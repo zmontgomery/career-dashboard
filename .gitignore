@@ -1,4 +1,6 @@
 backend/HELP.md
+backend/src/main/resources/public/**
+backend/src/main/resources/static/**
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

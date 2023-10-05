@@ -10,7 +10,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 class Post {
-
     private UUID id;
     private String title;
     private String content;
