@@ -1,0 +1,34 @@
+<h1>DashBoard</h1>
+
+
+<mat-card>
+  <mat-card-header>
+    <h2>
+      Milestones
+    </h2>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngFor="let milestone of milestones">
+      <div>{{milestone.description}}</div>
+      <div>{{milestone.date}}</div>
+      <div>&nbsp;</div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+<div>&nbsp;</div>
+<mat-card>
+  <mat-card-header>
+    <h2>
+      Events
+    </h2>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngFor="let event of events">
+      <div>{{event.description}}</div>
+      <div>{{event.date}}</div>
+      <div>{{event.organizer}}</div>
+      <div>{{event.location}}</div>
+      <div>&nbsp;</div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
