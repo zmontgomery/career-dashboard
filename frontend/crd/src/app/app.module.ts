@@ -6,16 +6,18 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import {MatCardModule} from "@angular/material/card";
 import {DashboardModule} from "./dashboard/dashboard.module";
+import {PortfolioModule} from "./portfolio/portfolio.module";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     DashboardModule,
+    PortfolioModule,
     MatCardModule,
   ],
   providers: [],

@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
-import { EventsComponent } from './events/events.component';
+import {MilestonesComponent} from "./milestones/milestones.component";
+import {PortfolioComponent} from "./portfolio.component";
 
 
 
 @NgModule({
   declarations: [
-    DashboardComponent,
-    EventsComponent,
+    PortfolioComponent,
+    MilestonesComponent,
   ],
   exports: [
+    MilestonesComponent
   ],
   imports: [
     CommonModule,
     MatCardModule
   ]
 })
-export class DashboardModule { }
+export class PortfolioModule { }

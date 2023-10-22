@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-header>
+    <h2>
+      Milestones
+    </h2>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngFor="let milestone of milestones">
+      <div>{{milestone.description}}</div>
+      <div>{{milestone.date}}</div>
+      <div>&nbsp;</div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

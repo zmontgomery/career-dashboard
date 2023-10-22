@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Milestone, MilestoneJSON} from "../../domain/Milestone";
+import {Milestone, MilestoneJSON} from "../../../domain/Milestone";
 import {map, Observable} from "rxjs";
 
 @Injectable({
