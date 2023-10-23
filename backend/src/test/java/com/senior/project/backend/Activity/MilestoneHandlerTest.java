@@ -9,6 +9,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @AutoConfigureWebTestClient
@@ -28,7 +32,11 @@ public class MilestoneHandlerTest {
         Milestone milestone2 = Milestone.builder().milestoneID("2").build();
         Flux<Milestone> eventFlux = Flux.just(milestone1, milestone2);
         when(milestoneService.all()).thenReturn(eventFlux);
-        webTestClient.get().uri("/api/milestones").exchange().expectStatus().isOk().expectBody();
-
+        List<Milestone> result = webTestClient.get().uri("/api/milestones").exchange().expectStatus().isOk()
+                .expectBodyList(Milestone.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(milestone1, result.get(0));
+        assertEquals(milestone2, result.get(1));
     }
 }

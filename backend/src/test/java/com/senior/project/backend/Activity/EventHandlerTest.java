@@ -1,18 +1,16 @@
 package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Event;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @AutoConfigureWebTestClient
@@ -32,6 +30,11 @@ public class EventHandlerTest {
         Event event2 = Event.builder().eventID("2").build();
         Flux<Event> eventFlux = Flux.just(event1, event2);
         when(eventService.all()).thenReturn(eventFlux);
-        webTestClient.get().uri("/api/events").exchange().expectStatus().isOk().expectBody();
+        List<Event> result = webTestClient.get().uri("/api/events").exchange().expectStatus().isOk()
+                .expectBodyList(Event.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(event1, result.get(0));
+        assertEquals(event2, result.get(1));
     }
 }
