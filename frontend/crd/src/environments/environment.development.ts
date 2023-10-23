@@ -1,3 +1,3 @@
 export const environment = {
-    serverPort: 8080
+    redirectURI: "http://localhost:4200",
 };

@@ -1,1 +1,3 @@
-export const environment = {};
+export const environment = {
+    redirectURI: "http://localhost:8080",
+};

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --watch",
+    "start": "ng serve --watch --configuration development",
     "build": "ng build --output-path=../../backend/src/main/resources/static",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@azure/msal-angular": "^3.0.6",
+    "@azure/msal-browser": "^3.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
