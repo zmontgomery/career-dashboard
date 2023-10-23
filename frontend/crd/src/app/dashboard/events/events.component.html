@@ -6,7 +6,9 @@
   </mat-card-header>
   <mat-card-content>
     <ng-container *ngFor="let event of events">
+      <div>{{event.name}}</div>
       <div>{{event.description}}</div>
+      <div>{{event.isRequired? "Required": "Optional"}}</div>
       <div>{{event.date}}</div>
       <div>{{event.organizer}}</div>
       <div>{{event.location}}</div>

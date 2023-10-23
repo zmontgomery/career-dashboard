@@ -2,13 +2,20 @@ package com.senior.project.backend.domain;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Milestone extends Activity{
+public class Milestone {
     private String milestoneID;
-    private String activityID;
+    private String name;
+    private List<Task> tasks;
+    private List<Event> events;
     private boolean isActive;
+    private YearLevel yearLevel;
 }
+
+

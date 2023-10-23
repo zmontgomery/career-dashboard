@@ -22,4 +22,5 @@ export class MilestonesComponent implements OnInit {
 
   milestones: Array<Milestone> = []
 
+  protected readonly Milestone = Milestone;
 }

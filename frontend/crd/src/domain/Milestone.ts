@@ -1,26 +1,35 @@
+import {Event} from "./Event";
+import {Task} from "./Task";
+
 export interface MilestoneJSON {
-  activityID: string;
-  description: string;
-  needsArtifact: Boolean;
-  date: string;
+  name: string;
+  yearLevel: YearLevel;
   milestoneID: string;
   active: Boolean;
+  events: Array<Event>;
+  tasks: Array<Task>;
+}
+
+enum YearLevel {
+  Freshman = "Freshman", Sophomore = "Sophomore",
+  Junior = "Junior", Senior = "Senior"
 }
 
 export class Milestone {
   constructor(json: MilestoneJSON) {
-    this.activityID = json.activityID;
-    this.description = json.description;
-    this.needsArtifact = json.needsArtifact;
-    this.date = new Date(json.date);
+    this.name = json.name;
+    this.yearLevel = json.yearLevel;
     this.milestoneID = json.milestoneID;
     this.active = json.active;
+    this.events = json.events;
+    this.tasks = json.tasks;
   }
 
-  activityID: string;
-  description: string;
-  needsArtifact: Boolean;
-  date: Date;
-  milestoneID: string;
-  active: Boolean;
+    name: string;
+    yearLevel: YearLevel;
+    milestoneID: string;
+    active: Boolean;
+    events: Array<Event>;
+    tasks: Array<Task>;
+    expanded = false;
 }

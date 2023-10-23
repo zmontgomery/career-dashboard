@@ -1,7 +1,6 @@
 export interface EventJSON {
-  activityID: string;
+  name: string;
   description: string;
-  needsArtifact: Boolean;
   date: string;
   eventID: string;
   isRecurring: Boolean;
@@ -12,9 +11,8 @@ export interface EventJSON {
 
 export class Event {
   constructor(json: EventJSON) {
-    this.activityID = json.activityID;
+    this.name = json.name
     this.description = json.description;
-    this.needsArtifact = json.needsArtifact;
     this.date = new Date(json.date);
     this.eventID = json.eventID;
     this.isRecurring = json.isRecurring;
@@ -23,9 +21,8 @@ export class Event {
     this.isRequired = json.isRequired;
   }
 
-  activityID: string;
+  name: string;
   description: string;
-  needsArtifact: Boolean;
   date: Date;
   eventID: string;
   isRecurring: Boolean;
