@@ -1,5 +1,7 @@
 package com.senior.project.backend.security.domain;
 
+import com.senior.project.backend.security.domain.TokenType;
+
 public class LoginRequest {
     private final String token;
     private final TokenType type;

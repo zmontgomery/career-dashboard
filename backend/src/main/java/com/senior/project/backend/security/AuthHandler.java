@@ -13,6 +13,7 @@ import com.senior.project.backend.security.verifiers.MicrosoftEntraIDTokenVerifi
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 
+import reactor.core.observability.SignalListener;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -32,23 +33,20 @@ public class AuthHandler {
     }
 
     public Mono<ServerResponse> signIn(ServerRequest req) {
-        LoginRequest request = req.bodyToMono(LoginRequest.class).block();
-    
-        // Verifiy token
-        String token = request.getToken();
-        try {
-            TokenType type = request.getType();
-            TokenVerifier verifier = getTokenVerifier(type);
-            token = verifier.verifiyToken(token);
-        } catch (TokenVerificiationException e) {
-            logger.error(e.getMessage(), e);
-            return ServerResponse.status(403).body("Error occurred during sign in", String.class);
-        }
-
-        LoginResponse response = repository.addToken(token);
-
-        return ServerResponse.ok().body(response, LoginResponse.class)
-            .switchIfEmpty(ServerResponse.notFound().build());
+        return req.bodyToMono(LoginRequest.class)
+            .flatMap(request -> {
+                String token = request.getToken();
+                TokenType type = request.getType();
+                try {
+                    TokenVerifier verifier = getTokenVerifier(type);
+                    token = verifier.verifiyToken(token);
+                    return this.repository.addToken(token)
+                        .flatMap(res -> ServerResponse.ok().body(res, LoginResponse.class));
+                } catch (TokenVerificiationException e) {
+                    this.logger.error("An error occured during sign in");
+                    return ServerResponse.status(403).build();
+                }
+            });
     }   
 
     private TokenVerifier getTokenVerifier(TokenType type) throws TokenVerificiationException {

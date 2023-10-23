@@ -1,4 +1,4 @@
-package com.senior.project.backend;
+package com.senior.project.backend.util;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;

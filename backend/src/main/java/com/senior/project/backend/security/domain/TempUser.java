@@ -1,4 +1,4 @@
-package com.senior.project.backend.security;
+package com.senior.project.backend.security.domain;
 
 public class TempUser {
     public final String name;

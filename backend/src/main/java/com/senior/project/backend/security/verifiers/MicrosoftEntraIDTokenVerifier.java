@@ -5,10 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
+    /**
+     * Verifies a provided token
+     * 
+     * TODO Verify the token 
+     */
     @Override
     public String verifiyToken(String token) throws TokenVerificiationException{
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifiyToken'");
+        throw new TokenVerificiationException("Test");
+        // return token;
     }
-    
 }

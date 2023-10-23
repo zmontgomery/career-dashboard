@@ -1,4 +1,4 @@
-package com.senior.project.backend;
+package com.senior.project.backend.util;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;

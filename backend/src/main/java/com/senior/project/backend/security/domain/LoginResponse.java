@@ -1,4 +1,6 @@
-package com.senior.project.backend.security;
+package com.senior.project.backend.security.domain;
+
+import com.senior.project.backend.security.domain.TempUser;
 
 public class LoginResponse {
     private final String token;
