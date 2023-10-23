@@ -41,10 +41,10 @@ public class AuthHandler {
                     TokenVerifier verifier = getTokenVerifier(type);
                     token = verifier.verifiyToken(token);
                     return this.repository.addToken(token)
-                        .flatMap(res -> ServerResponse.ok().body(res, LoginResponse.class));
+                        .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
                 } catch (TokenVerificiationException e) {
-                    this.logger.error("An error occured during sign in");
-                    return ServerResponse.status(403).build();
+                    this.logger.error(e.getMessage());
+                    return ServerResponse.status(403).bodyValue("An error ocurred during sign in");
                 }
             });
     }   

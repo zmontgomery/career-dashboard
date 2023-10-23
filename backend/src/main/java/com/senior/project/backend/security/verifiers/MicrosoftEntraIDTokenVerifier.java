@@ -12,7 +12,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
      */
     @Override
     public String verifiyToken(String token) throws TokenVerificiationException{
-        throw new TokenVerificiationException("Test");
-        // return token;
+        // throw new TokenVerificiationException("Test");
+        return token;
     }
 }
