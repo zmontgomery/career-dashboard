@@ -46,6 +46,7 @@ jobs:
     - name: Run Gradle Tests
       run: ./gradlew test
     - name: Save Test Artifact
+      if: success() || failure()
       uses: actions/upload-artifact@v3
       with:
         name: coverage
