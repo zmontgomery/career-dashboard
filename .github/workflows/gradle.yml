@@ -11,7 +11,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
 
 permissions:
   contents: read
@@ -20,6 +20,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
     - uses: actions/checkout@v3
@@ -32,8 +35,11 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: build
+        gradle-version: current
 #    - name: Save Build Artifact        # leaving this here just in case
 #      uses: actions/upload-artifact@v3
 #      with:
 #        name: Package
 #        path: build/libs
+    - name: Run Gradle Tests
+      run: ./gradlew test
