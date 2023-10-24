@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TempUser {
+    public String oid;
     public String name;
     public String email;
     public String role;
