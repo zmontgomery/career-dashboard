@@ -42,6 +42,7 @@ jobs:
       with:
         arguments: build
         gradle-version: current
+        build-root-directory: ./backend
 #    - name: Save Build Artifact        # leaving this here just in case
 #      uses: actions/upload-artifact@v3
 #      with:
