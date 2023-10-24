@@ -10,7 +10,7 @@ export interface MilestoneJSON {
   tasks: Array<Task>;
 }
 
-enum YearLevel {
+export enum YearLevel {
   Freshman = "Freshman", Sophomore = "Sophomore",
   Junior = "Junior", Senior = "Senior"
 }

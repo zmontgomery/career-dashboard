@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
+import {MockComponent} from "ng-mocks";
+import {EventsComponent} from "./events/events.component";
+import {MilestonesComponent} from "../portfolio/milestones/milestones.component";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -8,7 +11,7 @@ describe('DashboardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent]
+      declarations: [DashboardComponent, MockComponent(EventsComponent), MockComponent(MilestonesComponent)]
     });
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
