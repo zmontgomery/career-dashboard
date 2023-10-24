@@ -8,6 +8,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "**" ]
+  workflow_dispatch:
+    inputs:
+        used-branch:
+          description: Branch the test shall be run on
+          default: main
+          required: true
 
 jobs:
   build:
