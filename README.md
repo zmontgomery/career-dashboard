@@ -18,3 +18,13 @@ Partially Hydrated devs - Senior Project
 
 # Notes
 - the frontend will recompile automatically but the backend will not
+
+# Executing tests
+### Front-end
+- `cd frontend/crd`
+- `npm test`
+- coverage found in frontend/crd/coverage/crd/index.html
+### Back-end
+- `cd backend`
+- `./gradlew test`
+- coverage found in backend/build/reports/jacoco/test/html/index.html
