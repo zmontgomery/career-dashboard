@@ -1,5 +1,6 @@
 package com.senior.project.backend.security.verifiers;
 
 public interface TokenVerifier {
-    String verifiyToken(String token) throws TokenVerificiationException;
+    String verifiyIDToken(String token) throws TokenVerificiationException;
+    String verifiyAccessToken(String token) throws TokenVerificiationException;
 }

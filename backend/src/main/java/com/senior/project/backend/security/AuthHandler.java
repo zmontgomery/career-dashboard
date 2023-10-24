@@ -31,15 +31,27 @@ public class AuthHandler {
         this.microsoftEntraIDTokenVerifier = microsoftEntraIDTokenVerifier;
     }
 
+    /**
+     * Handler function for signing in
+     * 
+     * The function gets the data from the login request and verifies the authentication token
+     * In the case an error ocurrs, the fucntion catches the error
+     * 
+     * @param req - the server request with the login request
+     * @return 
+     *      200 for successful login
+     *      403 If an error ocurred during sign in
+     */
     public Mono<ServerResponse> signIn(ServerRequest req) {
         return req.bodyToMono(LoginRequest.class)
             .flatMap(request -> {
-                String token = request.getToken();
+                String accessToken = request.getAccessToken();
+                String idToken = request.getIdToken();
                 TokenType type = request.getType();
                 try {
                     TokenVerifier verifier = getTokenVerifier(type);
-                    token = verifier.verifiyToken(token);
-                    return this.repository.addToken(token)
+                    accessToken = verifier.verifiyIDToken(accessToken);
+                    return this.repository.addToken(accessToken)
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
                 } catch (TokenVerificiationException e) {
                     this.logger.error(e.getMessage());
@@ -47,6 +59,14 @@ public class AuthHandler {
                 }
             });
     }   
+
+    public Mono<ServerResponse> signOut(ServerRequest req) {
+        return ServerResponse.ok().body(Mono.just(""), String.class);
+    }
+
+    //
+    // Helper methods
+    //
 
     private TokenVerifier getTokenVerifier(TokenType type) throws TokenVerificiationException {
         switch (type) {

@@ -1,21 +1,17 @@
 package com.senior.project.backend.security.domain;
 
-import com.senior.project.backend.security.domain.TempUser;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponse {
-    private final String token;
-    private final TempUser user;
-
-    public LoginResponse(String token, TempUser user) {
-        this.token = token;
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public TempUser getUser() {
-        return user;
-    }
+    private String token;
+    private TempUser user;
 }

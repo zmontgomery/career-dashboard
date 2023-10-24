@@ -25,6 +25,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+
+    implementation("org.bitbucket.b_c:jose4j:0.6.0")
 }
 
 tasks.withType<Test> {
