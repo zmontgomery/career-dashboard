@@ -8,15 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'crd';
-  posts: any[] = [];
 
   constructor(
-    private readonly http: HttpClient,
   ) {}
 
-  makeRequest() {
-    return this.http.get<any[]>('http://localhost:8080/api/posts').subscribe((res: any[]) => {
-      this.posts = res;
-    });
-  }
 }
