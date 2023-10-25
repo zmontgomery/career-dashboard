@@ -50,7 +50,8 @@ public class AuthHandler {
                 TokenType type = request.getType();
                 try {
                     TokenVerifier verifier = getTokenVerifier(type);
-                    String oid = verifier.verifiyIDToken(accessToken);
+                    String oid = verifier.verifiyIDToken(idToken);
+                    verifier.verifiyAccessToken(accessToken);
                     return this.repository.addToken(accessToken, oid)
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
                 } catch (TokenVerificiationException e) {
