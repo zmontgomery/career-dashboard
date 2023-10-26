@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { filter } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,8 @@ export class AppComponent implements OnInit {
   }
 
   login() {
-    this.authService.loginRedirect();
+    // Note the scope is set since we are using the access tokens for personal use
+    // https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/521#issuecomment-577400515
+    this.authService.loginRedirect({scopes: [`${environment.clientId}/.default`]});
   }
 }
