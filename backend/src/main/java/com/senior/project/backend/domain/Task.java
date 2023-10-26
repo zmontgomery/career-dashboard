@@ -8,7 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
+    
     private String id;
+    
     private String description;
     private Boolean isRequired;
     private Boolean needsArtifact;

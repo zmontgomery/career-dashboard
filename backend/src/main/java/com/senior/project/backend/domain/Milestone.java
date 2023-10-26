@@ -10,7 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Milestone {
-    private String milestoneID;
+ 
+    private String id;
+
     private String name;
     private List<Task> tasks;
     private List<Event> events;

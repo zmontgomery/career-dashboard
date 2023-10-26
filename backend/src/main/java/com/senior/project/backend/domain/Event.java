@@ -10,7 +10,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {
-    private String eventID;
+
+    private String id;
+    
     private Boolean isRecurring;
     private String organizer;
     private String location;
