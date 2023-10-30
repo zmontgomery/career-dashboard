@@ -10,7 +10,6 @@ describe('PortfolioComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      // providers: [MockComponent]
       declarations: [PortfolioComponent, MockComponent(MilestonesComponent)]
     });
     fixture = TestBed.createComponent(PortfolioComponent);
