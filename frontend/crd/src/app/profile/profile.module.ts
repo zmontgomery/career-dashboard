@@ -10,4 +10,4 @@ import { ProfileComponent } from './profile.component';
     CommonModule,
   ],
 })
-export class MyModule { }
+export class ProfileModule { }
