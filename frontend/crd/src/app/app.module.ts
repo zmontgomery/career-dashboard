@@ -7,10 +7,12 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatCardModule} from "@angular/material/card";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {PortfolioModule} from "./portfolio/portfolio.module";
+import { ApiDocumentationsComponent } from './api-documentations/api-documentations.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ApiDocumentationsComponent,
   ],
   imports: [
     BrowserModule,

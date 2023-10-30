@@ -30,7 +30,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less", "./node_modules/swagger-ui/dist/swagger-ui.css"
             ],
             "scripts": []
           },
