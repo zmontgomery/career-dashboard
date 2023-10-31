@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
-import {PortfolioModule} from "../portfolio/portfolio.module";
+import {MilestonesModule} from "../milestones-page/milestones/milestones.module";
 
 
 
@@ -17,7 +17,7 @@ import {PortfolioModule} from "../portfolio/portfolio.module";
   imports: [
     CommonModule,
     MatCardModule,
-    PortfolioModule
+    MilestonesModule
   ]
 })
 export class DashboardModule { }
