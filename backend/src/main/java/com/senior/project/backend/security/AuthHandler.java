@@ -56,6 +56,8 @@ public class AuthHandler {
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
                 } catch (TokenVerificiationException e) {
                     this.logger.error(e.getMessage());
+                    
+                    // Obscure the reason for failure
                     return ServerResponse.status(403).bodyValue("An error ocurred during sign in");
                 }
             });

@@ -3,8 +3,10 @@
 
   <p>Press the button below to test out the application!</p>
   <button (click)="login()">
-    Click Me!
+    Login With Microsoft!
   </button>
+
+  <asl-google-signin-button></asl-google-signin-button>
 
   <div *ngFor="let i of posts">
     <p>{{i.title}}</p>
