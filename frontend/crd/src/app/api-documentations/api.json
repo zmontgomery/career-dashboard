@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "title": "Sample API",
     "description": "API description in Markdown.",
@@ -9,14 +9,478 @@
   "basePath": "/api",
   "schemes": ["http"],
   "paths": {
-    "/events": {
+    "/dashboard-events": {
       "get": {
-        "summary": "Returns a list of events.",
+        "summary": "Returns the selection of events to display on the dashboard carousel",
         "description": "Optional extended description in Markdown.",
+        "tags": ["dashboard"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only return events relevant to this student"
+          },
+          {
+            "in": "query",
+            "name": "pageNum",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Which page of events to display"
+          }
+        ],
         "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/dashboard-tasks": {
+      "get": {
+        "summary": "Returns the selection of tasks to display on the dashboard",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["dashboard"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only return incomplete tasks for this student"
+          },
+          {
+            "in": "query",
+            "name": "numTasks",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 5
+            },
+            "description": "How many tasks should be returned"
+          },
+          {
+            "in": "query",
+            "name": "maxOverdue",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 3
+            },
+            "description": "Maximum number of returned events that are overdue rather than upcoming"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "Returns a list of events.",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["events"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/milestones": {
+      "get": {
+        "summary": "Returns a list of milestones also containing each milestone's task list.",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["milestones"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/task/{taskID}": {
+      "get": {
+        "summary": "Returns a specific task",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "taskID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The task ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/event/{eventID}": {
+      "get": {
+        "summary": "Returns a specific event",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["events"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "eventID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The event ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Event not found"
+          }
+        }
+      }
+    },
+    "/task/{taskID}/{artifactID}": {
+      "get": {
+        "summary": "Returns more information about the artifact required for a specific task",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "taskID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Which task we are getting the artifact for"
+          },
+          {
+            "in": "path",
+            "name": "artifactID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The artifact ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Task or artifact not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit an artifact",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "taskID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Which task we are getting the artifact for"
+          },
+          {
+            "in": "path",
+            "name": "artifactID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The artifact to be submitted"
+          }
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "integer",
+                    "required": "true",
+                    "description": "The student submitting the artifact"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "description": "Any comment with the artifact"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Artifact file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Uploaded"
+          }
+        }
+      }
+    },
+    "/student/{studentID}": {
+      "get": {
+        "summary": "Returns profile information about a student",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["profile"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update profile information about a student",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["profile"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "updatedField": {
+                      "type": "string",
+                      "required": "true",
+                      "description": "Which profile field was updated"
+                    },
+                    "newValue": {
+                      "type": "string",
+                      "description": "Updated value for the field"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/portfolio/{studentID}": {
+      "get": {
+        "summary": "Returns portfolio information about a student",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update portfolio information about a student",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "updatedField": {
+                      "type": "string",
+                      "required": "true",
+                      "description": "Which portfolio field was updated"
+                    },
+                    "newValue": {
+                      "type": "string",
+                      "description": "Updated value for the field"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/portfolio/{studentID}/artifacts": {
+      "get": {
+        "summary": "Returns all artifacts on a student's portfolio",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        }
+      }
+    },
+    "/portfolio/{studentID}/{artifactID}": {
+      "get": {
+        "summary": "Returns a specific artifact from a student's portfolio",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Artifact not found"
+          }
+        }
+      }
+    },
+    "/portfolio/{studentID}/{artifactID}/download": {
+      "get": {
+        "summary": "Downloads a specific artifact from a student's portfolio",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "studentID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The student ID"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Artifact not found"
           }
         }
       }
