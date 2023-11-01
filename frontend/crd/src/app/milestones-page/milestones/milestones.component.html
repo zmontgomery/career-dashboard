@@ -1,18 +1,25 @@
 
 <ul>
-  <li *ngFor="let milestone of milestones">
+  <li class="milestone" *ngFor="let milestone of milestones">
     <div class="title-container" (click)="milestone.expanded = !milestone.expanded">
       <span class="title">{{ milestone.name }}</span>
       <span class ="arrow" [ngClass]="{ 'arrow-up': milestone.expanded, 'arrow-down': !milestone.expanded }"></span>
     </div>
     <ng-container *ngIf="milestone.expanded">
       <div class="content">{{ milestone.yearLevel }}</div>
-      <ng-container *ngFor="let task of milestone.tasks">
-        <div class="content">
-          {{task.description}}
-        </div>
-      </ng-container>
-
+      <ul>
+        <li *ngFor="let task of milestone.tasks">
+          <div class="title-container" (click)="task.expanded = !task.expanded">
+            <div>{{task.description}}</div>
+            <span class ="arrow" [ngClass]="{ 'arrow-up': task.expanded, 'arrow-down': !task.expanded }"></span>
+          </div>
+          <ng-container *ngIf="task.expanded">
+            <div class="content">
+              <button mat-button color="primary">submission</button>
+            </div>
+          </ng-container>
+        </li>
+      </ul>
       <ng-container *ngFor="let event of milestone.events">
         <div class="content">
           <div>{{event.name}}</div>
