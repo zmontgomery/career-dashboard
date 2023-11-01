@@ -29,4 +29,5 @@ export class Event {
   organizer: string;
   location: string;
   isRequired: Boolean;
+  expanded = false;
 }
