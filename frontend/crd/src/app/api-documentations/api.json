@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample API",
-    "description": "API description in Markdown.",
+    "title": "Career Readiness Dashboard API",
+    "description": "API documentation for the Career Readiness Dashboard 2023-2024 senior project.",
     "version": "1.0.0"
   },
   "host": "localhost:8080",
