@@ -22,6 +22,7 @@ public class TokenPayload {
     private String name;
     private String nonce;
     private String oid;
+    private String email;
     @JsonProperty("preferred_username") private String prefferedUsername;
     private String rh;
     private String sub;

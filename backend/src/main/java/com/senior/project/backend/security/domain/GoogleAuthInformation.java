@@ -9,10 +9,7 @@ import lombok.Getter;
 @PropertySource("classpath:application.properties")
 @Component
 @Getter
-public class MicrosoftAuthInformation {
-    @Value("${security.ms.clientID}")
+public class GoogleAuthInformation {
+    @Value("${security.google.clientID}")
     private String clientId;
-
-    @Value("${security.ms.tenantID}")
-    private String tenantId;
 }

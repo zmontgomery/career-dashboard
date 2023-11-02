@@ -13,6 +13,8 @@ import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
     private MicrosoftAuthInformation microsoftAuthInformation;
 
+    private Logger logger = LoggerFactory.getLogger(MicrosoftEntraIDTokenVerifier.class);
+
     public MicrosoftEntraIDTokenVerifier(
         ResourceLoader resourceLoader,
         MicrosoftAuthInformation microsoftAuthInformation
@@ -48,17 +52,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         token = verifyStructure(token);
         String payload = validateSignature(token);
         TokenPayload tokenPayload = validateClaims(payload);
-        return tokenPayload.getOid();
-    }
-
-    /**
-     * Verifies a provided token and returns the token after validation
-     */
-    @Override
-    public String verifiyAccessToken(String token) throws TokenVerificiationException {
-        token = verifyStructure(token);
-        validateSignature(token);
-        return token;
+        return tokenPayload.getEmail();
     }
 
     private String verifyStructure(String token) throws TokenVerificiationException {

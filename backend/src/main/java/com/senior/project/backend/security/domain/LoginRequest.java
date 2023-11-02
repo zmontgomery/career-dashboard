@@ -12,7 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest {
-    private String accessToken;
     private String idToken;
     private TokenType type;
 }

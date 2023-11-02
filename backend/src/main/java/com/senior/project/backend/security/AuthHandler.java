@@ -9,9 +9,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.TokenType;
-import com.senior.project.backend.security.verifiers.MicrosoftEntraIDTokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
+import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
 
 import reactor.core.publisher.Mono;
 
@@ -21,14 +21,14 @@ public class AuthHandler {
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
     private final AuthRepository repository;
-    private final MicrosoftEntraIDTokenVerifier microsoftEntraIDTokenVerifier;
+    private final TokenVerifierGetter tokenVerifierGetter;
 
     public AuthHandler(
         AuthRepository repository,
-        MicrosoftEntraIDTokenVerifier microsoftEntraIDTokenVerifier
+        TokenVerifierGetter tokenVerifierGetter
     ) {
         this.repository = repository;
-        this.microsoftEntraIDTokenVerifier = microsoftEntraIDTokenVerifier;
+        this.tokenVerifierGetter = tokenVerifierGetter;
     }
 
     /**
@@ -45,14 +45,13 @@ public class AuthHandler {
     public Mono<ServerResponse> signIn(ServerRequest req) {
         return req.bodyToMono(LoginRequest.class)
             .flatMap(request -> {
-                String accessToken = request.getAccessToken();
                 String idToken = request.getIdToken();
                 TokenType type = request.getType();
                 try {
-                    TokenVerifier verifier = getTokenVerifier(type);
+                    TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
                     String oid = verifier.verifiyIDToken(idToken);
-                    verifier.verifiyAccessToken(accessToken);
-                    return this.repository.addToken(accessToken, oid)
+                    // verifier.verifiyAccessToken(accessToken);
+                    return this.repository.addToken(":)", oid)
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
                 } catch (TokenVerificiationException e) {
                     this.logger.error(e.getMessage());
@@ -65,20 +64,5 @@ public class AuthHandler {
 
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
-    }
-
-    //
-    // Helper methods
-    //
-
-    private TokenVerifier getTokenVerifier(TokenType type) throws TokenVerificiationException {
-        switch (type) {
-            case GOOGLE:
-                throw new TokenVerificiationException("This verifier does not exist");
-            case MICROSOFT_ENTRA_ID:
-                return this.microsoftEntraIDTokenVerifier;
-            default:
-                throw new TokenVerificiationException("Source for token not compatible");
-        }
     }
 }
