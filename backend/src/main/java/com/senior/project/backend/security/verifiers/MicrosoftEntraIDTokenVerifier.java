@@ -13,8 +13,6 @@ import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -32,8 +30,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     private JsonWebKeySet keySet;
 
     private MicrosoftAuthInformation microsoftAuthInformation;
-
-    private Logger logger = LoggerFactory.getLogger(MicrosoftEntraIDTokenVerifier.class);
 
     public MicrosoftEntraIDTokenVerifier(
         ResourceLoader resourceLoader,
