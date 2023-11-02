@@ -13,7 +13,7 @@ public class EventRepository {
     public static final List<Event> DATA = new ArrayList<>();
 
     static {
-        Event e1 = Event.builder().eventID("event 1")
+        Event e1 = Event.builder().id("event 1")
                 .name("Event 1")
                 .isRecurring(false)
                 .organizer("Organizer 1")
@@ -22,7 +22,7 @@ public class EventRepository {
         e1.setDescription("Event 1 description");
         e1.setDate(new Date());
         DATA.add(e1);
-        Event e2 = Event.builder().eventID("event 2")
+        Event e2 = Event.builder().id("event 2")
                 .name("Event 2")
                 .isRecurring(false)
                 .organizer("Organizer 2")

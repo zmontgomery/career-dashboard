@@ -31,7 +31,7 @@ public class MilestoneRepository {
         tasks.add(task2);
 
         Milestone m1 = Milestone.builder()
-                .milestoneID("milestone 1")
+                .id("milestone 1")
                 .name("Milestone 1")
                 .isActive(false)
                 .yearLevel(YearLevel.Freshman)
@@ -40,7 +40,7 @@ public class MilestoneRepository {
                 .build();
         DATA.add(m1);
         Milestone m2 = Milestone.builder()
-                .milestoneID("milestone 2")
+                .id("milestone 2")
                 .name("Milestone 2")
                 .isActive(false)
                 .yearLevel(YearLevel.Junior)
