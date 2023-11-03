@@ -8,10 +8,20 @@ import { MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalModule, MsalRedirectCom
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
+import {MatCardModule} from "@angular/material/card";
+import {DashboardModule} from "./dashboard/dashboard.module";
+import {PortfolioModule} from "./portfolio/portfolio.module";
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {RouterModule} from "@angular/router";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ProfileModule} from "./profile/profile.module";
+import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +50,14 @@ import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from
     ),
     SocialLoginModule,
     GoogleSigninButtonModule,
+    DashboardModule,
+    PortfolioModule,
+    ProfileModule,
+    MilestonesPageModule,
+    MatCardModule,
+    MatTabsModule,
+    RouterModule,
+    BrowserAnimationsModule,
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',

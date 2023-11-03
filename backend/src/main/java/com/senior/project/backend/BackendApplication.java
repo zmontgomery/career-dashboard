@@ -17,13 +17,4 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-    @Bean
-    public RouterFunction<ServerResponse> routes(PostHandler postHandler) {
-        return route(GET("/api/posts"), postHandler::all)
-                .andRoute(POST("/api/posts"), postHandler::create)
-                .andRoute(GET("/api/posts/{id}"), postHandler::get);
-//                .andRoute(PUT("/posts/{id}"), postHandler::update)
-//                .andRoute(DELETE("/posts/{id}"), postHandler::delete);
-    }
-
 }

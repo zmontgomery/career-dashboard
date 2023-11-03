@@ -13,7 +13,6 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent implements OnInit {
   title = 'crd';
-  posts: any[] = [];
 
   constructor(
     private readonly http: HttpClient,
@@ -33,12 +32,6 @@ export class AppComponent implements OnInit {
       });
 
     this.socialAuthService.authState.subscribe((state) => console.log(state));
-  }
-
-  makeRequest() {
-    return this.http.get<any[]>('http://localhost:8080/api/posts').subscribe((res: any[]) => {
-      this.posts = res;
-    });
   }
 
   login() {

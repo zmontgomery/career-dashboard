@@ -1,5 +1,6 @@
 plugins {
     java
+    id("jacoco")
     id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.3"
 }
@@ -22,16 +23,20 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
     implementation("org.projectlombok:lombok:1.18.28")
+    implementation("org.bitbucket.b_c:jose4j:0.6.0")
+    implementation("com.google.api-client:google-api-client:1.32.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
-
-    implementation("org.bitbucket.b_c:jose4j:0.6.0")
-
-    implementation("com.google.api-client:google-api-client:1.32.1")
-    implementation("com.google.code.gson:gson:2.10.1")
+    testImplementation("org.mockito:mockito-core")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // Generate the report after running tests
 }
