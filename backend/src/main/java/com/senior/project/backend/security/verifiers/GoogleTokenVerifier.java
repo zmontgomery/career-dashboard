@@ -8,7 +8,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.senior.project.backend.security.domain.GoogleAuthInformation;
+import com.senior.project.backend.security.domain.AuthInformation;
 
 /**
  * A TokenVerifier that verifies a token
@@ -18,12 +18,12 @@ import com.senior.project.backend.security.domain.GoogleAuthInformation;
 @Component
 public class GoogleTokenVerifier implements TokenVerifier {
 
-    private GoogleAuthInformation googleAuthInformation;
+    private AuthInformation authInformation;
     private NetHttpTransport transport;
     private GsonFactory factory;
 
-    public GoogleTokenVerifier(GoogleAuthInformation googleAuthInformation) {
-        this.googleAuthInformation = googleAuthInformation;
+    public GoogleTokenVerifier(AuthInformation authInformation) {
+        this.authInformation = authInformation;
         this.transport = new NetHttpTransport();
         this.factory = new GsonFactory();
     }
@@ -37,7 +37,7 @@ public class GoogleTokenVerifier implements TokenVerifier {
      */
     @Override
     public String verifiyIDToken(String token) throws TokenVerificiationException {
-        String clientID = this.googleAuthInformation.getClientId();
+        String clientID = this.authInformation.getGClientId();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, factory)
             .setAudience(Collections.singletonList(clientID))
             .build();

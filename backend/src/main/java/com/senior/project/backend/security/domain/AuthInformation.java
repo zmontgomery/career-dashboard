@@ -15,7 +15,13 @@ import lombok.Getter;
 @PropertySource("classpath:application.properties")
 @Component
 @Getter
-public class GoogleAuthInformation {
+public class AuthInformation {
     @Value("${security.google.clientID}")
-    private String clientId;
+    private String gClientId;
+
+    @Value("${security.ms.clientID}")
+    private String msClientId;
+
+    @Value("${security.ms.tenantID}")
+    private String msTenantId;
 }

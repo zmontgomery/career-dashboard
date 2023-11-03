@@ -26,7 +26,6 @@ dependencies {
     implementation("org.bitbucket.b_c:jose4j:0.6.0")
     implementation("com.google.api-client:google-api-client:1.32.1")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

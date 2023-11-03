@@ -24,7 +24,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.senior.project.backend.security.domain.MicrosoftAuthInformation;
+import com.senior.project.backend.security.domain.AuthInformation;
 import com.senior.project.backend.security.domain.TokenPayload;
 
 
@@ -39,17 +39,17 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     private final Logger logger = LoggerFactory.getLogger(MicrosoftEntraIDTokenVerifier.class);
 
     private JsonWebKeySet keySet;
-    private MicrosoftAuthInformation microsoftAuthInformation;
+    private AuthInformation authInformation;
 
     public MicrosoftEntraIDTokenVerifier(
         ResourceLoader resourceLoader,
-        MicrosoftAuthInformation microsoftAuthInformation
+        AuthInformation authInformation
     ) throws JoseException {
 
         // TODO source from internet
         String keys = resourceAsString(resourceLoader.getResource("classpath:keys.json"));
         keySet = new JsonWebKeySet(keys);
-        this.microsoftAuthInformation = microsoftAuthInformation;
+        this.authInformation = authInformation;
     }
 
     /**
@@ -155,7 +155,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             boolean expValid = tokenPayload.getExp() < now;
 
             // Verify aud
-            boolean audValid = tokenPayload.getAud().equals(microsoftAuthInformation.getClientId());
+            boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());
 
             // Check results
             if (iatValid && nbfValid && expValid && audValid) return tokenPayload;
