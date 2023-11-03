@@ -4,13 +4,17 @@ import lombok.*;
 
 import java.util.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 @Data
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Event {
-
+    @Id
     private String id;
     
     private Boolean isRecurring;
