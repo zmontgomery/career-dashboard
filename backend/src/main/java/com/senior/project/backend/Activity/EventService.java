@@ -13,6 +13,6 @@ public class EventService {
 
     public EventService(EventRepository eventRepository) { this.eventRepository = eventRepository;}
     public Flux<Event> all() {
-        return eventRepository.all();
+        return Flux.fromIterable(eventRepository.findAll());
     }
 }
