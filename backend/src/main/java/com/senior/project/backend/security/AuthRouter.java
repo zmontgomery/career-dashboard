@@ -10,6 +10,11 @@ import com.senior.project.backend.util.URIBuilder;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+/**
+ * Endpoints for authentication
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class AuthRouter {
 

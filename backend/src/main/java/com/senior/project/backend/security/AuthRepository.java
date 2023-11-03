@@ -12,6 +12,11 @@ import com.senior.project.backend.security.domain.TempUser;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * This will store user emails with their token
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class AuthRepository {
     private static final Map<String, TempUser> DATA = new HashMap<String, TempUser>();
