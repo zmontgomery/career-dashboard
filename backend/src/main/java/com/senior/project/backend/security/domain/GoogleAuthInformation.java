@@ -6,6 +6,12 @@ import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 
+/**
+ * Basic object to fetch the google auth information from the
+ * configuration files
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @PropertySource("classpath:application.properties")
 @Component
 @Getter

@@ -6,6 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * A domain object representing the response gotten from a 
+ * request to log in
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Data
 @ToString
 @Builder

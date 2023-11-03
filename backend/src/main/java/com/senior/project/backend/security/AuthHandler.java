@@ -15,6 +15,11 @@ import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * Handler for authentication functions
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class AuthHandler {
 
@@ -62,6 +67,14 @@ public class AuthHandler {
             });
     }   
 
+    /**
+     * Signs out a user
+     * 
+     * TODO Implement
+     * 
+     * @param req
+     * @return
+     */
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
     }

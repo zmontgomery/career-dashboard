@@ -10,6 +10,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.senior.project.backend.security.domain.GoogleAuthInformation;
 
+/**
+ * A TokenVerifier that verifies a token
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class GoogleTokenVerifier implements TokenVerifier {
 
@@ -23,6 +28,13 @@ public class GoogleTokenVerifier implements TokenVerifier {
         this.factory = new GsonFactory();
     }
 
+    /**
+     * Verifies an ID token by verifying its structures, signature, and claims
+     * 
+     * @param token - token being verified
+     * @return - A unique id for the user
+     * @throws TokenVerificiationException - thrown when an error occurs during the verification
+     */
     @Override
     public String verifiyIDToken(String token) throws TokenVerificiationException {
         String clientID = this.googleAuthInformation.getClientId();

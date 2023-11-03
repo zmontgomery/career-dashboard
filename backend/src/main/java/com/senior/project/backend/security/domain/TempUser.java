@@ -6,6 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Temp User, will delete later
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Data
 @ToString
 @Builder
