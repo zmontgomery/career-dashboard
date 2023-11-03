@@ -30,6 +30,9 @@
               "src/assets"
             ],
             "styles": [
+              {
+                "input": "src/theme.scss"
+              },
               "src/styles.less"
             ],
             "scripts": []
