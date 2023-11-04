@@ -17,5 +17,4 @@ export class Task {
     needsArtifact: Boolean;
     id: string;
     isRequired: Boolean;
-    expanded = false;
 }

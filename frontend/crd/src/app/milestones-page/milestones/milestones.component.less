@@ -1,49 +1,15 @@
-mat-card-header {
-  border-bottom: 1px solid gray;
-  padding-bottom: 5px;
-}
+@import "../../../common";
 
-mat-card-content {
-  padding-top: 5px
-}
+.year-card {
+  background-color: @oswego-green;
+  color: white;
+  width: 200px;
+  mat-card-header {
+    padding: 10px 16px;
+    justify-content: center;
 
-ul {
-  list-style-type: none; /* Remove bullets from the UL */
-  padding-left: 0; /* Remove default left padding */
-}
-
-li.milestone {
-  margin-bottom: 10px;
-}
-
-.arrow-up::before {
-  content: '▼';
-  margin-left: 10px;
-}
-
-.arrow-down::before {
-  content: '▲';
-  margin-left: 10px;
-}
-
-.title-container, .content {
-  border: 1px solid #ccc; /* Add a border for visual separation */
-  padding: 10px;
-}
-
-.title {
-  font-weight: bold;
-}
-
-.title-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.arrow {
-
-}
-
-.content {
-
+    .year-name {
+      font-size: 18px;
+    }
+  }
 }

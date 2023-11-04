@@ -31,5 +31,4 @@ export class Milestone {
     active: Boolean;
     events: Array<Event>;
     tasks: Array<Task>;
-    expanded = false;
 }

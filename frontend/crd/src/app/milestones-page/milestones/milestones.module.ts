@@ -4,6 +4,8 @@ import { MatCardModule } from "@angular/material/card";
 import { MilestonesComponent } from './milestones.component';
 import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 
 
@@ -19,6 +21,8 @@ import {MatButtonModule} from "@angular/material/button";
     MatCardModule,
     RouterLink,
     MatButtonModule,
+    MatTabsModule,
+    MatExpansionModule,
   ]
 })
 export class MilestonesModule { }

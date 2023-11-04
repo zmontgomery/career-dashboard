@@ -1,44 +1,35 @@
 
-<ul>
-  <li class="milestone" *ngFor="let milestone of milestones">
-    <div class="title-container" (click)="milestone.expanded = !milestone.expanded">
-      <span class="title">{{ milestone.name }}</span>
-      <span class ="arrow" [ngClass]="{ 'arrow-up': milestone.expanded, 'arrow-down': !milestone.expanded }"></span>
-    </div>
-    <ng-container *ngIf="milestone.expanded">
-      <div class="content">{{ milestone.yearLevel }}</div>
-      <ul>
-        <li *ngFor="let task of milestone.tasks">
-          <div class="title-container" (click)="task.expanded = !task.expanded">
-            <div>{{task.description}}</div>
-            <span class ="arrow" [ngClass]="{ 'arrow-up': task.expanded, 'arrow-down': !task.expanded }"></span>
-          </div>
-          <ng-container *ngIf="task.expanded">
-            <div class="content">
-              <button mat-button color="primary">submission</button>
-            </div>
-          </ng-container>
-        </li>
-      </ul>
 
-      <ul>
-        <li *ngFor="let event of milestone.events">
-          <div class="title-container" (click)="event.expanded = !event.expanded">
-            <div>{{event.name}}</div>
-            <span class ="arrow" [ngClass]="{ 'arrow-up': event.expanded, 'arrow-down': !event.expanded }"></span>
-          </div>
-          <ng-container *ngIf="event.expanded">
-            <div class="content">
-            <div >{{event.description}}</div>
-            <div >{{event.date | date:'short'}}</div>
-            <div >{{event.organizer}}</div>
-            <div >{{event.location}}</div>
-          </div>
-          </ng-container>
-        </li>
-      </ul>
+<ng-container *ngFor="let yearLevel of YearLevels">
+  <mat-card class="year-card">
+    <mat-card-header>
+      <div class="year-name">{{yearLevel}}</div>
+    </mat-card-header>
+  </mat-card>
 
 
+  <mat-accordion>
+    <ng-container *ngFor="let milestone of milestones">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{milestone.name}}
+          </mat-panel-title>
+<!--  Use if we want to display a description -->
+<!--          <mat-panel-description>-->
+<!--            {{milestone.description}}-->
+<!--          </mat-panel-description>-->
+        </mat-expansion-panel-header>
+        <p *ngFor="let task of milestone.tasks">{{task.description}}</p>
+        <ng-container *ngFor="let event of milestone.events">
+          <div>{{event.description}}</div>
+          <div>{{event.date | date:'short'}}</div>
+          <div>{{event.organizer}}</div>
+          <div>{{event.location}}</div>
+          <div>&nbsp;</div>
+        </ng-container>
+      </mat-expansion-panel>
     </ng-container>
-  </li>
-</ul>
+  </mat-accordion>
+
+</ng-container>

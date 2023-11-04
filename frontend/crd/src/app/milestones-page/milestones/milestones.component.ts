@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MilestoneService} from "./MilestoneService";
-import {Milestone} from "../../../domain/Milestone";
+import {Milestone, YearLevel} from "../../../domain/Milestone";
 
 @Component({
   selector: 'app-milestones',
@@ -22,4 +22,5 @@ export class MilestonesComponent implements OnInit {
 
   milestones: Array<Milestone> = []
 
+  protected readonly YearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 }
