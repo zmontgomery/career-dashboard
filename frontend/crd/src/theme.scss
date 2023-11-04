@@ -16,10 +16,10 @@ $primary-palette: (
   700: #338a55,
   800: #2d794a,
   900: #235937,
-  A100: #8c9eff,
-  A200: #536dfe,
-  A400: #3d5afe,
-  A700: #304ffe,
+  A100: #cbe4c8,
+  A200: #aad3a6,
+  A400: #71b669,
+  A700: #46893c,
   contrast: (
     50: $dark-primary-text,
     100: $dark-primary-text,
@@ -49,10 +49,10 @@ $accent-palette: (
   700: #fea317,
   800: #fe9215,
   900: #fe7310,
-  A100: #8c9eff,
-  A200: #536dfe,
-  A400: #3d5afe,
-  A700: #304ffe,
+  A100: #eeffbf,
+  A200: #e1ff92,
+  A400: #ccff33,
+  A700: #a9d300,
   contrast: (
     50: $dark-primary-text,
     100: $dark-primary-text,
@@ -73,8 +73,6 @@ $accent-palette: (
 
 $my-primary: mat.define-palette($primary-palette, 500);
 $my-accent: mat.define-palette($accent-palette, A200, A100, A400);
-//$my-primary: mat.define-palette(mat.$red-palette, 500);
-//$my-accent: mat.define-palette(mat.$yellow-palette, A200, A100, A400);
 
 $my-theme: mat.define-light-theme((
   color: (
@@ -87,9 +85,5 @@ $my-theme: mat.define-light-theme((
 // Emit theme-dependent styles for common features used across multiple components.
 @include mat.core-theme($my-theme);
 
-// Emit styles for MatButton based on `$my-theme`. Because the configuration
-// passed to `define-light-theme` omits typography, `button-theme` will not
-// emit any typography styles.
+// Emit styles for all components based on `$my-theme`.
 @include mat.all-component-themes($my-theme);
-
-// Include the theme mixins for other components you use here.
