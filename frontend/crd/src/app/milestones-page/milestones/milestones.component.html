@@ -1,6 +1,6 @@
 
 
-<ng-container *ngFor="let yearLevel of YearLevels">
+<div class="year-container" *ngFor="let yearLevel of yearLevels">
   <mat-card class="year-card">
     <mat-card-header>
       <div class="year-name">{{yearLevel}}</div>
@@ -9,10 +9,12 @@
 
 
   <mat-accordion>
-    <ng-container *ngFor="let milestone of milestones">
+    <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
+            <mat-checkbox color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+            &nbsp;
             {{milestone.name}}
           </mat-panel-title>
 <!--  Use if we want to display a description -->
@@ -20,16 +22,28 @@
 <!--            {{milestone.description}}-->
 <!--          </mat-panel-description>-->
         </mat-expansion-panel-header>
-        <p *ngFor="let task of milestone.tasks">{{task.description}}</p>
-        <ng-container *ngFor="let event of milestone.events">
-          <div>{{event.description}}</div>
+        <mat-expansion-panel class="task-expansion-panel" *ngFor="let task of milestone.tasks">
+          <mat-expansion-panel-header>
+            <div class="flex-vertical-align">
+              <mat-checkbox color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+              <p>{{task.description}}</p>
+            </div>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="event-expansion-panel" *ngFor="let event of milestone.events">
+          <mat-expansion-panel-header>
+            <div class="flex-vertical-align">
+              <mat-checkbox color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+              <div>{{event.description}}</div>
+            </div>
+          </mat-expansion-panel-header>
           <div>{{event.date | date:'short'}}</div>
           <div>{{event.organizer}}</div>
           <div>{{event.location}}</div>
           <div>&nbsp;</div>
-        </ng-container>
+        </mat-expansion-panel>
       </mat-expansion-panel>
     </ng-container>
   </mat-accordion>
 
-</ng-container>
+</div>

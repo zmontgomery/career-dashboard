@@ -1,15 +1,29 @@
 @import "../../../common";
 
-.year-card {
-  background-color: @oswego-green;
-  color: white;
-  width: 200px;
-  mat-card-header {
-    padding: 10px 16px;
-    justify-content: center;
+.year-container {
+  margin-bottom: 20px;
 
-    .year-name {
-      font-size: 18px;
+  .year-card {
+    background-color: @oswego-green;
+    color: white;
+    width: 200px;
+    mat-card-header {
+      padding: 10px 16px;
+      justify-content: center;
+
+
+      .year-name {
+        font-size: 18px;
+      }
     }
   }
+}
+
+.mat-mdc-checkbox.mat-primary.mat-mdc-checkbox-checked {
+  --mdc-checkbox-selected-checkmark-color: white;
+}
+
+.flex-vertical-align {
+  display: flex;
+  align-items: center;
 }

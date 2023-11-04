@@ -6,6 +6,8 @@ import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 
@@ -23,6 +25,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     MatButtonModule,
     MatTabsModule,
     MatExpansionModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
   ]
 })
 export class MilestonesModule { }
