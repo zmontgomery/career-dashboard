@@ -13,6 +13,7 @@ import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ProfileModule} from "./profile/profile.module";
 import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
+import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
     MatTabsModule,
     RouterModule,
     BrowserAnimationsModule,
+    OswegoLogoModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
