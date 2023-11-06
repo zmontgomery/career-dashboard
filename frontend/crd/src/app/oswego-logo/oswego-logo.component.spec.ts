@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OswegoLogoComponent } from './oswego-logo.component';
+import {NgOptimizedImage} from "@angular/common";
 
 describe('OswegoLogoComponent', () => {
   let component: OswegoLogoComponent;
@@ -8,7 +9,8 @@ describe('OswegoLogoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OswegoLogoComponent]
+      declarations: [OswegoLogoComponent],
+      imports: [NgOptimizedImage],
     });
     fixture = TestBed.createComponent(OswegoLogoComponent);
     component = fixture.componentInstance;
