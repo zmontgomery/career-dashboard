@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {MilestoneService} from "./MilestoneService";
+import {MilestoneService} from "./milestone.service";
 import {Milestone, YearLevel} from "../../../domain/Milestone";
+import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 describe('MilestoneService', () => {
   let service: MilestoneService;
@@ -32,7 +33,7 @@ describe('MilestoneService', () => {
     service.getMilestones().subscribe(result => {
       expect(result).toEqual(milestones);
     });
-    const request = httpMock.expectOne('http://localhost:8080/api/milestones');
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
     expect(request.request.method).toEqual('GET');
     request.flush(milestones)
   });

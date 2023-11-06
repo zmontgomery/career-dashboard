@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { HttpService } from '../services/http.service';
 
 /**
  * Service used for authentication and checking if the user is authenticated
@@ -16,7 +15,6 @@ export class AuthService {
   isAuthenticated: boolean;
 
   constructor(
-    private readonly httpService: HttpService,
   ) { 
     this.isAuthenticated = false;
   }
