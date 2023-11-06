@@ -1,6 +1,6 @@
 @import "../../common";
 
-.card-container {
+.section-container {
   display: flex;
   justify-content: space-between;
 
@@ -10,30 +10,36 @@
   }
 }
 
-.card {
-  width: 30%; /* Adjust the width as needed */
-  border: 1px solid #ccc;
+.section {
+  width: 45%; /* Adjust the width as needed */
   margin: 10px;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   border-radius: 5px;
   transition: transform 0.2s;
-
-  .card-header {
-    background-color: @oswego-green;
-    color: #fff;
-    font-weight: bold;
-    padding: 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }
 
   .card-body {
     padding: 10px;
   }
 
+  .resume-card .mdc-button{
+    height: 50vh;
+
+    mat-icon {
+      transform: scale(2);
+    }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
+}
+
+.card-header {
+  background-color: @oswego-green;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
