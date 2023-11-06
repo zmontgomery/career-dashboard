@@ -1,0 +1,52 @@
+<h2>Single File Upload</h2>
+
+<input type="file" class="file-input" (change)="onChange($event)" #fileUpload />
+
+<div *ngIf="file">
+  <section class="file-info">
+    File details:
+    <ul>
+      <li>Name: {{file.name}}</li>
+      <li>Type: {{file.type}}</li>
+      <li>Size: {{file.size}} bytes</li>
+    </ul>
+  </section>
+
+  <button (click)="onUpload()">Upload the file</button>
+
+  <section [ngSwitch]="status">
+    <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
+    <p *ngSwitchCase="'success'">✅ Done!</p>
+    <p *ngSwitchCase="'fail'">❌ Error!</p>
+    <p *ngSwitchDefault>😶 Waiting to upload...</p>
+  </section>
+</div>
+
+
+<!--<input type="file" class="file-input"-->
+<!--       [accept]="requiredFileType"-->
+<!--       (change)="onFileSelected($event)" #fileUpload>-->
+
+<!--<div class="file-upload">-->
+
+<!--  {{fileName || "No file uploaded yet."}}-->
+
+<!--  <button mat-mini-fab color="primary" class="upload-btn"-->
+<!--          (click)="fileUpload.click()">-->
+<!--    <mat-icon>attach_file</mat-icon>-->
+
+<!--  </button>-->
+
+<!--</div>-->
+
+<!--<div class="progress">-->
+
+<!--  <mat-progress-bar class="progress-bar" mode="determinate"-->
+<!--                    [value]="uploadProgress" *ngIf="uploadProgress">-->
+
+<!--  </mat-progress-bar>-->
+
+<!--  <mat-icon class="cancel-upload" (click)="cancelUpload()"-->
+<!--            *ngIf="uploadProgress">delete_forever</mat-icon>-->
+
+<!--</div>-->
