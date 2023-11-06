@@ -37,6 +37,7 @@ describe('MilestoneService', () => {
         isRequired: true,
       }],
       tasks: [{
+        name: 'task name',
         description: "description",
         needsArtifact: true,
         id: "id",

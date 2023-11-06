@@ -18,13 +18,15 @@ public class MilestoneRepository {
     static {
         Task task1 = Task.builder()
                 .id("Task 1 id")
+                .name("Major and Class Schedule")
                 .description("Meet with academic advisor to discuss current major and class schedule")
                 .needsArtifact(true)
                 .isRequired(false)
                 .build();
         Task task2 = Task.builder()
                 .id("Task 2 id")
-                .description("Complete Degreeworks Training")
+                .name("Complete Degreeworks Training")
+                .description("Detailed description here")
                 .needsArtifact(true)
                 .isRequired(true)
                 .build();
@@ -75,6 +77,7 @@ public class MilestoneRepository {
 
         Task task3 = Task.builder()
                 .id("Task 3 id")
+                .name("Registration PIN meeting")
                 .description("Meet with academic advisor to discuss class schedule and receive PIN for registration")
                 .needsArtifact(true)
                 .isRequired(true)

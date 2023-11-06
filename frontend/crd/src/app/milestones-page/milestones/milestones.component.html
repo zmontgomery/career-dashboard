@@ -25,9 +25,10 @@
           <mat-expansion-panel-header>
             <div class="flex-vertical-align">
               <mat-checkbox disabled [checked]="task.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
-              <p>{{task.description}}</p>
+              <p>{{task.name}}</p>
             </div>
           </mat-expansion-panel-header>
+          <div>{{task.description}}</div>
         </mat-expansion-panel>
         <mat-expansion-panel class="event-expansion-panel" *ngFor="let event of milestone.events">
           <mat-expansion-panel-header>

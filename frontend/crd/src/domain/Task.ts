@@ -1,4 +1,5 @@
 export interface TaskJSON {
+  name: string;
   description: string;
   needsArtifact: boolean;
   id: string;
@@ -8,6 +9,7 @@ export interface TaskJSON {
 
 export class Task {
   constructor(json: TaskJSON) {
+    this.name = json.name;
     this.description = json.description;
     this.needsArtifact = json.needsArtifact;
     this.id = json.id;
@@ -18,6 +20,7 @@ export class Task {
     this.submission = json.submission;
   }
 
+  name: string;
   description: string;
   needsArtifact: boolean;
   id: string;
