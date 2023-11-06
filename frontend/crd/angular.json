@@ -57,6 +57,9 @@
               "zenscroll"
             ],
             "styles": [
+              {
+                "input": "src/theme.scss"
+              },
               "src/styles.less", "./node_modules/swagger-ui/dist/swagger-ui.css"
             ],
             "scripts": []
