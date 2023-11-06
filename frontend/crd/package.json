@@ -6,7 +6,8 @@
     "start": "ng serve --watch",
     "build": "ng build --output-path=../../backend/src/main/resources/static",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --code-coverage --no-watch --source-map=false --browsers=ChromeHeadless"
+    "test-headless": "ng test --code-coverage --no-watch --source-map=false --browsers=ChromeHeadless",
+    "test": "ng test --code-coverage"
   },
   "private": true,
   "dependencies": {

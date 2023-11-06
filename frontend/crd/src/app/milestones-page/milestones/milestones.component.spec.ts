@@ -5,6 +5,10 @@ import {of} from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
 import {Milestone, YearLevel} from "../../../domain/Milestone";
 import {MilestoneService} from "./MilestoneService";
+import {MatCardModule} from "@angular/material/card";
+import { MatExpansionModule} from "@angular/material/expansion";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
@@ -21,7 +25,7 @@ describe('MilestonesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
+      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
       declarations: [MilestonesComponent]
     });
