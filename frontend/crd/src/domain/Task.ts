@@ -3,6 +3,7 @@ export interface TaskJSON {
   needsArtifact: boolean;
   id: string;
   isRequired: boolean;
+  submission: any;
 }
 
 export class Task {
@@ -13,6 +14,8 @@ export class Task {
     this.isRequired = json.isRequired;
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = true;
+    // TODO replace with constructor call when we add submission objects
+    this.submission = json.submission;
   }
 
   description: string;
@@ -20,4 +23,5 @@ export class Task {
   id: string;
   isRequired: boolean;
   isComplete: boolean;
+  submission: any;
 }
