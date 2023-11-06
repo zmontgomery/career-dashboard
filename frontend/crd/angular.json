@@ -29,8 +29,35 @@
               "src/favicon.ico",
               "src/assets"
             ],
+            "allowedCommonJsDependencies": [
+              "minim",
+              "stampit",
+              "process",
+              "hoist-non-react-statics",
+              "traverse",
+              "deepmerge",
+              "dompurify",
+              "@braintree/sanitize-url",
+              "base64-js",
+              "classnames",
+              "css.escape",
+              "ieee754",
+              "immutable",
+              "js-file-download",
+              "lodash",
+              "prop-types",
+              "randexp",
+              "react-copy-to-clipboard",
+              "react-debounce-input",
+              "react-immutable-proptypes",
+              "redux-immutable",
+              "serialize-error",
+              "url-parse",
+              "xml-but-prettier",
+              "zenscroll"
+            ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less", "./node_modules/swagger-ui/dist/swagger-ui.css"
             ],
             "scripts": []
           },
@@ -40,7 +67,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
