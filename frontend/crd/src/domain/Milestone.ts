@@ -5,7 +5,6 @@ export interface MilestoneJSON {
   name: string;
   yearLevel: YearLevel;
   milestoneID: string;
-  active: boolean;
   events: Array<EventJSON>;
   tasks: Array<TaskJSON>;
 }
@@ -20,7 +19,6 @@ export class Milestone {
     this.name = json.name;
     this.yearLevel = json.yearLevel;
     this.milestoneID = json.milestoneID;
-    this.active = json.active;
     this.events = json.events.map((event) => new Event(event));
     this.tasks = json.tasks.map((task) => new Task(task));
     // TODO this should be checked through the submission object or provided by the backend later
@@ -30,7 +28,6 @@ export class Milestone {
     name: string;
     yearLevel: YearLevel;
     milestoneID: string;
-    active: boolean;
     events: Array<Event>;
     tasks: Array<Task>;
     isComplete: boolean;

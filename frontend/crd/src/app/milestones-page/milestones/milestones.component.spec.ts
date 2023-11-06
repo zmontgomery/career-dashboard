@@ -18,7 +18,6 @@ describe('MilestonesComponent', () => {
     name: "name",
     yearLevel: YearLevel.Freshman,
     milestoneID: "id",
-    active: true,
     events: [],
     tasks: [],
   }))));
