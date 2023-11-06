@@ -33,9 +33,10 @@
           <mat-expansion-panel-header>
             <div class="flex-vertical-align">
               <mat-checkbox color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
-              <div>{{event.description}}</div>
+              <div>{{event.name}}</div>
             </div>
           </mat-expansion-panel-header>
+          <div>{{event.description}}</div>
           <div>{{event.date | date:'short'}}</div>
           <div>{{event.organizer}}</div>
           <div>{{event.location}}</div>
