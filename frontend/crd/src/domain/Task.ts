@@ -1,20 +1,23 @@
 export interface TaskJSON {
-    description: string;
-    needsArtifact: Boolean;
-    id: string;
-    isRequired: Boolean;
+  description: string;
+  needsArtifact: boolean;
+  id: string;
+  isRequired: boolean;
 }
 
 export class Task {
-    constructor(json: TaskJSON) {
-        this.description = json.description;
-        this.needsArtifact = json.needsArtifact;
-        this.id = json.id;
-        this.isRequired = json.isRequired;
-    }
+  constructor(json: TaskJSON) {
+    this.description = json.description;
+    this.needsArtifact = json.needsArtifact;
+    this.id = json.id;
+    this.isRequired = json.isRequired;
+    // TODO this should be checked through the submission object or provided by the backend later
+    this.isComplete = true;
+  }
 
-    description: string;
-    needsArtifact: Boolean;
-    id: string;
-    isRequired: Boolean;
+  description: string;
+  needsArtifact: boolean;
+  id: string;
+  isRequired: boolean;
+  isComplete: boolean;
 }

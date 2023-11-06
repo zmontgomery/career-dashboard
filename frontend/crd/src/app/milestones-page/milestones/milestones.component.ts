@@ -16,8 +16,8 @@ export class MilestonesComponent implements OnInit {
 
   ngOnInit() {
     this.milestoneService.getMilestones().subscribe((milestones: Milestone[]) => {
-      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()))
-      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone))
+      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
+      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
     });
   }
 
