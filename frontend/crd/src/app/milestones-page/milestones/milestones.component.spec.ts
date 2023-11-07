@@ -4,7 +4,7 @@ import { MilestonesComponent } from './milestones.component';
 import {of} from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
 import {Milestone, YearLevel} from "../../../domain/Milestone";
-import {MilestoneService} from "./MilestoneService";
+import {MilestoneService} from "./milestone.service";
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
