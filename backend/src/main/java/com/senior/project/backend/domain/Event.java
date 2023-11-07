@@ -17,12 +17,12 @@ public class Event {
     @Id
     private String id;
     
+    private String name;
+    private String description;
     private Boolean isRecurring;
     private String organizer;
     private String location;
     private Boolean isRequired;
-    private String name;
-    private String description;
-    private Date date;
+    private Date eventDate;
 
 }

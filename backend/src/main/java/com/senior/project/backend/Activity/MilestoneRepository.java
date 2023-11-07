@@ -35,7 +35,7 @@ public class MilestoneRepository {
                 .name("Milestone 1")
                 .isActive(false)
                 .yearLevel(YearLevel.Freshman)
-                .events(EventRepository.DATA)
+                // .events(EventRepository.DATA)
                 .tasks(tasks)
                 .build();
         DATA.add(m1);
@@ -44,7 +44,7 @@ public class MilestoneRepository {
                 .name("Milestone 2")
                 .isActive(false)
                 .yearLevel(YearLevel.Junior)
-                .events(EventRepository.DATA)
+                // .events(EventRepository.DATA)
                 .tasks(tasks)
                 .build();
         DATA.add(m2);

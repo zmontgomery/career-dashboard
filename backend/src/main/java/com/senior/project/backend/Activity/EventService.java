@@ -15,4 +15,6 @@ public class EventService {
     public Flux<Event> all() {
         return Flux.fromIterable(eventRepository.findAll());
     }
+
+    //future querying methods can be added later
 }
