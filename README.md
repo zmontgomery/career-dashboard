@@ -13,11 +13,12 @@ Partially Hydrated devs - Senior Project
 - open a terminal and navigate to the backend directory
 - run `./gradlew bootrun`
 - open another terminal and navigate to the frontend/crd directory
-- run `./npm start`
+- run `npm start`
 - open up your browser and go to http://localhost:4200/
 
 # Notes
 - the frontend will recompile automatically but the backend will not
+- view API documentation at http://localhost:4200/swagger
 
 # Executing tests
 ### Front-end

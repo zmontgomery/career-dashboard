@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {MilestoneService} from "./MilestoneService";
 import {Milestone, YearLevel} from "../../../domain/Milestone";
+import {MilestoneService} from "./milestone.service";
 
 @Component({
   selector: 'app-milestones',
