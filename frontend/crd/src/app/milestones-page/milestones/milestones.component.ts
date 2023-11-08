@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MilestoneService} from "./MilestoneService";
+import {MilestoneService} from "./milestone.service";
 import {Milestone} from "../../../domain/Milestone";
 
 @Component({

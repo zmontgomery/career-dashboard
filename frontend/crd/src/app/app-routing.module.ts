@@ -4,6 +4,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {PortfolioComponent} from "./portfolio/portfolio.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {MilestonesPageComponent} from "./milestones-page/milestones-page.component";
+import {ApiDocumentationsComponent} from "./api-documentations/api-documentations.component";
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent},
@@ -11,6 +12,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'milestones', component: MilestonesPageComponent},
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+  {path: 'swagger', component: ApiDocumentationsComponent},
 ];
 
 @NgModule({
