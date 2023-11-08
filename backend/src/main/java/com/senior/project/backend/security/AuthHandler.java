@@ -2,6 +2,7 @@ package com.senior.project.backend.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -54,10 +55,10 @@ public class AuthHandler {
                 TokenType type = request.getType();
                 try {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
-                    String oid = verifier.verifiyIDToken(idToken);
-                    return this.repository.addToken(":)", oid)
+                    String email = verifier.verifiyIDToken(idToken);
+                    return this.repository.addSession(email)
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
-                } catch (TokenVerificiationException e) {
+                } catch (Exception e) {
                     this.logger.error(e.getMessage());
                     
                     // Obscure the reason for failure

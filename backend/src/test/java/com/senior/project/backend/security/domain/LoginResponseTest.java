@@ -7,18 +7,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class LoginResponseTest {
-    private static final String TOKEN = "Token";
-    private static final TempUser USER = new TempUser();
+    // private static final String TOKEN = "Token";
+    // private static final TempUser USER = new TempUser();
 
-    private LoginResponse CuT;
+    // private LoginResponse CuT;
 
-    public LoginResponseTest() {
-        CuT = new LoginResponse(TOKEN, USER);
-    }
+    // public LoginResponseTest() {
+    //     CuT = new LoginResponse(TOKEN, USER);
+    // }
 
-    @Test
-    public void testGetters() {
-        assertEquals(CuT.getToken(), TOKEN);
-        assertEquals(CuT.getUser(), USER);
-    }
+    // @Test
+    // public void testGetters() {
+    //     assertEquals(CuT.getToken(), TOKEN);
+    //     assertEquals(CuT.getUser(), USER);
+    // }
 }

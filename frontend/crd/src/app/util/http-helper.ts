@@ -1,10 +1,12 @@
+import { environment } from "src/environments/environment";
+
 export enum Endpoints {
     SIGN_IN = 'auth/signIn',
     MILESTONES = 'milestones',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string}>): string {
-    let uri = `http://localhost:8080/api/${segments}`;
+    let uri = `${environment.requestURI}/api/${segments}`;
 
     // Append params
     if (qParams.length > 0) uri += '?';
