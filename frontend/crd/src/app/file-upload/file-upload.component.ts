@@ -1,6 +1,5 @@
 import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {throwError} from "rxjs";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
@@ -49,7 +48,7 @@ export class FileUploadComponent {
         },
         error: (error: any) => {
           this.status = 'fail';
-          return throwError(() => error);
+          return console.log(error);
         },
       });
     }
