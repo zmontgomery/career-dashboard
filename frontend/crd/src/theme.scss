@@ -1,0 +1,89 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: white;
+
+$primary-palette: (
+  50: #235937,
+  100: #235937,
+  200: #235937,
+  300: #235937,
+  400: #235937,
+  500: #235937,
+  600: #235937,
+  700: #235937,
+  800: #235937,
+  900: #235937,
+  A100: #235937,
+  A200: #235937,
+  A400: #235937,
+  A700: #235937,
+  contrast: (
+    50: $light-primary-text,
+    100: $light-primary-text,
+    200: $light-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $light-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$accent-palette: (
+  50: #ffcc33,
+  100: #ffcc33,
+  200: #ffcc33,
+  300: #ffcc33,
+  400: #ffcc33,
+  500: #ffcc33,
+  600: #ffcc33,
+  700: #ffcc33,
+  800: #ffcc33,
+  900: #ffcc33,
+  A100: #ffcc33,
+  A200: #ffcc33,
+  A400: #ffcc33,
+  A700: #ffcc33,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $dark-primary-text,
+    700: $dark-primary-text,
+    800: $dark-primary-text,
+    900: $dark-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text,
+  )
+);
+
+$my-primary: mat.define-palette($primary-palette, 500);
+$my-accent: mat.define-palette($accent-palette, A200, A100, A400);
+
+$my-theme: mat.define-light-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+  ),
+  density: 0,
+));
+
+// Emit theme-dependent styles for common features used across multiple components.
+@include mat.core-theme($my-theme);
+
+// Emit styles for all components based on `$my-theme`.
+@include mat.all-component-themes($my-theme);

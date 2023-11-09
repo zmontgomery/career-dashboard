@@ -3,13 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --watch",
+    "start": "ng serve --watch --configuration development",
     "build": "ng build --output-path=../../backend/src/main/resources/static",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --code-coverage --no-watch --source-map=false --browsers=ChromeHeadless"
+    "test-headless": "ng test --code-coverage --no-watch --source-map=false --browsers=ChromeHeadless",
+    "test": "ng test --code-coverage"
   },
   "private": true,
   "dependencies": {
+    "@abacritt/angularx-social-login": "^2.1.0",
     "@angular/animations": "^16.2.7",
     "@angular/cdk": "^16.2.6",
     "@angular/common": "^16.2.0",
@@ -20,7 +22,10 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@azure/msal-angular": "^3.0.6",
+    "@azure/msal-browser": "^3.3.0",
     "rxjs": "~7.8.0",
+    "swagger-ui": "^5.9.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
@@ -29,6 +34,7 @@
     "@angular/cli": "^16.2.4",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
+    "@types/swagger-ui": "^3.52.3",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
