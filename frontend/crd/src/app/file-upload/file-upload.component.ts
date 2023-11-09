@@ -45,6 +45,7 @@ export class FileUploadComponent {
       upload$.subscribe({
         next: () => {
           this.status = 'success';
+          setTimeout(() => {this.dialogRef.close()}, 1000)
         },
         error: (error: any) => {
           this.status = 'fail';
