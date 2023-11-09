@@ -14,7 +14,6 @@ public class Milestone {
     private String name;
     private List<Task> tasks;
     private List<Event> events;
-    private boolean isActive;
     private YearLevel yearLevel;
 }
 

@@ -38,7 +38,7 @@ jobs:
         cache-dependency-path: frontend/crd/package-lock.json
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm run test-headless
     - name: Save Test Artifact
       uses: actions/upload-artifact@v3
       with:
