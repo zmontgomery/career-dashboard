@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {throwError} from "rxjs";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-file-upload',
@@ -16,7 +16,8 @@ export class FileUploadComponent {
 
   constructor(
     private http: HttpClient,
-    @Inject(MAT_DIALOG_DATA) public data: { url:string }
+    @Inject(MAT_DIALOG_DATA) public data: { url:string },
+    private dialogRef: MatDialogRef<FileUploadComponent>,
   ) {
     this.url = data.url;
   }
@@ -51,5 +52,10 @@ export class FileUploadComponent {
         },
       });
     }
+  }
+
+  onClose(): void {
+    // Close the dialog when the close button is clicked
+    this.dialogRef.close();
   }
 }

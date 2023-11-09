@@ -12,8 +12,7 @@ export class PortfolioComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(FileUploadComponent, {
-      minWidth: '200px',
+    this.dialog.open(FileUploadComponent, {
       data: {url: constructBackendRequest(Endpoints.RESUME)}
     });
   }
