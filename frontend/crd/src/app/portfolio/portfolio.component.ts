@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {FileUploadComponent} from "../file-upload/file-upload.component";
+import {constructBackendRequest, Endpoints} from "../util/http-helper";
 
 @Component({
   selector: 'app-portfolio',
@@ -13,6 +14,7 @@ export class PortfolioComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(FileUploadComponent, {
       minWidth: '200px',
+      data: {url: constructBackendRequest(Endpoints.RESUME)}
     });
   }
 }

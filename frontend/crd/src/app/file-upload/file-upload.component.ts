@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {throwError} from "rxjs";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-file-upload',
@@ -11,7 +12,14 @@ export class FileUploadComponent {
   status: "initial" | "uploading" | "success" | "fail" = "initial"; // Variable to store file status
   file: File | null = null; // Variable to store file
 
-  constructor(private http: HttpClient) {}
+  url: string = ""
+
+  constructor(
+    private http: HttpClient,
+    @Inject(MAT_DIALOG_DATA) public data: { url:string }
+  ) {
+    this.url = data.url;
+  }
 
   // On file Select
   onChange(event: any) {
@@ -29,8 +37,7 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      // TODO replace with real api
-      const upload$ = this.http.post("https://httpbin.org/post", formData);
+      const upload$ = this.http.post(this.url, formData);
 
       this.status = 'uploading';
 
