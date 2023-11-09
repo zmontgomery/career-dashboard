@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {Milestone, YearLevel} from "../../../domain/Milestone";
 import {MilestoneService} from "./milestone.service";
-import {Milestone} from "../../../domain/Milestone";
 
 @Component({
   selector: 'app-milestones',
@@ -16,10 +16,12 @@ export class MilestonesComponent implements OnInit {
 
   ngOnInit() {
     this.milestoneService.getMilestones().subscribe((milestones: Milestone[]) => {
-      this.milestones = milestones;
+      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
+      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
     });
   }
 
-  milestones: Array<Milestone> = []
+  milestonesMap: Map<string, Array<Milestone>> = new Map()
 
+  protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 }

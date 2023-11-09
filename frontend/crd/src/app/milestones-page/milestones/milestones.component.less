@@ -1,49 +1,42 @@
-mat-card-header {
-  border-bottom: 1px solid gray;
-  padding-bottom: 5px;
+@import "../../../common";
+
+.year-container {
+  margin-bottom: 20px;
+
+  .year-card {
+    background-color: @oswego-green;
+    color: white;
+    width: 200px;
+    mat-card-header {
+      padding: 10px 16px;
+      justify-content: center;
+
+
+      .year-name {
+        font-size: 18px;
+      }
+    }
+  }
 }
 
-mat-card-content {
-  padding-top: 5px
+@media (max-width: 768px) {
+  mat-expansion-panel-header {
+    padding: 0 15px 0 8px;
+  }
+
+  mat-expansion- {
+    mat-expansion-panel-body {
+      padding: 0 10px 16px;
+    }
+  }
 }
 
-ul {
-  list-style-type: none; /* Remove bullets from the UL */
-  padding-left: 0; /* Remove default left padding */
-}
-
-li {
-  margin-bottom: 10px;
-}
-
-.arrow-up::before {
-  content: '▼';
-  margin-left: 10px;
-}
-
-.arrow-down::before {
-  content: '▲';
-  margin-left: 10px;
-}
-
-.title-container, .content {
-  border: 1px solid #ccc; /* Add a border for visual separation */
-  padding: 10px;
-}
-
-.title {
-  font-weight: bold;
-}
-
-.title-container {
+.flex-vertical-align {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 }
 
-.arrow {
-
-}
-
-.content {
-
+mat-checkbox.mat-mdc-checkbox.mat-primary {
+  --mdc-checkbox-disabled-selected-icon-color: @oswego-green;
+  --mdc-checkbox-disabled-unselected-icon-color: @oswego-green;
 }
