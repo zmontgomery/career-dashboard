@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EventsComponent } from './events.component';
-import {MatCardModule} from "@angular/material/card";
-import {Event} from "../../../domain/Event";
-import {EventService} from "./EventService";
-import {of} from "rxjs";
+import { MatCardModule } from "@angular/material/card";
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { Event } from "../../../domain/Event";
+import { EventService } from "./EventService";
+import { of } from "rxjs";
 const createSpyObj= jasmine.createSpyObj;
 
 describe('EventsComponent', () => {
@@ -24,7 +24,7 @@ describe('EventsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule],
+      imports: [MatCardModule, CarouselModule],
       providers: [{provide: EventService, useValue: eventServiceSpy}],
       declarations: [EventsComponent]
     });
