@@ -26,8 +26,8 @@ public class EventHandlerTest {
 
     @Test
     public void testAll() {
-        Event event1 = Event.builder().eventID("1").build();
-        Event event2 = Event.builder().eventID("2").build();
+        Event event1 = Event.builder().id("1").build();
+        Event event2 = Event.builder().id("2").build();
         Flux<Event> eventFlux = Flux.just(event1, event2);
         when(eventService.all()).thenReturn(eventFlux);
         List<Event> result = webTestClient.get().uri("/api/events").exchange().expectStatus().isOk()

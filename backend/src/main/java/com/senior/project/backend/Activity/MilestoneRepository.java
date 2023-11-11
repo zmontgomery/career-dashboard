@@ -46,9 +46,11 @@ public class MilestoneRepository {
         events.add(e1);
 
         Milestone m1 = Milestone.builder()
-                .milestoneID("milestone 1")
+                .id("milestone 1")
+                .isActive(false)
                 .name("Major Exploration")
                 .yearLevel(YearLevel.Freshman)
+                // .events(EventRepository.DATA)
                 .events(events)
                 .tasks(tasks)
                 .build();
@@ -87,9 +89,12 @@ public class MilestoneRepository {
 
 
         Milestone m2 = Milestone.builder()
-                .milestoneID("milestone 2")
+                .id("milestone 2")
+                .isActive(false)
                 .name("Major/Minor Exploration")
                 .yearLevel(YearLevel.Junior)
+                // .events(EventRepository.DATA)
+                .tasks(tasks)
                 .events(events2)
                 .tasks(tasks2)
                 .build();

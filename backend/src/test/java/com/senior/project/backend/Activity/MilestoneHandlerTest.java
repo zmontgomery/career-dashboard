@@ -28,8 +28,8 @@ public class MilestoneHandlerTest {
 
     @Test
     public void testAll() {
-        Milestone milestone1 = Milestone.builder().milestoneID("1").build();
-        Milestone milestone2 = Milestone.builder().milestoneID("2").build();
+        Milestone milestone1 = Milestone.builder().id("1").build();
+        Milestone milestone2 = Milestone.builder().id("2").build();
         Flux<Milestone> eventFlux = Flux.just(milestone1, milestone2);
         when(milestoneService.all()).thenReturn(eventFlux);
         List<Milestone> result = webTestClient.get().uri("/api/milestones").exchange().expectStatus().isOk()

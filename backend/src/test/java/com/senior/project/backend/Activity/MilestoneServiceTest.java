@@ -21,8 +21,8 @@ public class MilestoneServiceTest {
 
     @Test
     public void testAll() {
-        Milestone milestone1 = Milestone.builder().milestoneID("1").build();
-        Milestone milestone2 = Milestone.builder().milestoneID("2").build();
+        Milestone milestone1 = Milestone.builder().id("1").build();
+        Milestone milestone2 = Milestone.builder().id("2").build();
         Flux<Milestone> eventFlux = Flux.just(milestone1, milestone2);
         when(milestoneRepository.all()).thenReturn(eventFlux);
         Flux<Milestone> result = milestoneService.all();
