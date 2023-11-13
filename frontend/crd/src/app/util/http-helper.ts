@@ -1,6 +1,7 @@
 export enum Endpoints {
     SIGN_IN = 'auth/signIn',
     MILESTONES = 'milestones',
+    RESUME = 'portfolio/resume',
     DASHBOARD_EVENTS = 'dashboard_events'
 }
 
