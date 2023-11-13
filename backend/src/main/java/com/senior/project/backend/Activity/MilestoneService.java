@@ -11,6 +11,6 @@ public class MilestoneService {
 
     public MilestoneService(MilestoneRepository milestoneRepository) { this.milestoneRepository = milestoneRepository;}
     public Flux<Milestone> all() {
-        return milestoneRepository.all();
+        return Flux.fromIterable(milestoneRepository.findAll());
     }
 }

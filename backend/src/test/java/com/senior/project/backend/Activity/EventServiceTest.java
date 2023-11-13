@@ -23,9 +23,9 @@ public class EventServiceTest {
     @Test
     public void testAll() {
         Event event1 = new Event();
-        event1.setId(1);
+        event1.setId(1L);
         Event event2 = new Event();
-        event2.setId(2);
+        event2.setId(2L);
         List<Event> events = new ArrayList<>();
         events.add(event1);
         events.add(event2);

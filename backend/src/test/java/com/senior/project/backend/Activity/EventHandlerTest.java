@@ -38,9 +38,9 @@ public class EventHandlerTest {
     @Test
     public void testAll() {
         Event event1 = new Event();
-        event1.setId(1);
+        event1.setId(1L);
         Event event2 = new Event();
-        event2.setId(2);
+        event2.setId(2L);
         Flux<Event> eventFlux = Flux.just(event1, event2);
         when(eventService.all()).thenReturn(eventFlux);
         List<Event> result = webTestClient.method(HttpMethod.GET)

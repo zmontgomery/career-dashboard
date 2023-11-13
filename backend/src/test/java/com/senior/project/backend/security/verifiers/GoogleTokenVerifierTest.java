@@ -1,24 +1,25 @@
 package com.senior.project.backend.security.verifiers;
 
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.senior.project.backend.security.domain.AuthInformation;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Test for google token verifier
@@ -27,27 +28,35 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
  * NOTE: We can't really test for success since we would have to 
  * hard 
  */
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class GoogleTokenVerifierTest {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @InjectMocks
     private GoogleTokenVerifier CuT;
 
-    GoogleIdTokenVerifier tokenVerifier = mock(GoogleIdTokenVerifier.class);
-    GoogleIdToken token = mock(GoogleIdToken.class);
-    Payload payload = mock(Payload.class);
+    @Mock
+    GoogleIdTokenVerifier tokenVerifier;
+
+    @Mock
+    GoogleIdToken token;
+
+    @Mock
+    Payload payload;
+
+    @Mock
+    AuthInformation authInformation;
 
     @BeforeEach
     public void setup() throws GeneralSecurityException, IOException {
         ReflectionTestUtils.setField(CuT, "googleIdTokenVerifier", tokenVerifier);
-        when(token.getPayload()).thenReturn(payload);
-        when(payload.getEmail()).thenReturn("a@a.a");
     }
 
     @Test
     public void happyPath() throws TokenVerificiationException, GeneralSecurityException, IOException {
+        when(token.getPayload()).thenReturn(payload);
+        when(payload.getEmail()).thenReturn("a@a.a");
         when(tokenVerifier.verify(anyString())).thenReturn(token);
 
         String invalidToken = ":)";
