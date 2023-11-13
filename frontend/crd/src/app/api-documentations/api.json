@@ -5,11 +5,16 @@
     "description": "API documentation for the Career Readiness Dashboard 2023-2024 senior project.",
     "version": "1.0.0"
   },
+  "servers": [{
+      "url": "http://localhost:8080/api",
+      "description": "Dev API server"
+    }
+  ],
   "host": "localhost:8080",
   "basePath": "/api",
   "schemes": ["http"],
   "paths": {
-    "/dashboard-events": {
+    "/dashboard_events": {
       "get": {
         "summary": "Returns the selection of events to display on the dashboard carousel",
         "description": "Optional extended description in Markdown.",
@@ -18,11 +23,11 @@
           {
             "in": "query",
             "name": "studentID",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Only return events relevant to this student"
+            "description": "Only return events relevant to this student, default is logged in user"
           },
           {
             "in": "query",
@@ -72,7 +77,7 @@
         }
       }
     },
-    "/dashboard-tasks": {
+    "/dashboard_tasks": {
       "get": {
         "summary": "Returns the selection of tasks to display on the dashboard",
         "description": "Optional extended description in Markdown.",
