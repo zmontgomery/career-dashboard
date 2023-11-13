@@ -51,3 +51,15 @@ tasks.withType<Test> {
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // Generate the report after running tests
 }
+
+tasks.register("setupEnvironmentVariables") {
+    doLast {
+        if (System.getenv("CRD_DB_PASSWORD") == null) {
+            throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")
+        }
+    }
+}
+
+tasks.named("bootRun") {
+    dependsOn("setupEnvironmentVariables")
+}
