@@ -18,6 +18,7 @@ Partially Hydrated devs - Senior Project
 # Running the app
 - open a terminal and navigate to the backend directory
 - run `CRD_DB_PASSWORD={your_password} ./gradlew bootrun`
+- or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
 - open another terminal and navigate to the frontend/crd directory
 - run `npm start`
 - open up your browser and go to http://localhost:4200/
