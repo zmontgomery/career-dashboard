@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.Session;
@@ -23,7 +26,11 @@ import reactor.core.publisher.Mono;
  * @author Jimmy Logan - jrl9984@rit.edu
  */
 @Component
+@Repository
 public class AuthRepository {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     private static final List<Session> DATA = new LinkedList<>();
     private static final List<TempUser> USERS = new LinkedList<>();
 
@@ -39,39 +46,35 @@ public class AuthRepository {
         USERS.add(tempUser2);
     }
 
-    public TempUser findUserByEmail(String email) {
+    public Mono<TempUser> findUserByEmail(String email) {
         for (TempUser user : USERS) {
-            if (user.email.equals(email)) return user;
+            if (user.email.equals(email)) return Mono.just(user);
+        }
+        return Mono.just(tempUser1);
+    }
+
+    public Mono<Session> findSessionBySessionID(String id) {
+        for (Session session : DATA) {
+            logger.info(id);
+            logger.info(session.getSessionID().toString());
+            if (session.getSessionID().equals(UUID.fromString(id))) {
+                return Mono.just(session);
+            }
         }
         return null;
     }
 
-    public boolean findSesstionByUser(TempUser user) {
+    public boolean userHasSession(TempUser user) {
         return DATA.stream().anyMatch(s -> user.getEmail().equals(s.getUser().getEmail()));
     }
 
-    public Mono<LoginResponse> addSession(String email) throws Exception {
-        TempUser user = findUserByEmail(email);
-        Date now = new Date(Instant.now().toEpochMilli());
-        UUID sessionId = UUID.randomUUID();
-
-        Session session = Session.builder()
-            .user(user)
-            .signInDate(now)
-            .sessionID(sessionId)
-            .build();
-
-        if (findSesstionByUser(user)) {
-            throw new Exception("Session already exists");
-        }
-
+    public Mono<Session> addSession(Session session) {
         DATA.add(session);
+        return Mono.just(session);
+    }
 
-        return Mono.just(
-            LoginResponse.builder()
-                .sessionID(session.getSessionID())
-                .user(session.getUser())
-                .build()
-        );
+    public Mono<Void> deleteSession(Session session) {
+        DATA.remove(session);
+        return Mono.empty();
     }
 }

@@ -20,5 +20,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class LoginRequest {
     private String idToken;
-    private TokenType type;
+    private TokenType tokenType;
 }

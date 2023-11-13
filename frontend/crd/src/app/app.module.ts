@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
@@ -19,6 +19,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ProfileModule} from "./profile/profile.module";
 import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
 import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
+import { AuthInterceptor } from './security/auth-interceptor';
+import { AuthRefreshInterceptor } from './security/auth-refresh-interceptor';
 
 @NgModule({
   declarations: [
@@ -63,18 +65,21 @@ import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
     BrowserAnimationsModule,
     OswegoLogoModule,
   ],
-  providers: [{
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: true, //keeps the user signed in
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider("10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com") // your client id
-        }
-      ]
-    }
-  }],
+  providers: [
+      {provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: true, //keeps the user signed in
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider("10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com") // your client id
+          }
+        ]
+      }
+    },
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthRefreshInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }

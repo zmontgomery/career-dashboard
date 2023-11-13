@@ -1,5 +1,6 @@
 package com.senior.project.backend.security.domain;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,4 +17,15 @@ public class Session {
     private UUID sessionID;
     private TempUser user;
     private Date signInDate;
+    private Date expiryDate;
+    private Date lastUsed;
+
+    public boolean isExpired() {
+        Date now = Date.from(Instant.now());
+        return now.after(expiryDate) || now.equals(expiryDate);
+    }
+
+    public void update() {
+        lastUsed = Date.from(Instant.now());
+    }
 }
