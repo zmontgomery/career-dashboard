@@ -7,6 +7,12 @@ Partially Hydrated devs - Senior Project
 - install npm if it did not come with node
 - install angular cli https://angular.io/guide/setup-local
 - install mysql 8 from https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/
+- create a database called CRD and a user called backend with all permissions to CRD
+- CLI example
+  - run `mysql -u root -p` and use the password you set up when installing mysql
+  - run `CREATE DATABASE CRD;`
+  - run `CREATE USER 'backend'@'localhost';`
+  - run (replace *password* with your password of choice) `GRANT ALL PRIVILEGES ON CRD.* To 'backend'@'localhost' IDENTIFIED BY 'password';`
 - navigate to the frontend/crd directory and run `npm install`
 
 # Running the app
