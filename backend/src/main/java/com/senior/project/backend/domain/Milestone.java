@@ -18,8 +18,8 @@ public class Milestone {
     private String id;
 
     private String name;
-    private List<Task> tasks;
-    private List<Event> events;
+//    private List<Task> tasks;
+//    private List<Event> events;
     private YearLevel yearLevel;
 }
 

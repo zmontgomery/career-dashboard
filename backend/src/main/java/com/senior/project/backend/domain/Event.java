@@ -1,28 +1,26 @@
 package com.senior.project.backend.domain;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-@Data
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Event {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
     
-    private String name;
-    private String description;
     private Boolean isRecurring;
     private String organizer;
     private String location;
     private Boolean isRequired;
-    private Date eventDate;
+    private String name;
+    private String description;
+    private Date date;
 
 }
