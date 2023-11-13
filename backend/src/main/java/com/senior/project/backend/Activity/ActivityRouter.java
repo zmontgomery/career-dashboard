@@ -13,6 +13,7 @@ public class ActivityRouter {
     @Bean
     public RouterFunction<ServerResponse> activityRoutes(EventHandler eventHandler, MilestoneHandler milestoneHandler) {
         return route(GET("/api/events"), eventHandler::all)
-                .andRoute(GET("/api/milestones"), milestoneHandler::all);
+                .andRoute(GET("/api/milestones"), milestoneHandler::all)
+                .andRoute(GET("/api/dashboard_events"), eventHandler::dashboard);
     }
 }

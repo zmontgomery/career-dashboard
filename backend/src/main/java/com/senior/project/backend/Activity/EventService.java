@@ -15,4 +15,7 @@ public class EventService {
     public Flux<Event> all() {
         return eventRepository.all();
     }
+    public Flux<Event> dashboard() {
+        return eventRepository.dashboard();
+    }
 }
