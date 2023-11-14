@@ -1,32 +1,24 @@
 <h1>Portfolio</h1>
 
-<div class="card-container">
-  <div class="card">
+<div class="section-container">
+  <div class="section">
     <div class="card-header">
       Details
     </div>
     <div class="card-body">
       <!-- Content for Card 1 goes here -->
-      
     </div>
   </div>
 
-  <div class="card">
+  <div class="section">
     <div class="card-header">
       Resume
     </div>
-    <div class="card-body">
-      <!-- Content for Card 2 goes here -->
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      Milestones
-    </div>
-    <div class="card-body">
-      <app-milestones></app-milestones>
-    </div>
+    <mat-card class="resume-card">
+      <button mat-button (click)="openDialog()">
+        <mat-icon>upload_file</mat-icon>
+      </button>
+    </mat-card>
   </div>
 </div>
 

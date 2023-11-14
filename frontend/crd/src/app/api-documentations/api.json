@@ -5,11 +5,16 @@
     "description": "API documentation for the Career Readiness Dashboard 2023-2024 senior project.",
     "version": "1.0.0"
   },
+  "servers": [{
+      "url": "http://localhost:8080/api",
+      "description": "Dev API server"
+    }
+  ],
   "host": "localhost:8080",
   "basePath": "/api",
   "schemes": ["http"],
   "paths": {
-    "/dashboard-events": {
+    "/dashboard_events": {
       "get": {
         "summary": "Returns the selection of events to display on the dashboard carousel",
         "description": "Optional extended description in Markdown.",
@@ -18,11 +23,11 @@
           {
             "in": "query",
             "name": "studentID",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Only return events relevant to this student"
+            "description": "Only return events relevant to this student, default is logged in user"
           },
           {
             "in": "query",
@@ -54,7 +59,9 @@
                       "description": "campus wide career fair",
                       "scheduledDatetime": "9/27/2023 10:00 AM",
                       "location": "Gordon Field House",
-                      "studentID": -1
+                      "organizer": "SUNY career prep department",
+                      "isRequired": 0,
+                      "studentID": "-1"
                     }, 
                     {
                       "eventID": 2,
@@ -62,7 +69,9 @@
                       "description": "meeting with career advisor",
                       "scheduledDatetime": "9/28/2023 12:00 PM",
                       "location": "Online",
-                      "studentID": 14
+                      "organizer": "student advisor",
+                      "isRequired": 1,
+                      "studentID": "14"
                     }
                   ]
                 }
@@ -72,7 +81,7 @@
         }
       }
     },
-    "/dashboard-tasks": {
+    "/dashboard_tasks": {
       "get": {
         "summary": "Returns the selection of tasks to display on the dashboard",
         "description": "Optional extended description in Markdown.",
@@ -83,7 +92,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "Only return incomplete tasks for this student"
           },
@@ -173,7 +182,9 @@
                       "description": "campus wide career fair",
                       "scheduledDatetime": "9/27/2023 10:00 AM",
                       "location": "Gordon Field House",
-                      "studentID": -1
+                      "organizer": "SUNY career prep department",
+                      "isRequired": 0,
+                      "studentID": "-1"
                     }, 
                     {
                       "eventID": 2,
@@ -181,7 +192,9 @@
                       "description": "meeting with career advisor",
                       "scheduledDatetime": "9/28/2023 12:00 PM",
                       "location": "Online",
-                      "studentID": 14
+                      "organizer": "student advisor",
+                      "isRequired": 1,
+                      "studentID": "14"
                     }
                   ]
                 }
@@ -276,6 +289,57 @@
             "description": "Task not found"
           }
         }
+      },
+      "post": {
+        "summary": "Submit an artifact",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "taskID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Which task we are submitted the artifact for"
+          }
+        ],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string",
+                    "required": "true",
+                    "description": "The student submitting the artifact"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "description": "Any comment with the artifact"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "description": "Name of file to be submitted"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Artifact file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Uploaded"
+          }
+        }
       }
     },
     "/event/{eventID}": {
@@ -309,7 +373,9 @@
                   "description": "campus wide career fair",
                   "scheduledDatetime": "9/27/2023 10:00 AM",
                   "location": "Gordon Field House",
-                  "studentID": -1
+                  "organizer": "SUNY career prep department",
+                  "isRequired": 0,
+                  "studentID": "-1"
                 }
               }
             }
@@ -322,7 +388,7 @@
     },
     "/task/{taskID}/{artifactID}": {
       "get": {
-        "summary": "Returns more information about the artifact required for a specific task",
+        "summary": "Returns more information about the submitted artifact",
         "description": "Optional extended description in Markdown.",
         "tags": ["tasks"],
         "parameters": [
@@ -368,62 +434,6 @@
             "description": "Task or artifact not found"
           }
         }
-      },
-      "post": {
-        "summary": "Submit an artifact",
-        "description": "Optional extended description in Markdown.",
-        "tags": ["tasks"],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "taskID",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "Which task we are getting the artifact for"
-          },
-          {
-            "in": "path",
-            "name": "artifactID",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The artifact to be submitted"
-          }
-        ],
-        "requestBody": {
-          "required": "true",
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "studentID": {
-                    "type": "integer",
-                    "required": "true",
-                    "description": "The student submitting the artifact"
-                  },
-                  "comment": {
-                    "type": "string",
-                    "description": "Any comment with the artifact"
-                  },
-                  "fileName": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Artifact file"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successfully Uploaded"
-          }
-        }
       }
     },
     "/student/{studentID}": {
@@ -437,7 +447,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -452,7 +462,7 @@
                   "$ref": "#/components/schemas/Student"
                 },
                 "example": {
-                  "studentID": 1,
+                  "studentID": "1",
                   "firstName": "Sample",
                   "lastName": "Student",
                   "yearLevel": "freshman",
@@ -486,7 +496,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -545,7 +555,7 @@
                   "$ref": "#/components/schemas/Student"
                 },
                 "example": {
-                  "studentID": 1,
+                  "studentID": "1",
                   "firstName": "Sample",
                   "lastName": "Student",
                   "yearLevel": "freshman",
@@ -578,7 +588,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -610,7 +620,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -662,6 +672,39 @@
         }
       }
     },
+    "/portfolio/resume": {
+      "post": {
+        "summary": "Upload a resume directly from a student's portfolio [currently does not have studentID in path]",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["portfolio"],
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "description": "Name of file to be submitted"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Artifact file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Uploaded"
+          }
+        }
+      }
+    },
     "/portfolio/{studentID}/artifacts": {
       "get": {
         "summary": "Returns all artifacts on a student's portfolio [technically redundant but included anyway just in case]",
@@ -673,7 +716,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -726,7 +769,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -767,7 +810,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "The student ID"
           }
@@ -798,7 +841,7 @@
         "properties": {
           "taskID": {
             "type": "integer",
-            "description": "interal ID for the task"
+            "description": "internal ID for the task"
           },
           "name": {
             "type": "string",
@@ -826,6 +869,10 @@
             "type": "string",
             "description": "the name of the artifact that is required for the task, ie resume or linkedin profile"
           },
+          "artifactSubmission": {
+            "$ref": "#/components/schemas/Artifact",
+            "description": "submission data for the artifact, if the task is completed"
+          },
           "submissionDate": {
             "type": "string",
             "description": "when the task was completed, null/empty if not"
@@ -849,7 +896,7 @@
         "properties": {
           "eventID": {
             "type": "integer",
-            "description": "interal ID for the event"
+            "description": "internal ID for the event"
           },
           "name": {
             "type": "string",
@@ -867,8 +914,16 @@
             "type": "string",
             "description": "where the event will be located"
           },
-          "studentID": {
+          "organizer": {
+            "type": "string",
+            "description": "who is hosting/organizing the event"
+          },
+          "isRequired": {
             "type": "integer",
+            "description": "whether the student needs to attend the event"
+          },
+          "studentID": {
+            "type": "string",
             "description": "the student the event is assigned to if it's individual, -1 if it's for all students"
           }
         },
@@ -919,11 +974,11 @@
         ]
       },
       "Artifact": {
-        "description": "full artifact information",
+        "description": "submission data for an artifact",
         "properties": {
           "artifactID": {
             "type": "integer",
-            "description": "interal ID for the task"
+            "description": "internal ID for the submitted artifact"
           },
           "name": {
             "type": "string",
@@ -951,7 +1006,7 @@
         "description": "a student's personal information",
         "properties": {
           "studentID": {
-            "type": "integer",
+            "type": "string",
             "description": "internal Id for the student"
           },
           "firstName": {
@@ -1007,7 +1062,7 @@
         "description": "the professional info listed on a student's portfolio",
         "properties": {
           "studentID": {
-            "type": "integer",
+            "type": "string",
             "description": "internal Id for the student"
           },
           "coops": {
