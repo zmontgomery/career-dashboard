@@ -50,7 +50,8 @@ describe('EventService', () => {
       organizer: "organizer",
       location: "location",
       isRequired: true,
-
+    }));
+    
     service.getDashboardEvents(1).subscribe(result => {
       expect(result).toEqual(events);
     });
