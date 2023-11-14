@@ -1,5 +1,8 @@
 package com.senior.project.backend.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Endpoints {
     // Domain
     EVENTS("events", true),
@@ -7,7 +10,6 @@ public enum Endpoints {
 
     // Security
     SIGNIN("auth/signIn", false);
-
 
     private String value;
     private boolean needsAuthentication;
@@ -25,10 +27,13 @@ public enum Endpoints {
         return needsAuthentication;
     }
 
-    public static Endpoints toEndpoint(String path) {
+    public static Map<String, Endpoints> stringToEndpoint = new HashMap<>() {{
         for (Endpoints e : Endpoints.values()) {
-            if (e.getValue().equals(path)) return e;
+            put(e.getValue(), e);
         }
-        return null;
+    }};
+
+    public static Endpoints toEndpoint(String path) {
+        return stringToEndpoint.get(path);
     }
 }
