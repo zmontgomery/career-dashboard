@@ -1,8 +1,5 @@
 package com.senior.project.backend.security.webfilters;
 
-import java.util.List;
-import java.util.LinkedList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +13,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.domain.Session;
-
 import reactor.core.publisher.Mono;
 
 @Component

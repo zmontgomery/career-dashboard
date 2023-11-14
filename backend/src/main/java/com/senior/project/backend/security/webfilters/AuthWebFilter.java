@@ -41,7 +41,6 @@ public class AuthWebFilter implements WebFilter{
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
         Endpoints endpoint = Endpoints.toEndpoint(path);
-        HttpHeaders resHeaders = exchange.getResponse().getHeaders();
         HttpHeaders reqHeaders = exchange.getRequest().getHeaders();
         
         // Ignore pre request
@@ -52,7 +51,10 @@ public class AuthWebFilter implements WebFilter{
                 String sessionId = reqHeaders.get(SESSION_HEADER).get(0);
                 return authService.retrieveSession(sessionId)
                     .flatMap(session -> {
-                        if (session.isExpired()) return Mono.empty();
+                        if (session.isExpired()) {
+                            authService.deleteSession(sessionId).subscribe();
+                            return Mono.empty();
+                        }
                         return chain.filter(exchange);
                     });
             } catch (Exception e) {

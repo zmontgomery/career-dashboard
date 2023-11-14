@@ -1,9 +1,5 @@
 package com.senior.project.backend.security;
 
-import java.util.Date;
-import java.util.UUID;
-import java.time.Instant;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +9,6 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.Session;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
@@ -36,16 +30,11 @@ public class AuthHandler {
     @Autowired
     private AuthRepository repository;
 
-    private final AuthService authService;
-    private final TokenVerifierGetter tokenVerifierGetter;
+    @Autowired
+    private AuthService authService;
 
-    public AuthHandler(
-        AuthService authService,
-        TokenVerifierGetter tokenVerifierGetter
-    ) {
-        this.authService = authService;
-        this.tokenVerifierGetter = tokenVerifierGetter;
-    }
+    @Autowired
+    private TokenVerifierGetter tokenVerifierGetter;
 
     /**
      * Handler function for signing in
@@ -97,28 +86,5 @@ public class AuthHandler {
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
-    }
-
-    //
-    // Helper Methods
-    //
-
-    private Mono<Session> createSession(TempUser user) {
-        if (repository.userHasSession(user)) {
-            return Mono.empty();
-        }
-
-        Date now = new Date(Instant.now().toEpochMilli());
-        UUID sessionId = UUID.randomUUID();
-
-        Session session = Session.builder()
-            .user(user)
-            .signInDate(now)
-            // Add a day to the expiration 
-            .expiryDate(Date.from(now.toInstant().plusSeconds(86400)))
-            .sessionID(sessionId)
-            .build();
-
-        return repository.addSession(session);
     }
 }

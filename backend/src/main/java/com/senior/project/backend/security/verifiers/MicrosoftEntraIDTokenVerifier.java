@@ -145,7 +145,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             TokenPayload tokenPayload = mapper.readValue(payload, TokenPayload.class);
-            logger.info(tokenPayload.toString());
  
             // Verify time dependent fields
             // The 1000 is because the time fields are recoreded in seconds and Instant.now().toEpochMillis()
@@ -157,11 +156,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
             // Verify aud
             boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());
-
-            logger.info(iatValid + "");
-            logger.info(nbfValid + "");
-            logger.info(expValid + "");
-            logger.info(audValid + "");
 
             // Check results
             if (iatValid && nbfValid && expValid && audValid) return tokenPayload;
