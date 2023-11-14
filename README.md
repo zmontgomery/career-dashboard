@@ -11,8 +11,8 @@ Partially Hydrated devs - Senior Project
 - CLI example
   - run `mysql -u root -p` and use the password you set up when installing mysql
   - run `CREATE DATABASE CRD;`
-  - run `CREATE USER 'backend'@'localhost';`
-  - run (replace *password* with your password of choice) `GRANT ALL PRIVILEGES ON CRD.* To 'backend'@'localhost' IDENTIFIED BY 'password';`
+  - run `CREATE USER 'backend'@'localhost' IDENTIFIED BY 'password';`
+  - run (replace *password* with your password of choice) `GRANT ALL PRIVILEGES ON CRD.* To 'backend'@'localhost';`
 - navigate to the frontend/crd directory and run `npm install`
 
 # Running the app
