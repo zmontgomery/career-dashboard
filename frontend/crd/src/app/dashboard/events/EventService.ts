@@ -24,10 +24,9 @@ export class EventService {
       }))
   }
 
-  getDashboardEvents(studentID: string, pageNum: number): Observable<Event[]> {
-    const studentParam =  {key: 'studentID', value: studentID};
+  getDashboardEvents(pageNum: number): Observable<Event[]> {
     const pageParam = {key: 'pageNum', value: pageNum};
-    return this.http.get<Event[]>(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, studentParam, pageParam))
+    return this.http.get<Event[]>(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, pageParam))
       .pipe(map((data: any) => {
         return data.map((eventData: EventJSON) => {
           return new Event(eventData)

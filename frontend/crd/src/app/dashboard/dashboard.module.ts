@@ -5,7 +5,7 @@ import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
 import { MilestonesModule } from "../milestones-page/milestones/milestones.module";
 import { CarouselModule } from 'ngx-bootstrap/carousel';
-
+import { OswegoLogoModule } from "../oswego-logo/oswego-logo.module";
 
 
 @NgModule({
@@ -19,7 +19,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     CommonModule,
     MatCardModule,
     MilestonesModule,
-    CarouselModule
+    CarouselModule,
+    OswegoLogoModule
   ]
 })
 export class DashboardModule { }
