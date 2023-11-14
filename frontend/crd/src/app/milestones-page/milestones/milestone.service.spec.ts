@@ -22,20 +22,38 @@ describe('MilestoneService', () => {
   });
 
   it('getMilestones should return list of milestones', () => {
-    const milestones = Array(new Milestone({
+    const milestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
       milestoneID: "id",
       active: true,
-      events: [],
-      tasks: [],
-    }));
+      events: [{
+        name: "name",
+        description: "description",
+        date: new Date().toDateString(),
+        eventID: "id",
+        isRecurring: true,
+        organizer: "organizer",
+        location: "location",
+        isRequired: true,
+      }],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        needsArtifact: true,
+        id: "id",
+        isRequired: true,
+        submission: 'submission'
+      }],
+    }
+
+    const milestones = Array(new Milestone(milestoneJSON));
     service.getMilestones().subscribe(result => {
       expect(result).toEqual(milestones);
     });
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
     expect(request.request.method).toEqual('GET');
-    request.flush(milestones)
+    request.flush(Array(milestoneJSON));
   });
 
 

@@ -1,13 +1,12 @@
-import {Event} from "./Event";
-import {Task} from "./Task";
+import {Event, EventJSON} from "./Event";
+import {Task, TaskJSON} from "./Task";
 
 export interface MilestoneJSON {
   name: string;
   yearLevel: YearLevel;
   milestoneID: string;
-  active: Boolean;
-  events: Array<Event>;
-  tasks: Array<Task>;
+  events: Array<EventJSON>;
+  tasks: Array<TaskJSON>;
 }
 
 export enum YearLevel {
@@ -20,16 +19,16 @@ export class Milestone {
     this.name = json.name;
     this.yearLevel = json.yearLevel;
     this.milestoneID = json.milestoneID;
-    this.active = json.active;
-    this.events = json.events;
-    this.tasks = json.tasks;
+    this.events = json.events.map((event) => new Event(event));
+    this.tasks = json.tasks.map((task) => new Task(task));
+    // TODO this should be checked through the submission object or provided by the backend later
+    this.isComplete = false;
   }
 
     name: string;
     yearLevel: YearLevel;
     milestoneID: string;
-    active: Boolean;
     events: Array<Event>;
     tasks: Array<Task>;
-    expanded = false;
+    isComplete: boolean;
 }
