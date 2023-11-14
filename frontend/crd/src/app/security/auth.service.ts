@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, filter, map, tap } from 'rxjs';
-import { TempUser } from './user';
+import { TempUser } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
 import { EventMessage, EventType } from '@azure/msal-browser';
-import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './login-objects';
+import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './domain/login-objects';
 import { constructBackendRequest } from '../util/http-helper';
 
 export const SESSION_KEY = 'session';

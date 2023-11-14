@@ -19,8 +19,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ProfileModule} from "./profile/profile.module";
 import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
 import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
-import { AuthInterceptor } from './security/auth-interceptor';
-import { AuthRefreshInterceptor } from './security/auth-refresh-interceptor';
+import { AuthInterceptor } from './security/interceptors/auth-interceptor';
+import { AuthRefreshInterceptor } from './security/interceptors/auth-refresh-interceptor';
 
 @NgModule({
   declarations: [

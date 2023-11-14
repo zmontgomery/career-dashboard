@@ -1,8 +1,8 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { SESSION_KEY } from "./auth.service";
-import { LangUtils } from "../util/lang-utils";
+import { SESSION_KEY } from "../auth.service";
+import { LangUtils } from "../../util/lang-utils";
 
 @Injectable({
     providedIn: 'root',

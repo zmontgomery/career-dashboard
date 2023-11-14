@@ -1,7 +1,7 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
-import { SESSION_KEY } from "./auth.service";
+import { SESSION_KEY } from "../auth.service";
 
 export const NEW_SESSION_HEADER = 'New-Session';
 
