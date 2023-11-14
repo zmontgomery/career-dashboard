@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
-import {MilestonesModule} from "../milestones-page/milestones/milestones.module";
+import { MilestonesModule } from "../milestones-page/milestones/milestones.module";
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 
 
@@ -17,7 +18,8 @@ import {MilestonesModule} from "../milestones-page/milestones/milestones.module"
   imports: [
     CommonModule,
     MatCardModule,
-    MilestonesModule
+    MilestonesModule,
+    CarouselModule
   ]
 })
 export class DashboardModule { }
