@@ -6,6 +6,7 @@ import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,14 +33,17 @@ public class AuthHandler {
 
     private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
 
-    private final AuthRepository repository;
+    @Autowired
+    private AuthRepository repository;
+
+    private final AuthService authService;
     private final TokenVerifierGetter tokenVerifierGetter;
 
     public AuthHandler(
-        AuthRepository repository,
+        AuthService authService,
         TokenVerifierGetter tokenVerifierGetter
     ) {
-        this.repository = repository;
+        this.authService = authService;
         this.tokenVerifierGetter = tokenVerifierGetter;
     }
 
@@ -64,7 +68,7 @@ public class AuthHandler {
                     String email = verifier.verifiyIDToken(idToken);
 
                     return this.repository.findUserByEmail(email)
-                        .flatMap(user -> this.createSession(user))
+                        .flatMap(user -> authService.createSession(user))
                         .flatMap(session -> Mono.just(
                             LoginResponse.builder()
                                 .sessionID(session.getSessionID())

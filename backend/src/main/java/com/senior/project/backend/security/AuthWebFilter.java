@@ -1,8 +1,5 @@
 package com.senior.project.backend.security;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,40 +28,34 @@ import reactor.core.publisher.Mono;
 @Order(2)
 public class AuthWebFilter implements WebFilter{
 
+    public static final String SESSION_HEADER = "Session-ID";
+    public static final String NEW_SESSION_HEADER = "New-Session";
+
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AuthRepository authRepository;
-
+    private AuthService authService;
+ 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
         Endpoints endpoint = Endpoints.toEndpoint(path);
+        HttpHeaders resHeaders = exchange.getResponse().getHeaders();
+        HttpHeaders reqHeaders = exchange.getRequest().getHeaders();
         
         // Ignore pre request
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) return chain.filter(exchange);
 
         if (endpoint.getNeedsAuthentication()) {
             try {
-                HttpHeaders headers = exchange.getRequest().getHeaders();
-                String sessionId = headers.get("SessionID").get(0);
-                logger.info(sessionId);
-                return authRepository.findSessionBySessionID(sessionId)
+                String sessionId = reqHeaders.get(SESSION_HEADER).get(0);
+                return authService.retrieveSession(sessionId)
                     .flatMap(session -> {
-                        logger.info(session.toString());
-                        if (session != null) {
-                            boolean valid = true;
-
-                            if (session.isExpired()) {
-                                valid = false;
-                                authRepository.deleteSession(session);
-                            }
-
-                            return valid ? chain.filter(exchange) : Mono.empty();
-                        }
-                        return Mono.empty();
+                        if (session.isExpired()) return Mono.empty();
+                        return chain.filter(exchange);
                     });
             } catch (Exception e) {
+                logger.error(e.getMessage());
                 exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(403));
                 return Mono.empty();
             }

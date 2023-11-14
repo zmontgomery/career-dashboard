@@ -1,12 +1,7 @@
 package com.senior.project.backend.security;
 
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -14,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.Session;
 import com.senior.project.backend.security.domain.TempUser;
 
@@ -55,13 +49,11 @@ public class AuthRepository {
 
     public Mono<Session> findSessionBySessionID(String id) {
         for (Session session : DATA) {
-            logger.info(id);
-            logger.info(session.getSessionID().toString());
             if (session.getSessionID().equals(UUID.fromString(id))) {
                 return Mono.just(session);
             }
         }
-        return null;
+        return Mono.empty();
     }
 
     public boolean userHasSession(TempUser user) {
@@ -73,8 +65,8 @@ public class AuthRepository {
         return Mono.just(session);
     }
 
-    public Mono<Void> deleteSession(Session session) {
+    public Mono<Session> deleteSession(Session session) {
         DATA.remove(session);
-        return Mono.empty();
+        return Mono.just(session);
     }
 }

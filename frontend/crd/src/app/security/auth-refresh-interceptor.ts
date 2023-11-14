@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { SESSION_KEY } from "./auth.service";
 
-export const NEW_SESSION = 'NewSession';
+export const NEW_SESSION_HEADER = 'New-Session';
 
 @Injectable({
     providedIn: 'root',
@@ -14,8 +14,8 @@ export class AuthRefreshInterceptor implements HttpInterceptor {
             map((event) => {
                 console.log(event);
                 if (event instanceof HttpResponse) {
-                    if (event.headers.has(NEW_SESSION)) {
-                        const newKey = event.headers.get(NEW_SESSION)!;
+                    if (event.headers.has(NEW_SESSION_HEADER)) {
+                        const newKey = event.headers.get(NEW_SESSION_HEADER)!;
                         sessionStorage.setItem(SESSION_KEY, newKey);
                     }
                 }

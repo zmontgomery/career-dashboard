@@ -25,6 +25,12 @@ public class Session {
         return now.after(expiryDate) || now.equals(expiryDate);
     }
 
+    public boolean isInRefreshRange() {
+        Date now = Date.from(Instant.now());
+        Date hourBeforeExpiry = Date.from(expiryDate.toInstant().minusSeconds(3600));
+        return hourBeforeExpiry.before(now) && expiryDate.after(now);
+    }
+
     public void update() {
         lastUsed = Date.from(Instant.now());
     }
