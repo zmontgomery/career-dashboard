@@ -51,10 +51,12 @@ describe('EventService', () => {
       location: "location",
       isRequired: true,
     }));
-    service.getDashboardEvents("student", 1).subscribe(result => {
+    
+    service.getDashboardEvents(1).subscribe(result => {
       expect(result).toEqual(events);
     });
-    const request = httpMock.expectOne('http://localhost:8080/api/dashboard_events?studentID=student&pageNum=1');
+    const request = httpMock.expectOne('http://localhost:8080/api/dashboard_events?pageNum=1');
+
     expect(request.request.method).toEqual('GET');
     request.flush(events)
   });

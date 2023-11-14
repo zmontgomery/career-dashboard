@@ -5,6 +5,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./EventService";
 import { of } from "rxjs";
+import { MockComponent, MockModule } from 'ng-mocks';
 const createSpyObj= jasmine.createSpyObj;
 
 describe('EventsComponent', () => {
@@ -35,7 +36,7 @@ describe('EventsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, CarouselModule],
+      imports: [MatCardModule, MockModule(CarouselModule)],
       providers: [{provide: EventService, useValue: eventServiceSpy}],
       declarations: [EventsComponent]
     });
