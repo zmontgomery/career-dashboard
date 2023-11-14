@@ -34,27 +34,24 @@ export class AuthService {
     this.isAuthenticated = false;
 
     this.broadcastService.msalSubject$
-    .pipe(
-      filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
-    )
-    .subscribe((result: EventMessage) => {
-      if (!this.isAuthenticated) {
-        const payload = result.payload as any;
-        const idToken = payload["idToken"];
-        const tokenType = TokenType.MICROSOFT_ENTRA_ID;
-        console.log(tokenType.toString());
-        const loginRequest = new LoginRequest({
-          idToken: idToken,
-          tokenType: tokenType.toLocaleString(),
-        })
+      .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS))
+      .subscribe((result: EventMessage) => {
+        if (!this.isAuthenticated) {
+          const payload = result.payload as any;
+          const idToken = payload["idToken"];
+          this.signIn(this.createLoginRequest(idToken, TokenType.MICROSOFT_ENTRA_ID)).subscribe((res) => {
+            this.processResponse(res);
+          });
+        }
+    });
 
-        this.signIn(loginRequest).subscribe((res) => {
+    this.googleAuthService.authState.subscribe((state) => {
+      if (!this.isAuthenticated) {
+        this.signIn(this.createLoginRequest(state.idToken, TokenType.GOOGLE)).subscribe((res) => {
           this.processResponse(res);
         });
       }
     });
-
-    this.googleAuthService.authState.subscribe((state) => console.log(state));
   }
 
   loginRedirectMS() {
@@ -79,8 +76,15 @@ export class AuthService {
   private processResponse(res: LoginResponse) {
     if (res !== null || res !== undefined) {
       this.user = res.user;
+      this.isAuthenticated = true;
       sessionStorage.setItem(SESSION_KEY, res.sessionID);
-      console.log(sessionStorage.getItem(SESSION_KEY));
     }
+  }
+
+  private createLoginRequest(token: string, tokenType: TokenType): LoginRequest {
+    return new LoginRequest({
+      idToken: token,
+      tokenType: tokenType.toLocaleString(),
+    });
   }
 }
