@@ -1,4 +1,4 @@
-package com.senior.project.backend.security;
+package com.senior.project.backend.security.webfilters;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -15,6 +15,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
+import com.senior.project.backend.security.AuthService;
 import com.senior.project.backend.security.domain.Session;
 
 import reactor.core.publisher.Mono;

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
-import com.senior.project.backend.security.AuthWebFilter;
+import com.senior.project.backend.security.webfilters.AuthWebFilter;
 
 /**
  * CORS configuration to allow request to be made while the frontend is in DEV mode
