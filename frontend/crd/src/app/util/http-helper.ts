@@ -1,6 +1,7 @@
 export enum Endpoints {
     SIGN_IN = 'auth/signIn',
     MILESTONES = 'milestones',
+    RESUME = 'portfolio/resume',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string}>): string {
