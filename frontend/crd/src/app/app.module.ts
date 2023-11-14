@@ -8,17 +8,18 @@ import { MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalModule, MsalRedirectCom
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
-import {MatCardModule} from "@angular/material/card";
-import {DashboardModule} from "./dashboard/dashboard.module";
-import {PortfolioModule} from "./portfolio/portfolio.module";
+import { MatCardModule } from "@angular/material/card";
+import { DashboardModule } from "./dashboard/dashboard.module";
+import { PortfolioModule } from "./portfolio/portfolio.module";
 import { ApiDocumentationsComponent } from './api-documentations/api-documentations.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import {MatTabsModule} from "@angular/material/tabs";
-import {RouterModule} from "@angular/router";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ProfileModule} from "./profile/profile.module";
-import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
-import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
+import { MatTabsModule } from "@angular/material/tabs";
+import { RouterModule } from "@angular/router";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ProfileModule } from "./profile/profile.module";
+import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
+import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
+    CarouselModule
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',

@@ -1,11 +1,13 @@
 .page-container {
   display: flex;
   align-items: flex-start; /* Align calendar stub to the top */
+  flex-direction: column;
 
   .calendar-stub {
     flex: 2;
     background-color: #f0f0f0;
     padding: 20px;
+    width: 100%;
   }
 
   .info-cards {
@@ -13,5 +15,6 @@
     display: flex;
     flex-direction: column; /* Display cards in a single column */
     padding: 20px;
+    width: 100%;
   }
 }

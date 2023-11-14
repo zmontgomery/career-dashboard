@@ -57,10 +57,11 @@
               "zenscroll"
             ],
             "styles": [
+              "src/styles.less",
+              "./node_modules/swagger-ui/dist/swagger-ui.css",
               {
                 "input": "src/theme.scss"
-              },
-              "src/styles.less", "./node_modules/swagger-ui/dist/swagger-ui.css"
+              }
             ],
             "scripts": []
           },
