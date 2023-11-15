@@ -14,7 +14,7 @@ public class Task {
     private String description;
     private Boolean isRequired;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
     private Milestone milestone;
 }
