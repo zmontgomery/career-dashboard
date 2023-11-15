@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean isRequired;
     private String name;
