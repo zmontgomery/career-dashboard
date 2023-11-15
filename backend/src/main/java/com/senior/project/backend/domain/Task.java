@@ -13,4 +13,8 @@ public class Task {
     private String name;
     private String description;
     private Boolean isRequired;
+
+    @ManyToOne()
+    @JoinColumn()
+    private Milestone milestone;
 }

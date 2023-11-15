@@ -1,10 +1,10 @@
 package com.senior.project.backend.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,8 +15,11 @@ public class Milestone {
     private Long id;
 
     private String name;
-//    private List<Task> tasks;
+    @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("milestone")
+    private List<Task> tasks;
 //    private List<Event> events;
+    @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
 }
 
