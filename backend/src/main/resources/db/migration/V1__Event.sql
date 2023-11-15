@@ -1,5 +1,5 @@
 CREATE TABLE event(
-    id LONG AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
 	name varchar(256),
 	description TEXT,
 	date Date,
