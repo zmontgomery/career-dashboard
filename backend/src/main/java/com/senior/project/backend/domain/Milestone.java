@@ -1,19 +1,22 @@
 package com.senior.project.backend.domain;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-import java.util.List;
-
-@Data
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@Entity
 public class Milestone {
-    private String milestoneID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
-    private List<Task> tasks;
-    private List<Event> events;
+//    private List<Task> tasks;
+//    private List<Event> events;
     private YearLevel yearLevel;
 }
 

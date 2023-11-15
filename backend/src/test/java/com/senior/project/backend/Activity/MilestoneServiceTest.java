@@ -2,29 +2,38 @@ package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Milestone;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class MilestoneServiceTest {
 
-    @Autowired
+    @InjectMocks
     private MilestoneService milestoneService;
 
-    @MockBean
+    @Mock
     private MilestoneRepository milestoneRepository;
 
 
     @Test
     public void testAll() {
-        Milestone milestone1 = Milestone.builder().milestoneID("1").build();
-        Milestone milestone2 = Milestone.builder().milestoneID("2").build();
-        Flux<Milestone> eventFlux = Flux.just(milestone1, milestone2);
-        when(milestoneRepository.all()).thenReturn(eventFlux);
+        Milestone milestone1 = new Milestone();
+        milestone1.setId(1L);
+        Milestone milestone2 = new Milestone();
+        milestone1.setId(2L);
+        List<Milestone> milestones = new ArrayList<>();
+        milestones.add(milestone1);
+        milestones.add(milestone2);
+        when(milestoneRepository.findAll()).thenReturn(milestones);
         Flux<Milestone> result = milestoneService.all();
         StepVerifier.create(result).expectNext(milestone1).expectNext(milestone2).expectComplete().verify();
     }
