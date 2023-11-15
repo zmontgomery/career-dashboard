@@ -30,7 +30,7 @@ Partially Hydrated devs - Senior Project
 # Executing tests
 ### Front-end
 - `cd frontend/crd`
-- `npm test`
+- `npm run test-headless`
 - coverage found in frontend/crd/coverage/crd/index.html
 ### Back-end
 - `cd backend`

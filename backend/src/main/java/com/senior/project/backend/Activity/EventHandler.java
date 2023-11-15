@@ -20,7 +20,6 @@ public class EventHandler {
     }
 
     public Mono<ServerResponse> dashboard(ServerRequest serverRequest) {
-        serverRequest.queryParam("studentID");
         serverRequest.queryParam("pageNum");
         return ServerResponse.ok().body(this.eventService.dashboard(), Event.class );
     }
