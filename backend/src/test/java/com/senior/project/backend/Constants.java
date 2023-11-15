@@ -20,7 +20,6 @@ public class Constants {
         e1 = new Event();
         e1.setId(1L);
         e1.setName("Major/Minor & Career Exploration Event");
-        e1.setIsRecurring(false);
         e1.setOrganizer("Organizer 1");
         e1.setLocation("Location 1");
         e1.setIsRequired(true);
@@ -30,7 +29,6 @@ public class Constants {
         e2 = new Event();
         e2.setId(1L);
         e2.setName("Attend Job Fair Fall Semester");
-        e2.setIsRecurring(false);
         e2.setOrganizer("Organizer 1");
         e2.setLocation("Location 1");
         e2.setIsRequired(true);
@@ -40,7 +38,6 @@ public class Constants {
         e3 = new Event();
         e3.setId(1L);
         e3.setName("Attend Job Fair Spring Semester");
-        e3.setIsRecurring(false);
         e3.setOrganizer("Organizer 1");
         e3.setLocation("Location 1");
         e3.setIsRequired(true);

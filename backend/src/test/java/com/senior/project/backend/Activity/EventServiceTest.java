@@ -37,11 +37,18 @@ public class EventServiceTest {
 
     @Test
     public void testDashboard() {
-        Event event1 = Event.builder().eventID("1").build();
-        Event event2 = Event.builder().eventID("2").build();
-        Event event3 = Event.builder().eventID("3").build();
-        Flux<Event> eventFlux = Flux.just(event1, event2, event3);
-        when(eventRepository.dashboard()).thenReturn(eventFlux);
+        Event event1 = new Event();
+        event1.setId(1L);
+        Event event2 = new Event();
+        event2.setId(2L);
+        Event event3 = new Event();
+        event3.setId(2L);
+        List<Event> events = new ArrayList<>();
+        events.add(event1);
+        events.add(event2);
+        events.add(event3);
+
+        when(eventRepository.findAll()).thenReturn(events);
         Flux<Event> result = eventService.dashboard();
         StepVerifier.create(result).expectNext(event1).expectNext(event2).expectNext(event3).expectComplete().verify();
     }

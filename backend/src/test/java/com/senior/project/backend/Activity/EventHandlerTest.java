@@ -31,6 +31,7 @@ public class EventHandlerTest {
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .GET("/api/events", eventHandler::all)
+                        .GET("/api/dashboard_events", eventHandler::dashboard)
                         .build())
                 .build();
     }
@@ -55,17 +56,21 @@ public class EventHandlerTest {
     @Test
     public void testDashboard() {
         //currently this is the same test as /events
-        Event event1 = Event.builder().eventID("1").build();
-        Event event2 = Event.builder().eventID("2").build();
-        Event event3 = Event.builder().eventID("3").build();
+        Event event1 = new Event();
+        event1.setId(1L);
+        Event event2 = new Event();
+        event2.setId(2L);
+        Event event3 = new Event();
+        event3.setId(3L);
         Flux<Event> eventFlux = Flux.just(event1, event2, event3);
         when(eventService.dashboard()).thenReturn(eventFlux);
-        List<Event> result = webTestClient.get().uri("/api/dashboard_events?pageNum=1").exchange().expectStatus().isOk()
+        List<Event> result = webTestClient.method(HttpMethod.GET)
+                .uri("/api/dashboard_events?pageNum=1").exchange().expectStatus().isOk()
                 .expectBodyList(Event.class).returnResult().getResponseBody();
         assertNotNull(result);
         assertEquals(3, result.size());
-        assertEquals(event1, result.get(0));
-        assertEquals(event2, result.get(1));
-        assertEquals(event3, result.get(2));
+        assertEquals(event1.getId(), result.get(0).getId());
+        assertEquals(event2.getId(), result.get(1).getId());
+        assertEquals(event3.getId(), result.get(2).getId());
     }
 }

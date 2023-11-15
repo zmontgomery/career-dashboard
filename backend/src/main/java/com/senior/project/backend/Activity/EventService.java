@@ -16,6 +16,6 @@ public class EventService {
         return Flux.fromIterable(eventRepository.findAll());
     }
     public Flux<Event> dashboard() {
-        return Flux.fromIterable(eventRepository.dashboard());
+        return Flux.fromIterable(eventRepository.findAll()); //same as /events for now
     }
 }
