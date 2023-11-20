@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-import com.senior.project.backend.domain.User;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,8 +23,8 @@ public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID sessionID;
-
-    private User user;
+    
+    private TempUser user;
     private Date signInDate;
     private Date expiryDate;
     private Date lastUsed;

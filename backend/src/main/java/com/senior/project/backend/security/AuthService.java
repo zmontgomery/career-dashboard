@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.Session;
 import com.senior.project.backend.security.domain.TempUser;
 
@@ -23,7 +24,7 @@ public class AuthService {
     private AuthRepository repository;
 
     public Mono<Session> retrieveSession(String sessionID) {
-        return repository.findSessionBySessionID(sessionID);
+        return Mono.just(repository.findById(UUID.fromString(sessionID)).get());
     }
 
     public Mono<Session> createSession(TempUser user) {
@@ -38,21 +39,23 @@ public class AuthService {
             .sessionID(sessionId)
             .build();
 
-        return repository.addSession(session);
+        return Mono.just(repository.saveAndFlush(session));
+    }
+
+    public Mono<LoginResponse> generateResponse(Session session) {
+        return Mono.just(
+            LoginResponse.builder()
+                .sessionID(session.getSessionID())
+                .user(session.getUser())
+                .build()
+        );
     }
 
     public Mono<Session> deleteSession(String sessionID) {
-        return retrieveSession(sessionID).flatMap(session -> repository.deleteSession(session));
-    }
-
-    /**
-     * Deletes the old session and generates a new one for the user
-     */
-    public Mono<Session> refreshSession(String sessionID) {
-        return repository.findSessionBySessionID(sessionID)
-            .flatMap(session -> 
-                repository.deleteSession(session)
-                    .flatMap(v -> createSession(session.getUser()))
-            );
+        return retrieveSession(sessionID)
+            .map(session -> {
+                repository.deleteById(UUID.fromString(sessionID));
+                return session;
+            });
     }
 }

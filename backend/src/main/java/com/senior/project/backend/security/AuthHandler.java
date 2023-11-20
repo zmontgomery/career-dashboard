@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
+import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
@@ -26,9 +27,6 @@ public class AuthHandler {
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
     private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
-
-    @Autowired
-    private AuthRepository repository;
 
     @Autowired
     private AuthService authService;
@@ -56,20 +54,15 @@ public class AuthHandler {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
                     String email = verifier.verifiyIDToken(idToken);
 
-                    return this.repository.findUserByEmail(email)
-                        .flatMap(user -> authService.createSession(user))
-                        .flatMap(session -> Mono.just(
-                            LoginResponse.builder()
-                                .sessionID(session.getSessionID())
-                                .user(session.getUser())
-                                .build())
-                        )
+                    return findUserByEmail(email)
+                        .flatMap(authService::createSession)
+                        .flatMap(authService::generateResponse)
                         .switchIfEmpty(Mono.empty())
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
                         .switchIfEmpty(errorResponse);
                 } catch (Exception e) {
                     this.logger.error(e.getMessage());
-                    
+
                     // Obscure the reason for failure
                     return errorResponse;
                 }
@@ -86,5 +79,11 @@ public class AuthHandler {
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
+    }
+
+    // FIXME this will be replaced by an actual user repository
+    @Deprecated
+    private Mono<TempUser> findUserByEmail(String email) {
+        return Mono.just(TempUser.builder().email("testuser@email.com").build());
     }
 }
