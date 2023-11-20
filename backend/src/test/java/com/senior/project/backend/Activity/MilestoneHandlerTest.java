@@ -1,5 +1,6 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Milestone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,18 +38,26 @@ public class MilestoneHandlerTest {
     }
 
     @Test
-    public void testAll() {
-        Milestone milestone1 = new Milestone();
-        milestone1.setId(1L);
-        Milestone milestone2 = new Milestone();
-        milestone2.setId(2L);
-        Flux<Milestone> eventFlux = Flux.just(milestone1, milestone2);
-        when(milestoneService.all()).thenReturn(eventFlux);
+    public void testAllWithTasks() {
+        Flux<Milestone> eventFlux = Flux.just(Constants.m1, Constants.m2);
+        when(milestoneService.allWithTasks()).thenReturn(eventFlux);
         List<Milestone> result = webTestClient.get().uri("/test").exchange().expectStatus().isOk()
                 .expectBodyList(Milestone.class).returnResult().getResponseBody();
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(milestone1.getId(), result.get(0).getId());
-        assertEquals(milestone2.getId(), result.get(1).getId());
+        assertEquals(Constants.m1.getId(), result.get(0).getId());
+        assertEquals(Constants.m2.getId(), result.get(1).getId());
+    }
+
+    @Test
+    public void testAll() {
+        Flux<Milestone> eventFlux = Flux.just(Constants.m1, Constants.m2);
+        when(milestoneService.all()).thenReturn(eventFlux);
+        List<Milestone> result = webTestClient.get().uri("/test?tasks=false").exchange().expectStatus().isOk()
+                .expectBodyList(Milestone.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(Constants.m1.getId(), result.get(0).getId());
+        assertEquals(Constants.m2.getId(), result.get(1).getId());
     }
 }

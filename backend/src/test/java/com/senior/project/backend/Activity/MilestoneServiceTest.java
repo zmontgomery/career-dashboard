@@ -1,5 +1,6 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Milestone;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,4 +38,12 @@ public class MilestoneServiceTest {
         Flux<Milestone> result = milestoneService.all();
         StepVerifier.create(result).expectNext(milestone1).expectNext(milestone2).expectComplete().verify();
     }
+
+    @Test
+    public void testAllWithTasks() {
+        when(milestoneRepository.findAll()).thenReturn(Constants.milestoneDATA);
+        Flux<Milestone> result = milestoneService.all();
+        StepVerifier.create(result).expectNext(Constants.milestoneDATA.get(0)).expectNext(Constants.milestoneDATA.get(1)).expectComplete().verify();
+    }
+
 }

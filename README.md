@@ -10,9 +10,11 @@ Partially Hydrated devs - Senior Project
 - create a database called CRD and a user called backend with all permissions to CRD
 - CLI example
   - run `mysql -u root -p` and use the password you set up when installing mysql
+  - run (replace *password* with your password of choice)`CREATE USER 'backend'@'localhost' IDENTIFIED BY 'password';`
+  - run `quit`
+  - run `mysql -u backend -p`
+  - enter the password you just entered for the backend
   - run `CREATE DATABASE CRD;`
-  - run `CREATE USER 'backend'@'localhost' IDENTIFIED BY 'password';`
-  - run (replace *password* with your password of choice) `GRANT ALL PRIVILEGES ON CRD.* To 'backend'@'localhost';`
 - navigate to the frontend/crd directory and run `npm install`
 
 # Running the app

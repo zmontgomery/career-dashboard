@@ -12,16 +12,21 @@ public class Constants {
 
     public static final List<Event> eventDATA = new ArrayList<>();
 
-    static Event e1;
-    static Event e2;
-    static Event e3;
+    public static Event e1;
+    public static Event e2;
+    public static Event e3;
+
+    public static Milestone m1 = new Milestone();
+    public static Milestone m2 = new Milestone();
+
+    public static Task task1;
+    public static Task task2;
+    public static Task task3;
 
     static {
         e1 = new Event();
         e1.setId(1L);
         e1.setName("Major/Minor & Career Exploration Event");
-        e1.setOrganizer("Organizer 1");
-        e1.setLocation("Location 1");
         e1.setIsRequired(true);
         e1.setDescription("Event 1 description");
         e1.setDate(new Date());
@@ -29,8 +34,6 @@ public class Constants {
         e2 = new Event();
         e2.setId(1L);
         e2.setName("Attend Job Fair Fall Semester");
-        e2.setOrganizer("Organizer 1");
-        e2.setLocation("Location 1");
         e2.setIsRequired(true);
         e2.setDescription("Event 1 description");
         e2.setDate(new Date());
@@ -38,40 +41,30 @@ public class Constants {
         e3 = new Event();
         e3.setId(1L);
         e3.setName("Attend Job Fair Spring Semester");
-        e3.setOrganizer("Organizer 1");
-        e3.setLocation("Location 1");
         e3.setIsRequired(true);
         e3.setDescription("Event 1 description");
         e3.setDate(new Date());
     }
 
-    private static final List<Milestone> milestoneDATA = new ArrayList<>();
-
-    static Task task1;
-    static Task task2;
-    static Task task3;
+    public static final List<Milestone> milestoneDATA = new ArrayList<>();
 
     static {
-        task1 = Task.builder()
-                .id(1L)
-                .name("Major and Class Schedule")
-                .description("Meet with academic advisor to discuss current major and class schedule")
-                .needsArtifact(true)
-                .isRequired(false)
-                .build();
-        task2 = Task.builder()
-                .id(2L)
-                .name("Complete Degreeworks Training")
-                .description("Detailed description here")
-                .needsArtifact(true)
-                .isRequired(true)
-                .build();
-        task3 = new Task();
-        task3.setId(3L);
-        task3.setName("Registration PIN meeting");
-        task3.setDescription("Meet with academic advisor to discuss class schedule and receive PIN for registration");
-        task3.setNeedsArtifact(true);
-        task3.setIsRequired(true);
+        task1 = new Task(1L,
+                "Major and Class Schedule",
+                "Meet with academic advisor to discuss current major and class schedule",
+                true,
+                m1);
+
+        task2 = new Task(2L,
+                "Complete Degreeworks Training",
+                "Detailed description here",
+                true,
+                m1);
+        task3 = new Task(3L,
+                "Registration PIN meeting",
+                "Meet with academic advisor to discuss class schedule and receive PIN for registration",
+                true,
+                m1);
     }
 
     static {
@@ -80,12 +73,9 @@ public class Constants {
         tasks.add(task2);
         var events = new ArrayList<Event>();
         events.add(e1);
-        Milestone m1 = new Milestone();
         m1.setId(1L);
         m1.setName("Major Exploration");
         m1.setYearLevel(YearLevel.Freshman);
-//        m1.setEvents(events);
-//        m1.setTasks(tasks);
         milestoneDATA.add(m1);
 
 
@@ -96,13 +86,9 @@ public class Constants {
         List<Task> tasks2 = new ArrayList<>();
         tasks2.add(task3);
 
-
-        Milestone m2 = new Milestone();
         m2.setId(2L);
         m2.setName("Major/Minor Exploration");
         m2.setYearLevel(YearLevel.Junior);
-//        m2.setEvents(events2);
-//        m2.setTasks(tasks2);
         milestoneDATA.add(m2);
     }
 
