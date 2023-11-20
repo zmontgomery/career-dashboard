@@ -8,9 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
@@ -18,21 +21,29 @@ import lombok.ToString;
 @ToString
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Session {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID sessionID;
+    private UUID id;
     
-    private TempUser user;
+    // FIXME replace with user id
+    private String email;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date signInDate;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date expiryDate;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date lastUsed;
 
     public boolean isExpired() {
-        // Date now = Date.from(Instant.now());
-        // return now.after(expiryDate) || now.equals(expiryDate);
-        return true;
+        Date now = Date.from(Instant.now());
+        return now.after(expiryDate) || now.equals(expiryDate);
+        // return true;
     }
 
     public boolean isInRefreshRange() {

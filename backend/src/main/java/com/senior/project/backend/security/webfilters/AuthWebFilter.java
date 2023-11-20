@@ -47,6 +47,7 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
                         
                     return Mono.empty();
                 }
+                
                 return chain.filter(exchange);
             });
     }

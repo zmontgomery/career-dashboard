@@ -28,9 +28,9 @@ public class AuthRefreshWebFilter extends AbstractAuthWebFilter {
         authService.retrieveSession(sessionId).subscribe(s -> {
             if (s.isInRefreshRange()) {
                 authService.deleteSession(sessionId)
-                    .flatMap(os -> authService.createSession(os.getUser()))
+                    .flatMap(os -> authService.createSession(os.getEmail()))
                     .subscribe(ns -> {
-                        resHeaders.add(NEW_SESSION_HEADER, ns.getSessionID().toString());
+                        resHeaders.add(NEW_SESSION_HEADER, ns.getId().toString());
                     });
             }
         });

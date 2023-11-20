@@ -1,6 +1,7 @@
 package com.senior.project.backend.security;
 
 import java.util.Date;
+import java.util.Optional;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -27,16 +28,18 @@ public class AuthService {
         return Mono.just(repository.findById(UUID.fromString(sessionID)).get());
     }
 
-    public Mono<Session> createSession(TempUser user) {
+    public Mono<Session> createSession(String email) {
         Date now = new Date(Instant.now().toEpochMilli());
         UUID sessionId = UUID.randomUUID();
 
+        sessionExistsCheck(email);
+
         Session session = Session.builder()
-            .user(user)
+            .email(email)
             .signInDate(now)
             // Add a day to the expiration 
             .expiryDate(Date.from(now.toInstant().plusSeconds(86400)))
-            .sessionID(sessionId)
+            .id(sessionId)
             .build();
 
         return Mono.just(repository.saveAndFlush(session));
@@ -45,8 +48,8 @@ public class AuthService {
     public Mono<LoginResponse> generateResponse(Session session) {
         return Mono.just(
             LoginResponse.builder()
-                .sessionID(session.getSessionID())
-                .user(session.getUser())
+                .sessionID(session.getId())
+                .user(TempUser.builder().email(session.getEmail()).build())
                 .build()
         );
     }
@@ -57,5 +60,13 @@ public class AuthService {
                 repository.deleteById(UUID.fromString(sessionID));
                 return session;
             });
+    }
+
+    private void sessionExistsCheck(String email) {
+        Optional<Session> session = repository.findSessionByEmail(email);
+
+        if (session.isPresent()) {
+            deleteSession(session.get().getId().toString()).subscribe();
+        }
     }
 }
