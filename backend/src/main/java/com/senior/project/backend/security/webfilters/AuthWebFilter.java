@@ -35,9 +35,16 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
         return authService.retrieveSession(sessionId)
             .flatMap(session -> {
                 if (session.isExpired()) {
-                    authService.deleteSession(sessionId).subscribe(os -> {
-                        resHeaders.add(REMOVE_SESSION_HEADER, "true");
-                    });
+                    exchange.getResponse()
+                        .setRawStatusCode(401);
+
+                    exchange.getResponse()
+                        .getHeaders()
+                        .add(REMOVE_SESSION_HEADER, sessionId);
+
+                    authService.deleteSession(sessionId)
+                        .subscribe();
+                        
                     return Mono.empty();
                 }
                 return chain.filter(exchange);

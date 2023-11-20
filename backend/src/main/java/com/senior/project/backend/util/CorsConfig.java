@@ -17,7 +17,7 @@ public class CorsConfig implements WebFluxConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-            // .exposedHeaders(AuthRefreshWebFilter.NEW_SESSION_HEADER, AuthWebFilter.REMOVE_SESSION_HEADER)
+            .exposedHeaders(AuthRefreshWebFilter.NEW_SESSION_HEADER, AuthWebFilter.REMOVE_SESSION_HEADER)
             .allowedOrigins("http://127.0.0.1:4200", "http://localhost:4200");
     }
 }

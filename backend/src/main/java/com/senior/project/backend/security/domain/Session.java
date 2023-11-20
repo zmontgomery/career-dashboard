@@ -21,8 +21,9 @@ public class Session {
     private Date lastUsed;
 
     public boolean isExpired() {
-        Date now = Date.from(Instant.now());
-        return now.after(expiryDate) || now.equals(expiryDate);
+        // Date now = Date.from(Instant.now());
+        // return now.after(expiryDate) || now.equals(expiryDate);
+        return true;
     }
 
     public boolean isInRefreshRange() {
