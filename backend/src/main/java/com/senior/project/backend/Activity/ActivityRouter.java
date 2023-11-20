@@ -15,6 +15,7 @@ public class ActivityRouter {
     @Bean
     public RouterFunction<ServerResponse> activityRoutes(EventHandler eventHandler, MilestoneHandler milestoneHandler) {
         return route(GET(Endpoints.EVENTS.getValue()), eventHandler::all)
-                .andRoute(GET(Endpoints.MILSTONES.getValue()), milestoneHandler::all);
+                .andRoute(GET(Endpoints.MILSTONES.getValue()), milestoneHandler::all)
+                .andRoute(GET(Endpoints.DASHBOARD_EVENTS.getValue()), eventHandler::dashboard);
     }
 }

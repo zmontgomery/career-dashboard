@@ -6,6 +6,7 @@ import java.util.Map;
 public enum Endpoints {
     // Domain
     EVENTS("events", true),
+    DASHBOARD_EVENTS("dashboard_events", true),
     MILSTONES("milestones", true),
 
     // Security

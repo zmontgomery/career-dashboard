@@ -3,9 +3,7 @@ package com.senior.project.backend.security.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class TokenPayloadTest {
     private static final String AUD = "me";
     private static final String ISS = "iss";

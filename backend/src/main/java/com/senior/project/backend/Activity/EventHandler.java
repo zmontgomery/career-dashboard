@@ -18,4 +18,9 @@ public class EventHandler {
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
         return ServerResponse.ok().body(this.eventService.all(), Event.class );
     }
+
+    public Mono<ServerResponse> dashboard(ServerRequest serverRequest) {
+        serverRequest.queryParam("pageNum");
+        return ServerResponse.ok().body(this.eventService.dashboard(), Event.class );
+    }
 }

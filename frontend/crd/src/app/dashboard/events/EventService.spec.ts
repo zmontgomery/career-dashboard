@@ -21,7 +21,7 @@ describe('EventService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('getMilestones should return list of milestones', () => {
+  it('events should return list of events', () => {
     const events = Array(new Event({
       name: "name",
       description: "description",
@@ -36,6 +36,27 @@ describe('EventService', () => {
       expect(result).toEqual(events);
     });
     const request = httpMock.expectOne('http://localhost:8080/api/events');
+    expect(request.request.method).toEqual('GET');
+    request.flush(events)
+  });
+
+  it('dashboard_events should return list of events', () => {
+    const events = Array(new Event({
+      name: "name",
+      description: "description",
+      date: new Date().toDateString(),
+      eventID: "id",
+      isRecurring: true,
+      organizer: "organizer",
+      location: "location",
+      isRequired: true,
+    }));
+    
+    service.getDashboardEvents(1).subscribe(result => {
+      expect(result).toEqual(events);
+    });
+    const request = httpMock.expectOne('http://localhost:8080/api/dashboard_events?pageNum=1');
+
     expect(request.request.method).toEqual('GET');
     request.flush(events)
   });

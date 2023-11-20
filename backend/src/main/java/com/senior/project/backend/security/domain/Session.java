@@ -4,18 +4,29 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+import com.senior.project.backend.domain.User;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
+@Entity
 @ToString
 @Builder
 @AllArgsConstructor
 public class Session {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID sessionID;
-    private TempUser user;
+
+    private User user;
     private Date signInDate;
     private Date expiryDate;
     private Date lastUsed;

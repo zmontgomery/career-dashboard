@@ -3,9 +3,11 @@ import { environment } from "src/environments/environment";
 export enum Endpoints {
     SIGN_IN = 'auth/signIn',
     MILESTONES = 'milestones',
+    DASHBOARD_EVENTS = 'dashboard_events',
+    RESUME = 'portfolio/resume'
 }
 
-export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string}>): string {
+export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {
     let uri = `${environment.requestURI}/api/${segments}`;
 
     // Append params
