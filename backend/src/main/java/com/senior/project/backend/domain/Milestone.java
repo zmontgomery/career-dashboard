@@ -10,6 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
