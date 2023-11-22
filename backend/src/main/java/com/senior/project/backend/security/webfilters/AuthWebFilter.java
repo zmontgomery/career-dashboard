@@ -1,7 +1,6 @@
 package com.senior.project.backend.security.webfilters;
 
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
@@ -24,14 +23,25 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
         super(authService);
     }
 
+    /**
+     * Code that runs the authentication filter
+     * 
+     * Checks if a session exists
+     * 
+     * @param exchange - The web exchange
+     * @param chain - The filter chain
+     * @return
+     */
     @Override
     protected Mono<Void> authFilter(
         ServerWebExchange exchange, 
-        WebFilterChain chain,
-        HttpHeaders resHeaders,
-        HttpHeaders reqHeaders
+        WebFilterChain chain
     ) {
-        String sessionId = reqHeaders.get(SESSION_HEADER).get(0);
+        String sessionId = exchange.getRequest()
+            .getHeaders()
+            .get(SESSION_HEADER)
+            .get(0);
+
         return authService.retrieveSession(sessionId)
             .flatMap(session -> {
                 return chain.filter(exchange);

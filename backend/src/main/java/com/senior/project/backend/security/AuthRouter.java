@@ -1,12 +1,11 @@
 package com.senior.project.backend.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.AbstractRouter;
-import com.senior.project.backend.Activity.ActivityRouter;
 import com.senior.project.backend.util.Endpoints;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -16,7 +15,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  * 
  * @author Jimmy Logan - jrl9984@rit.edu
  */
-@Component
+@Configuration
 public class AuthRouter extends AbstractRouter {
     @Bean
     public RouterFunction<ServerResponse> authRotues(AuthHandler handler) {

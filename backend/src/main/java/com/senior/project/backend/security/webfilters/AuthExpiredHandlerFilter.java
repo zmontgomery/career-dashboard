@@ -14,6 +14,11 @@ import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * Filter for expiring a session if it is no longer valid
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class AuthExpiredHandlerFilter implements HandlerFilterFunction<ServerResponse, ServerResponse> {
 
@@ -22,6 +27,9 @@ public class AuthExpiredHandlerFilter implements HandlerFilterFunction<ServerRes
     @Autowired
     private AuthService authService;
 
+    /**
+     * Filters the request
+     */
     @Override
     public Mono<ServerResponse> filter(ServerRequest request, HandlerFunction<ServerResponse> next) {
         Endpoints endpoint = Endpoints.toEndpoint(request.path());
@@ -33,6 +41,12 @@ public class AuthExpiredHandlerFilter implements HandlerFilterFunction<ServerRes
         }
     }
 
+    /**
+     * Attempts to retrieve the session and then checks for the expiry status fo the
+     * session
+     * 
+     * @return the server response
+     */
     private Mono<ServerResponse> checkForExpiry(ServerRequest request, HandlerFunction<ServerResponse> next) {
         try {
             String sessionId = request

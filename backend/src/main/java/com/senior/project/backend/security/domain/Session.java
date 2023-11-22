@@ -17,6 +17,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Builder.Default;
 
+/**
+ * A domain object to represent a session in the database
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Data
 @Entity
 @ToString
@@ -44,20 +49,28 @@ public class Session {
     @Default()
     private boolean valid = true;
 
+    /**
+     * Checks if a token is expired
+     * @return expiry status
+     */
     public boolean isExpired() {
-        // Date now = Date.from(Instant.now());
-        // return now.after(expiryDate) || now.equals(expiryDate);
-        // return true;
-        return false;
+        Date now = Date.from(Instant.now());
+        return now.after(expiryDate) || now.equals(expiryDate);
     }
 
+    /**
+     * Checks if a token can be refreshed
+     * @return refresh status
+     */
     public boolean isInRefreshRange() {
-        // Date now = Date.from(Instant.now());
-        // Date hourBeforeExpiry = Date.from(expiryDate.toInstant().minusSeconds(3600));
-        // return hourBeforeExpiry.before(now) && expiryDate.after(now);
-        return true;
+        Date now = Date.from(Instant.now());
+        Date hourBeforeExpiry = Date.from(expiryDate.toInstant().minusSeconds(3600));
+        return hourBeforeExpiry.before(now) && expiryDate.after(now);
     }
 
+    /**
+     * Updates the date the token was last used
+     */
     public void update() {
         lastUsed = Date.from(Instant.now());
     }
