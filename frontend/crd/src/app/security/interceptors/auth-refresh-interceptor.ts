@@ -1,6 +1,6 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from "@angular/common/http";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, map } from "rxjs";
+import { Observable, catchError, map, of, tap } from "rxjs";
 import { AuthService, SESSION_KEY } from "../auth.service";
 
 export const NEW_SESSION_HEADER = 'New-Session';
@@ -16,11 +16,16 @@ export class AuthRefreshInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             map((event) => {
+                console.log(event);
                 if (event instanceof HttpResponse) {
                     this.refreshSessionHeader(event);
-                    this.removeSessionIfFailed(event);
                 }
+
                 return event;
+            }),
+            catchError((err: HttpErrorResponse) => {
+                this.removeSessionIfFailed(err);
+                return of(new HttpResponse());
             }),
         );
     }
@@ -36,13 +41,11 @@ export class AuthRefreshInterceptor implements HttpInterceptor {
         }
     }
 
-    private removeSessionIfFailed(event: HttpResponse<any>) {
-        console.log(event.headers);
-        if (event.headers.has(REMOVE_SESSION_HEADER)) {
-            console.log('hello there');
-            const newKey = event.headers.get(NEW_SESSION_HEADER)!;
-            const currKey = sessionStorage.getItem(SESSION_KEY);
-            if (newKey === currKey) sessionStorage.removeItem(SESSION_KEY);
+    private removeSessionIfFailed(err: HttpErrorResponse) {
+        console.log(err);
+        if (err.error === "Session expired.") {
+            sessionStorage.removeItem(SESSION_KEY);
+            this.authService.signOut();
         }
     }
     

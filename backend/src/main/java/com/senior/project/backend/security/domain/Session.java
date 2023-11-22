@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Builder.Default;
 
 @Data
 @Entity
@@ -40,16 +41,21 @@ public class Session {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date lastUsed;
 
+    @Default()
+    private boolean valid = true;
+
     public boolean isExpired() {
-        Date now = Date.from(Instant.now());
-        return now.after(expiryDate) || now.equals(expiryDate);
+        // Date now = Date.from(Instant.now());
+        // return now.after(expiryDate) || now.equals(expiryDate);
         // return true;
+        return false;
     }
 
     public boolean isInRefreshRange() {
-        Date now = Date.from(Instant.now());
-        Date hourBeforeExpiry = Date.from(expiryDate.toInstant().minusSeconds(3600));
-        return hourBeforeExpiry.before(now) && expiryDate.after(now);
+        // Date now = Date.from(Instant.now());
+        // Date hourBeforeExpiry = Date.from(expiryDate.toInstant().minusSeconds(3600));
+        // return hourBeforeExpiry.before(now) && expiryDate.after(now);
+        return true;
     }
 
     public void update() {

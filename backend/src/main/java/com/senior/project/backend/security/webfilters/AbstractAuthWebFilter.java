@@ -38,7 +38,7 @@ public abstract class AbstractAuthWebFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         // Ignore pre request
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) return chain.filter(exchange);
-        
+
         String path = exchange.getRequest().getURI().getPath();
         Endpoints endpoint = Endpoints.toEndpoint(path);
         HttpHeaders reqHeaders = exchange.getRequest().getHeaders();

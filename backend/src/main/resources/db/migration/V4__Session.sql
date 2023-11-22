@@ -3,7 +3,8 @@ CREATE TABLE session (
     email varchar(256) unique,
     sign_in_date timestamp,
     expiry_date timestamp,
-    last_used timestamp
+    last_used timestamp,
+    valid bit default 1
 );
 
 -- This will need to be updated to link to the user table when that exists

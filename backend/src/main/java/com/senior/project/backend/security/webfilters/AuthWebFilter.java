@@ -32,9 +32,6 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
         HttpHeaders reqHeaders
     ) {
         String sessionId = reqHeaders.get(SESSION_HEADER).get(0);
-
-        // This will throw an error the filter method will catch 
-        // if the session cannot be found
         return authService.retrieveSession(sessionId)
             .flatMap(session -> {
                 return chain.filter(exchange);

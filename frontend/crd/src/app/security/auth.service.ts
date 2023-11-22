@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './domain/login-objects';
 import { constructBackendRequest } from '../util/http-helper';
+import { LangUtils } from '../util/lang-utils';
 
 export const SESSION_KEY = 'session';
 
@@ -70,11 +71,12 @@ export class AuthService {
   }
 
   signOut() {
-
+    this.user = undefined;
+    this.isAuthenticated = false;
   }
 
   private processResponse(res: LoginResponse) {
-    if (res !== null || res !== undefined) {
+    if (LangUtils.exists(res)) {
       this.user = res.user;
       this.isAuthenticated = true;
       sessionStorage.setItem(SESSION_KEY, res.sessionID);

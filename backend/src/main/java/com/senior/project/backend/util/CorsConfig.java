@@ -4,8 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
-import com.senior.project.backend.security.webfilters.AuthRefreshWebFilter;
-import com.senior.project.backend.security.webfilters.AuthWebFilter;
+import com.senior.project.backend.security.webfilters.AbstractAuthWebFilter;
 
 /**
  * CORS configuration to allow request to be made while the frontend is in DEV mode
@@ -17,7 +16,7 @@ public class CorsConfig implements WebFluxConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-            .exposedHeaders(AuthRefreshWebFilter.NEW_SESSION_HEADER, AuthWebFilter.REMOVE_SESSION_HEADER)
+            .exposedHeaders(AbstractAuthWebFilter.NEW_SESSION_HEADER, AbstractAuthWebFilter.REMOVE_SESSION_HEADER)
             .allowedOrigins("http://127.0.0.1:4200", "http://localhost:4200");
     }
 }

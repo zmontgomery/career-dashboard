@@ -14,6 +14,7 @@ import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.Session;
 import com.senior.project.backend.security.domain.TempUser;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -24,13 +25,16 @@ public class AuthService {
     @Autowired
     private AuthRepository repository;
 
+    public Flux<Session> all() {
+        return Flux.fromIterable(repository.findAll());
+    }
+
     public Mono<Session> retrieveSession(String sessionID) {
         return Mono.just(repository.findById(UUID.fromString(sessionID)).get());
     }
 
     public Mono<Session> createSession(String email) {
         Date now = new Date(Instant.now().toEpochMilli());
-        UUID sessionId = UUID.randomUUID();
 
         sessionExistsCheck(email);
 
@@ -39,7 +43,6 @@ public class AuthService {
             .signInDate(now)
             // Add a day to the expiration 
             .expiryDate(Date.from(now.toInstant().plusSeconds(86400)))
-            .id(sessionId)
             .build();
 
         return Mono.just(repository.saveAndFlush(session));
@@ -58,6 +61,8 @@ public class AuthService {
         return retrieveSession(sessionID)
             .map(session -> {
                 repository.deleteById(UUID.fromString(sessionID));
+                logger.info("Deleted");
+                session.setValid(false);
                 return session;
             });
     }

@@ -1,24 +1,59 @@
 package com.senior.project.backend.security.webfilters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.HandlerFilterFunction;
 import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
 
+@Component
 public class AuthExpiredHandlerFilter implements HandlerFilterFunction<ServerResponse, ServerResponse> {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AuthService authService;
 
     @Override
     public Mono<ServerResponse> filter(ServerRequest request, HandlerFunction<ServerResponse> next) {
+        Endpoints endpoint = Endpoints.toEndpoint(request.path());
         
-        return next.handle(request);
+        if (endpoint.getNeedsAuthentication()) {
+            return checkForExpiry(request, next);
+        } else {
+            return next.handle(request);
+        }
+    }
+
+    private Mono<ServerResponse> checkForExpiry(ServerRequest request, HandlerFunction<ServerResponse> next) {
+        try {
+            String sessionId = request
+                .headers()
+                .asHttpHeaders()
+                .get(AbstractAuthWebFilter.SESSION_HEADER)
+                .get(0);
+
+            return authService.retrieveSession(sessionId)
+                .flatMap(session -> {
+                    if (session.isExpired()) {
+                        authService.deleteSession(sessionId).subscribe();
+                            
+                        return ServerResponse.status(403).bodyValue("Session expired.");
+                    }
+
+                    return next.handle(request);
+                });
+        } catch (Exception e) {
+            return ServerResponse.status(401).bodyValue("Unauthorized.");
+        }
     }
     
 }

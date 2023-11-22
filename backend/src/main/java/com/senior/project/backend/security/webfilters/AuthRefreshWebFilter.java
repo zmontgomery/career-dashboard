@@ -25,15 +25,33 @@ public class AuthRefreshWebFilter extends AbstractAuthWebFilter {
         HttpHeaders reqHeaders
     ) {
         String sessionId = reqHeaders.get(SESSION_HEADER).get(0);
-        authService.retrieveSession(sessionId).subscribe(s -> {
-            if (s.isInRefreshRange()) {
-                authService.deleteSession(sessionId)
-                    .flatMap(os -> authService.createSession(os.getEmail()))
-                    .subscribe(ns -> {
-                        resHeaders.add(NEW_SESSION_HEADER, ns.getId().toString());
-                    });
-            }
-        });
-        return chain.filter(exchange);
+        return authService.retrieveSession(sessionId)
+            .flatMap(s -> {
+                if (s.isInRefreshRange()) {
+                    return authService.deleteSession(sessionId);
+                }
+                return Mono.just(s);
+            })
+            .flatMap(s -> {
+                if (s.isValid()) return Mono.just(s);
+                else return authService.createSession(s.getEmail());
+            })
+            .flatMap(s -> {
+                exchange.getResponse()
+                    .getHeaders()
+                    .add(NEW_SESSION_HEADER, s.getId().toString());
+
+                return chain.filter(
+                    exchange.mutate()
+                        .request(
+                            exchange.getRequest()
+                                .mutate()
+                                .header(SESSION_HEADER, s.getId().toString())
+                                .build()
+                        )
+                        .build()
+                    );
+                }
+            );
     }  
 }
