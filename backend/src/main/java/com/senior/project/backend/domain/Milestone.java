@@ -1,23 +1,34 @@
 package com.senior.project.backend.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.senior.project.backend.Activity.MilestoneDTO;
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-//    private List<Task> tasks;
+    @OneToMany(mappedBy = "milestone", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("milestone")
+    private List<Task> tasks = null;
 //    private List<Event> events;
+    @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
+
+
+    public MilestoneDTO toDTO() {
+        return new MilestoneDTO(this.id, this.name, this.yearLevel);
+    }
 }
 
 

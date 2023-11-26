@@ -19,8 +19,8 @@ export class Milestone {
     this.name = json.name;
     this.yearLevel = json.yearLevel;
     this.milestoneID = json.milestoneID;
-    this.events = json.events.map((event) => new Event(event));
-    this.tasks = json.tasks.map((task) => new Task(task));
+    this.events = json.events?.map((event) => new Event(event));
+    this.tasks = json.tasks?.map((task) => new Task(task));
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = false;
   }

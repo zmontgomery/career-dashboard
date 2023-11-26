@@ -33,10 +33,12 @@ dependencies {
 
     // Spring Boot Starter Data JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    // Java Persistence API
-    implementation("javax.persistence:javax.persistence-api:2.2")
     // Database driver
     implementation("mysql:mysql-connector-java:8.0.33")
+    // Flyway
+    implementation("org.flywaydb:flyway-mysql")
+    implementation("org.flywaydb:flyway-core")
+
 
     // Test dependecies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
