@@ -17,6 +17,6 @@ public class LoginRequestTest {
     @Test
     public void testGetters() {
         assertEquals(CuT.getIdToken(), TOKEN);
-        assertEquals(CuT.getType(), TYPE);
+        assertEquals(CuT.getTokenType(), TYPE);
     }
 }

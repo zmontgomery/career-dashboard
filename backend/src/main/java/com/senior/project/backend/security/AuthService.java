@@ -91,7 +91,6 @@ public class AuthService {
         return retrieveSession(sessionID)
             .map(session -> {
                 repository.deleteById(UUID.fromString(sessionID));
-                logger.info("Deleted");
                 session.setValid(false);
                 return session;
             });

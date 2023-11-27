@@ -2,7 +2,7 @@ package com.senior.project.backend.security;
 
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.TempUser;
+import com.senior.project.backend.security.domain.Session;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
@@ -22,6 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.UUID;
+
 @ExtendWith(MockitoExtension.class)
 public class AuthHandlerTest {
     private WebTestClient webTestClient;
@@ -33,7 +35,8 @@ public class AuthHandlerTest {
     private TokenVerifierGetter tokenVerifierGetter;
 
     @Mock
-    private AuthRepository authRepository;
+    private AuthService authService;
+    
     @Mock
     private TokenVerifier verifier;
 
@@ -41,50 +44,53 @@ public class AuthHandlerTest {
     public void setup() throws TokenVerificiationException {
         when(tokenVerifierGetter.getTokenVerifier(any())).thenReturn(verifier);
 
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-                        .POST("/test", CuT::signIn)
-                        .build())
-                .build();
+        webTestClient = WebTestClient.bindToRouterFunction(
+            RouterFunctions.route()
+                .POST("/test", CuT::signIn)
+                .build()
+        )
+            .build();
     }
 
-    // @Test
-    // public void testSignInHappy() throws TokenVerificiationException {
-    //     LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
-    //     LoginResponse response = new LoginResponse("token", new TempUser());
+    @Test
+    public void testSignInHappy() throws TokenVerificiationException {
+        LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
+        LoginResponse response = LoginResponse.builder().sessionID(UUID.randomUUID()).build();
+        Session session = Session.builder().id(UUID.randomUUID()).build();
 
-    //     when(authRepository.addToken(anyString(), anyString())).thenReturn(Mono.just(response));
-    //     when(verifier.verifiyIDToken(anyString())).thenReturn("answer");
+        when(authService.createSession(anyString())).thenReturn(Mono.just(session));
+        when(authService.generateResponse(any())).thenReturn(Mono.just(response));
+        when(verifier.verifiyIDToken(anyString())).thenReturn("answer");
 
-        // LoginResponse response2 = webTestClient
-        //     .post()
-        //     .uri("/test")
-        //     .bodyValue(request)
-        //     .exchange()
-        //     .expectStatus().isOk()
-        //     .expectBody(LoginResponse.class)
-        //     .returnResult()
-        //     .getResponseBody();
+        LoginResponse response2 = webTestClient
+            .post()
+            .uri("/test")
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(LoginResponse.class)
+            .returnResult()
+            .getResponseBody();
 
-    //     assertEquals(response, response2);
-    // }
+        assertEquals(response, response2);
+    }
 
-    // @Test
-    // public void testSignInUnhappy() throws TokenVerificiationException {
-    //     LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
-    //     LoginResponse response = new LoginResponse("token", new TempUser());
+    @Test
+    public void testSignInUnhappy() throws TokenVerificiationException {
+        LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
 
-        // when(verifier.verifiyIDToken(anyString())).thenThrow(new TokenVerificiationException("fail"));
+        when(verifier.verifiyIDToken(anyString())).thenThrow(new TokenVerificiationException("fail"));
 
-        // String result = webTestClient
-        //     .post()
-        //     .uri("/test")
-        //     .bodyValue(request)
-        //     .exchange()
-        //     .expectStatus().isEqualTo(403)
-        //     .expectBody(String.class)
-        //     .returnResult()
-        //     .getResponseBody();
+        String result = webTestClient
+            .post()
+            .uri("/test")
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isEqualTo(403)
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
 
-    //     assertEquals(result, "An error ocurred during sign in");
-    // }
+        assertEquals(result, "An error ocurred during sign in");
+    }
 }
