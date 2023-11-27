@@ -3,6 +3,7 @@ package com.senior.project.backend.security;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,6 +50,7 @@ public class AuthServiceTest {
         session1 = Session.builder()
             .email("test@test.test")
             .id(UUID.randomUUID())
+            .valid(true)
             .build();
         
         session2 = Session.builder()
@@ -59,10 +61,7 @@ public class AuthServiceTest {
         sessions.add(session1);
         sessions.add(session2);
 
-        // when(authRepository.findAll()).thenReturn(sessions);
-        // when(authRepository.findById(any())).thenReturn(returnVal);
-        // when(authRepository.saveAndFlush(any())).thenReturn(session1);
-        // when(authRepository.findSessionByEmail(any())).thenReturn(returnVal);
+        CuT = spy(CuT);
     }
 
     @Test
