@@ -15,6 +15,8 @@ import java.util.UUID;
 @Service
 public class ArtifactService {
 
+    private static final long MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+
     @Value("${FILE_UPLOAD_DIRECTORY}")
     private String uploadDirectory;
 
@@ -23,7 +25,7 @@ public class ArtifactService {
     public ArtifactService(ArtifactRepository artifactRepository) { this.artifactRepository = artifactRepository;}
 
     public Mono<String> processFile(FilePart filePart) {
-        // TODO Validate file size.
+        validateFileSize(filePart);
         String extension;
 
         // Check if the file is a PDF based on content type
@@ -47,5 +49,22 @@ public class ArtifactService {
         // Save the file to the specified directory
         return filePart.transferTo(destination)
                 .thenReturn("File uploaded successfully");
+    }
+
+    private void validateFileSize(FilePart filePart) {
+        filePart
+                .content()
+                .reduce(0L, (currentSize, buffer) -> currentSize + buffer.readableByteCount())
+                .flatMap(size -> {
+                    if (size > MAX_FILE_SIZE_BYTES) {
+                        return Mono.error(new ResponseStatusException(
+                                HttpStatus.PAYLOAD_TOO_LARGE,
+                                "File size exceeds the maximum allowed size."
+                        ));
+                    } else {
+                        return Mono.empty();
+                    }
+                })
+                .block(); // Block to get the result synchronously
     }
 }
