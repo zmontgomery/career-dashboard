@@ -49,7 +49,7 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      const upload$ = this.http.post(this.url, formData);
+      const upload$ = this.http.post(this.url, formData, { responseType: 'text' });
 
       this.status = 'uploading';
 
