@@ -15,8 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -27,7 +25,6 @@ import java.io.InputStream;
 
 @ExtendWith(MockitoExtension.class)
 public class MicrosoftEntraIDTokenVerifierTest {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Mock()
     private ResourceLoader resourceLoader;
