@@ -1,5 +1,6 @@
 package com.senior.project.backend.Portfolio;
 
+import com.senior.project.backend.domain.Artifact;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,8 +47,17 @@ public class ArtifactService {
         // Construct the destination path using the unique identifier
         Path destination = Paths.get(uploadDirectory, uniqueFilename);
 
+        Artifact upload = new Artifact();
+        upload.setFileLocation(destination.toString());
+        upload.setName(filePart.filename());
+
+        // TODO add comment capture
+        upload.setComment("");
+
         // Save the file to the specified directory
         return filePart.transferTo(destination)
+                // TODO need to also add to user's portfolio table in DB?
+                .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
                 .thenReturn("File uploaded successfully");
     }
 
