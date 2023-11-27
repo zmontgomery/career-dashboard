@@ -59,6 +59,10 @@ tasks.register("setupEnvironmentVariables") {
         if (System.getenv("CRD_DB_PASSWORD") == null) {
             throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")
         }
+
+        if (System.getenv("FILE_UPLOAD_DIRECTORY") == null) {
+            throw IllegalStateException("Required environment variable is not defined: FILE_UPLOAD_DIRECTORY")
+        }
     }
 }
 
