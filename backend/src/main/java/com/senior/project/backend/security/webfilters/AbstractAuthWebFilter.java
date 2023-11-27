@@ -49,6 +49,8 @@ public abstract class AbstractAuthWebFilter implements WebFilter {
      */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        logger.info("SDFSDJF");
+
         // Ignore pre request
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) return chain.filter(exchange);
 

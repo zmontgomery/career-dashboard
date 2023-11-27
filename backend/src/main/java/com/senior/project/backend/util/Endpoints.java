@@ -10,7 +10,11 @@ public enum Endpoints {
     MILSTONES("milestones", true),
 
     // Security
-    SIGNIN("auth/signIn", false);
+    SIGNIN("auth/signIn", false),
+
+    // Test -- ONLY USE FOR UNIT TESTS --
+    TEST_NEEDS_AUTH("test/yes", true),
+    TEST_NO_AUTH("tests/no", false);
 
     private String value;
     private boolean needsAuthentication;

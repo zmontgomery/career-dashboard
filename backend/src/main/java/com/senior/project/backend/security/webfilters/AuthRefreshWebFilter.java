@@ -60,9 +60,11 @@ public class AuthRefreshWebFilter extends AbstractAuthWebFilter {
                 else return authService.createSession(s.getEmail());
             })
             .flatMap(s -> {
-                exchange.getResponse()
-                    .getHeaders()
-                    .add(NEW_SESSION_HEADER, s.getId().toString());
+                if (!s.getId().toString().equals(sessionId)) {
+                    exchange.getResponse()
+                        .getHeaders()
+                        .add(NEW_SESSION_HEADER, s.getId().toString());
+                }
 
                 return chain.filter(
                     exchange.mutate()
