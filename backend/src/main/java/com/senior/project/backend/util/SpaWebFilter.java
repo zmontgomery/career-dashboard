@@ -21,7 +21,9 @@ import reactor.core.publisher.Mono;
 @Component
 @Order(1)
 public class SpaWebFilter implements WebFilter{
+    
     Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
