@@ -66,6 +66,4 @@ fdescribe('AuthRefreshInterceptor', () => {
             done();
         });
     });
-
-    it ('shoul error')
   });

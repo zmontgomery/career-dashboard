@@ -28,7 +28,7 @@ export class AuthService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly msalAuthServer: MsalService,
+    private readonly msalAuthService: MsalService,
     private readonly broadcastService: MsalBroadcastService,
     private readonly googleAuthService: SocialAuthService,
   ) { 
@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   loginRedirectMS() {
-    this.msalAuthServer.loginRedirect();
+    this.msalAuthService.loginRedirect();
   }
 
   loginRedirectGoogle() {
