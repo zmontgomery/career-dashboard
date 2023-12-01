@@ -37,7 +37,6 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
         ServerWebExchange exchange, 
         WebFilterChain chain
     ) {
-        logger.info("asdjfhasdkljdfh");
         String sessionId = exchange.getRequest()
             .getHeaders()
             .get(SESSION_HEADER)
