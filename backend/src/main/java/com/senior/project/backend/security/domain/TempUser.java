@@ -1,10 +1,6 @@
 package com.senior.project.backend.security.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Temp User, will delete later
@@ -16,6 +12,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class TempUser {
     public String oid;
     public String name;
