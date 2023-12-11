@@ -3,10 +3,12 @@ package com.senior.project.backend;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.Task;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.YearLevel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class Constants {
 
@@ -101,6 +103,23 @@ public class Constants {
         DATA.add(e2);
         DASH_DATA.add(e2);
         DASH_DATA.add(e3);
+    }
+
+    public static User user1;
+    public static User user2;
+
+    public static final List<User> USERS = new ArrayList<>();
+
+    static {
+        user1 = new User();
+        user1.setId(UUID.randomUUID());
+        user1.setEmail("test@test.com");
+        user2 = new User();
+        user2.setId(UUID.randomUUID());
+        user2.setEmail("test2@test.com");
+
+        USERS.add(user1);
+        USERS.add(user2);
     }
 }
 
