@@ -2,6 +2,7 @@ package com.senior.project.backend.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -9,7 +10,6 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.TokenType;
-import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
 
@@ -25,16 +25,13 @@ public class AuthHandler {
 
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
-    private final AuthRepository repository;
-    private final TokenVerifierGetter tokenVerifierGetter;
+    private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
 
-    public AuthHandler(
-        AuthRepository repository,
-        TokenVerifierGetter tokenVerifierGetter
-    ) {
-        this.repository = repository;
-        this.tokenVerifierGetter = tokenVerifierGetter;
-    }
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private TokenVerifierGetter tokenVerifierGetter;
 
     /**
      * Handler function for signing in
@@ -51,17 +48,22 @@ public class AuthHandler {
         return req.bodyToMono(LoginRequest.class)
             .flatMap(request -> {
                 String idToken = request.getIdToken();
-                TokenType type = request.getType();
+                TokenType type = request.getTokenType();
                 try {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
-                    String oid = verifier.verifiyIDToken(idToken);
-                    return this.repository.addToken(":)", oid)
-                        .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
-                } catch (TokenVerificiationException e) {
+                    String email = verifier.verifiyIDToken(idToken);
+
+                    return findUserByEmail(email)
+                        .flatMap(authService::createSession)
+                        .flatMap(authService::generateResponse)
+                        .switchIfEmpty(Mono.empty())
+                        .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
+                        .switchIfEmpty(errorResponse);
+                } catch (Exception e) {
                     this.logger.error(e.getMessage());
-                    
+
                     // Obscure the reason for failure
-                    return ServerResponse.status(403).bodyValue("An error ocurred during sign in");
+                    return errorResponse;
                 }
             });
     }   
@@ -76,5 +78,11 @@ public class AuthHandler {
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
+    }
+
+    // FIXME this will be replaced by an actual user repository
+    @Deprecated
+    private Mono<String> findUserByEmail(String email) {
+        return Mono.just("testuser@email.com");
     }
 }

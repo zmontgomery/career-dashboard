@@ -150,9 +150,9 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             // The 1000 is because the time fields are recoreded in seconds and Instant.now().toEpochMillis()
             // returns milliseconds
             long now = Instant.now().toEpochMilli() / 1000;
-            boolean iatValid = tokenPayload.getIat() < now;
-            boolean nbfValid = tokenPayload.getNbf() < now;
-            boolean expValid = tokenPayload.getExp() < now;
+            boolean iatValid = now >= tokenPayload.getIat();
+            boolean nbfValid = now >= tokenPayload.getNbf();
+            boolean expValid = now < tokenPayload.getExp();
 
             // Verify aud
             boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());

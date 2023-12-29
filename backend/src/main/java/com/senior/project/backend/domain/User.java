@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class User {
-	
+
     private String id;
 	
 	private String email;

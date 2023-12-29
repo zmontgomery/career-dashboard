@@ -104,7 +104,7 @@ CREATE TABLE Submission(
 	FOREIGN KEY (artifactID) REFERENCES Artifact (artifactID)
 )
 
-# Defect Density in file: 47 defects/0.100KLOC before corrections made
+-- Defect Density in file: 47 defects/0.100KLOC before corrections made
 
 INSERT INTO Event (eventID, name, description, isRecurring, organizer, location, isRequired, eventDate)
 VALUES (8902394, 'Career Fair', 'Several companies visit campus', True, 'SUNY Oswego', 'SAU', True, '03-03-2024');

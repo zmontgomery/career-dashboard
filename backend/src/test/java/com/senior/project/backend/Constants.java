@@ -4,9 +4,16 @@ import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.YearLevel;
+
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 public class Constants {
 
@@ -101,6 +108,11 @@ public class Constants {
         DATA.add(e2);
         DASH_DATA.add(e2);
         DASH_DATA.add(e3);
+    }
+
+    public static Mono<ServerResponse> handle(ServerRequest req) {
+        LoggerFactory.getLogger(Constants.class).info("asdfasdfas");
+        return ServerResponse.ok().build();
     }
 }
 

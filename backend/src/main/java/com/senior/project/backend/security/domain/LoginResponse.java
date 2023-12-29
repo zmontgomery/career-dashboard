@@ -1,5 +1,7 @@
 package com.senior.project.backend.security.domain;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    private String token;
+    private UUID sessionID;
     private TempUser user;
 }

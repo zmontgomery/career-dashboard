@@ -1,49 +1,23 @@
 package com.senior.project.backend.security;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.TempUser;
-
-import reactor.core.publisher.Mono;
+import com.senior.project.backend.security.domain.Session;
 
 /**
- * This will store user emails with their token
+ * Repository that holds Session information
  * 
  * @author Jimmy Logan - jrl9984@rit.edu
  */
-@Component
-public class AuthRepository {
-    private static final Map<String, TempUser> DATA = new HashMap<String, TempUser>();
-    private static final List<TempUser> USERS = new LinkedList<>();
-
-    public static final TempUser tempUser1;
-    public static final TempUser tempUser2;
-
-    static {
-
-        tempUser1 = new TempUser("54c7d394-67a4-43d4-8673-980b52564c71", "Test User", "testuser@test.com", "faculty");
-        tempUser2 = new TempUser("", "Test User 2", "testuser@test.com", "user");
-
-        USERS.add(tempUser1);
-        USERS.add(tempUser2);
-    }
-
-    public TempUser findUserByOid(String email) {
-        for (TempUser user : USERS) {
-            if (user.oid.equals(email)) return user;
-        }
-        return null;
-    }
-
-    public Mono<LoginResponse> addToken(String token, String oid) { // Token should be verified by now
-        TempUser user = findUserByOid(oid);
-        DATA.put(token, user);
-        return Mono.just(new LoginResponse(token, user));
-    }
+@Repository
+public interface AuthRepository extends JpaRepository<Session, UUID>{
+    // Add methods when needed
+    @Query("SELECT s FROM Session s WHERE s.email = :email")
+    Optional<Session> findSessionByEmail(@Param("email") String email);
 }
