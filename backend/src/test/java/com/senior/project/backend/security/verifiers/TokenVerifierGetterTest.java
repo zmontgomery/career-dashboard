@@ -1,18 +1,25 @@
 package com.senior.project.backend.security.verifiers;
 
+import com.senior.project.backend.security.domain.TokenType;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import com.senior.project.backend.security.domain.TokenType;
-
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class TokenVerifierGetterTest {
+
+    @Mock
+    private MicrosoftEntraIDTokenVerifier microsoftEntraIDTokenVerifier;
+
+    @Mock
+    private GoogleTokenVerifier googleTokenVerifier;
     
-    @Autowired
+    @InjectMocks
     private TokenVerifierGetter CuT;
 
     @Test

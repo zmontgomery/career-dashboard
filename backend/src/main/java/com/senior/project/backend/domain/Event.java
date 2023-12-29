@@ -1,19 +1,21 @@
 package com.senior.project.backend.domain;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Data
-@ToString
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
+@Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class Event {
-    private String eventID;
-    private Boolean isRecurring;
-    private String organizer;
-    private String location;
+    @Id
+    private Long id;
     private Boolean isRequired;
     private String name;
     private String description;

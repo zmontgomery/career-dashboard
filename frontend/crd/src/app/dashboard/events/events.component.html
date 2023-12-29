@@ -8,7 +8,8 @@
             [singleSlideOffset]="true"
             [noWrap]="!noWrap"
             [interval]="0"
-            [startFromIndex]="0">
+            [startFromIndex]="0"
+            [isAnimated]="true">
     <slide *ngFor="let slide of slides; let index=index">
       <img [src]="slide.img" alt="event image" style="display: block; width: 100%; padding: 1%; background-color: darkslategrey;">
       <div class="carousel-caption">

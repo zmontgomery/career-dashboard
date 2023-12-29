@@ -1,17 +1,24 @@
 package com.senior.project.backend.domain;
 
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@ToString
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
+@Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class Task {
-    private String id;
+    @Id
+    private Long id;
     private String name;
     private String description;
     private Boolean isRequired;
-    private Boolean needsArtifact;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn()
+    private Milestone milestone;
 }

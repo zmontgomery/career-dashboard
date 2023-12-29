@@ -1,8 +1,8 @@
 export enum Endpoints {
     SIGN_IN = 'auth/signIn',
     MILESTONES = 'milestones',
-    RESUME = 'portfolio/resume',
-    DASHBOARD_EVENTS = 'dashboard_events'
+    DASHBOARD_EVENTS = 'dashboard_events',
+    RESUME = 'portfolio/resume'
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {
