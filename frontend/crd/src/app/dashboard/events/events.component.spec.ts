@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EventsComponent } from './events.component';
 import { MatCardModule } from "@angular/material/card";
-import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { CarouselModule } from '@coreui/angular';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./EventService";
 import { of } from "rxjs";
@@ -36,7 +36,8 @@ describe('EventsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MockModule(CarouselModule)],
+      //imports: [MatCardModule, MockModule(CarouselModule)],
+      imports: [MatCardModule],
       providers: [{provide: EventService, useValue: eventServiceSpy}],
       declarations: [EventsComponent]
     });

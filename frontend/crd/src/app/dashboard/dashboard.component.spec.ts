@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DashboardComponent } from './dashboard.component';
 import {MockComponent} from "ng-mocks";
 import {EventsComponent} from "./events/events.component";
 import {MilestonesComponent} from "../milestones-page/milestones/milestones.component";
+import {MatListModule} from '@angular/material/list';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;

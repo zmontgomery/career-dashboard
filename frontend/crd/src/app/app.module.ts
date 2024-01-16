@@ -19,7 +19,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ProfileModule } from "./profile/profile.module";
 import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
-import { CarouselModule } from 'ngx-bootstrap/carousel';
+//import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   declarations: [
@@ -62,8 +62,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     MatTabsModule,
     RouterModule,
     BrowserAnimationsModule,
-    OswegoLogoModule,
-    CarouselModule
+    OswegoLogoModule
+    //CarouselModule
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',

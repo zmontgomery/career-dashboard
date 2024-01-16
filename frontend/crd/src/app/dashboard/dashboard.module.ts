@@ -4,14 +4,15 @@ import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
 import { MilestonesModule } from "../milestones-page/milestones/milestones.module";
-import { CarouselModule } from 'ngx-bootstrap/carousel';
+//import { CarouselModule } from 'ngx-bootstrap/carousel';
+import {MatListModule} from '@angular/material/list';
 
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    EventsComponent,
+    EventsComponent
   ],
   exports: [
   ],
@@ -19,7 +20,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     CommonModule,
     MatCardModule,
     MilestonesModule,
-    CarouselModule
+    MatListModule,
+    //CarouselModule
   ]
 })
 export class DashboardModule { }
