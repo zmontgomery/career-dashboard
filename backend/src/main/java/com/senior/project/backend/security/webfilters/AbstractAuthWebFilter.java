@@ -9,6 +9,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
@@ -22,7 +23,7 @@ import reactor.core.publisher.Mono;
 public abstract class AbstractAuthWebFilter implements WebFilter {
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final String SESSION_HEADER = "Session-ID";
+    public static final String AUTHORIZATION_HEADER = "X-Authorization";
     public static final String NEW_SESSION_HEADER = "New-Session";
     public static final String REMOVE_SESSION_HEADER = "Session-Expired";
 
@@ -38,19 +39,18 @@ public abstract class AbstractAuthWebFilter implements WebFilter {
      * @param exchange - The web exchange
      * @param chain - The filter chain
      * @return
+     * @throws TokenVerificiationException 
      */
     protected abstract Mono<Void> authFilter(
         ServerWebExchange exchange, 
         WebFilterChain chain
-    );
+    ) throws TokenVerificiationException;
 
     /**
      * Filters incoming http requests
      */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        logger.info("SDFSDJF");
-
         // Ignore pre request
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) return chain.filter(exchange);
 

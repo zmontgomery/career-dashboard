@@ -24,6 +24,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthHandler {
 
+    private static final String AUTHORIZATION_HEADER = "X-Authorization";
+
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
     private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
@@ -55,7 +57,7 @@ public class AuthHandler {
                     String email = verifier.verifiyIDToken(idToken);
 
                     return findUserByEmail(email)
-                        .flatMap(authService::generateResponse)
+                        .flatMap(authService::login)
                         .switchIfEmpty(Mono.empty())
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
                         .switchIfEmpty(errorResponse);
@@ -66,7 +68,21 @@ public class AuthHandler {
                     return errorResponse;
                 }
             });
-    }   
+    } 
+    
+    public Mono<ServerResponse> refresh(ServerRequest req) {
+        try {
+            String token = req
+                .headers()
+                .header(AUTHORIZATION_HEADER)
+                .get(0);
+
+            return authService.refreshToken(token)
+                .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
+        } catch (Exception e) {
+            return errorResponse;
+        }
+    }
 
     /**
      * Signs out a user

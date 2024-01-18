@@ -11,6 +11,7 @@ public enum Endpoints {
 
     // Security
     SIGNIN("auth/signIn", false),
+    REFRESH("auth/refresh", true),
 
     // Test -- ONLY USE FOR UNIT TESTS --
     TEST_NEEDS_AUTH("test/yes", true),
@@ -24,7 +25,7 @@ public enum Endpoints {
         this.needsAuthentication = needsAuthentication;
     }
 
-    public String getValue() {
+    public String uri() {
         return value;
     }
 
@@ -34,7 +35,7 @@ public enum Endpoints {
 
     public static Map<String, Endpoints> stringToEndpoint = new HashMap<>() {{
         for (Endpoints e : Endpoints.values()) {
-            put(e.getValue(), e);
+            put(e.uri(), e);
         }
     }};
 

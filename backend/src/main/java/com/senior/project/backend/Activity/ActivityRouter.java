@@ -16,9 +16,9 @@ public class ActivityRouter extends AbstractRouter {
     @Bean
     public RouterFunction<ServerResponse> activityRoutes(EventHandler eventHandler, MilestoneHandler milestoneHandler) {
         return wrapRoutes(
-            route(GET(Endpoints.EVENTS.getValue()), eventHandler::all)
-                .andRoute(GET(Endpoints.MILSTONES.getValue()), milestoneHandler::all)
-                .andRoute(GET(Endpoints.DASHBOARD_EVENTS.getValue()), eventHandler::dashboard)
+            route(GET(Endpoints.EVENTS.uri()), eventHandler::all)
+                .andRoute(GET(Endpoints.MILSTONES.uri()), milestoneHandler::all)
+                .andRoute(GET(Endpoints.DASHBOARD_EVENTS.uri()), eventHandler::dashboard)
             );
     }
 }

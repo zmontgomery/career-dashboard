@@ -19,6 +19,9 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class AuthRouter extends AbstractRouter {
     @Bean
     public RouterFunction<ServerResponse> authRotues(AuthHandler handler) {
-        return wrapRoutes(route(POST(Endpoints.SIGNIN.getValue()), handler::signIn));
+        return wrapRoutes(
+            route(POST(Endpoints.SIGNIN.uri()), handler::signIn)
+            .andRoute(POST(Endpoints.REFRESH.uri()), handler::refresh)
+        );
     }
 }

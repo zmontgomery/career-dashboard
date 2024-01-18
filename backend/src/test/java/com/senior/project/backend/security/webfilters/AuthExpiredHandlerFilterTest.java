@@ -51,8 +51,8 @@ public class AuthExpiredHandlerFilterTest {
         webTestClient = WebTestClient
             .bindToRouterFunction(
                 RouterFunctions.route()
-                    .GET(Endpoints.TEST_NEEDS_AUTH.getValue(), Constants::handle)
-                    .GET(Endpoints.TEST_NO_AUTH.getValue(), Constants::handle)
+                    .GET(Endpoints.TEST_NEEDS_AUTH.uri(), Constants::handle)
+                    .GET(Endpoints.TEST_NO_AUTH.uri(), Constants::handle)
                     .build()
                     .filter(CuT)
             )
@@ -62,7 +62,7 @@ public class AuthExpiredHandlerFilterTest {
     @Test
     public void happy_unprotected() {
         webTestClient.get()
-            .uri(Endpoints.TEST_NO_AUTH.getValue())
+            .uri(Endpoints.TEST_NO_AUTH.uri())
             .exchange()
             .expectStatus()
             .isOk();
@@ -74,7 +74,7 @@ public class AuthExpiredHandlerFilterTest {
         when(authService.retrieveSession(anyString())).thenReturn(Mono.just(session));
 
         webTestClient.get()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
             .exchange()
             .expectStatus()
@@ -86,7 +86,7 @@ public class AuthExpiredHandlerFilterTest {
         when(authService.retrieveSession(anyString())).thenThrow(new NoSuchElementException());
 
         String res = webTestClient.get()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
             .exchange()
             .expectStatus()
@@ -105,7 +105,7 @@ public class AuthExpiredHandlerFilterTest {
         when(authService.deleteSession(anyString())).thenReturn(Mono.just(session));
 
         String res = webTestClient.get()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
             .exchange()
             .expectStatus()
