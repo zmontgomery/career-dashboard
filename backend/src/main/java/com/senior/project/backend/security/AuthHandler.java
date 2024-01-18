@@ -59,7 +59,7 @@ public class AuthHandler {
                 try {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
                     String email = verifier.verifiyIDToken(idToken);
-
+                    
                     return findUserByEmail(email)
                         .flatMap(authService::login)
                         .switchIfEmpty(Mono.empty())
