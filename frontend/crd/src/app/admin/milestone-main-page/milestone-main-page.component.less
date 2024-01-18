@@ -1,0 +1,45 @@
+@import "../../../common";
+
+.year-container {
+  margin-bottom: 20px;
+
+  .year-card {
+    background-color: @oswego-green;
+    color: white;
+    width: 200px;
+    mat-card-header {
+      padding: 10px 16px;
+      justify-content: center;
+
+
+      .year-name {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+mat-card-title {
+  /* CSS styles go here */
+  margin: 0px; // for example to remove the margin
+  font-weight: bold;
+}
+
+.flex-vertical-align {
+  display: flex;
+  align-items: center;
+}
+
+mat-checkbox.mat-mdc-checkbox.mat-primary {
+  --mdc-checkbox-disabled-selected-icon-color: @oswego-green;
+  --mdc-checkbox-disabled-unselected-icon-color: @oswego-green;
+}
+
+.mdc-button {
+  background-color: @oswego-green;
+  color:white;
+}
+
+.mat-mdc-button:not(:disabled) {
+  color:white;
+}

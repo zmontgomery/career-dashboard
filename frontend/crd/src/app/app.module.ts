@@ -20,6 +20,9 @@ import { ProfileModule } from "./profile/profile.module";
 import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
+import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -63,7 +66,10 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
-    CarouselModule
+    CarouselModule,
+    MilestoneMainPageModule,
+    MilestoneEditModule,
+    MatGridListModule
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',
