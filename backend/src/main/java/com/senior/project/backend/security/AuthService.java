@@ -30,6 +30,9 @@ public class AuthService {
     @Autowired
     private AuthRepository repository;
 
+    @Autowired
+    private TokenGenerator tokenGenerator;
+
     /**
      * Retreives all sessions
      * 
@@ -73,11 +76,11 @@ public class AuthService {
      * @param session - the corresponding session
      * @return the login resposne
      */
-    public Mono<LoginResponse> generateResponse(Session session) {
+    public Mono<LoginResponse> generateResponse(TempUser user) {
         return Mono.just(
             LoginResponse.builder()
-                .sessionID(session.getId())
-                .user(TempUser.builder().email(session.getEmail()).build())
+                .token(tokenGenerator.generateToken(user))
+                .user(user)
                 .build()
         );
     }

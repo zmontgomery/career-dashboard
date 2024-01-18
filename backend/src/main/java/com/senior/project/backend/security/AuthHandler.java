@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
+import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
@@ -54,7 +55,6 @@ public class AuthHandler {
                     String email = verifier.verifiyIDToken(idToken);
 
                     return findUserByEmail(email)
-                        .flatMap(authService::createSession)
                         .flatMap(authService::generateResponse)
                         .switchIfEmpty(Mono.empty())
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
@@ -82,7 +82,7 @@ public class AuthHandler {
 
     // FIXME this will be replaced by an actual user repository
     @Deprecated
-    private Mono<String> findUserByEmail(String email) {
-        return Mono.just("testuser@email.com");
+    private Mono<TempUser> findUserByEmail(String email) {
+        return Mono.just(TempUser.builder().email("jrl9984@rit.edu").build());
     }
 }

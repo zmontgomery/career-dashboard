@@ -14,7 +14,6 @@ import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -40,15 +39,14 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
     private JsonWebKeySet keySet;
     private AuthInformation authInformation;
+    private MicrosoftKeyset microsoftKeyset;
 
     public MicrosoftEntraIDTokenVerifier(
         ResourceLoader resourceLoader,
-        AuthInformation authInformation
-    ) throws JoseException {
-
-        // TODO source from internet
-        String keys = resourceAsString(resourceLoader.getResource("classpath:keys.json"));
-        keySet = new JsonWebKeySet(keys);
+        AuthInformation authInformation,
+        MicrosoftKeyset microsoftKeyset
+    ) {
+        this.microsoftKeyset = microsoftKeyset;
         this.authInformation = authInformation;
     }
 
@@ -103,15 +101,21 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             jws.setCompactSerialization(token);
             JsonWebKey jwk = null;
             String kid = jws.getKeyIdHeaderValue();
+            keySet = createKeySet();
 
             // Get key for the token
-            for (JsonWebKey key : keySet.getJsonWebKeys()) {
-                if (key.getKeyId().equals(kid)) {
-                    jwk = key;
-                    break;
+            jwk = extractKey(kid);
+
+            if (jwk == null) {
+                // Refetch the keyset if the keys have been rolled over
+                microsoftKeyset.invalidateCache();
+                keySet = createKeySet();
+                jwk = extractKey(kid);
+
+                if (jwk == null) {
+                    throw new TokenVerificiationException("Token had no key in the key set");
                 }
             }
-            if (jwk == null) throw new TokenVerificiationException("Token had no key in the key set");
 
             // Set the key
             jws.setKey(jwk.getKey());
@@ -124,11 +128,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             }
 
         } catch (Exception e) {
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            e.printStackTrace(printWriter);
-            logger.error(writer.toString());
-            throw new TokenVerificiationException(e.getMessage());
+            throw obscureError(e);
         }
     }
 
@@ -163,6 +163,37 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         } catch (Exception e) {
             throw new TokenVerificiationException("Error occured validating the token claims");
         }
+    }
+
+    private JsonWebKeySet createKeySet() throws TokenVerificiationException {
+        String keys;
+        JsonWebKeySet keySet = null;
+        try {
+            keys = microsoftKeyset.getKeySet();
+            keySet = new JsonWebKeySet(keys);
+        } catch (Exception e) {
+            throw obscureError(e);
+        }
+
+        return keySet;
+    }
+
+    private JsonWebKey extractKey(String kid) {
+        for (JsonWebKey key : keySet.getJsonWebKeys()) {
+            if (key.getKeyId().equals(kid)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    private TokenVerificiationException obscureError(Exception e) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        e.printStackTrace(printWriter);
+        logger.error(writer.toString());
+        return new TokenVerificiationException(e.getMessage());
     }
 
     /**
