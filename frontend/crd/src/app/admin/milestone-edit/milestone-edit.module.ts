@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MilestoneEditComponent } from './milestone-edit.component';
-
+import { MatButtonModule } from "@angular/material/button";
 
 
 @NgModule({
@@ -9,7 +9,8 @@ import { MilestoneEditComponent } from './milestone-edit.component';
     MilestoneEditComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ]
 })
 export class MilestoneEditModule { }

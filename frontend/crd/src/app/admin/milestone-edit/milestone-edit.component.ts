@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-milestone-edit',
@@ -8,17 +9,22 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MilestoneEditComponent {
 
-  milestoneID: string = '';
+  milestoneName: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       //TODO: the param is name for now but change to ID later (maybe)
-      this.milestoneID = decodeURIComponent(params['name']);
+      this.milestoneName = decodeURIComponent(params['name']);
     });
   }
 
-
+  back() {
+    this.router.navigate(['/admin/milestones']);
+  }
 
 }
