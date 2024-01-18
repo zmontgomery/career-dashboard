@@ -1,9 +1,5 @@
 package com.senior.project.backend.security;
 
-import java.time.Instant;
-import java.util.Date;
-
-import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +35,7 @@ public class AuthService {
     }
 
     public Mono<LoginResponse> refreshToken(String token) throws TokenVerificiationException {
-        Long expDate = tokenGenerator.extractExpDate(token).getValueInMillis();
+        long expDate = tokenGenerator.extractExpDate(token).getValueInMillis();
 
         // Don't need to check if expired, extracting the expiry date will throw an error if it
         // is expired

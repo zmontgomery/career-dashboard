@@ -27,4 +27,7 @@ public class AuthInformation {
 
     @Value("${security.signingkey}")
     private String signingKey;
+
+    @Value("${security.tokenduration}")
+    private long tokenDuration;
 }

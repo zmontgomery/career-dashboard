@@ -28,9 +28,6 @@ public class TokenGenerator {
     private Key key;
     private JwtConsumer jwtConsumer;
 
-    private static final String SUBJECT = "sub";
-    private static final String EXPIRY = "exp";
-
     @Autowired
     private AuthInformation authInformation;
 
@@ -39,7 +36,7 @@ public class TokenGenerator {
 
         JwtClaims claims = new JwtClaims();
         claims.setSubject(user.getEmail());
-        claims.setExpirationTimeMinutesInTheFuture(3600);
+        claims.setExpirationTimeMinutesInTheFuture(authInformation.getTokenDuration() / 60);
         claims.setIssuedAtToNow();
 
         jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.HMAC_SHA256);  
@@ -55,26 +52,28 @@ public class TokenGenerator {
     }
 
     public String extractEmail(String token) throws TokenVerificiationException {
-        return extractClaim(token, SUBJECT);
-    }
-
-    public NumericDate extractExpDate(String token) throws TokenVerificiationException {
-        return extractClaim(token, EXPIRY);
-    }
-
-    //
-    // Private
-    //
-
-    private <T> T extractClaim(String token, String claim) throws TokenVerificiationException {
         try {
-            return (T) jwtConsumer.processToClaims(token).getClaimValue(claim);
+            return jwtConsumer.processToClaims(token).getSubject();
         } catch (InvalidJwtException e) {
             throw new TokenVerificiationException("Token was expired.");
         } catch (Exception e) {
             throw new TokenVerificiationException("Token was malformed.");
         }
     }
+
+    public NumericDate extractExpDate(String token) throws TokenVerificiationException {
+        try {
+            return jwtConsumer.processToClaims(token).getExpirationTime();
+        } catch (InvalidJwtException e) {
+            throw new TokenVerificiationException("Token was expired.");
+        } catch (Exception e) {
+            throw new TokenVerificiationException("Token was malformed.");
+        }
+    }
+
+    //
+    // Private
+    //
 
     @PostConstruct
     private void initTokenGenerator() throws NoSuchAlgorithmException, UnsupportedEncodingException {

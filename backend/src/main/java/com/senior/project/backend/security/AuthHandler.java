@@ -1,5 +1,8 @@
 package com.senior.project.backend.security;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ public class AuthHandler {
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
     private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
+    private final Mono<ServerResponse> refreshErrorResponse = ServerResponse.status(403).bodyValue("An error ocurred when refreshing the token");
 
     @Autowired
     private AuthService authService;
@@ -80,7 +84,8 @@ public class AuthHandler {
             return authService.refreshToken(token)
                 .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
         } catch (Exception e) {
-            return errorResponse;
+            logger.error(e.getMessage());
+            return refreshErrorResponse;
         }
     }
 
