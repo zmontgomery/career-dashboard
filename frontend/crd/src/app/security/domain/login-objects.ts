@@ -1,7 +1,7 @@
 import { TempUser, TempUserJSON } from "./user";
 
 export interface LoginResponseJSON {
-    readonly sessionID: string;
+    readonly token: string;
     readonly user: TempUserJSON;
 }
 
@@ -16,11 +16,11 @@ export enum TokenType {
 }
 
 export class LoginResponse {
-    readonly sessionID: string;
+    readonly token: string;
     readonly user: TempUser;
 
     constructor(json: LoginResponseJSON) {
-        this.sessionID = json.sessionID;
+        this.token = json.token;
         this.user = new TempUser(json.user);
     }
 }
