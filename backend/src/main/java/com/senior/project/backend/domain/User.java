@@ -1,18 +1,21 @@
 package com.senior.project.backend.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Generated;
 
 import java.util.Date;
 
-@Data
-@ToString
-@SuperBuilder
-@NoArgsConstructor
+@Getter
+@Setter
+@Entity
 @AllArgsConstructor
+@NoArgsConstructor
+@Generated
 public abstract class User {
-	
-    private String id;
+	@Id
+	private Long id;
 	
 	private String email;
 	private int phoneNumber;
