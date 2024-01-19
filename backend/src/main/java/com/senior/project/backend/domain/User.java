@@ -1,25 +1,37 @@
 package com.senior.project.backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.*;
-import lombok.Generated;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.UUID;
 
-@Getter
-@Setter
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
 @Entity
-@AllArgsConstructor
+@Data
+@ToString
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Generated
-public abstract class User {
-	@Id
-	private Long id;
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 	
 	private String email;
-	private int phoneNumber;
+	private String phoneNumber;
+
+	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date dateCreated;
+
+	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date lastLogin;
 	private String firstName;
 	private String lastName;
