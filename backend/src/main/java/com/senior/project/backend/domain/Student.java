@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Data
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class Student {
 	
     private String id;

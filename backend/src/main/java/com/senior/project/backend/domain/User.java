@@ -19,6 +19,7 @@ import jakarta.persistence.TemporalType;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

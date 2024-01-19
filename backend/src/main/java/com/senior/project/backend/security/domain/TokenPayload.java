@@ -2,11 +2,7 @@ package com.senior.project.backend.security.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Object that represents the payload for a microsoft token
@@ -18,6 +14,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class TokenPayload {
     private String aud;
     private String iss;

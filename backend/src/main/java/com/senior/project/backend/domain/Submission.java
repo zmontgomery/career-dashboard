@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Data
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class Submission {
 	
     private int id;
