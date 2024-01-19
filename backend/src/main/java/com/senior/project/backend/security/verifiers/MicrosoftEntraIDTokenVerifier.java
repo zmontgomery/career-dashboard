@@ -1,11 +1,7 @@
 package com.senior.project.backend.security.verifiers;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.time.Instant;
 
 import org.jose4j.jwa.AlgorithmConstraints;
@@ -16,11 +12,8 @@ import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.security.domain.AuthInformation;
@@ -194,18 +187,5 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         e.printStackTrace(printWriter);
         logger.error(writer.toString());
         return new TokenVerificiationException(e.getMessage());
-    }
-
-    /**
-     * This will be removed
-     * @param resource
-     * @return
-     */
-    private static String resourceAsString(Resource resource) {
-        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 }

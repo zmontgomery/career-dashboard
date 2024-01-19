@@ -7,6 +7,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.AbstractRouter;
 import com.senior.project.backend.util.Endpoints;
+
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -22,6 +24,7 @@ public class AuthRouter extends AbstractRouter {
         return wrapRoutes(
             route(POST(Endpoints.SIGNIN.uri()), handler::signIn)
             .andRoute(POST(Endpoints.REFRESH.uri()), handler::refresh)
+            .andRoute(GET(Endpoints.FAILURE.uri()), handler::authenticationFailed)
         );
     }
 }

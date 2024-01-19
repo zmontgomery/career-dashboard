@@ -12,6 +12,7 @@ public enum Endpoints {
     // Security
     SIGNIN("auth/signIn", false),
     REFRESH("auth/refresh", true),
+    FAILURE("auth/fail", false),
 
     // Test -- ONLY USE FOR UNIT TESTS --
     TEST_NEEDS_AUTH("test/yes", true),

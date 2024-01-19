@@ -1,7 +1,7 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, defaultIfEmpty, flatMap, map, mergeMap } from "rxjs";
-import { AuthService, SESSION_KEY } from "../auth.service";
+import { Observable, catchError, mergeMap, of } from "rxjs";
+import { AuthService } from "../auth.service";
 import { LangUtils } from "../../util/lang-utils";
 
 @Injectable({
@@ -14,22 +14,34 @@ export class AuthInterceptor implements HttpInterceptor {
     ) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        console.log(req.url);
         if (req.url.includes('signIn')) return next.handle(req);
 
-        const token = this.authService.getToken();
+        let token = this.authService.getToken();
 
         if (LangUtils.exists(token)) {
             this.authService.expiryCheck(req.url);
 
             return this.authService.refreshCheck$.pipe(
                 mergeMap(() => {
-                    const updatedRequest = req.clone({...req, setHeaders: {'X-Authorization': token!.getToken()}});
-                    return next.handle(updatedRequest);    
+                    console.log(token);
+                    const updatedRequest = req.clone({...req, setHeaders: {'X-Authorization': `Bearer ${token!.getToken()}`}});
+                    return this.handle(updatedRequest, next);
                 })
             );
         } else {
-            return next.handle(req);
+            return this.handle(req, next)
         }
+    }
+
+    private handle(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return next.handle(req).pipe(catchError((event) => this.clearExpired(event)));
+    }
+
+    private clearExpired(event: HttpErrorResponse): Observable<HttpResponse<any>> {
+        if (event.status === 401) {
+            this.authService.expireToken();
+        }
+
+        return of(new HttpResponse());
     }
 }

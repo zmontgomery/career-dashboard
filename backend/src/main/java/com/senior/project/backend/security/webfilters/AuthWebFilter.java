@@ -45,7 +45,7 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
             .get(AUTHORIZATION_HEADER)
             .get(0);
 
-        return authService.findUserFromToken(token)
+        return authService.findUserFromToken(token.split("Bearer ")[1])
             .flatMap(user -> {
                 return chain.filter(exchange);
             });

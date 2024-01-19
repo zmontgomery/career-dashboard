@@ -8,6 +8,7 @@ import { EventMessage, EventType } from '@azure/msal-browser';
 import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './domain/login-objects';
 import { constructBackendRequest } from '../util/http-helper';
 import { LangUtils } from '../util/lang-utils';
+import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
 
 export const SESSION_KEY = 'session';
 
@@ -65,10 +66,11 @@ export class AuthService {
     });
 
     // Load token from session storage
-    if (LangUtils.exists(sessionStorage.getItem('authToken'))) {
-      const tokenString = sessionStorage.getItem('authToken');
-      const tokenExpiry = sessionStorage.getItem('tokenExpiry');
-      const token = new Token(tokenString!, new Date(Number.parseInt(tokenExpiry!)));
+    const tokenString = localStorage.getItem(AUTH_TOKEN_STORAGE);
+    const tokenIssued = Number.parseInt(localStorage.getItem(TOKEN_ISSUED)!);
+
+    if (LangUtils.exists(tokenString) && LangUtils.isANumber(tokenIssued)) {
+      const token = new Token(tokenString!, new Date(tokenIssued!));
       this.token = token;
 
       this.isAuthenticated = true;
@@ -82,11 +84,12 @@ export class AuthService {
 
     this.token$.subscribe((token) => {
       if (LangUtils.exists(token)) {
-        sessionStorage.setItem('authToken', token!.getToken());
-        sessionStorage.setItem('tokenExpiry', token!.getExpiry().getTime().toString());
+        localStorage.setItem(AUTH_TOKEN_STORAGE, token!.getToken());
+        localStorage.setItem(TOKEN_ISSUED, token!.getExpiry().getTime().toString());
+        this.token = token!;
       } else {
-        sessionStorage.removeItem('authToken');
-        sessionStorage.removeItem('tokenExpiry');
+        localStorage.removeItem(AUTH_TOKEN_STORAGE);
+        localStorage.removeItem(TOKEN_ISSUED);
       }
     });
   }
@@ -103,21 +106,19 @@ export class AuthService {
   refreshCheck$ = this.refreshCheckSubject.asObservable();
 
   expiryCheck(url: string) {
-    this.token$.subscribe((token) => {
-        if (token?.willExpire()) {
-          this.refresh().subscribe((res) => {
-            this.processResponse(res);
-            this.refreshCheckSubject.next();
-          });
-        } else {
-        console.log(`Emitting ${url}!`);
+    console.log(this.token?.willExpire());
+    if (this.token?.willExpire()) {
+      console.log('hello');
+      this.refresh().subscribe((res) => {
+        this.processResponse(res);
         this.refreshCheckSubject.next();
-      }
-    });
+      });
+    } else {
+      this.refreshCheckSubject.next();
+    }
   }
 
   signIn(loginRequest: LoginRequest): Observable<LoginResponse> {
-    console.log('Signing in!');
     return this.http.post<LoginResponseJSON>(constructBackendRequest('auth/signIn'), loginRequest)
       .pipe(
         map((json) => new LoginResponse(json)),
@@ -125,20 +126,23 @@ export class AuthService {
   }
 
   refresh(): Observable<LoginResponse> {
-    return this.http.post<LoginResponseJSON>(constructBackendRequest('auth/refresh'), {})
+    console.log('yo');
+    return this.http.post<LoginResponseJSON>(constructBackendRequest('auth/refresh'), 'hello')
       .pipe(
         map((json) => new LoginResponse(json)),
       );
   }
 
   signOut() {
-    this.isAuthenticated = false;
-    this.tokenSubject.next(null);
-    this.userSubject.next(null);
+    this.clearAuthData();
   }
 
   getToken(): Token | undefined {
     return this.token;
+  }
+
+  expireToken(): void {
+    this.clearAuthData();
   }
 
   private processResponse(res: LoginResponse) {
@@ -158,12 +162,18 @@ export class AuthService {
       tokenType: tokenType.toLocaleString(),
     });
   }
+
+  private clearAuthData() {
+    this.isAuthenticated = false;
+    this.tokenSubject.next(null);
+    this.userSubject.next(null);
+  }
 }
 
 export class Token {
   constructor(
     private token: string,
-    private tokenExpiry: Date,
+    private tokenIssued: Date,
   ) {}
 
   getToken() {
@@ -171,10 +181,14 @@ export class Token {
   }
 
   getExpiry() {
-    return this.tokenExpiry;
+    return this.tokenIssued;
   }
 
   willExpire(): boolean {
-    return Date.now() - this.tokenExpiry!.getMilliseconds() <= (10 * 60 * 1000)
+    return Date.now() - this.tokenIssued!.getTime() <= (10 * 60 * 1000)
+  }
+
+  expired(): boolean {
+    return Date.now() - this.tokenIssued!.getTime() <= 0;
   }
 }

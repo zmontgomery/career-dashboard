@@ -36,7 +36,8 @@ public class TokenGenerator {
 
         JwtClaims claims = new JwtClaims();
         claims.setSubject(user.getEmail());
-        claims.setExpirationTimeMinutesInTheFuture(authInformation.getTokenDuration() / 60);
+        // claims.setExpirationTimeMinutesInTheFuture(authInformation.getTokenDuration() / 60);
+        claims.setExpirationTimeMinutesInTheFuture(9);
         claims.setIssuedAtToNow();
 
         jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.HMAC_SHA256);  
