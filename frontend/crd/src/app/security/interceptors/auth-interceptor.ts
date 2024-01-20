@@ -1,9 +1,10 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, mergeMap, of, take } from "rxjs";
-import { AuthService, Token } from "../auth.service";
+import { AuthService } from "../auth.service";
 import { LangUtils } from "../../util/lang-utils";
 import { Endpoints } from "src/app/util/http-helper";
+import { Token } from "../domain/auth-objects";
 
 @Injectable({
     providedIn: 'root',

@@ -46,3 +46,38 @@ export class LoginRequest {
         }
     }
 }
+
+export class Token {
+    private refreshing: boolean;
+  
+    constructor(
+      private token: string,
+      private tokenIssued: Date,
+    ) {
+      this.refreshing = false;
+    }
+  
+    getToken() {
+      return this.token;
+    }
+  
+    getExpiry() {
+      return this.tokenIssued;
+    }
+  
+    willExpire(): boolean {
+      return Date.now() >= this.tokenIssued!.getTime() + (20 * 60 * 1000);
+    }
+  
+    expired(): boolean {
+      return Date.now() >= this.tokenIssued!.getTime() + (60 * 60 * 1000);
+    }
+  
+    refresh() {
+      this.refreshing = true;
+    }
+  
+    isRefreshing(): boolean {
+      return this.refreshing;
+    }
+  }

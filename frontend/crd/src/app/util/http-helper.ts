@@ -7,6 +7,7 @@ export enum Endpoints {
     SIGN_OUT = 'auth/signout',
 
     MILESTONES = 'milestones',
+    EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     RESUME = 'portfolio/resume'
 }

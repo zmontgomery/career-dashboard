@@ -5,7 +5,7 @@ import { TempUser } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { EventMessage, EventType } from '@azure/msal-browser';
-import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './domain/login-objects';
+import { LoginRequest, LoginResponse, LoginResponseJSON, Token, TokenType } from './domain/auth-objects';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 import { LangUtils } from '../util/lang-utils';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
@@ -145,6 +145,10 @@ export class AuthService {
     this.clearAuthData();
   }
 
+  authenticated(): boolean {
+    return this.isAuthenticated;
+  }
+
   private processResponse(res: LoginResponse) {
     if (LangUtils.exists(res)) {
       this.isAuthenticated = true;
@@ -167,40 +171,5 @@ export class AuthService {
     this.isAuthenticated = false;
     this.tokenSubject.next(null);
     this.userSubject.next(null);
-  }
-}
-
-export class Token {
-  private refreshing: boolean;
-
-  constructor(
-    private token: string,
-    private tokenIssued: Date,
-  ) {
-    this.refreshing = false;
-  }
-
-  getToken() {
-    return this.token;
-  }
-
-  getExpiry() {
-    return this.tokenIssued;
-  }
-
-  willExpire(): boolean {
-    return Date.now() >= this.tokenIssued!.getTime() + (20 * 60 * 1000);
-  }
-
-  expired(): boolean {
-    return Date.now() >= this.tokenIssued!.getTime() + (60 * 60 * 1000);
-  }
-
-  refresh() {
-    this.refreshing = true;
-  }
-
-  isRefreshing(): boolean {
-    return this.refreshing;
   }
 }
