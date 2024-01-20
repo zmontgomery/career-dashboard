@@ -3,17 +3,12 @@ package com.senior.project.backend.security.verifiers;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.senior.project.backend.security.domain.AuthInformation;
-import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.lang.JoseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 
@@ -39,8 +34,6 @@ public class MicrosoftEntraIDTokenVerifierTest {
 
     @BeforeEach
     public void setup() throws JoseException, IOException {
-        when(microsoftKeyset.getKeySet()).thenReturn("keys");
-
         CuT = new MicrosoftEntraIDTokenVerifier(authInformation, microsoftKeyset);
     }
 
