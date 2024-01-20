@@ -1,22 +1,17 @@
 package com.senior.project.backend.security.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.senior.project.backend.AbstractDomainObjectTest;
+import com.senior.project.backend.Pair;
 
-import org.junit.jupiter.api.Test;
-
-public class LoginRequestTest {
+public class LoginRequestTest extends AbstractDomainObjectTest<LoginRequest> {
     private static final String TOKEN = "Token";
     private static final TokenType TYPE = TokenType.GOOGLE;
 
-    private LoginRequest CuT;
-
     public LoginRequestTest() {
-        CuT = new LoginRequest(TOKEN, TYPE);
-    }
-
-    @Test
-    public void testGetters() {
-        assertEquals(CuT.getIdToken(), TOKEN);
-        assertEquals(CuT.getTokenType(), TYPE);
+        super(
+            new LoginRequest(TOKEN, TYPE),
+            new Pair<>("idToken", TOKEN),
+            new Pair<>("tokenType", TYPE)
+        );
     }
 }

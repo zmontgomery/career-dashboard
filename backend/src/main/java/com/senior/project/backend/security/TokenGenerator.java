@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.NumericDate;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -38,7 +39,7 @@ public class TokenGenerator {
     private AuthInformation authInformation;
 
     public String generateToken(TempUser user) {
-        JsonWebSignature jws = new JsonWebSignature();
+        JsonWebSignature jws = createWebSignature();
 
         JwtClaims claims = new JwtClaims();
         claims.setSubject(user.getEmail());
@@ -53,7 +54,7 @@ public class TokenGenerator {
             return jws.getCompactSerialization();
         } catch (JoseException e) {
             e.printStackTrace();
-            return "";
+            return "failed";
         }
     }
 
@@ -71,10 +72,6 @@ public class TokenGenerator {
         try {
             return jwtConsumer.processToClaims(token).getExpirationTime();
         } catch (InvalidJwtException e) {
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            e.printStackTrace(printWriter);
-            logger.error(writer.toString());
             throw new TokenVerificiationException("Token was expired.");
         } catch (Exception e) {
             throw new TokenVerificiationException("Token was malformed.");
@@ -103,5 +100,16 @@ public class TokenGenerator {
             .setRequireIssuedAt()
             .setVerificationKey(this.key)
             .build();
+    }
+
+    /**
+     * 
+     * 
+     * Used for unit tests
+     * 
+     * @return
+     */
+    protected JsonWebSignature createWebSignature() {
+        return new JsonWebSignature();
     }
 }
