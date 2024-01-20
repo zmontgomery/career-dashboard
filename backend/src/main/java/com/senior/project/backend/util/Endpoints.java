@@ -3,6 +3,9 @@ package com.senior.project.backend.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enum for endpoints in the system and if they are accessible
+ */
 public enum Endpoints {
     // Domain
     EVENTS("events", true),
@@ -26,6 +29,10 @@ public enum Endpoints {
         this.needsAuthentication = needsAuthentication;
     }
 
+    //
+    // Getters
+    //
+
     public String uri() {
         return value;
     }
@@ -34,12 +41,20 @@ public enum Endpoints {
         return needsAuthentication;
     }
 
+    //
+    // Static
+    //
+
+    // The map of the path to the endpoint
     public static Map<String, Endpoints> stringToEndpoint = new HashMap<>() {{
         for (Endpoints e : Endpoints.values()) {
             put(e.uri(), e);
         }
     }};
 
+    /**
+     * Converts a string to the endpoint
+     */
     public static Endpoints toEndpoint(String path) {
         return stringToEndpoint.get(path);
     }

@@ -7,6 +7,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * A component that fetches the Json Web Keyset from Microsoft
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class MicrosoftKeyset {
     

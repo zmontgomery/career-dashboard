@@ -34,6 +34,12 @@ public class AuthService {
         return generateResponse(user);
     }
 
+    /**
+     * Refreshes a given token by checking if it is within the refresh range
+     * @param token - token being checked
+     * @return - a Login Response with a new token
+     * @throws TokenVerificiationException when token does not need refreshed
+     */
     public Mono<LoginResponse> refreshToken(String token) throws TokenVerificiationException {
         long expDate = tokenGenerator.extractExpDate(token).getValueInMillis();
 
@@ -46,11 +52,22 @@ public class AuthService {
         }
     }
 
+    /**
+     * Finds a user from a given token by attempting to extract the email address
+     * @param token - token being analyzed
+     * @return the new user from the email address
+     * @throws TokenVerificiationException
+     */
     public Mono<TempUser> findUserFromToken(String token) throws TokenVerificiationException {
         String email = this.tokenGenerator.extractEmail(token);
         return findUserByEmailAdress(email);
     }
 
+    /**
+     * Generates a login response with a user
+     * @param user - user in the response
+     * @return A login response containing a new token and a user
+     */
     private Mono<LoginResponse> generateResponse(TempUser user) {
         return Mono.just(
             LoginResponse.builder()
@@ -60,10 +77,16 @@ public class AuthService {
         );
     }
 
+    // FIXME: replace with user repo
     private Mono<TempUser> findUserByEmailAdress(String email) {
         return Mono.just(TempUser.builder().email(email).build());
     }
 
+    /**
+     * Convers minutes to milliseconds
+     * @param min
+     * @return
+     */
     private long minToMilli(long min) {
         return min * 60 * 1000;
     }

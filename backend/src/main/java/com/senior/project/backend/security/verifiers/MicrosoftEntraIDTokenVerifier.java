@@ -156,6 +156,11 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         }
     }
 
+    /**
+     * Creates a the key set from the MicrosoftKeyset
+     * @return the keyset
+     * @throws TokenVerificiationException 
+     */
     private JsonWebKeySet createKeySet() throws TokenVerificiationException {
         String keys;
         JsonWebKeySet keySet = null;
@@ -169,6 +174,11 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         return keySet;
     }
 
+    /**
+     * Finds the key associated with the token
+     * @param kid - key id
+     * @return the key or null
+     */
     private JsonWebKey extractKey(String kid) {
         for (JsonWebKey key : keySet.getJsonWebKeys()) {
             if (key.getKeyId().equals(kid)) {
@@ -179,6 +189,12 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         return null;
     }
 
+    /**
+     * Takes any error produced during the process, prints the error, and throws
+     * a new Token Verification Exception;
+     * @param e - original error
+     * @return - Token Verificiation Exception
+     */
     private TokenVerificiationException obscureError(Exception e) {
         StringWriter writer = new StringWriter();
         PrintWriter printWriter = new PrintWriter(writer);

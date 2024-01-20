@@ -72,6 +72,17 @@ public class AuthHandler {
             });
     } 
     
+    /**
+     * Handler function for refreshing a token
+     * 
+     * The function takes an incoming token, verifies that it came from this server
+     * and then generates a new token for the user
+     * 
+     * @param req - the server request with the refresh request
+     * @return 
+     *      200 for successful refresh
+     *      403 If an error ocurred during token refresh
+     */
     public Mono<ServerResponse> refresh(ServerRequest req) {
         try {
             String token = req
@@ -88,6 +99,12 @@ public class AuthHandler {
         }
     }
 
+    /**
+     * Handler function for requests that failed authentication
+     * 
+     * @param req - failed request
+     * @return 401 Unauthorized
+     */
     public Mono<ServerResponse> authenticationFailed(ServerRequest req) {
         return authFailedResponse;
     }

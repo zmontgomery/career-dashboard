@@ -5,20 +5,15 @@ import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.NumericDate;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,16 +23,27 @@ import com.senior.project.backend.security.verifiers.TokenVerificiationException
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * Generates a token using a user as a subject.
+ * 
+ * Token is then used as a Bearer Token for authentication and Authorization
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Component
 public class TokenGenerator {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private Key key;
     private JwtConsumer jwtConsumer;
 
     @Autowired
     private AuthInformation authInformation;
 
+    /**
+     * Generates a JWT token for authentication
+     * 
+     * @param user - user included in the token
+     * @return the new token
+     */
     public String generateToken(TempUser user) {
         JsonWebSignature jws = createWebSignature();
 
@@ -58,6 +64,13 @@ public class TokenGenerator {
         }
     }
 
+    /**
+     * Extracts the user's email from the token
+     * 
+     * @param token - token being analyzed
+     * @return the user's email
+     * @throws TokenVerificiationException when an error occurrs
+     */
     public String extractEmail(String token) throws TokenVerificiationException {
         try {
             return jwtConsumer.processToClaims(token).getSubject();
@@ -68,6 +81,13 @@ public class TokenGenerator {
         }
     }
 
+    /**
+     * Extracts the expiration date from the token
+     * 
+     * @param token - token being analyzed
+     * @return the token's expiration date
+     * @throws TokenVerificiationException when an error occurrs
+     */
     public NumericDate extractExpDate(String token) throws TokenVerificiationException {
         try {
             return jwtConsumer.processToClaims(token).getExpirationTime();
@@ -82,6 +102,12 @@ public class TokenGenerator {
     // Private
     //
 
+    /**
+     * Initializes the generator by reading in the key and creating the consumer
+     * 
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
     @PostConstruct
     private void initTokenGenerator() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // Load the key
@@ -94,6 +120,11 @@ public class TokenGenerator {
         this.jwtConsumer = jwtConsumerFactory();
     }
 
+    /**
+     * Creates the JWT reader for extracting claims
+     * 
+     * @return the created consumer
+     */
     private JwtConsumer jwtConsumerFactory() {
         return new JwtConsumerBuilder()
             .setRequireExpirationTime()
@@ -103,7 +134,7 @@ public class TokenGenerator {
     }
 
     /**
-     * 
+     * Creates a new JsonWebSignature
      * 
      * Used for unit tests
      * 

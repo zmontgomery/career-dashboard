@@ -28,7 +28,8 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
     /**
      * Code that runs the authentication filter
      * 
-     * Checks if a session exists
+     * Checks if the incoming request has a valid token
+     * Checks if a user associated with a token exists
      * 
      * @param exchange - The web exchange
      * @param chain - The filter chain
