@@ -39,7 +39,7 @@ public class AuthService {
 
         // Don't need to check if expired, extracting the expiry date will throw an error if it
         // is expired
-        if (expDate - System.currentTimeMillis() < minToMilli(10)) { 
+        if (expDate - System.currentTimeMillis() < minToMilli(20)) { 
             return findUserFromToken(token).flatMap(this::generateResponse);
         } else {
             throw new TokenVerificiationException("Token does not need refreshed");

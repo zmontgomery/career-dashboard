@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, filter, map } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, filter, map, mergeMap, of, tap } from 'rxjs';
 import { TempUser } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { LoginRequest, LoginResponse, LoginResponseJSON, TokenType } from './domain/login-objects';
-import { constructBackendRequest } from '../util/http-helper';
+import { Endpoints, constructBackendRequest } from '../util/http-helper';
 import { LangUtils } from '../util/lang-utils';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
 
@@ -44,11 +44,9 @@ export class AuthService {
     this.broadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS))
       .subscribe((result: EventMessage) => {
-        console.log(this.isAuthenticated);
           if (!this.isAuthenticated) {
             const payload = result.payload as any;
             const idToken = payload["idToken"];
-            console.log(idToken);
             this.signIn(this.createLoginRequest(idToken, TokenType.MICROSOFT_ENTRA_ID)).subscribe((res) => {
               this.processResponse(res);
             });
@@ -105,29 +103,31 @@ export class AuthService {
   private refreshCheckSubject = new Subject<void>();
   refreshCheck$ = this.refreshCheckSubject.asObservable();
 
-  expiryCheck(url: string) {
-    console.log(this.token?.willExpire());
-    if (this.token?.willExpire()) {
-      console.log('hello');
-      this.refresh().subscribe((res) => {
-        this.processResponse(res);
-        this.refreshCheckSubject.next();
-      });
+  expiryCheck(): Observable<Token | null> {
+    if (this.token!.isRefreshing()) {
+      return this.token$;
+    } else if (this.token?.willExpire()) {
+      this.token?.refresh();
+      return this.refresh().pipe(
+        mergeMap((res) => {
+          this.processResponse(res);
+          return of(this.token!);
+        })
+      );
     } else {
-      this.refreshCheckSubject.next();
+      return this.token$;
     }
   }
 
   signIn(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponseJSON>(constructBackendRequest('auth/signIn'), loginRequest)
+    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.SIGN_IN), loginRequest)
       .pipe(
         map((json) => new LoginResponse(json)),
       );
   }
 
   refresh(): Observable<LoginResponse> {
-    console.log('yo');
-    return this.http.post<LoginResponseJSON>(constructBackendRequest('auth/refresh'), 'hello')
+    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.REFRESH), {})
       .pipe(
         map((json) => new LoginResponse(json)),
       );
@@ -171,10 +171,14 @@ export class AuthService {
 }
 
 export class Token {
+  private refreshing: boolean;
+
   constructor(
     private token: string,
     private tokenIssued: Date,
-  ) {}
+  ) {
+    this.refreshing = false;
+  }
 
   getToken() {
     return this.token;
@@ -185,10 +189,18 @@ export class Token {
   }
 
   willExpire(): boolean {
-    return Date.now() - this.tokenIssued!.getTime() <= (10 * 60 * 1000)
+    return Date.now() >= this.tokenIssued!.getTime() + (20 * 60 * 1000);
   }
 
   expired(): boolean {
-    return Date.now() - this.tokenIssued!.getTime() <= 0;
+    return Date.now() >= this.tokenIssued!.getTime() + (60 * 60 * 1000);
+  }
+
+  refresh() {
+    this.refreshing = true;
+  }
+
+  isRefreshing(): boolean {
+    return this.refreshing;
   }
 }

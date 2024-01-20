@@ -1,7 +1,11 @@
 import { environment } from "src/environments/environment";
 
 export enum Endpoints {
-    SIGN_IN = 'auth/signIn',
+    // Security
+    SIGN_IN = 'auth/signin',
+    REFRESH = 'auth/refresh',
+    SIGN_OUT = 'auth/signout',
+
     MILESTONES = 'milestones',
     DASHBOARD_EVENTS = 'dashboard_events',
     RESUME = 'portfolio/resume'

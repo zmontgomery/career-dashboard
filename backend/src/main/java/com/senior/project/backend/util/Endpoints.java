@@ -10,7 +10,7 @@ public enum Endpoints {
     MILSTONES("milestones", true),
 
     // Security
-    SIGNIN("auth/signIn", false),
+    SIGNIN("auth/signin", false),
     REFRESH("auth/refresh", true),
     FAILURE("auth/fail", false),
 

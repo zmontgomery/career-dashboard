@@ -54,7 +54,7 @@ public abstract class AbstractAuthWebFilter implements WebFilter {
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) return chain.filter(exchange);
 
         String path = exchange.getRequest().getURI().getPath();
-        logger.info(exchange.getRequest().getURI().toString());
+        logger.info(path);
         Endpoints endpoint = Endpoints.toEndpoint(path);
 
         // Execute filter if the endpoint needs authentication

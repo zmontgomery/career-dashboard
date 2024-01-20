@@ -77,7 +77,8 @@ public class AuthHandler {
             String token = req
                 .headers()
                 .header(AUTHORIZATION_HEADER)
-                .get(0);
+                .get(0)
+                .split("Bearer ")[1];
 
             return authService.refreshToken(token)
                 .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
