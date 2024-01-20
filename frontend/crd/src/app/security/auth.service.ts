@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, filter, map, mergeMap, of, tap } from 'rxjs';
-import { TempUser } from './domain/user';
+import { User } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { EventMessage, EventType } from '@azure/msal-browser';
@@ -28,7 +28,7 @@ export class AuthService {
 
   private token?: Token;
 
-  private userSubject: BehaviorSubject<TempUser | null> = new BehaviorSubject<TempUser | null>(null);
+  private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
   constructor(

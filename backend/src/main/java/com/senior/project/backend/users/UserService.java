@@ -2,6 +2,7 @@ package com.senior.project.backend.users;
 
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class UserService {
 
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
+        LoggerFactory.getLogger(getClass()).info(email);
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {

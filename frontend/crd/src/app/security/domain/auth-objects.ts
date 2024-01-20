@@ -1,4 +1,4 @@
-import { TempUser, TempUserJSON } from "./user";
+import { User, UserJSON } from "./user";
 
 /**
  * Login Response Json
@@ -7,7 +7,7 @@ import { TempUser, TempUserJSON } from "./user";
  */
 export interface LoginResponseJSON {
     readonly token: string;
-    readonly user: TempUserJSON;
+    readonly user: UserJSON;
 }
 
 /**
@@ -35,11 +35,11 @@ export enum TokenType {
  */
 export class LoginResponse {
     readonly token: string;
-    readonly user: TempUser;
+    readonly user: User;
 
     constructor(json: LoginResponseJSON) {
         this.token = json.token;
-        this.user = new TempUser(json.user);
+        this.user = new User(json.user);
     }
 }
 
