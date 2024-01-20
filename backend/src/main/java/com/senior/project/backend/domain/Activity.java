@@ -1,13 +1,12 @@
 package com.senior.project.backend.domain;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Data
 @ToString
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public abstract class Activity {
 
     private String id;
