@@ -16,7 +16,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.domain.Session;
 import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
@@ -30,15 +29,13 @@ public class AuthWebFilterTest {
     @Mock
     private AuthService authService;
 
-    private Session session;
+    private String token;
 
     private WebTestClient webTestClient;
 
     @BeforeEach
     public void setup() {
-        session = Session.builder()
-            .id(UUID.randomUUID())
-            .build();
+        token = "token";
 
         webTestClient = WebTestClient
             .bindToRouterFunction(
@@ -63,11 +60,9 @@ public class AuthWebFilterTest {
 
     @Test
     public void happy() {
-        when(authService.retrieveSession(anyString())).thenReturn(Mono.just(session));
-        
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())
-            .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
+            .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
             .exchange()
             .expectStatus()
             .isOk();
@@ -75,11 +70,9 @@ public class AuthWebFilterTest {
 
     @Test
     public void unhappy() {
-        when(authService.retrieveSession(anyString())).thenThrow(new NoSuchElementException());
-        
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())
-            .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
+            .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
             .exchange()
             .expectStatus()
             .isUnauthorized();

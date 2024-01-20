@@ -12,7 +12,6 @@ import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +34,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     private MicrosoftKeyset microsoftKeyset;
 
     public MicrosoftEntraIDTokenVerifier(
-        ResourceLoader resourceLoader,
         AuthInformation authInformation,
         MicrosoftKeyset microsoftKeyset
     ) {

@@ -26,17 +26,12 @@ import java.io.InputStream;
 @ExtendWith(MockitoExtension.class)
 public class MicrosoftEntraIDTokenVerifierTest {
 
-    @Mock()
-    private ResourceLoader resourceLoader;
-
     @Mock
     private AuthInformation authInformation;
 
     @Mock
-    private Resource resource;
+    private MicrosoftKeyset microsoftKeyset;
 
-    @Mock
-    private InputStream inputStream;
 
     /**
      * NOTE
@@ -50,11 +45,10 @@ public class MicrosoftEntraIDTokenVerifierTest {
 
     @BeforeEach
     public void setup() throws JoseException, IOException {
-        when(resourceLoader.getResource(anyString())).thenReturn(resource);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("test data".getBytes()));
+        when(microsoftKeyset.getKeySet()).thenReturn("keys");
 
         try(MockedConstruction<JsonWebKeySet> mockJsonWebKeySet = Mockito.mockConstruction(JsonWebKeySet.class)) {
-            CuT = new MicrosoftEntraIDTokenVerifier(resourceLoader, authInformation);
+            CuT = new MicrosoftEntraIDTokenVerifier(authInformation, microsoftKeyset);
         }
     }
 
