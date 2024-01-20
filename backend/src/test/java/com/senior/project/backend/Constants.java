@@ -112,7 +112,6 @@ public class Constants {
         DASH_DATA.add(e3);
     }
 
-<<<<<<< HEAD
     public static Mono<ServerResponse> handle(ServerRequest req) {
         LoggerFactory.getLogger(Constants.class).info("Ok");
         return ServerResponse.ok().build();
@@ -121,7 +120,8 @@ public class Constants {
     public static Mono<ServerResponse> handleFail(ServerRequest req) {
         LoggerFactory.getLogger(Constants.class).info("Fail");
         return ServerResponse.status(401).build();
-=======
+    }
+
     public static User user1;
     public static User user2;
 
@@ -137,7 +137,6 @@ public class Constants {
 
         USERS.add(user1);
         USERS.add(user2);
->>>>>>> main
     }
 }
 
