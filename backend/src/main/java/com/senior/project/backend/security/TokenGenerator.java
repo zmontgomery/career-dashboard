@@ -17,8 +17,8 @@ import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.AuthInformation;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 
 import jakarta.annotation.PostConstruct;
@@ -44,7 +44,7 @@ public class TokenGenerator {
      * @param user - user included in the token
      * @return the new token
      */
-    public String generateToken(TempUser user) {
+    public String generateToken(User user) {
         JsonWebSignature jws = createWebSignature();
 
         JwtClaims claims = new JwtClaims();

@@ -12,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.senior.project.backend.Constants;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -28,9 +30,10 @@ public class AuthServiceTest {
     @Mock
     private TokenGenerator tokenGenerator;
 
-    private static final TempUser USER = TempUser.builder()
-        .email("test@test.test")
-        .build();
+    @Mock
+    private UserService userService;
+
+    private static final User USER = Constants.user1;
 
     private static final String TOKEN = "token";
     private static final String TOKEN_2 = "token2";
@@ -57,6 +60,8 @@ public class AuthServiceTest {
             .thenReturn(NumericDate.fromMilliseconds(System.currentTimeMillis() + 600000));
         when(tokenGenerator.generateToken(any())).thenReturn(TOKEN_2);
         when(tokenGenerator.extractEmail(anyString())).thenReturn(USER.getEmail());
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.user1));
+
         LoginResponse expected = LoginResponse.builder()
             .user(USER)
             .token(TOKEN_2)

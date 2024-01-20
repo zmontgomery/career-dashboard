@@ -9,10 +9,10 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
+import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
 
@@ -34,6 +34,9 @@ public class AuthHandler {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private TokenVerifierGetter tokenVerifierGetter;
@@ -58,9 +61,8 @@ public class AuthHandler {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
                     String email = verifier.verifiyIDToken(idToken);
                     
-                    return findUserByEmail(email)
+                    return userService.findByEmailAddress(email)
                         .flatMap(authService::login)
-                        .switchIfEmpty(Mono.empty())
                         .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
                         .switchIfEmpty(errorResponse);
                 } catch (Exception e) {
@@ -119,11 +121,5 @@ public class AuthHandler {
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
         return ServerResponse.ok().body(Mono.just(""), String.class);
-    }
-
-    // FIXME this will be replaced by an actual user repository
-    @Deprecated
-    private Mono<TempUser> findUserByEmail(String email) {
-        return Mono.just(TempUser.builder().email("jrl9984@rit.edu").build());
     }
 }

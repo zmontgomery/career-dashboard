@@ -13,7 +13,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.util.Endpoints;
 
@@ -29,7 +28,6 @@ public class AuthWebFilterTest {
     private AuthService authService;
 
     private String token;
-
     private WebTestClient webTestClient;
 
     @BeforeEach
@@ -60,7 +58,7 @@ public class AuthWebFilterTest {
 
     @Test
     public void happy() throws TokenVerificiationException {
-        when(authService.findUserFromToken(anyString())).thenReturn(Mono.just(TempUser.builder().build()));
+        when(authService.findUserFromToken(anyString())).thenReturn(Mono.just(Constants.user1));
 
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())
@@ -72,7 +70,7 @@ public class AuthWebFilterTest {
 
     @Test
     public void unhappy() throws TokenVerificiationException {
-        when(authService.findUserFromToken(anyString())).thenThrow(new TokenVerificiationException(":()"));
+        when(authService.findUserFromToken(anyString())).thenThrow(new TokenVerificiationException(":("));
 
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())

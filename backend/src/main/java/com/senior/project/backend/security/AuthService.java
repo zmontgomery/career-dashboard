@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
 
@@ -23,14 +24,16 @@ public class AuthService {
 
     @Autowired
     private TokenGenerator tokenGenerator;
-    
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Generates a login response based on the session
      * @param session - the corresponding session
      * @return the login resposne
      */
-    public Mono<LoginResponse> login(TempUser user) {
+    public Mono<LoginResponse> login(User user) {
         return generateResponse(user);
     }
 
@@ -46,7 +49,9 @@ public class AuthService {
         // Don't need to check if expired, extracting the expiry date will throw an error if it
         // is expired
         if (expDate - System.currentTimeMillis() < minToMilli(20)) { 
-            return findUserFromToken(token).flatMap(this::generateResponse);
+            return findUserFromToken(token)
+                .switchIfEmpty(Mono.empty())
+                .flatMap(this::generateResponse);
         } else {
             throw new TokenVerificiationException("Token does not need refreshed");
         }
@@ -58,9 +63,9 @@ public class AuthService {
      * @return the new user from the email address
      * @throws TokenVerificiationException
      */
-    public Mono<TempUser> findUserFromToken(String token) throws TokenVerificiationException {
+    public Mono<User> findUserFromToken(String token) throws TokenVerificiationException {
         String email = this.tokenGenerator.extractEmail(token);
-        return findUserByEmailAdress(email);
+        return userService.findByEmailAddress(email);
     }
 
     /**
@@ -68,18 +73,13 @@ public class AuthService {
      * @param user - user in the response
      * @return A login response containing a new token and a user
      */
-    private Mono<LoginResponse> generateResponse(TempUser user) {
+    private Mono<LoginResponse> generateResponse(User user) {
         return Mono.just(
             LoginResponse.builder()
                 .user(user)
                 .token(tokenGenerator.generateToken(user))
                 .build()
         );
-    }
-
-    // FIXME: replace with user repo
-    private Mono<TempUser> findUserByEmailAdress(String email) {
-        return Mono.just(TempUser.builder().email(email).build());
     }
 
     /**

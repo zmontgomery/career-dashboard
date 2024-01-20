@@ -43,11 +43,18 @@ public abstract class AbstractDomainObjectTest<T> {
             builder.toString();
 
             Method[] methods = ReflectionUtils.getAllDeclaredMethods(builder.getClass());
+
+            for (Method m : methods) {
+                logger.info(m.getName());
+            }
+
             Method buildMethod = null;
             for (Method m : methods) {
                 if (m.getName().equals("build")) buildMethod = m;
                 if (!isObjectMethod(m)) {
                     Object value = fieldValueMap.get(m.getName());
+                    m.setAccessible(true);
+                    logger.info("Running Builder Test: " + m.getName());
                     m.invoke(builder, value);
                 }
             }
@@ -132,7 +139,10 @@ public abstract class AbstractDomainObjectTest<T> {
     private boolean isObjectMethod(Method m) {
         String methodName = m.getName();
 
-        if (methodName.equals("$jacocoInit") || methodName.equals("build")) return true;
+        if (methodName.equals("$jacocoInit") 
+            || methodName.equals("build")
+            || methodName.equals("self")
+        ) return true;
 
         Method[] oMethods = ReflectionUtils.getAllDeclaredMethods(Object.class);
 

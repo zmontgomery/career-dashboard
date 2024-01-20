@@ -1,11 +1,13 @@
 package com.senior.project.backend.security;
 
+import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.TokenType;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
+import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
 
@@ -45,6 +47,9 @@ public class AuthHandlerTest {
     @Mock
     private TokenVerifier verifier;
 
+    @Mock
+    private UserService userService;
+
     @BeforeEach
     public void setup() throws TokenVerificiationException {
         webTestClient = WebTestClient.bindToRouterFunction(
@@ -60,6 +65,8 @@ public class AuthHandlerTest {
 
     @Test
     public void testSignInHappy() throws TokenVerificiationException {
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.user1));
+
         LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
         LoginResponse response = LoginResponse.builder().token("token_2").build();
 

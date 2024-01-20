@@ -26,8 +26,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.senior.project.backend.Constants;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.AuthInformation;
-import com.senior.project.backend.security.domain.TempUser;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,9 +41,7 @@ public class TokenGeneratorTest {
     @Mock
     private AuthInformation authInformation;
 
-    private static final TempUser user = TempUser.builder()
-        .email("test@test.test")
-        .build();
+    private static final User user = Constants.user1;
 
     private static String token;
     private static Long now;
