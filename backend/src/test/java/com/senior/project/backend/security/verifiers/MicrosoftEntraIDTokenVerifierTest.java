@@ -13,14 +13,8 @@ import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -47,9 +41,7 @@ public class MicrosoftEntraIDTokenVerifierTest {
     public void setup() throws JoseException, IOException {
         when(microsoftKeyset.getKeySet()).thenReturn("keys");
 
-        try(MockedConstruction<JsonWebKeySet> mockJsonWebKeySet = Mockito.mockConstruction(JsonWebKeySet.class)) {
-            CuT = new MicrosoftEntraIDTokenVerifier(authInformation, microsoftKeyset);
-        }
+        CuT = new MicrosoftEntraIDTokenVerifier(authInformation, microsoftKeyset);
     }
 
     @Test

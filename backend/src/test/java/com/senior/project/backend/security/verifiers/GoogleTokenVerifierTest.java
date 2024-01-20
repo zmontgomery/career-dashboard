@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
  * 
  * 
  * NOTE: We can't really test for success since we would have to 
- * hard 
+ * hard code a token
  */
 @ExtendWith(MockitoExtension.class)
 public class GoogleTokenVerifierTest {

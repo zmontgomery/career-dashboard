@@ -111,8 +111,13 @@ public class Constants {
     }
 
     public static Mono<ServerResponse> handle(ServerRequest req) {
-        LoggerFactory.getLogger(Constants.class).info("asdfasdfas");
+        LoggerFactory.getLogger(Constants.class).info("Ok");
         return ServerResponse.ok().build();
+    }
+
+    public static Mono<ServerResponse> handleFail(ServerRequest req) {
+        LoggerFactory.getLogger(Constants.class).info("Fail");
+        return ServerResponse.status(401).build();
     }
 }
 

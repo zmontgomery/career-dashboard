@@ -1,8 +1,5 @@
 package com.senior.project.backend.security.webfilters;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.domain.TempUser;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
@@ -35,7 +34,7 @@ public class AuthWebFilterTest {
 
     @BeforeEach
     public void setup() {
-        token = "token";
+        token = "Bearer token";
 
         webTestClient = WebTestClient
             .bindToRouterFunction(
@@ -43,6 +42,7 @@ public class AuthWebFilterTest {
                     .OPTIONS(Endpoints.TEST_NEEDS_AUTH.uri(), Constants::handle)
                     .GET(Endpoints.TEST_NEEDS_AUTH.uri(), Constants::handle)
                     .GET(Endpoints.TEST_NO_AUTH.uri(), Constants::handle)
+                    .GET(Endpoints.FAILURE.uri(), Constants::handleFail)
                     .build()
             )
             .webFilter(CuT)
@@ -59,7 +59,9 @@ public class AuthWebFilterTest {
     }
 
     @Test
-    public void happy() {
+    public void happy() throws TokenVerificiationException {
+        when(authService.findUserFromToken(anyString())).thenReturn(Mono.just(TempUser.builder().build()));
+
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
@@ -69,7 +71,9 @@ public class AuthWebFilterTest {
     }
 
     @Test
-    public void unhappy() {
+    public void unhappy() throws TokenVerificiationException {
+        when(authService.findUserFromToken(anyString())).thenThrow(new TokenVerificiationException(":()"));
+
         webTestClient.get()
             .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
