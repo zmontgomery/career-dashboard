@@ -21,8 +21,6 @@ export const SESSION_KEY = 'session';
   providedIn: 'root'
 })
 export class AuthService {
-
-  
   private isAuthenticated: boolean;
 
   private tokenSubject: BehaviorSubject<Token | null> = new BehaviorSubject<Token | null>(null);
@@ -40,7 +38,117 @@ export class AuthService {
     private readonly googleAuthService: SocialAuthService,
   ) { 
     this.isAuthenticated = false;
+    this.listenForMSALSignIn();
+    this.listenForGoogleSignIn();
+    this.loadToken();
+    this.listenForTokenUpdates();
+  }
 
+  /**
+   * Redirects to the microsoft login page
+   */
+  loginRedirectMS() {
+    this.msalAuthService.loginRedirect();
+  }
+
+  /**
+   * Redirects to the google login page
+   */
+  loginRedirectGoogle() {
+    this.googleAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  /**
+   * Determines if the token needs to be refreshed, and if so,
+   * calles the refresh endpoint
+   * 
+   * @returns the token observable
+   */
+  expiryCheck(): Observable<Token | null> {
+    if (this.token!.isRefreshing()) {
+      // returns the observable directly if refreshing to prevent
+      // duplicate refresh requests
+
+      return this.token$;
+    } else if (this.token?.willExpire()) {
+      // Calls the refresh endpoint if the token is expiring soon
+      // It then returns an observable of the new token
+
+      this.token?.refresh();
+      return this.refresh().pipe(
+        mergeMap((res) => {
+          this.processResponse(res);
+          return of(this.token!);
+        })
+      );
+    } else {
+      // Return the observable token by default
+
+      return this.token$;
+    }
+  }
+
+  /**
+   * Signs in the user
+   * 
+   * @param loginRequest - login request to the backend
+   * @returns a login response
+   */
+  signIn(loginRequest: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.SIGN_IN), loginRequest)
+      .pipe(
+        map((json) => new LoginResponse(json)),
+      );
+  }
+
+  /**
+   * Refreshes a token
+   * 
+   * @returns a login response
+   */
+  refresh(): Observable<LoginResponse> {
+    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.REFRESH), {})
+      .pipe(
+        map((json) => new LoginResponse(json)),
+      );
+  }
+
+  /**
+   * Signs out the user
+   */
+  signOut() {
+    this.clearAuthData();
+  }
+
+  /**
+   * @returns the token
+   */
+  getToken(): Token | undefined {
+    return this.token;
+  }
+
+  /**
+   * Expires the current token
+   */
+  expireToken(): void {
+    this.clearAuthData();
+  }
+
+  /**
+   * @returns if the user is authenticated
+   */
+  authenticated(): boolean {
+    return this.isAuthenticated;
+  }
+
+  //
+  // Private
+  //
+
+  /**
+   * Subscribes to the broadcast from microsoft, creates a log in request, and signs in the user
+   */
+  private listenForMSALSignIn() {
     this.broadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS))
       .subscribe((result: EventMessage) => {
@@ -52,7 +160,12 @@ export class AuthService {
             });
           }
     });
+  }
 
+  /**
+   * Subsribes to the google auth state, creates a log in request, and signs in the user
+   */
+  private listenForGoogleSignIn() {
     this.googleAuthService.authState.subscribe((state) => {
       if (LangUtils.exists(state)) {
           if (!this.isAuthenticated) {
@@ -62,7 +175,28 @@ export class AuthService {
           }
       }
     });
+  }
 
+  /**
+   * Subscribes to the token observable to update local storage
+   */
+  private listenForTokenUpdates() {
+    this.token$.subscribe((token) => {
+      if (LangUtils.exists(token)) {
+        localStorage.setItem(AUTH_TOKEN_STORAGE, token!.getToken());
+        localStorage.setItem(TOKEN_ISSUED, token!.getExpiry().getTime().toString());
+        this.token = token!;
+      } else {
+        localStorage.removeItem(AUTH_TOKEN_STORAGE);
+        localStorage.removeItem(TOKEN_ISSUED);
+      }
+    });
+  }
+
+  /**
+   * Loads the token on service creation
+   */
+  private loadToken() {
     // Load token from session storage
     const tokenString = localStorage.getItem(AUTH_TOKEN_STORAGE);
     const tokenIssued = Number.parseInt(localStorage.getItem(TOKEN_ISSUED)!);
@@ -79,76 +213,13 @@ export class AuthService {
       this.tokenSubject.next(null);
       this.userSubject.next(null);
     }
-
-    this.token$.subscribe((token) => {
-      if (LangUtils.exists(token)) {
-        localStorage.setItem(AUTH_TOKEN_STORAGE, token!.getToken());
-        localStorage.setItem(TOKEN_ISSUED, token!.getExpiry().getTime().toString());
-        this.token = token!;
-      } else {
-        localStorage.removeItem(AUTH_TOKEN_STORAGE);
-        localStorage.removeItem(TOKEN_ISSUED);
-      }
-    });
   }
 
-  loginRedirectMS() {
-    this.msalAuthService.loginRedirect();
-  }
-
-  loginRedirectGoogle() {
-    this.googleAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
-  }
-
-  private refreshCheckSubject = new Subject<void>();
-  refreshCheck$ = this.refreshCheckSubject.asObservable();
-
-  expiryCheck(): Observable<Token | null> {
-    if (this.token!.isRefreshing()) {
-      return this.token$;
-    } else if (this.token?.willExpire()) {
-      this.token?.refresh();
-      return this.refresh().pipe(
-        mergeMap((res) => {
-          this.processResponse(res);
-          return of(this.token!);
-        })
-      );
-    } else {
-      return this.token$;
-    }
-  }
-
-  signIn(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.SIGN_IN), loginRequest)
-      .pipe(
-        map((json) => new LoginResponse(json)),
-      );
-  }
-
-  refresh(): Observable<LoginResponse> {
-    return this.http.post<LoginResponseJSON>(constructBackendRequest(Endpoints.REFRESH), {})
-      .pipe(
-        map((json) => new LoginResponse(json)),
-      );
-  }
-
-  signOut() {
-    this.clearAuthData();
-  }
-
-  getToken(): Token | undefined {
-    return this.token;
-  }
-
-  expireToken(): void {
-    this.clearAuthData();
-  }
-
-  authenticated(): boolean {
-    return this.isAuthenticated;
-  }
-
+  /**
+   * Processes a login response 
+   * 
+   * @param res - the login response
+   */
   private processResponse(res: LoginResponse) {
     if (LangUtils.exists(res)) {
       this.isAuthenticated = true;
@@ -160,6 +231,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * Creates a login request
+   * 
+   * @param token - id token
+   * @param tokenType - token source
+   * @returns 
+   */
   private createLoginRequest(token: string, tokenType: TokenType): LoginRequest {
     return new LoginRequest({
       idToken: token,
@@ -167,6 +245,9 @@ export class AuthService {
     });
   }
 
+  /**
+   * Clears all data related to authentication
+   */
   private clearAuthData() {
     this.isAuthenticated = false;
     this.tokenSubject.next(null);
