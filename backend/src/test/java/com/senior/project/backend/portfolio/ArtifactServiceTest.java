@@ -39,7 +39,7 @@ public class ArtifactServiceTest {
     private ArtifactRepository artifactRepository;
 
     @Test
-    public void testProcessFile() {
+    public void testProcessFile() throws NoSuchFieldException, IllegalAccessException {
         when(artifactRepository.save(any())).thenReturn(new Artifact());
 
         FilePart filePart = mock(FilePart.class);
@@ -54,12 +54,17 @@ public class ArtifactServiceTest {
 
         when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
 
+        // Use reflection to set the value of uploadDirectory
+        Field uploadDirectoryField = ArtifactService.class.getDeclaredField("uploadDirectory");
+        uploadDirectoryField.setAccessible(true); // Make the private field accessible
+        uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
+
         Mono<String> result = artifactService.processFile(filePart);
         StepVerifier.create(result).expectNext("File uploaded successfully").expectComplete().verify();
     }
 
     @Test
-    public void testProcessFileWrongContentType() throws NoSuchFieldException, IllegalAccessException {
+    public void testProcessFileWrongContentType() {
         FilePart filePart = mock(FilePart.class);
 
         DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
@@ -69,11 +74,6 @@ public class ArtifactServiceTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         when(filePart.headers()).thenReturn(headers);
-
-        // Use reflection to set the value of uploadDirectory
-        Field uploadDirectoryField = ArtifactService.class.getDeclaredField("uploadDirectory");
-        uploadDirectoryField.setAccessible(true); // Make the private field accessible
-        uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> artifactService.processFile(filePart).block());
 
