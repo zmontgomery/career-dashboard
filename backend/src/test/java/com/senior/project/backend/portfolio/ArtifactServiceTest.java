@@ -64,6 +64,22 @@ public class ArtifactServiceTest {
     }
 
     @Test
+    public void testProcessFileToLarge(){
+        FilePart filePart = mock(FilePart.class);
+
+        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+        long bufferSize = 10 * 1024 * 1024 + 1;
+        byte[] bufferContent = new byte[(int) bufferSize];
+        DataBuffer dataBuffer = dataBufferFactory.wrap(bufferContent);
+
+        when(filePart.content()).thenReturn(Flux.just(dataBuffer));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> artifactService.processFile(filePart).block());
+
+        assertEquals(HttpStatus.PAYLOAD_TOO_LARGE, exception.getStatusCode());
+    }
+
+    @Test
     public void testProcessFileWrongContentType() {
         FilePart filePart = mock(FilePart.class);
 
