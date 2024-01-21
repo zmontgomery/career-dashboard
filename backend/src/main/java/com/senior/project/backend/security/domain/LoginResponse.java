@@ -1,10 +1,6 @@
 package com.senior.project.backend.security.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * A domain object representing the response gotten from a 
@@ -17,6 +13,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class LoginResponse {
     private String token;
     private TempUser user;

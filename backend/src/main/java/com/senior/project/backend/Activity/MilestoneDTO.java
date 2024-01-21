@@ -5,6 +5,7 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
+@Generated
 public class MilestoneDTO {
     private Long id;
     private String name;
