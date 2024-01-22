@@ -9,6 +9,7 @@ import {constructBackendRequest, Endpoints} from "../util/http-helper";
   styleUrls: ['./portfolio.component.less']
 })
 export class PortfolioComponent {
+  showUploadButton: boolean = false;
   constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
