@@ -26,43 +26,45 @@ public class ArtifactService {
     public ArtifactService(ArtifactRepository artifactRepository) { this.artifactRepository = artifactRepository;}
 
     public Mono<String> processFile(FilePart filePart) {
-        validateFileSize(filePart);
-        String extension;
+        return validateFileSize(filePart).flatMap(
+            (result) -> {
+                String extension;
+                // Check if the file is a PDF based on content type
+                MediaType contentType = filePart.headers().getContentType();
+                if (contentType == null) {
+                    return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Content type provided for file"));
+                } else if (contentType.isCompatibleWith(MediaType.APPLICATION_PDF)){
+                    extension = ".pdf";
+                }
+                // Add more file types here
+                else {
+                    return Mono.error(new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported filetype"));
+                }
 
-        // Check if the file is a PDF based on content type
-        MediaType contentType = filePart.headers().getContentType();
-        if (contentType == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Content type provided for file");
-        } else if (contentType.isCompatibleWith(MediaType.APPLICATION_PDF)){
-            extension = ".pdf";
-        }
-        // Add more file types here
-        else {
-            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported filetype");
-        }
+                // Generate a unique identifier for the file
+                String uniqueFilename = UUID.randomUUID() + extension;
 
-        // Generate a unique identifier for the file
-        String uniqueFilename = UUID.randomUUID() + extension;
+                // Construct the destination path using the unique identifier
+                Path destination = Paths.get(uploadDirectory, uniqueFilename);
 
-        // Construct the destination path using the unique identifier
-        Path destination = Paths.get(uploadDirectory, uniqueFilename);
+                Artifact upload = new Artifact();
+                upload.setFileLocation(destination.toString());
+                upload.setName(filePart.filename());
 
-        Artifact upload = new Artifact();
-        upload.setFileLocation(destination.toString());
-        upload.setName(filePart.filename());
+                // TODO add comment capture
+                upload.setComment("");
 
-        // TODO add comment capture
-        upload.setComment("");
-
-        // Save the file to the specified directory
-        return filePart.transferTo(destination)
-                // TODO need to also add to user's portfolio table in DB?
-                .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
-                .thenReturn("File uploaded successfully");
+                // Save the file to the specified directory
+                return filePart.transferTo(destination)
+                        // TODO need to also add to user's portfolio table in DB?
+                        .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
+                        .thenReturn("File uploaded successfully");
+            }
+        );
     }
 
-    private void validateFileSize(FilePart filePart) {
-        filePart
+    private Mono<Object> validateFileSize(FilePart filePart) {
+        return filePart
                 .content()
                 .reduce(0L, (currentSize, buffer) -> currentSize + buffer.readableByteCount())
                 .flatMap(size -> {
@@ -74,7 +76,6 @@ public class ArtifactService {
                     } else {
                         return Mono.empty();
                     }
-                })
-                .block(); // Block to get the result synchronously
+                });// Block to get the result synchronously
     }
 }
