@@ -84,8 +84,13 @@ public class ArtifactService {
                 });
     }
 
-    public Mono<ResponseEntity<Resource>> getFile(String filename, HttpHeaders headers) {
-        Path path = Paths.get(uploadDirectory, filename);
+    public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
+
+        var artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
+
+        // TODO do we need canonical path check here?
+        Path path = Paths.get(artifact.getFileLocation());
 
         return Mono.justOrEmpty(path)
                 .flatMap(p -> {

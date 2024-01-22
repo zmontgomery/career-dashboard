@@ -11,7 +11,8 @@ import {ArtifactService} from "./artifact.service";
 })
 export class PortfolioComponent {
   showUploadButton: boolean = true;
-  pdfURL: string = 'http://localhost:8080/api/portfolio/resume/Resume.pdf';
+  pdfURLBase = 'http://localhost:8080/api/portfolio/';
+  pdfURL: string = '';
 
   constructor(
     public dialog: MatDialog,
@@ -19,10 +20,11 @@ export class PortfolioComponent {
   ) {
     this.artifactService.getPortfolioArtifacts().subscribe((artifacts) => {
       // need different way to get resume since the name is defined by the user
-      const resume = artifacts.find((artifact) => artifact.name == "Resume.pdf")
+      const resume = artifacts.find((artifact) => artifact.name == "resume.pdf")
 
       if (resume !== undefined) {
-        this.showUploadButton = true;
+        this.pdfURL = this.pdfURLBase + resume.id;
+        this.showUploadButton = false;
       }
     });
   }

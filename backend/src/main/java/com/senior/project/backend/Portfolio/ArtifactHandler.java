@@ -42,16 +42,13 @@ public class ArtifactHandler {
 
 
     public Mono<ServerResponse> servePdf(ServerRequest request) {
-        String filename = request.pathVariable("artifactID");
-
-        // TODO actually grab filename using id
+        String artifactID = request.pathVariable("artifactID");
 
         // Set the appropriate headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", filename);
 
-        Mono<ResponseEntity<Resource>> file = artifactService.getFile(filename, headers);
+        Mono<ResponseEntity<Resource>> file = artifactService.getFile(artifactID, headers);
 
         return file.flatMap(responseEntity ->
                 ServerResponse.ok()
@@ -60,7 +57,6 @@ public class ArtifactHandler {
     }
 
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
-        System.out.println("all artifacts");
         // TODO may want way to only get artifacts needed from portfolio page
         return ServerResponse.ok().body(this.artifactService.all(), Artifact.class );
     }
