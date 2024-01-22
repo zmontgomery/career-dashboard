@@ -2,6 +2,7 @@ package com.senior.project.backend.Portfolio;
 
 import com.senior.project.backend.domain.Artifact;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
@@ -18,12 +19,25 @@ public class ArtifactService {
 
     private static final long MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
-    @Value("${FILE_UPLOAD_DIRECTORY}")
-    private String uploadDirectory;
+    @Value("${FILE_UPLOAD_DIRECTORY:}")
+    private String _uploadDirectory;
+
+    private final String uploadDirectory;
 
     private final ArtifactRepository artifactRepository;
 
-    public ArtifactService(ArtifactRepository artifactRepository) { this.artifactRepository = artifactRepository;}
+    public ArtifactService(ArtifactRepository artifactRepository) {
+        this.artifactRepository = artifactRepository;
+        if (this._uploadDirectory == null) {
+            // Get the absolute path of the project directory
+            Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
+
+            // Get new upload directory location in the project root
+            this.uploadDirectory = projectDirectory.resolve("uploads").toString();
+        } else {
+            this.uploadDirectory = this._uploadDirectory;
+        }
+    }
 
     public Mono<String> processFile(FilePart filePart) {
         return validateFileSize(filePart).flatMap(
