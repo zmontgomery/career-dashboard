@@ -6,9 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 
 @Component
@@ -49,8 +52,9 @@ public class ArtifactHandler {
 
         Mono<ResponseEntity<Resource>> file = artifactService.getFile(filename, headers);
 
-        return ServerResponse.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .bodyValue(file);
+        return file.flatMap(responseEntity ->
+                ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 }
