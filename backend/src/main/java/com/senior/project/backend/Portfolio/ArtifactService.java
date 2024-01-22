@@ -68,7 +68,7 @@ public class ArtifactService {
         );
     }
 
-    private Mono<Object> validateFileSize(FilePart filePart) {
+    private Mono<Boolean> validateFileSize(FilePart filePart) {
         return filePart
                 .content()
                 .reduce(0L, (currentSize, buffer) -> currentSize + buffer.readableByteCount())
@@ -79,9 +79,9 @@ public class ArtifactService {
                                 "File size exceeds the maximum allowed size."
                         ));
                     } else {
-                        return Mono.empty();
+                        return Mono.just(true);
                     }
-                });// Block to get the result synchronously
+                });
     }
 
     public Mono<ResponseEntity<Resource>> getFile(String filename, HttpHeaders headers) {
