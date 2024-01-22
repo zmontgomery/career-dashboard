@@ -13,7 +13,7 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-checkbox [checked]="milestone.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="milestone.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
             {{milestone.name}}
           </mat-panel-title>
 <!--  Use if we want to display a description -->
@@ -24,7 +24,7 @@
         <mat-expansion-panel class="task-expansion-panel" *ngFor="let task of milestone.tasks">
           <mat-expansion-panel-header>
             <div class="flex-vertical-align">
-              <mat-checkbox disabled [checked]="task.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+              <mat-checkbox [disabled]="true" [checked]="task.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
               <p>{{task.name}}</p>
             </div>
           </mat-expansion-panel-header>
@@ -33,7 +33,7 @@
         <mat-expansion-panel class="event-expansion-panel" *ngFor="let event of milestone.events">
           <mat-expansion-panel-header>
             <div class="flex-vertical-align">
-              <mat-checkbox disabled [checked]="event.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+              <mat-checkbox [disabled]="true" [checked]="event.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
               <div>{{event.name}}</div>
             </div>
           </mat-expansion-panel-header>
