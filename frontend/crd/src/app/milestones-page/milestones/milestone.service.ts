@@ -17,29 +17,20 @@ export class MilestoneService {
   ) {
   }
 
-  getMilestones(forceRefresh?: boolean): any {
+  getMilestones(forceRefresh?: boolean): Observable<Milestone[]> {
     // return last value (i.e. cache) from ReplaySubject or add data to it
     if (!this.hasBeenRequested || forceRefresh) {
       this.hasBeenRequested = true;
-      const milestoneData = this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES))
-        .pipe(map((data: any) => {
-          return data.map((milestoneData: MilestoneJSON) => {
+
+      this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES)).subscribe((data) => {
+        const mappedData = data.map((milestoneData: any) => {
             return new Milestone(milestoneData)
           })
-      }));
-
-      //makes sure the HTTP is done before adding data to cache
-      const processedObservable = milestoneData.pipe(
-          concatMap((processedData: any) => {
-            this.milestoneCache$.next(processedData);
-            return of(processedData);
-          })
-        );
-
-      return processedObservable;
+        this.milestoneCache$.next(mappedData)
+      })
     }
 
-    return this.milestoneCache$;
+    return this.milestoneCache$.asObservable();
 
   }
 
