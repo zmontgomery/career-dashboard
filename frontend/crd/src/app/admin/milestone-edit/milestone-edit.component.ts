@@ -21,10 +21,18 @@ export class MilestoneEditComponent {
       //TODO: the param is name for now but change to ID later (maybe)
       this.milestoneName = decodeURIComponent(params['name']);
     });
+
+    //TODO: retrieve the milestone data 
+
+    //TODO: retrieve all active tasks
   }
 
   back() {
     this.router.navigate(['/admin/milestones']);
+  }
+
+  saveMilestone() {
+    //TODO: this
   }
 
 }
