@@ -2,8 +2,12 @@ package com.senior.project.backend.Portfolio;
 
 import com.senior.project.backend.domain.Artifact;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -76,5 +80,25 @@ public class ArtifactService {
                     }
                 })
                 .block(); // Block to get the result synchronously
+    }
+
+    public Mono<ResponseEntity<Resource>> getFile(String filename, HttpHeaders headers) {
+        Path path = Paths.get(uploadDirectory, filename);
+
+        return Mono.justOrEmpty(path)
+                .flatMap(p -> {
+                    try {
+                        // Create a FileSystemResource for the PDF file
+                        Resource pdfResource = new FileSystemResource(p.toFile());
+
+                        // Return ResponseEntity with headers and PDF resource
+                        return Mono.just(ResponseEntity.ok()
+                                .headers(headers)
+                                .body(pdfResource));
+                    } catch (Exception e) {
+                        // Handle file not found or other errors
+                        return Mono.just(ResponseEntity.notFound().build());
+                    }
+                });
     }
 }

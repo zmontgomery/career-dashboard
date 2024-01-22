@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -21,6 +22,7 @@ public class PortfolioRouter {
     @Bean
     public RouterFunction<ServerResponse> portfolioRoutes(ArtifactHandler artifactHandler) {
         String resume = builder.buildUri("portfolio", "resume");
-        return route(POST(resume), artifactHandler::handleFileUpload);
+        return route(POST(resume), artifactHandler::handleFileUpload)
+                .andRoute(GET(resume + "/{artifactID}"), artifactHandler::servePdf);
     }
 }

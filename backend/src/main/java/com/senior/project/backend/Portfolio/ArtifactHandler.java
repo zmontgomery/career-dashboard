@@ -1,6 +1,9 @@
 package com.senior.project.backend.Portfolio;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -31,5 +34,23 @@ public class ArtifactHandler {
                         // spring update it won't break
                         .contentType(MediaType.TEXT_PLAIN)
                         .bodyValue(response));
+    }
+
+
+    public Mono<ServerResponse> servePdf(ServerRequest request) {
+        String filename = request.pathVariable("artifactID");
+
+        // TODO actually grab filename using id
+
+        // Set the appropriate headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", filename);
+
+        Mono<ResponseEntity<Resource>> file = artifactService.getFile(filename, headers);
+
+        return ServerResponse.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .bodyValue(file);
     }
 }
