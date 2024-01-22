@@ -24,7 +24,8 @@ export class PortfolioComponent {
   private updateArtifacts() {
     this.artifactService.getPortfolioArtifacts().subscribe((artifacts) => {
       // need different way to get resume since the name is defined by the user
-      const resume = artifacts.find((artifact) => artifact.name == "resume.pdf")
+      // const resume = artifacts.find((artifact) => artifact.name == "resume.pdf")
+      const resume = artifacts[0]
 
       if (resume !== undefined) {
         this.pdfURL = this.pdfURLBase + resume.id;
