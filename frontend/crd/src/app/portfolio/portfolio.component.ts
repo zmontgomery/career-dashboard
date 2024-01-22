@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {FileUploadComponent} from "../file-upload/file-upload.component";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
+import {ArtifactService} from "./artifact.service";
 
 @Component({
   selector: 'app-portfolio',
@@ -9,8 +10,22 @@ import {constructBackendRequest, Endpoints} from "../util/http-helper";
   styleUrls: ['./portfolio.component.less']
 })
 export class PortfolioComponent {
-  showUploadButton: boolean = false;
-  constructor(public dialog: MatDialog) {}
+  showUploadButton: boolean = true;
+  pdfURL: string = 'http://localhost:8080/api/portfolio/resume/Resume.pdf';
+
+  constructor(
+    public dialog: MatDialog,
+    private readonly artifactService: ArtifactService
+  ) {
+    this.artifactService.getPortfolioArtifacts().subscribe((artifacts) => {
+      // need different way to get resume since the name is defined by the user
+      const resume = artifacts.find((artifact) => artifact.name == "Resume.pdf")
+
+      if (resume !== undefined) {
+        this.showUploadButton = true;
+      }
+    });
+  }
 
   openDialog(): void {
     this.dialog.open(FileUploadComponent, {

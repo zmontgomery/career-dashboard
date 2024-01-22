@@ -17,10 +17,12 @@
       <button mat-button *ngIf="showUploadButton" (click)="openDialog()">
         <mat-icon>upload_file</mat-icon>
       </button>
-      <pdf-viewer [src]="'http://localhost:8080/api/portfolio/resume/1f4a45da-1b13-48c5-b817-1d3bad8f543b.pdf'"
-                  [render-text]="true"
-                  [original-size]="true"
-                  style="width: 400px; height: 500px"
+      <pdf-viewer
+        *ngIf="!showUploadButton"
+        [src]="pdfURL"
+        [render-text]="true"
+        [original-size]="true"
+        style="width: 400px; height: 500px"
       ></pdf-viewer>
     </mat-card>
   </div>
