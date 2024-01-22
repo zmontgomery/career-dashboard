@@ -20,7 +20,6 @@ export class MilestoneService {
   getMilestones(forceRefresh?: boolean): any {
     // return last value (i.e. cache) from ReplaySubject or add data to it
     if (!this.hasBeenRequested || forceRefresh) {
-      console.log("calling refresh")
       this.hasBeenRequested = true;
       const milestoneData = this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES))
         .pipe(map((data: any) => {
