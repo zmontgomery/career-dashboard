@@ -18,6 +18,10 @@ export class PortfolioComponent {
     public dialog: MatDialog,
     private readonly artifactService: ArtifactService
   ) {
+    this.updateArtifacts();
+  }
+
+  private updateArtifacts() {
     this.artifactService.getPortfolioArtifacts().subscribe((artifacts) => {
       // need different way to get resume since the name is defined by the user
       const resume = artifacts.find((artifact) => artifact.name == "resume.pdf")
@@ -32,6 +36,8 @@ export class PortfolioComponent {
   openDialog(): void {
     this.dialog.open(FileUploadComponent, {
       data: {url: constructBackendRequest(Endpoints.RESUME)}
-    });
+    })
+      // this could definitely be optimized, but for now we can do this
+      .afterClosed().subscribe(this.updateArtifacts.bind(this))
   }
 }
