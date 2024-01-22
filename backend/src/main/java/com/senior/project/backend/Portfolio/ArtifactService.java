@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
@@ -101,5 +102,9 @@ public class ArtifactService {
                         return Mono.just(ResponseEntity.notFound().build());
                     }
                 });
+    }
+
+    public Flux<Artifact> all() {
+        return Flux.fromIterable(artifactRepository.findAll());
     }
 }

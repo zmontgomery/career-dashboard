@@ -1,5 +1,6 @@
 package com.senior.project.backend.Portfolio;
 
+import com.senior.project.backend.domain.Artifact;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -56,5 +57,11 @@ public class ArtifactHandler {
                 ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_PDF)
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
+    }
+
+    public Mono<ServerResponse> all(ServerRequest serverRequest) {
+        System.out.println("all artifacts");
+        // TODO may want way to only get artifacts needed from portfolio page
+        return ServerResponse.ok().body(this.artifactService.all(), Artifact.class );
     }
 }
