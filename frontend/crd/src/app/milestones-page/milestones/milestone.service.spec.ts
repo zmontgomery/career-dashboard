@@ -45,6 +45,7 @@ describe('MilestoneService', () => {
         isRequired: true,
         submission: 'submission',
         yearLevel: YearLevel.Freshman,
+        milestoneID: "id"
       }],
     }
 

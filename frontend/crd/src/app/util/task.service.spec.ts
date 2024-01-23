@@ -32,6 +32,7 @@ describe('TaskService', () => {
         isRequired: true,
         submission: 'submission',
         yearLevel: YearLevel.Freshman,
+        milestoneID: "1",
     }
 
     const tasks = Array(new Task(taskJSON));
