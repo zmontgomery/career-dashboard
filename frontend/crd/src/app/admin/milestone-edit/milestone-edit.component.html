@@ -1,20 +1,21 @@
 <button mat-button (click)="back()">BACK</button>
 
-<p>editing milestone: {{milestoneName}}</p>
-
-<mat-form-field>
+<form class="mat-dialog-content" (ngSubmit)="saveMilestone()">
+  <mat-form-field *ngIf="milestoneName == ''">
     <mat-label>Milestone Name</mat-label>
     <input matInput>
   </mat-form-field>
+  <div *ngIf="milestoneName != ''">
+    <h4>You are currently editing {{milestoneName}}</h4>
+  </div>
   <mat-form-field>
-    <mat-label>Select</mat-label>
+    <mat-label>Select Year Level</mat-label>
     <mat-select>
-      <mat-option value="one">First option</mat-option>
-      <mat-option value="two">Second option</mat-option>
+      <mat-option *ngFor="let yearLevel of yearLevels" value="{{yearLevel}}">{{yearLevel}}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
-    <mat-label>Textarea</mat-label>
+    <mat-label>Milestone Description</mat-label>
     <textarea matInput></textarea>
   </mat-form-field>
-  
+</form>
