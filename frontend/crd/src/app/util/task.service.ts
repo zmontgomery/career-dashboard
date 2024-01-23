@@ -23,8 +23,6 @@ export class TaskService {
       this.hasBeenRequested = true;
 
       this.http.get<Task[]>(constructBackendRequest(Endpoints.TASKS)).subscribe((data) => {
-        console.log("ooo received data");
-        console.log(data);
         const mappedData = data.map((taskData: any) => {
             return new Task(taskData)
           })
