@@ -3,7 +3,7 @@ import { DashboardComponent } from './dashboard.component';
 import {MockComponent} from "ng-mocks";
 import {EventsComponent} from "./events/events.component";
 import {MilestonesComponent} from "../milestones-page/milestones/milestones.component";
-import {MatListModule} from '@angular/material/list';
+import { TaskListComponent } from '../tasklist/tasklist.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -11,7 +11,7 @@ describe('DashboardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent, MockComponent(EventsComponent), MockComponent(MilestonesComponent)]
+      declarations: [DashboardComponent, MockComponent(EventsComponent), MockComponent(MilestonesComponent), MockComponent(TaskListComponent)]
     });
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;

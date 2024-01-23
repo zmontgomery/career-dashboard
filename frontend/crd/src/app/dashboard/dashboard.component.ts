@@ -6,9 +6,4 @@ import {Component} from '@angular/core';
   styleUrls: ['./dashboard.component.less']
 })
 export class DashboardComponent{
-  linkList = [
-         { label: 'Task 1', url: 'https://www.google.com/' },
-         { label: 'Task 2', url: 'https://angular.io' },
-         { label: 'Task 3', url: 'https://github.com' },
-       ];
 }
