@@ -1,3 +1,5 @@
+import { YearLevel } from "./Milestone";
+
 export interface TaskJSON {
   name: string;
   description: string;
@@ -5,6 +7,7 @@ export interface TaskJSON {
   id: string;
   isRequired: boolean;
   submission: any;
+  yearLevel: YearLevel;
 }
 
 export class Task {
@@ -18,6 +21,7 @@ export class Task {
     this.isComplete = true;
     // TODO replace with constructor call when we add submission objects
     this.submission = json.submission;
+    this.yearLevel = json.yearLevel;
   }
 
   name: string;
@@ -27,4 +31,5 @@ export class Task {
   isRequired: boolean;
   isComplete: boolean;
   submission: any;
+  yearLevel: YearLevel;
 }

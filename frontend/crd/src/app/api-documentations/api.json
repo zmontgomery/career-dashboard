@@ -257,6 +257,37 @@
         }
       }
     },
+    "/tasks": {
+      "get": {
+        "summary": "Returns all tasks",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["tasks"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                },
+                "example": {
+                    "taskID": 1,
+                    "name": "Upload Resume",
+                    "description": "upload resume draft to portfolio",
+                    "yearLevel": "freshman",
+                    "artifactSubmitted": -1,
+                    "artifactName": "Resume",
+                    "submissionDate": "",
+                    "parentMilestoneID": 1,
+                    "parentMilestoneName": "Professional Career Package Development"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/task/{taskID}": {
       "get": {
         "summary": "Returns a specific task",
