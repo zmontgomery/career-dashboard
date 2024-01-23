@@ -8,6 +8,7 @@ export interface TaskJSON {
   isRequired: boolean;
   submission: any;
   yearLevel: YearLevel;
+  milestoneID: string;
 }
 
 export class Task {
@@ -22,6 +23,7 @@ export class Task {
     // TODO replace with constructor call when we add submission objects
     this.submission = json.submission;
     this.yearLevel = json.yearLevel;
+    this.milestoneID = json.milestoneID;
   }
 
   name: string;
@@ -32,4 +34,5 @@ export class Task {
   isComplete: boolean;
   submission: any;
   yearLevel: YearLevel;
+  milestoneID: string;
 }
