@@ -18,7 +18,7 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()
     private Milestone milestone;
 }
