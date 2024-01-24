@@ -43,7 +43,9 @@ describe('MilestoneService', () => {
         needsArtifact: true,
         id: "id",
         isRequired: true,
-        submission: 'submission'
+        submission: 'submission',
+        yearLevel: YearLevel.Freshman,
+        milestoneID: "id"
       }],
     }
 
