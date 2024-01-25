@@ -62,17 +62,20 @@ public class Constants {
                 "Major and Class Schedule",
                 "Meet with academic advisor to discuss current major and class schedule",
                 true,
+                YearLevel.Freshman,
                 m1);
 
         task2 = new Task(2L,
                 "Complete Degreeworks Training",
                 "Detailed description here",
                 true,
+                YearLevel.Freshman,
                 m1);
         task3 = new Task(3L,
                 "Registration PIN meeting",
                 "Meet with academic advisor to discuss class schedule and receive PIN for registration",
                 true,
+                YearLevel.Freshman,
                 m1);
     }
 

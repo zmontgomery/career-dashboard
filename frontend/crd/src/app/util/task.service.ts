@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Milestone, MilestoneJSON } from "../../../domain/Milestone";
+import { Task, TaskJSON } from 'src/domain/Task';
 import { concatMap, finalize, map, Observable, of, ReplaySubject } from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MilestoneService {
+export class TaskService {
 
-  private milestoneCache$ = new ReplaySubject<any>();
+  private taskCache$ = new ReplaySubject<any>();
   private hasBeenRequested = false;
 
   constructor(
@@ -17,20 +17,20 @@ export class MilestoneService {
   ) {
   }
 
-  getMilestones(forceRefresh?: boolean): Observable<Milestone[]> {
+  getTasks(forceRefresh?: boolean): Observable<Task[]> {
     // return last value (i.e. cache) from ReplaySubject or add data to it
     if (!this.hasBeenRequested || forceRefresh) {
       this.hasBeenRequested = true;
 
-      this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES)).subscribe((data) => {
-        const mappedData = data.map((milestoneData: any) => {
-            return new Milestone(milestoneData)
+      this.http.get<Task[]>(constructBackendRequest(Endpoints.TASKS)).subscribe((data) => {
+        const mappedData = data.map((taskData: any) => {
+            return new Task(taskData)
           })
-        this.milestoneCache$.next(mappedData)
+        this.taskCache$.next(mappedData)
       })
     }
 
-    return this.milestoneCache$.asObservable();
+    return this.taskCache$.asObservable();
 
   }
 

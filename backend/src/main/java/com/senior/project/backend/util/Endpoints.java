@@ -11,6 +11,7 @@ public enum Endpoints {
     EVENTS("events", true),
     DASHBOARD_EVENTS("dashboard_events", true),
     MILSTONES("milestones", true),
+    TASKS("tasks", true),
 
     // Security
     SIGNIN("auth/signin", false),

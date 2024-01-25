@@ -14,11 +14,16 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class ActivityRouter extends AbstractRouter {
     @Bean
-    public RouterFunction<ServerResponse> activityRoutes(EventHandler eventHandler, MilestoneHandler milestoneHandler) {
+    public RouterFunction<ServerResponse> activityRoutes(
+        EventHandler eventHandler, 
+        MilestoneHandler milestoneHandler, 
+        TaskHandler taskHandler
+    ) {
         return wrapRoutes(
             route(GET(Endpoints.EVENTS.uri()), eventHandler::all)
                 .andRoute(GET(Endpoints.MILSTONES.uri()), milestoneHandler::all)
                 .andRoute(GET(Endpoints.DASHBOARD_EVENTS.uri()), eventHandler::dashboard)
+                .andRoute(GET(Endpoints.TASKS.uri()), taskHandler::all)
             );
     }
 }
