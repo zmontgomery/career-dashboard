@@ -8,13 +8,7 @@
   <div *ngIf="currentMilestone">
     <h4>You are currently editing {{milestoneName}} [ID Number {{currentMilestone.milestoneID}}] </h4>
   </div>
-  <!-- IFF we want to be able to edit year levels -->
-  <mat-form-field>
-    <mat-label>Select Year Level</mat-label>
-    <mat-select formControlName="level" (ngModelChange)="switchYear($event)">
-      <mat-option *ngFor="let yearLevel of yearLevels" value="{{yearLevel}}">{{yearLevel}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <h5>This milestone is for grade level {{mYearLevel}} </h5>
   <mat-form-field>
     <mat-label>Milestone Description</mat-label>
     <textarea matInput></textarea>

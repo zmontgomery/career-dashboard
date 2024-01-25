@@ -80,7 +80,6 @@ export class MilestoneEditComponent {
     this.milestoneForm = this.formBuilder.group({
       name: [null, Validators.required],   //this field is hidden if the milestone already exists
       description: [null],
-      level: [this.mYearLevel, Validators.required],  //IFF we want to be able to edit year levels
       tasks: this.listTasks()
     });
 
@@ -116,12 +115,6 @@ export class MilestoneEditComponent {
 
   getFormControlTask(control: AbstractControl): FormControl {
     return control as FormControl;  //otherwise angular doesn't recognize this as a FormControl
-  }
-
-  //IFF we want to be able to edit year levels
-  switchYear(year: YearLevel) {
-    alert("WARNING: switching year level will reset all assigned tasks");
-    //IFF we want to be able to edit year levels, change the list of tasks shown
   }
 
   back() {
