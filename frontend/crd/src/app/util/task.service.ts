@@ -24,6 +24,12 @@ export class TaskService {
 
       this.http.get<Task[]>(constructBackendRequest(Endpoints.TASKS)).subscribe((data) => {
         const mappedData = data.map((taskData: any) => {
+            //if the milestone is sent as a object and not just the ID, extract the ID
+            if(taskData.milestone) {
+              const taskMilestone = taskData.milestone.id;
+              taskData.milestoneID = taskMilestone;
+            }
+
             return new Task(taskData)
           })
         this.taskCache$.next(mappedData)

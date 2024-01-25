@@ -1,16 +1,17 @@
 <button mat-button (click)="back()">BACK</button>
 
-<form class="mat-dialog-content" (ngSubmit)="saveMilestone()">
+<form *ngIf="dataLoaded" [formGroup]="milestoneForm" class="mat-dialog-content" (ngSubmit)="saveMilestone()">
   <mat-form-field *ngIf="milestoneName == ''">
     <mat-label>Milestone Name</mat-label>
-    <input matInput>
+    <input matInput formControlName="name">
   </mat-form-field>
-  <div *ngIf="milestoneName != ''">
-    <h4>You are currently editing {{milestoneName}}</h4>
+  <div *ngIf="currentMilestone">
+    <h4>You are currently editing {{milestoneName}} [ID Number {{currentMilestone.milestoneID}}] </h4>
   </div>
+  <!-- IFF we want to be able to edit year levels -->
   <mat-form-field>
     <mat-label>Select Year Level</mat-label>
-    <mat-select>
+    <mat-select formControlName="level" (ngModelChange)="switchYear($event)">
       <mat-option *ngFor="let yearLevel of yearLevels" value="{{yearLevel}}">{{yearLevel}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -18,4 +19,16 @@
     <mat-label>Milestone Description</mat-label>
     <textarea matInput></textarea>
   </mat-form-field>
+  <div *ngFor="let task of tasks.controls; let i=index">
+      <mat-checkbox [formControl]="getFormControlTask(task)">
+          {{yearTasks[i].name}}
+          <!-- TODO: edit button  -->
+      </mat-checkbox>
+      <div>
+        <p *ngIf="getFormControlTask(task).disabled">
+          This task is part of milestone ID {{yearTasks[i].milestoneID}}
+        </p>
+      </div>
+  </div>
+  <button mat-button type="submit" [disabled]="!milestoneForm.status">Submit</button>
 </form>

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import createSpyObj = jasmine.createSpyObj;
 import { of } from "rxjs";
-import {Milestone, YearLevel} from "../../../domain/Milestone";
+import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneMainPageComponent } from './milestone-main-page.component';
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 import { MatCardModule } from "@angular/material/card";
@@ -15,7 +15,7 @@ describe('MilestoneMainPageComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    milestoneID: "id",
+    id: "id",
     events: [],
     tasks: [],
   }))));
