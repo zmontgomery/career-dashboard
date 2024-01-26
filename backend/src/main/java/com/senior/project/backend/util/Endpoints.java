@@ -13,6 +13,9 @@ public enum Endpoints {
     MILSTONES("milestones", true),
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
+    PORTFOLIO("portfolio", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),

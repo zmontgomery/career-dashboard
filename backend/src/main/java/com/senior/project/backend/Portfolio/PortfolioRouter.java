@@ -17,15 +17,10 @@ public class PortfolioRouter {
 
     @Bean
     public RouterFunction<ServerResponse> portfolioRoutes(ArtifactHandler artifactHandler) {
-
-//        String resume = builder.buildUri("portfolio", "resume");
-//        String portfolio = builder.buildUri("portfolio");
-//        String artifactList = builder.buildUri("portfolio", "artifacts");
-//        String singleArtifact = builder.buildUri("portfolio" + "/{artifactID}");
         // TODO do something special here if coming from resume url
-        return route(POST(Endpoints.RESUME.uri(), artifactHandler::handleFileUpload)
-                .andRoute(POST(portfolio), artifactHandler::handleFileUpload)
-                .andRoute(GET(artifactList), artifactHandler::all)
-                .andRoute(GET(singleArtifact), artifactHandler::servePdf);
+        return route(POST(Endpoints.RESUME.uri()), artifactHandler::handleFileUpload)
+                .andRoute(POST(Endpoints.PORTFOLIO.uri()), artifactHandler::handleFileUpload)
+                .andRoute(GET(Endpoints.ARTIFACT_LIST.uri()), artifactHandler::all)
+                .andRoute(GET(Endpoints.SINGLE_ARTIFACT.uri()), artifactHandler::servePdf);
     }
 }
