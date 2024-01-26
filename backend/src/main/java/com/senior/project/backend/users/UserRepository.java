@@ -1,8 +1,11 @@
 package com.senior.project.backend.users;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.senior.project.backend.domain.User;
 
@@ -11,4 +14,7 @@ import com.senior.project.backend.domain.User;
  * 
  * @author Jim Logan - jrl9984@rit.edu
  */
-public interface UserRepository extends JpaRepository<User, UUID> { }
+public interface UserRepository extends JpaRepository<User, UUID> { 
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    public Optional<User> findUserByEmail(@Param("email") String email);
+}

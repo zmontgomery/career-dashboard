@@ -1,6 +1,6 @@
 package com.senior.project.backend.Portfolio;
 
-import com.senior.project.backend.util.URIBuilder;
+import com.senior.project.backend.util.Endpoints;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -13,20 +13,17 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class PortfolioRouter {
 
-    private final URIBuilder builder;
-
-    public PortfolioRouter(URIBuilder builder) {
-        this.builder = builder;
-    }
+    public PortfolioRouter() {}
 
     @Bean
     public RouterFunction<ServerResponse> portfolioRoutes(ArtifactHandler artifactHandler) {
-        String resume = builder.buildUri("portfolio", "resume");
-        String portfolio = builder.buildUri("portfolio");
-        String artifactList = builder.buildUri("portfolio", "artifacts");
-        String singleArtifact = builder.buildUri("portfolio" + "/{artifactID}");
+
+//        String resume = builder.buildUri("portfolio", "resume");
+//        String portfolio = builder.buildUri("portfolio");
+//        String artifactList = builder.buildUri("portfolio", "artifacts");
+//        String singleArtifact = builder.buildUri("portfolio" + "/{artifactID}");
         // TODO do something special here if coming from resume url
-        return route(POST(resume), artifactHandler::handleFileUpload)
+        return route(POST(Endpoints.RESUME.uri(), artifactHandler::handleFileUpload)
                 .andRoute(POST(portfolio), artifactHandler::handleFileUpload)
                 .andRoute(GET(artifactList), artifactHandler::all)
                 .andRoute(GET(singleArtifact), artifactHandler::servePdf);

@@ -1,14 +1,23 @@
+import { environment } from "src/environments/environment";
+
 export enum Endpoints {
-    SIGN_IN = 'auth/signIn',
+    // Security
+    SIGN_IN = 'auth/signin',
+    REFRESH = 'auth/refresh',
+    SIGN_OUT = 'auth/signout',
+
     MILESTONES = 'milestones',
+    EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
+    TASKS = 'tasks',
+    //DASHBOARD_TASKS = 'dashboard_tasks'
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
     ARTIFACTS = `${PORTFOLIO}/artifacts`,
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {
-    let uri = `http://localhost:8080/api/${segments}`;
+    let uri = `${environment.requestURI}/api/${segments}`;
 
     // Append params
     if (qParams.length > 0) uri += '?';

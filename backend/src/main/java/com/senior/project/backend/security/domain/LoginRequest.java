@@ -17,5 +17,5 @@ import lombok.*;
 @Generated
 public class LoginRequest {
     private String idToken;
-    private TokenType type;
+    private TokenType tokenType;
 }

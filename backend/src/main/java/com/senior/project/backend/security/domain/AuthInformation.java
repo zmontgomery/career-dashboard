@@ -26,4 +26,10 @@ public class AuthInformation {
 
     @Value("${security.ms.tenantID}")
     private String msTenantId;
+
+    @Value("${security.signingkey}")
+    private String signingKey;
+
+    @Value("${security.tokenduration}")
+    private long tokenDuration;
 }
