@@ -12,6 +12,7 @@ public enum Endpoints {
     DASHBOARD_EVENTS("dashboard_events", true),
     MILSTONES("milestones", true),
     TASKS("tasks", true),
+    RESUME("Portfolio/Resume", true),
 
     // Security
     SIGNIN("auth/signin", false),
