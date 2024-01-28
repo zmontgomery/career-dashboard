@@ -103,9 +103,15 @@ public class ArtifactService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
 
         // TODO do we need canonical path check here?
-        Path path = Paths.get(artifact.getFileLocation());
+        Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
+        Path normalizedFilePath = Paths.get(artifact.getFileLocation()).toAbsolutePath().normalize();
 
-        return Mono.justOrEmpty(path)
+        if(!normalizedFilePath.startsWith(normalizedDirectoryPath)) {
+            // should be impossible since we generate a hash for the file location but
+            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "File location is forbidden"));
+        }
+
+        return Mono.justOrEmpty(normalizedFilePath)
                 .flatMap(p -> {
                     try {
                         // Create a FileSystemResource for the PDF file
