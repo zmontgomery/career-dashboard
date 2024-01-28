@@ -1,29 +1,67 @@
-CREATE TABLE Student(
-    studentID varchar,
-	userID varchar,
-	universityID distinct varchar,
-	graduationYear Date,
-	startDate Date,
-	PRIMARY KEY (studentID),
-	FOREIGN KEY (userID) REFERENCES User (userID)
+CREATE TABLE student(
+    studentID INT AUTO_INCREMENT PRIMARY KEY,
+	userID BINARY(16),
+	universityID DISTINCT VARCHAR(256),
+    gpa DECIMAL(4, 3),
+    description TEXT,
+	graduationYear DATE,
+	startDate DATE,
+    degreeLevel VARCHAR(256),
+	FOREIGN KEY (userID) REFERENCES user (userID)
 );
 
-CREATE TABLE Coop(
-    coopID varchar,
-    studentID varchar,
-    description varchar,
-    startDate Date,
-    endDate Date,
-    PRIMARY KEY (coopID),
-    FOREIGN KEY (studentID) REFERENCES Student (studentID)
+CREATE TABLE coop(
+    coopID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    coopName VARCHAR(256),
+    location VARCHAR(256),
+    description TEXT,
+    startDate DATE,
+    endDate DATE,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
 );
 
-CREATE TABLE Job(
-    jobID varchar,
-    studentID varchar,
-    description varchar,
-    startDate Date,
-    endDate Date,
-    PRIMARY KEY (jobID),
-    FOREIGN KEY (studentID) REFERENCES Student (studentID)
+CREATE TABLE job(
+    jobID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    jobName VARCHAR(256),
+    location VARCHAR(256),
+    description TEXT,
+    startDate DATE,
+    endDate DATE,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
 );
+
+CREATE TABLE project(
+    projectID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    projectName VARCHAR(256),
+    description TEXT,
+    startDate DATE,
+    endDate DATE,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+);
+
+CREATE TABLE skill(
+    skillID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    skillName VARCHAR(256),
+    isLanguage BOOLEAN,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+);
+
+CREATE TABLE degreeProgram(
+    programID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    programName VARCHAR(256),
+    isMinor BOOLEAN,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+);
+
+CREATE TABLE club(
+    clubID INT AUTO_INCREMENT PRIMARY KEY,
+    clubName VARCHAR(256),
+    startDate DATE,
+    endDate DATE,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+)
