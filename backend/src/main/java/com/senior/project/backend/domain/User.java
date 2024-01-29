@@ -3,8 +3,12 @@ package com.senior.project.backend.domain;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +24,7 @@ import jakarta.persistence.TemporalType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -37,4 +41,34 @@ public class User {
 	private String lastName;
 	private boolean canEmail;
 	private boolean canText;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+	}
+	@Override
+	public String getPassword() {
+		return "";
+	}
+	@Override
+	public String getUsername() {
+		return email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

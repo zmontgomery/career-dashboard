@@ -30,6 +30,7 @@ dependencies {
     implementation("org.bitbucket.b_c:jose4j:0.6.0")
     implementation("com.google.api-client:google-api-client:1.32.1")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Spring Boot Starter Data JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -38,7 +39,6 @@ dependencies {
     // Flyway
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.flywaydb:flyway-core")
-
 
     // Test dependecies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
