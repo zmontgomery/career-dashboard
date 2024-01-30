@@ -2,6 +2,8 @@ package com.senior.project.backend.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Enum for endpoints in the system and if they are accessible
@@ -59,5 +61,19 @@ public enum Endpoints {
      */
     public static Endpoints toEndpoint(String path) {
         return stringToEndpoint.get(path);
+    }
+
+    public static String[] getOpenRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+            .filter(r -> !r.getNeedsAuthentication())
+            .map((r) -> r.uri())
+            .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            routes[i] = list.get(i);
+        }
+
+        return routes;
     }
 }

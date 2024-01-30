@@ -167,6 +167,7 @@ export class AuthService {
    */
   private listenForGoogleSignIn() {
     this.googleAuthService.authState.subscribe((state) => {
+      console.log(state);
       if (LangUtils.exists(state)) {
           if (!this.isAuthenticated) {
             this.signIn(this.createLoginRequest(state.idToken, TokenType.GOOGLE)).subscribe((res) => {

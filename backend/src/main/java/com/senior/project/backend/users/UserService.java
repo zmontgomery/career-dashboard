@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.server.authorization.DelegatingReactiveAuthorizationManager;
 import org.springframework.stereotype.Service;
 
 import com.senior.project.backend.domain.User;
@@ -47,10 +48,5 @@ public class UserService implements ReactiveUserDetailsService {
     public Mono<UserDetails> findByUsername(String username) {
         return findByEmailAddress(username)
             .map((u) -> (UserDetails) u);
-    }
-
-    @Bean
-    public UserService userDetailsService() {
-        return this;
     }
 }
