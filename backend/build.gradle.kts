@@ -21,6 +21,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    // email
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")

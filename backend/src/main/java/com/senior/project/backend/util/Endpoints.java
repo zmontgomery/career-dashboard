@@ -14,6 +14,9 @@ public enum Endpoints {
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
 
+    // TODO remove this
+    EMAIL("send-email", false),
+
     // Security
     SIGNIN("auth/signin", false),
     REFRESH("auth/refresh", true),
