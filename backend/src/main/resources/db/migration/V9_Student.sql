@@ -10,17 +10,6 @@ CREATE TABLE student(
 	FOREIGN KEY (userID) REFERENCES user (userID)
 );
 
-CREATE TABLE coop(
-    coopID INT AUTO_INCREMENT PRIMARY KEY,
-    studentID INT,
-    coopName VARCHAR(256),
-    location VARCHAR(256),
-    description TEXT,
-    startDate DATE,
-    endDate DATE,
-    FOREIGN KEY (studentID) REFERENCES student (studentID)
-);
-
 CREATE TABLE job(
     jobID INT AUTO_INCREMENT PRIMARY KEY,
     studentID INT,
@@ -29,6 +18,7 @@ CREATE TABLE job(
     description TEXT,
     startDate DATE,
     endDate DATE,
+    isCoop BOOLEAN,
     FOREIGN KEY (studentID) REFERENCES student (studentID)
 );
 
@@ -60,6 +50,7 @@ CREATE TABLE degreeProgram(
 
 CREATE TABLE club(
     clubID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
     clubName VARCHAR(256),
     startDate DATE,
     endDate DATE,
