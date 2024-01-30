@@ -37,7 +37,6 @@ public class EmailService {
 
     @PostConstruct
     private void initEmailInfo() {
-        System.out.println(username);
         this.emailSender = javaMailSender();
     }
 
@@ -59,7 +58,6 @@ public class EmailService {
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
-        System.out.println(props);
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", smtpAuth);
         props.put("mail.smtp.starttls.enable", tls);
