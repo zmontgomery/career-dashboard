@@ -42,7 +42,6 @@ public class ArtifactService {
         } else {
             this.uploadDirectory = this._uploadDirectory;
         }
-        System.out.println("upload directory: "+uploadDirectory);
     }
 
     public Mono<String> processFile(FilePart filePart) {
