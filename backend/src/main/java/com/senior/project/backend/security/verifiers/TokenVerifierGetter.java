@@ -1,5 +1,6 @@
 package com.senior.project.backend.security.verifiers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.senior.project.backend.security.domain.TokenType;
@@ -11,16 +12,11 @@ import com.senior.project.backend.security.domain.TokenType;
  */
 @Component
 public class TokenVerifierGetter {
+    @Autowired
     private MicrosoftEntraIDTokenVerifier microsoftEntraIDTokenVerifier;
-    private GoogleTokenVerifier googleTokenVerifier;
 
-    public TokenVerifierGetter(
-        MicrosoftEntraIDTokenVerifier microsoftEntraIDTokenVerifier,
-        GoogleTokenVerifier googleTokenVerifier
-    ) {
-        this.microsoftEntraIDTokenVerifier = microsoftEntraIDTokenVerifier;
-        this.googleTokenVerifier = googleTokenVerifier;
-    }
+    @Autowired
+    private GoogleTokenVerifier googleTokenVerifier;
 
     /**
      * Gets a token verifier based on a token type

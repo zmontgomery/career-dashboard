@@ -1,11 +1,7 @@
 package com.senior.project.backend.security.verifiers;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.time.Instant;
 
 import org.jose4j.jwa.AlgorithmConstraints;
@@ -14,14 +10,9 @@ import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.security.domain.AuthInformation;
@@ -40,15 +31,13 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
     private JsonWebKeySet keySet;
     private AuthInformation authInformation;
+    private MicrosoftKeyset microsoftKeyset;
 
     public MicrosoftEntraIDTokenVerifier(
-        ResourceLoader resourceLoader,
-        AuthInformation authInformation
-    ) throws JoseException {
-
-        // TODO source from internet
-        String keys = resourceAsString(resourceLoader.getResource("classpath:keys.json"));
-        keySet = new JsonWebKeySet(keys);
+        AuthInformation authInformation,
+        MicrosoftKeyset microsoftKeyset
+    ) {
+        this.microsoftKeyset = microsoftKeyset;
         this.authInformation = authInformation;
     }
 
@@ -103,15 +92,21 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             jws.setCompactSerialization(token);
             JsonWebKey jwk = null;
             String kid = jws.getKeyIdHeaderValue();
+            keySet = createKeySet();
 
             // Get key for the token
-            for (JsonWebKey key : keySet.getJsonWebKeys()) {
-                if (key.getKeyId().equals(kid)) {
-                    jwk = key;
-                    break;
+            jwk = extractKey(kid);
+
+            if (jwk == null) {
+                // Refetch the keyset if the keys have been rolled over
+                microsoftKeyset.invalidateCache();
+                keySet = createKeySet();
+                jwk = extractKey(kid);
+
+                if (jwk == null) {
+                    throw new TokenVerificiationException("Token had no key in the key set");
                 }
             }
-            if (jwk == null) throw new TokenVerificiationException("Token had no key in the key set");
 
             // Set the key
             jws.setKey(jwk.getKey());
@@ -124,11 +119,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             }
 
         } catch (Exception e) {
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            e.printStackTrace(printWriter);
-            logger.error(writer.toString());
-            throw new TokenVerificiationException(e.getMessage());
+            throw obscureError(e);
         }
     }
 
@@ -150,9 +141,9 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             // The 1000 is because the time fields are recoreded in seconds and Instant.now().toEpochMillis()
             // returns milliseconds
             long now = Instant.now().toEpochMilli() / 1000;
-            boolean iatValid = tokenPayload.getIat() < now;
-            boolean nbfValid = tokenPayload.getNbf() < now;
-            boolean expValid = tokenPayload.getExp() < now;
+            boolean iatValid = now >= tokenPayload.getIat();
+            boolean nbfValid = now >= tokenPayload.getNbf();
+            boolean expValid = now < tokenPayload.getExp();
 
             // Verify aud
             boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());
@@ -166,15 +157,49 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     }
 
     /**
-     * This will be removed
-     * @param resource
-     * @return
+     * Creates a the key set from the MicrosoftKeyset
+     * @return the keyset
+     * @throws TokenVerificiationException 
      */
-    private static String resourceAsString(Resource resource) {
-        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+    private JsonWebKeySet createKeySet() throws TokenVerificiationException {
+        String keys;
+        JsonWebKeySet keySet = null;
+        try {
+            keys = microsoftKeyset.getKeySet();
+            keySet = new JsonWebKeySet(keys);
+        } catch (Exception e) {
+            throw obscureError(e);
         }
+
+        return keySet;
+    }
+
+    /**
+     * Finds the key associated with the token
+     * @param kid - key id
+     * @return the key or null
+     */
+    private JsonWebKey extractKey(String kid) {
+        for (JsonWebKey key : keySet.getJsonWebKeys()) {
+            if (key.getKeyId().equals(kid)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Takes any error produced during the process, prints the error, and throws
+     * a new Token Verification Exception;
+     * @param e - original error
+     * @return - Token Verificiation Exception
+     */
+    private TokenVerificiationException obscureError(Exception e) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        e.printStackTrace(printWriter);
+        logger.error(writer.toString());
+        return new TokenVerificiationException(e.getMessage());
     }
 }

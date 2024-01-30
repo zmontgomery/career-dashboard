@@ -5,10 +5,17 @@ import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.YearLevel;
+
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 public class Constants {
 
@@ -55,17 +62,20 @@ public class Constants {
                 "Major and Class Schedule",
                 "Meet with academic advisor to discuss current major and class schedule",
                 true,
+                YearLevel.Freshman,
                 m1);
 
         task2 = new Task(2L,
                 "Complete Degreeworks Training",
                 "Detailed description here",
                 true,
+                YearLevel.Freshman,
                 m1);
         task3 = new Task(3L,
                 "Registration PIN meeting",
                 "Meet with academic advisor to discuss class schedule and receive PIN for registration",
                 true,
+                YearLevel.Freshman,
                 m1);
     }
 
@@ -103,6 +113,16 @@ public class Constants {
         DATA.add(e2);
         DASH_DATA.add(e2);
         DASH_DATA.add(e3);
+    }
+
+    public static Mono<ServerResponse> handle(ServerRequest req) {
+        LoggerFactory.getLogger(Constants.class).info("Ok");
+        return ServerResponse.ok().build();
+    }
+
+    public static Mono<ServerResponse> handleFail(ServerRequest req) {
+        LoggerFactory.getLogger(Constants.class).info("Fail");
+        return ServerResponse.status(401).build();
     }
 
     public static User user1;

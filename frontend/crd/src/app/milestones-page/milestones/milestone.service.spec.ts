@@ -43,12 +43,14 @@ describe('MilestoneService', () => {
         needsArtifact: true,
         id: "id",
         isRequired: true,
-        submission: 'submission'
+        submission: 'submission',
+        yearLevel: YearLevel.Freshman,
+        milestoneID: "id"
       }],
     }
 
     const milestones = Array(new Milestone(milestoneJSON));
-    service.getMilestones().subscribe(result => {
+    service.getMilestones().subscribe((result: any) => {
       expect(result).toEqual(milestones);
     });
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));

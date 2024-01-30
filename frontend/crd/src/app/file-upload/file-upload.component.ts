@@ -13,6 +13,10 @@ export class FileUploadComponent {
 
   url: string = ""
 
+  private maxSizeMegaBytes = 10;
+  private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
+
+
   constructor(
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: { url:string },
@@ -26,8 +30,16 @@ export class FileUploadComponent {
     const file: File = event.target.files[0];
 
     if (file) {
-      this.status = "initial";
-      this.file = file;
+
+      if (file.size > this.maxSizeBytes) {
+        alert(`File size exceeds the maximum allowed size (${this.maxSizeMegaBytes} MB).`)
+        // Display an error message or perform other actions
+        console.error(`File size exceeds the maximum allowed size (${this.maxSizeMegaBytes} MB).`);
+      } else {
+        // File is within the allowed size, proceed with handling
+        this.status = "initial";
+        this.file = file;
+      }
     }
   }
 
@@ -37,7 +49,7 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      const upload$ = this.http.post(this.url, formData);
+      const upload$ = this.http.post(this.url, formData, { responseType: 'text' });
 
       this.status = 'uploading';
 

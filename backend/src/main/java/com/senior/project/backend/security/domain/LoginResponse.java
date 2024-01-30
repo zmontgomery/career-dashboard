@@ -1,5 +1,7 @@
 package com.senior.project.backend.security.domain;
 
+import com.senior.project.backend.domain.User;
+
 import lombok.*;
 
 /**
@@ -16,5 +18,5 @@ import lombok.*;
 @Generated
 public class LoginResponse {
     private String token;
-    private TempUser user;
+    private User user;
 }

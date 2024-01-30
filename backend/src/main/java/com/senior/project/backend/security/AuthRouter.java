@@ -1,12 +1,14 @@
 package com.senior.project.backend.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import com.senior.project.backend.util.URIBuilder;
+import com.senior.project.backend.AbstractRouter;
+import com.senior.project.backend.util.Endpoints;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -15,18 +17,14 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  * 
  * @author Jimmy Logan - jrl9984@rit.edu
  */
-@Component
-public class AuthRouter {
-
-    private URIBuilder builder;
-
-    public AuthRouter(URIBuilder builder) {
-        this.builder = builder;
-    }
-
+@Configuration
+public class AuthRouter extends AbstractRouter {
     @Bean
     public RouterFunction<ServerResponse> authRotues(AuthHandler handler) {
-        String signIn = builder.buildUri("auth", "signIn");
-        return route(POST(signIn), handler::signIn);
+        return wrapRoutes(
+            route(POST(Endpoints.SIGNIN.uri()), handler::signIn)
+            .andRoute(POST(Endpoints.REFRESH.uri()), handler::refresh)
+            .andRoute(GET(Endpoints.FAILURE.uri()), handler::authenticationFailed)
+        );
     }
 }

@@ -16,7 +16,7 @@ export class EventService {
 
   // Get all data items
   getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>('http://localhost:8080/api/events')
+    return this.http.get<Event[]>(constructBackendRequest(Endpoints.EVENTS))
       .pipe(map((data: any) => {
         return data.map((eventData: EventJSON) => {
           return new Event(eventData)
@@ -26,6 +26,7 @@ export class EventService {
 
   getDashboardEvents(pageNum: number): Observable<Event[]> {
     const pageParam = {key: 'pageNum', value: pageNum};
+    console.log(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, pageParam));
     return this.http.get<Event[]>(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, pageParam))
       .pipe(map((data: any) => {
         return data.map((eventData: EventJSON) => {
