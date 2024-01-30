@@ -1,34 +1,44 @@
 package com.senior.project.backend.notification;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
 import java.util.Properties;
 
-@PropertySource("classpath:application.properties")
-@Component
+@Service
 public class EmailService {
 
-    // TODO set the rest of these with application properties/environment variables
-    private String host = "smtp.gmail.com";
-    private int port = 587;
-    private String username = "partiallyhydrateddevs@gmail.com";
-
     @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.port}")
+    private int port = 587;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @Value("${spring.mail.password}")
     private String password;
+
+    @Value("${spring.mail.properties.mail.smtp.auth}")
     private String smtpAuth = "true";
+
+    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String tls = "true";
 
-    private final JavaMailSender emailSender;
+    private JavaMailSender emailSender;
 
     public EmailService() {
+
+    }
+
+    @PostConstruct
+    private void initEmailInfo() {
+        System.out.println(username);
         this.emailSender = javaMailSender();
-        System.out.println("email service: "+password);
-        System.out.println(new EmailInformation().getPassword());
     }
 
     public void sendSimpleMessage(String to, String subject, String text) {
@@ -49,6 +59,7 @@ public class EmailService {
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
+        System.out.println(props);
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", smtpAuth);
         props.put("mail.smtp.starttls.enable", tls);
