@@ -27,7 +27,7 @@ public class Student extends User{
 	private int universityID;
 	private double gpa;
 	private String description;
-	private String degreeLevel;
+	private String yearLevel;
 
 	@Temporal(value = TemporalType.DATE)
 	private Date graduationYear;
