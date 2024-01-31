@@ -6,6 +6,8 @@ import { MilestoneMainPageComponent } from './milestone-main-page.component';
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 import { MatCardModule } from "@angular/material/card";
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 
 describe('MilestoneMainPageComponent', () => {
@@ -22,7 +24,7 @@ describe('MilestoneMainPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatGridListModule],
+      imports: [MatCardModule, MatGridListModule, MatTabsModule, NoopAnimationsModule],
       declarations: [MilestoneMainPageComponent],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
     });
