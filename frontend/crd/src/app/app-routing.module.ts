@@ -18,6 +18,7 @@ const routes: Routes = [
   {path: 'admin/milestones', component: MilestoneMainPageComponent},
   {path: 'admin/milestone-edit/:name', component: MilestoneEditComponent},
   {path: 'admin/tasks', component: TaskMainPageComponent},
+  //{path: 'admin/task-edit/:name', component: TaskEditComponent},
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'swagger', component: ApiDocumentationsComponent},
 ];

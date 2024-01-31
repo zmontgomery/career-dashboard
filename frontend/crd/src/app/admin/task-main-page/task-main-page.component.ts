@@ -38,4 +38,9 @@ export class TaskMainPageComponent implements OnDestroy {
     });
   }
 
+  editTask(name: string) {
+    //const encodedName = encodeURIComponent(name);
+    //this.router.navigate(['/admin/task-edit', encodedName]);
+  }
+
 }

@@ -1,5 +1,3 @@
-<p>task-main-page works!</p>
-
 <mat-tab-group animationDuration="0ms">
     <div class="year-container" *ngFor="let yearLevel of yearLevels">
         <mat-tab label="{{yearLevel}}">
@@ -7,7 +5,8 @@
                 <ng-container *ngFor="let task of taskMap.get(yearLevel)">
                     <mat-list-item>
                         <span matListItemTitle>{{task.name}}</span>
-                        <span matListItemLine>Second line</span>
+                        <span matListItemLine>{{task.description}}</span>
+                        <button mat-button (click)="editTask(task.name)">EDIT</button>
                     </mat-list-item>
                 </ng-container>
             </mat-list>
