@@ -1,0 +1,8 @@
+<div>
+  <mat-list class="matList">
+  <h3 mat-subheader class="matListTitle">Tasks</h3>
+  <a mat-list-item class="matListItem" *ngFor="let task of tasksList" href={{task.id}}>
+    {{task.name}} {{task.id}}
+  </a>
+</mat-list>
+</div>

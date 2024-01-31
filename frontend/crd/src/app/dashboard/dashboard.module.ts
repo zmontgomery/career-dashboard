@@ -4,7 +4,7 @@ import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
 import { MilestonesModule } from "../milestones-page/milestones/milestones.module";
-import { TaskListModule } from "../tasklist/tasklist.module";
+import { TasksModule } from "../tasks/tasks.module";
 
 
 
@@ -19,7 +19,7 @@ import { TaskListModule } from "../tasklist/tasklist.module";
     CommonModule,
     MatCardModule,
     MilestonesModule,
-    TaskListModule,
+    TasksModule,
   ]
 })
 export class DashboardModule { }

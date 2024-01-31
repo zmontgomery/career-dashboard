@@ -19,7 +19,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ProfileModule } from "./profile/profile.module";
 import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
-import { TaskListModule } from './tasklist/tasklist.module';
+import { TasksModule } from './tasks/tasks.module';
 //import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
@@ -61,7 +61,7 @@ import { TaskListModule } from './tasklist/tasklist.module';
     MilestonesPageModule,
     MatCardModule,
     MatTabsModule,
-    TaskListModule,
+    TasksModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule
