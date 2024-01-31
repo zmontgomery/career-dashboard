@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MilestonesComponent } from './milestones.component';
-import { of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
+import { of } from "rxjs";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
+import { MilestoneMainPageComponent } from './milestone-main-page.component';
+import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 import { MatCardModule } from "@angular/material/card";
-import { MatExpansionModule } from "@angular/material/expansion";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MilestoneService } from "./milestone.service";
+import { MatGridListModule } from '@angular/material/grid-list';
 
-describe('MilestonesComponent', () => {
-  let component: MilestonesComponent;
-  let fixture: ComponentFixture<MilestonesComponent>;
+
+describe('MilestoneMainPageComponent', () => {
+  let component: MilestoneMainPageComponent;
+  let fixture: ComponentFixture<MilestoneMainPageComponent>;
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
@@ -24,11 +22,11 @@ describe('MilestonesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule],
+      imports: [MatCardModule, MatGridListModule],
+      declarations: [MilestoneMainPageComponent],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
-      declarations: [MilestonesComponent]
     });
-    fixture = TestBed.createComponent(MilestonesComponent);
+    fixture = TestBed.createComponent(MilestoneMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
