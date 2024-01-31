@@ -54,6 +54,20 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport) // Generate the report after running tests
 }
 
+// tasks.jacocoTestReport {
+//     group = "Reporting"
+//     description = "Generate Jacoco coverage reports"
+
+//     classDirectories.setFrom(
+//             fileTree("${buildDir}/src/main/java/com/senior/project/backend") {
+//                 setExcludes(setOf(
+//                     "/util"
+//                 ))
+//             }
+//     ) 
+// }
+
+
 tasks.register("setupEnvironmentVariables") {
     if (System.getenv("CRD_DB_PASSWORD") == null) {
         throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")

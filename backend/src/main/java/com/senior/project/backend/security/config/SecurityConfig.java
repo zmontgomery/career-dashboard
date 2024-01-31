@@ -16,6 +16,9 @@ import com.senior.project.backend.util.Endpoints;
 
 import java.util.Arrays;
 
+/**
+ * Security configuration for Spring Security
+ */
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -26,6 +29,10 @@ public class SecurityConfig {
     @Autowired
     private ServerSecurityContextRepository securityContextRepostory;
 
+    /**
+     * Configuration for the filter chain, where the custom authentication manager
+     * and security contex† repository are set
+     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.csrf(c -> c.disable());
@@ -40,6 +47,9 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * The configuration for the CORS filter
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

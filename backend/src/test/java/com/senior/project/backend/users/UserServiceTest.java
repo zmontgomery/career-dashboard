@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.User;
@@ -58,6 +59,60 @@ public class UserServiceTest {
             fail("Error should have been thrown");
         } catch (EntityNotFoundException e) {
             return;
+        }
+    }
+
+    @Test
+    public void findByEmailAddressHappy() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
+        
+        Mono<User> user = userService.findByEmailAddress(Constants.user1.getEmail());
+
+        StepVerifier.create(user)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void findByEmailAddressUnhappy() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
+        
+        try {
+            userService.findByEmailAddress(Constants.user1.getEmail());
+            fail("Error not thrown");
+        } catch (EntityNotFoundException en) {
+            return;
+        } catch (Exception e) {
+            fail("Unknown exception thrown");
+            
+        }
+
+    }
+
+    @Test
+    public void findByUsernameHappy() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
+        
+        Mono<UserDetails> user = userService.findByUsername(Constants.user1.getEmail());
+
+        StepVerifier.create(user)
+            .expectNext((UserDetails) Constants.user1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void findByUsernameUnhappy() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
+        
+        try {
+            userService.findByUsername(Constants.user1.getEmail());
+            fail("Error not thrown");
+        } catch (EntityNotFoundException en) {
+            return;
+        } catch (Exception e) {
+            fail("Unknown exception thrown");
         }
     }
 }

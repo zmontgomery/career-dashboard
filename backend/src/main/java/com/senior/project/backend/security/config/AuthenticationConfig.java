@@ -18,8 +18,21 @@ import com.senior.project.backend.security.verifiers.TokenVerificiationException
 import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Mono;
 
+/**
+ * Configuration for beans relating to Authentication and Authorization
+ * 
+ * @author Jimmy Logan - jrl9984@rit.edu
+ */
 @Configuration
 public class AuthenticationConfig {
+
+    /**
+     * Creates a Reactive Authentication Manager used for authenticating a JWT
+     * 
+     * @param userDetailsService - the user service used to retrieve a user
+     * @param tokenGenerator - the service used to retrieve information from the token
+     * @return a reactive authentication that is authenticated
+     */
     @Bean
     @Qualifier("authenticationManager")
     public ReactiveAuthenticationManager authenticationManager(
@@ -43,6 +56,12 @@ public class AuthenticationConfig {
         };
     }
 
+    /**
+     * A security context repository that loads the context based on the user token
+     * 
+     * @param authenticationManager
+     * @return the security context from the token
+     */
     @Bean
     public ServerSecurityContextRepository securityContextRepository(
         ReactiveAuthenticationManager authenticationManager
