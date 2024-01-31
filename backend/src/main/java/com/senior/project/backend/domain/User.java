@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,11 +46,13 @@ public class User implements UserDetails {
 	private boolean canEmail;
 	private boolean canText;
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority("USER"));
 	}
 
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return "";
@@ -59,21 +63,25 @@ public class User implements UserDetails {
 		return email;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;
