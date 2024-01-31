@@ -6,6 +6,8 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 
 import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,24 +28,26 @@ public class AuthWebFilter extends AbstractAuthWebFilter {
     /**
      * Code that runs the authentication filter
      * 
-     * Checks if a session exists
+     * Checks if the incoming request has a valid token
+     * Checks if a user associated with a token exists
      * 
      * @param exchange - The web exchange
      * @param chain - The filter chain
      * @return
+     * @throws TokenVerificiationException 
      */
     @Override
     protected Mono<Void> authFilter(
         ServerWebExchange exchange, 
         WebFilterChain chain
-    ) {
-        String sessionId = exchange.getRequest()
+    ) throws TokenVerificiationException {
+        String token = exchange.getRequest()
             .getHeaders()
-            .get(SESSION_HEADER)
+            .get(AUTHORIZATION_HEADER)
             .get(0);
 
-        return authService.retrieveSession(sessionId)
-            .flatMap(session -> {
+        return authService.findUserFromToken(token.split("Bearer ")[1])
+            .flatMap(user -> {
                 return chain.filter(exchange);
             });
     }

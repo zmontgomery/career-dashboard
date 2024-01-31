@@ -1,8 +1,5 @@
 package com.senior.project.backend.security.webfilters;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.domain.Session;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
@@ -30,22 +27,20 @@ public class AuthWebFilterTest {
     @Mock
     private AuthService authService;
 
-    private Session session;
-
+    private String token;
     private WebTestClient webTestClient;
 
     @BeforeEach
     public void setup() {
-        session = Session.builder()
-            .id(UUID.randomUUID())
-            .build();
+        token = "Bearer token";
 
         webTestClient = WebTestClient
             .bindToRouterFunction(
                 RouterFunctions.route()
-                    .OPTIONS(Endpoints.TEST_NEEDS_AUTH.getValue(), Constants::handle)
-                    .GET(Endpoints.TEST_NEEDS_AUTH.getValue(), Constants::handle)
-                    .GET(Endpoints.TEST_NO_AUTH.getValue(), Constants::handle)
+                    .OPTIONS(Endpoints.TEST_NEEDS_AUTH.uri(), Constants::handle)
+                    .GET(Endpoints.TEST_NEEDS_AUTH.uri(), Constants::handle)
+                    .GET(Endpoints.TEST_NO_AUTH.uri(), Constants::handle)
+                    .GET(Endpoints.FAILURE.uri(), Constants::handleFail)
                     .build()
             )
             .webFilter(CuT)
@@ -55,31 +50,31 @@ public class AuthWebFilterTest {
     @Test
     public void preflight() {
         webTestClient.options()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
             .exchange()
             .expectStatus()
             .isOk();
     }
 
     @Test
-    public void happy() {
-        when(authService.retrieveSession(anyString())).thenReturn(Mono.just(session));
-        
+    public void happy() throws TokenVerificiationException {
+        when(authService.findUserFromToken(anyString())).thenReturn(Mono.just(Constants.user1));
+
         webTestClient.get()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
-            .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
+            .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
             .exchange()
             .expectStatus()
             .isOk();
     }
 
     @Test
-    public void unhappy() {
-        when(authService.retrieveSession(anyString())).thenThrow(new NoSuchElementException());
-        
+    public void unhappy() throws TokenVerificiationException {
+        when(authService.findUserFromToken(anyString())).thenThrow(new TokenVerificiationException(":("));
+
         webTestClient.get()
-            .uri(Endpoints.TEST_NEEDS_AUTH.getValue())
-            .header(AbstractAuthWebFilter.SESSION_HEADER, session.getId().toString())
+            .uri(Endpoints.TEST_NEEDS_AUTH.uri())
+            .header(AbstractAuthWebFilter.AUTHORIZATION_HEADER, token)
             .exchange()
             .expectStatus()
             .isUnauthorized();
@@ -88,7 +83,7 @@ public class AuthWebFilterTest {
     @Test
     public void unprotectedEndpoint() {
         webTestClient.get()
-            .uri(Endpoints.TEST_NO_AUTH.getValue())
+            .uri(Endpoints.TEST_NO_AUTH.uri())
             .exchange()
             .expectStatus()
             .isOk();

@@ -1,5 +1,6 @@
 package com.senior.project.backend.security.domain;
 
+import lombok.Generated;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import lombok.Getter;
 @PropertySource("classpath:application.properties")
 @Component
 @Getter
+@Generated
 public class AuthInformation {
     @Value("${security.google.clientID}")
     private String gClientId;
@@ -24,4 +26,10 @@ public class AuthInformation {
 
     @Value("${security.ms.tenantID}")
     private String msTenantId;
+
+    @Value("${security.signingkey}")
+    private String signingKey;
+
+    @Value("${security.tokenduration}")
+    private long tokenDuration;
 }

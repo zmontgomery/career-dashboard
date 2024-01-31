@@ -1,22 +1,23 @@
 package com.senior.project.backend.security.domain;
 
-import java.util.UUID;
+import com.senior.project.backend.AbstractDomainObjectTest;
+import com.senior.project.backend.Constants;
+import com.senior.project.backend.Pair;
+import com.senior.project.backend.domain.User;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
-
-public class LoginResponseTest {
-    private static final UUID ID = UUID.randomUUID();
-
-    private LoginResponse CuT;
+public class LoginResponseTest extends AbstractDomainObjectTest<LoginResponse> {
+    private static final User USER = Constants.user1;
+    private static final String TOKEN = "token";
 
     public LoginResponseTest() {
-        CuT = LoginResponse.builder().sessionID(ID).build();
+        super(
+            LoginResponse.builder()
+                .token(TOKEN)
+                .user(USER)
+                .build(),
+            new Pair<>("token", TOKEN),
+            new Pair<>("user", USER)
+        );
     }
 
-    @Test
-    public void testGetters() {
-        assertEquals(CuT.getSessionID(), ID);
-    }
 }

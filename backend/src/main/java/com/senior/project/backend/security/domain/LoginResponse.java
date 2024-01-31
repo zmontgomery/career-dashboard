@@ -1,12 +1,8 @@
 package com.senior.project.backend.security.domain;
 
-import java.util.UUID;
+import com.senior.project.backend.domain.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * A domain object representing the response gotten from a 
@@ -19,7 +15,8 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class LoginResponse {
-    private UUID sessionID;
-    private TempUser user;
+    private String token;
+    private User user;
 }

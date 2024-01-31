@@ -1,10 +1,9 @@
 package com.senior.project.backend.security.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.senior.project.backend.AbstractDomainObjectTest;
+import com.senior.project.backend.Pair;
 
-import org.junit.jupiter.api.Test;
-
-public class TokenPayloadTest {
+public class TokenPayloadTest extends AbstractDomainObjectTest <TokenPayload> {
     private static final String AUD = "me";
     private static final String ISS = "iss";
     private static int IAT = 100;
@@ -21,28 +20,23 @@ public class TokenPayloadTest {
     private static String UTI = "adf";
     private static String VER = "version";
 
-    private TokenPayload CuT;
-
     public TokenPayloadTest() {
-        CuT = new TokenPayload(AUD, ISS, IAT, NBF, EXP, NAME, NONCE, OID, EMAIL, USERNAME, RH, SUB, TID, UTI, VER);
-    }
-
-    @Test
-    public void testGetters() {
-        assertEquals(CuT.getAud(), AUD);
-        assertEquals(CuT.getIss(), ISS);
-        assertEquals(CuT.getIat(), IAT);
-        assertEquals(CuT.getNbf(), NBF);
-        assertEquals(CuT.getExp(), EXP);
-        assertEquals(CuT.getName(), NAME);
-        assertEquals(CuT.getNonce(), NONCE);
-        assertEquals(CuT.getOid(), OID);
-        assertEquals(CuT.getEmail(), EMAIL);
-        assertEquals(CuT.getPrefferedUsername(), USERNAME);
-        assertEquals(CuT.getRh(), RH);
-        assertEquals(CuT.getSub(), SUB);
-        assertEquals(CuT.getTid(), TID);
-        assertEquals(CuT.getUti(), UTI);
-        assertEquals(CuT.getVer(), VER);
+        super(new TokenPayload(AUD, ISS, IAT, NBF, EXP, NAME, NONCE, OID, EMAIL, USERNAME, RH, SUB, TID, UTI, VER),
+            new Pair<>("aud", AUD),
+            new Pair<>("iss", ISS),
+            new Pair<>("iat", IAT),
+            new Pair<>("nbf", NBF),
+            new Pair<>("exp", EXP),
+            new Pair<>("name", NAME),
+            new Pair<>("nonce", NONCE),
+            new Pair<>("oid", OID),
+            new Pair<>("email", EMAIL),
+            new Pair<>("prefferedUsername", USERNAME),
+            new Pair<>("rh", RH),
+            new Pair<>("sub", SUB),
+            new Pair<>("tid", TID),
+            new Pair<>("uti", UTI),
+            new Pair<>("ver", VER)
+        );
     }
 }

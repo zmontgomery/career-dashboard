@@ -1,20 +1,15 @@
 package com.senior.project.backend.security;
 
-import java.util.Date;
-import java.util.Optional;
-import java.time.Instant;
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.Session;
-import com.senior.project.backend.security.domain.TempUser;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+import com.senior.project.backend.users.UserService;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -28,83 +23,71 @@ public class AuthService {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AuthRepository repository;
+    private TokenGenerator tokenGenerator;
 
-    /**
-     * Retreives all sessions
-     * 
-     * @return all sessions
-     */
-    public Flux<Session> all() {
-        return Flux.fromIterable(repository.findAll());
-    }
-
-    /**
-     * Retreives a session from its ID
-     * @param sessionID - UUID as string
-     * @return the session
-     */
-    public Mono<Session> retrieveSession(String sessionID) {
-        return Mono.just(repository.findById(UUID.fromString(sessionID)).get());
-    }
-
-    /**
-     * Creates a new session
-     * @param email - the user's email address
-     * @return the created session
-     */
-    public Mono<Session> createSession(String email) {
-        Date now = new Date(Instant.now().toEpochMilli());
-
-        sessionExistsCheck(email);
-
-        Session session = Session.builder()
-            .email(email)
-            .signInDate(now)
-            // Add a day to the expiration 
-            .expiryDate(Date.from(now.toInstant().plusSeconds(86400)))
-            .build();
-
-        return Mono.just(repository.saveAndFlush(session));
-    }
+    @Autowired
+    private UserService userService;
 
     /**
      * Generates a login response based on the session
      * @param session - the corresponding session
      * @return the login resposne
      */
-    public Mono<LoginResponse> generateResponse(Session session) {
+    public Mono<LoginResponse> login(User user) {
+        return generateResponse(user);
+    }
+
+    /**
+     * Refreshes a given token by checking if it is within the refresh range
+     * @param token - token being checked
+     * @return - a Login Response with a new token
+     * @throws TokenVerificiationException when token does not need refreshed
+     */
+    public Mono<LoginResponse> refreshToken(String token) throws TokenVerificiationException {
+        long expDate = tokenGenerator.extractExpDate(token).getValueInMillis();
+
+        // Don't need to check if expired, extracting the expiry date will throw an error if it
+        // is expired
+        if (expDate - System.currentTimeMillis() < minToMilli(20)) { 
+            return findUserFromToken(token)
+                .switchIfEmpty(Mono.empty())
+                .flatMap(this::generateResponse);
+        } else {
+            throw new TokenVerificiationException("Token does not need refreshed");
+        }
+    }
+
+    /**
+     * Finds a user from a given token by attempting to extract the email address
+     * @param token - token being analyzed
+     * @return the new user from the email address
+     * @throws TokenVerificiationException
+     */
+    public Mono<User> findUserFromToken(String token) throws TokenVerificiationException {
+        String email = this.tokenGenerator.extractEmail(token);
+        return userService.findByEmailAddress(email);
+    }
+
+    /**
+     * Generates a login response with a user
+     * @param user - user in the response
+     * @return A login response containing a new token and a user
+     */
+    private Mono<LoginResponse> generateResponse(User user) {
         return Mono.just(
             LoginResponse.builder()
-                .sessionID(session.getId())
-                .user(TempUser.builder().email(session.getEmail()).build())
+                .user(user)
+                .token(tokenGenerator.generateToken(user))
                 .build()
         );
     }
 
     /**
-     * Deteles a session based on its id
-     * @param sessionID - the UUID of the session being deleted as a string
-     * @return the deleted session
+     * Convers minutes to milliseconds
+     * @param min
+     * @return
      */
-    public Mono<Session> deleteSession(String sessionID) {
-        return retrieveSession(sessionID)
-            .map(session -> {
-                repository.deleteById(UUID.fromString(sessionID));
-                session.setValid(false);
-                return session;
-            });
-    }
-
-    /**
-     * Helper delete a session if one for the email exists
-     * @param email - email for the session
-     */
-    private void sessionExistsCheck(String email) {
-        Optional<Session> session = repository.findSessionByEmail(email);
-
-        if (session.isPresent()) {
-            deleteSession(session.get().getId().toString()).subscribe();
-        }
+    private long minToMilli(long min) {
+        return min * 60 * 1000;
     }
 }

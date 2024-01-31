@@ -2,27 +2,22 @@ package com.senior.project.backend.security;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import org.jose4j.jwt.NumericDate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.senior.project.backend.Constants;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
-import com.senior.project.backend.security.domain.Session;
-import com.senior.project.backend.security.domain.TempUser;
+import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+import com.senior.project.backend.users.UserService;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -33,110 +28,89 @@ public class AuthServiceTest {
     private AuthService CuT;
 
     @Mock
-    private AuthRepository authRepository;
+    private TokenGenerator tokenGenerator;
 
-    private Session session1;
-    private Session session2;
+    @Mock
+    private UserService userService;
 
-    private List<Session> sessions;
+    private static final User USER = Constants.user1;
 
-    public void setup() {
-        session1 = Session.builder()
-            .email("test@test.test")
-            .id(UUID.randomUUID())
-            .valid(true)
+    private static final String TOKEN = "token";
+    private static final String TOKEN_2 = "token2";
+
+    @Test
+    public void testLogin() {
+        when(tokenGenerator.generateToken(any())).thenReturn(TOKEN);
+        LoginResponse expected = LoginResponse.builder()
+            .user(USER)
+            .token(TOKEN)
             .build();
         
-        session2 = Session.builder()
-            .id(UUID.randomUUID())
-            .build();
+        Mono<LoginResponse> actual = CuT.login(USER);
 
-        sessions = new ArrayList<>();
-        sessions.add(session1);
-        sessions.add(session2);
-
-        CuT = spy(CuT);
-    }
-
-    @Test
-    public void testAll() {
-        setup();
-        when(authRepository.findAll()).thenReturn(sessions);
-
-        Flux<Session> result = CuT.all();
-        StepVerifier.create(result)
-            .expectNext(session1)
-            .expectNext(session2)
-            .expectComplete()
-            .verify();
-    }
-
-    @Test
-    public void testRetreiveSessionHappy() {
-        setup();
-        when(authRepository.findById(any())).thenReturn(Optional.of(session1));
-        Mono<Session> result = CuT.retrieveSession(session1.getId().toString());
-        StepVerifier.create(result)
-            .expectNext(session1)
-            .expectComplete()
-            .verify();
-    }
-
-    @Test
-    public void testRetreiveSessionUnhappy() {
-        setup();
-        when(authRepository.findById(any())).thenReturn(Optional.empty());
-        try {
-            CuT.retrieveSession(session1.getId().toString());
-            fail();
-        } catch(Exception e) {
-            return;
-        }
-    }
-
-    @Test
-    public void testCreateSession() {
-        setup();
-        when(authRepository.saveAndFlush(any())).thenReturn(session1);
-
-        Mono<Session> result = CuT.createSession("test");
-
-        StepVerifier.create(result)
-            .expectNext(session1)
-            .expectComplete()
-            .verify();
-    }
-
-    @Test
-    public void testGenerateResponse() {
-        setup();
-        LoginResponse expected = LoginResponse.builder()
-            .sessionID(session1.getId())
-            .user(TempUser.builder().email(session1.getEmail()).build())
-            .build();
-
-
-        Mono<LoginResponse> result = CuT.generateResponse(session1);
-
-        StepVerifier.create(result)
+        StepVerifier.create(actual)
             .expectNext(expected)
             .expectComplete()
             .verify();
     }
 
     @Test
-    public void testDeleteSession() {
-        setup();
-        when(authRepository.findById(any())).thenReturn(Optional.of(session1));
+    public void testRefreshHappy() throws TokenVerificiationException {
+        when(tokenGenerator.extractExpDate(anyString()))
+            .thenReturn(NumericDate.fromMilliseconds(System.currentTimeMillis() + 600000));
+        when(tokenGenerator.generateToken(any())).thenReturn(TOKEN_2);
+        when(tokenGenerator.extractEmail(anyString())).thenReturn(USER.getEmail());
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.user1));
 
-        Mono<Session> result = CuT.deleteSession(session1.getId().toString());
+        LoginResponse expected = LoginResponse.builder()
+            .user(USER)
+            .token(TOKEN_2)
+            .build();
 
-         StepVerifier.create(result)
-            .expectNext(session1)
+        Mono<LoginResponse> actual = CuT.refreshToken(TOKEN);
+
+        StepVerifier.create(actual)
+            .expectNext(expected)
             .expectComplete()
             .verify();
+    }
+
+    @Test
+    public void testRefreshBadToken() throws TokenVerificiationException {
+        when(tokenGenerator.extractExpDate(anyString())).thenThrow(new TokenVerificiationException("whoops"));
+
+        try {
+            CuT.refreshToken(TOKEN);
+            fail("Error should have been thrown");
+        } catch (TokenVerificiationException e) {
+            return;
+        }
+    }
+
+    @Test
+    public void testRefreshNotInRefreshRange() throws TokenVerificiationException {
+        when(tokenGenerator.extractExpDate(anyString()))
+            .thenReturn(NumericDate.fromMilliseconds(System.currentTimeMillis() + 10000000));
         
-        verify(authRepository, times(1)).findById(any());
-        verify(authRepository, times(1)).deleteById(any());
+        try {
+            CuT.refreshToken(TOKEN);
+            fail("Error should have been thrown");
+        } catch (TokenVerificiationException e) {
+            return;
+        }
+    }
+
+    @Test
+    public void testRefreshNoUser() throws TokenVerificiationException {
+        when(tokenGenerator.extractExpDate(anyString()))
+            .thenReturn(NumericDate.fromMilliseconds(System.currentTimeMillis() + 600000));
+        when(tokenGenerator.extractEmail(anyString())).thenThrow(new TokenVerificiationException("error"));
+
+        try {
+            CuT.refreshToken(TOKEN);
+            fail("Error should have been thrown");
+        } catch (TokenVerificiationException e) {
+            return;
+        }
     }
 }

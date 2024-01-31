@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
+import { MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
@@ -20,7 +20,6 @@ import {ProfileModule} from "./profile/profile.module";
 import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
 import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
-import { AuthRefreshInterceptor } from './security/interceptors/auth-refresh-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
@@ -80,7 +79,6 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
       }
     },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthRefreshInterceptor, multi: true},
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })

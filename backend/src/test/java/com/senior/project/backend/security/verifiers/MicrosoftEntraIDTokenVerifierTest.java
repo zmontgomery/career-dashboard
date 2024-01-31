@@ -3,40 +3,24 @@ package com.senior.project.backend.security.verifiers;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.senior.project.backend.security.domain.AuthInformation;
-import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.lang.JoseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 
 @ExtendWith(MockitoExtension.class)
 public class MicrosoftEntraIDTokenVerifierTest {
 
-    @Mock()
-    private ResourceLoader resourceLoader;
-
     @Mock
     private AuthInformation authInformation;
 
     @Mock
-    private Resource resource;
+    private MicrosoftKeyset microsoftKeyset;
 
-    @Mock
-    private InputStream inputStream;
 
     /**
      * NOTE
@@ -50,12 +34,7 @@ public class MicrosoftEntraIDTokenVerifierTest {
 
     @BeforeEach
     public void setup() throws JoseException, IOException {
-        when(resourceLoader.getResource(anyString())).thenReturn(resource);
-        when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("test data".getBytes()));
-
-        try(MockedConstruction<JsonWebKeySet> mockJsonWebKeySet = Mockito.mockConstruction(JsonWebKeySet.class)) {
-            CuT = new MicrosoftEntraIDTokenVerifier(resourceLoader, authInformation);
-        }
+        CuT = new MicrosoftEntraIDTokenVerifier(authInformation, microsoftKeyset);
     }
 
     @Test
