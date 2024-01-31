@@ -15,7 +15,7 @@ public class EmailService {
     private String host;
 
     @Value("${spring.mail.port}")
-    private int port = 587;
+    private int port;
 
     @Value("${spring.mail.username}")
     private String username;
@@ -24,10 +24,10 @@ public class EmailService {
     private String password;
 
     @Value("${spring.mail.properties.mail.smtp.auth}")
-    private String smtpAuth = "true";
+    private String smtpAuth;
 
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-    private String tls = "true";
+    private String tls;
 
     private JavaMailSender emailSender;
 
