@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.*;
 
 @Entity
@@ -14,6 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
+@PrimaryKeyJoinColumn(name = "id")
 public class Faculty extends User{
 
 	@Id

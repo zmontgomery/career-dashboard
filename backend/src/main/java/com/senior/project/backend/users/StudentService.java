@@ -3,6 +3,7 @@ package com.senior.project.backend.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.senior.project.backend.domain.Student;
 import com.senior.project.backend.domain.User;
 
 import reactor.core.publisher.Flux;
@@ -21,7 +22,7 @@ public class StudentService extends UserService{
      * Gets all students from the database
      * @return all the students
      */
-    public Flux<User> allStudents() {
+    public Flux<Student> allStudents() {
         return Flux.fromIterable(repository.findAll());
     }
 }

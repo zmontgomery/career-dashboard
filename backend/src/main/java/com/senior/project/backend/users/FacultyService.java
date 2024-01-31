@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
  */
 public class FacultyService extends UserService{
     @Autowired
-    private StudentRepository repository;
+    private FacultyRepository repository;
 
     /**
      * Gets all faculty from the database

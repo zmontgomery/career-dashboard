@@ -2,6 +2,7 @@ package com.senior.project.backend;
 
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Milestone;
+import com.senior.project.backend.domain.Student;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.YearLevel;
@@ -140,6 +141,23 @@ public class Constants {
 
         USERS.add(user1);
         USERS.add(user2);
+    }
+
+    public static Student student1;
+    public static Student student2;
+
+    public static final List<User> STUDENTS = new ArrayList<>();
+
+    static {
+        student1 = new Student();
+        student1.setId(UUID.randomUUID());
+        student1.setEmail("test@test.com");
+        student2 = new Student();
+        student2.setId(UUID.randomUUID());
+        student2.setEmail("test2@test.com");
+
+        STUDENTS.add(student1);
+        STUDENTS.add(student2);
     }
 }
 
