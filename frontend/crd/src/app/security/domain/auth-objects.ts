@@ -95,7 +95,7 @@ export class Token {
      * @returns if the token is in the refresh range of 20 minutes 
      */
     willExpire(): boolean {
-      return Date.now() >= this.tokenIssued!.getTime() + (20 * 60 * 1000);
+      return Date.now() >= this.tokenIssued!.getTime() + (40 * 60 * 1000);
     }
   
     /**

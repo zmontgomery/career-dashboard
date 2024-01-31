@@ -4,10 +4,8 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.server.authorization.DelegatingReactiveAuthorizationManager;
 import org.springframework.stereotype.Service;
 
 import com.senior.project.backend.domain.User;

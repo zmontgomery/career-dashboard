@@ -1,6 +1,7 @@
 package com.senior.project.backend.security.config;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -20,6 +21,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class AuthenticationConfig {
     @Bean
+    @Qualifier("authenticationManager")
     public ReactiveAuthenticationManager authenticationManager(
         ReactiveUserDetailsService userDetailsService, 
         TokenGenerator tokenGenerator
