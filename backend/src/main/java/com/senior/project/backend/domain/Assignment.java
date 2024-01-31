@@ -4,9 +4,9 @@ import lombok.*;
 
 @Data
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class Assignment {
 
     private int id;

@@ -1,10 +1,6 @@
 package com.senior.project.backend.security.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Domain object that represents a request to login
@@ -18,7 +14,8 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class LoginRequest {
     private String idToken;
-    private TokenType type;
+    private TokenType tokenType;
 }

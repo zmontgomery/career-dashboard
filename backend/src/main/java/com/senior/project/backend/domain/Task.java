@@ -1,24 +1,24 @@
 package com.senior.project.backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Generated
 public class Task {
     @Id
     private Long id;
     private String name;
     private String description;
     private Boolean isRequired;
+    @Enumerated(EnumType.STRING)
+    private YearLevel yearLevel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()
     private Milestone milestone;
 }

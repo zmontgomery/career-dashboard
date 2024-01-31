@@ -55,10 +55,8 @@ tasks.test {
 }
 
 tasks.register("setupEnvironmentVariables") {
-    doLast {
-        if (System.getenv("CRD_DB_PASSWORD") == null) {
-            throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")
-        }
+    if (System.getenv("CRD_DB_PASSWORD") == null) {
+        throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")
     }
 }
 

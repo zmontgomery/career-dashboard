@@ -5,7 +5,7 @@ CREATE TABLE task(
     is_required BOOLEAN DEFAULT true,
     milestone_id INT,
 
-    FOREIGN KEY (milestone_id) REFERENCES milestone(id)
+    FOREIGN KEY (milestone_id) REFERENCES milestone(id) ON DELETE CASCADE
 );
 
 INSERT INTO task (name, description, milestone_id)

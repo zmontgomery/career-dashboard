@@ -12,13 +12,14 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    @OneToMany(mappedBy = "milestone", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "milestone", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("milestone")
     private List<Task> tasks = null;
 //    private List<Event> events;

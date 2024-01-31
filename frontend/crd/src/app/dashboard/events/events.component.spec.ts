@@ -3,7 +3,7 @@ import { EventsComponent } from './events.component';
 import { MatCardModule } from "@angular/material/card";
 import { CarouselModule } from '@coreui/angular';
 import { Event } from "../../../domain/Event";
-import { EventService } from "./EventService";
+import { EventService } from "./event.service";
 import { of } from "rxjs";
 import { MockComponent, MockModule } from 'ng-mocks';
 const createSpyObj= jasmine.createSpyObj;
