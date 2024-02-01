@@ -22,7 +22,7 @@ public class StudentService extends UserService{
      * Gets all students from the database
      * @return all the students
      */
-    public Flux<Student> allStudents() {
+    public Flux<User> allStudents() {
         return Flux.fromIterable(repository.findAll());
     }
 }
