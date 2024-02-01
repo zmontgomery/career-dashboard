@@ -13,12 +13,12 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.security.TokenGenerator;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 
-import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -66,7 +66,7 @@ public class AuthenticationManagerTest {
         Mono<Authentication> auth = CuT.authenticate(token);
 
         StepVerifier.create(auth)
-            .expectError(TokenVerificiationException.class)
+            .expectError(ResponseStatusException.class)
             .verify();
     }
 
@@ -78,7 +78,7 @@ public class AuthenticationManagerTest {
         Mono<Authentication> auth = CuT.authenticate(token);
 
         StepVerifier.create(auth)
-            .expectError(EntityNotFoundException.class)
+            .expectError(ResponseStatusException.class)
             .verify();
     }
 }

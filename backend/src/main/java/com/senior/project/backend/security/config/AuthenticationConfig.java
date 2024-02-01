@@ -3,18 +3,21 @@ package com.senior.project.backend.security.config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.senior.project.backend.security.TokenGenerator;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 
-import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Mono;
 
 /**
@@ -47,9 +50,10 @@ public class AuthenticationConfig {
                         return Mono.empty();
                     }
                 })
-                .switchIfEmpty(Mono.error(new TokenVerificiationException("Email could not be extracted from token")))
+                .switchIfEmpty(Mono.error(new BadCredentialsException("Email could not be extracted from token")))
                 .flatMap(email -> userDetailsService.findByUsername(email))
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("User does not exists.")))
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User does not exists.")))
+                .onErrorMap(AuthenticationConfig::mapToError)
                 .map(user -> new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities()));
         };
     }
@@ -74,14 +78,22 @@ public class AuthenticationConfig {
             @Override
             public Mono<SecurityContext> load(ServerWebExchange exchange) {
                 return Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("X-Authorization"))
-                    .switchIfEmpty(Mono.error(new TokenVerificiationException("Request did not contain header")))
+                    .switchIfEmpty(Mono.error(new BadCredentialsException("Request did not contain header")))
                     .filter(header -> header.startsWith("Bearer "))
-                    .switchIfEmpty(Mono.error(new TokenVerificiationException("Request did not contain bearer token")))
+                    .switchIfEmpty(Mono.error(new BadCredentialsException("Request did not contain bearer token")))
                     .map(token -> token.split("Bearer ")[1].trim())
                     .map(token -> new UsernamePasswordAuthenticationToken(token, ""))
                     .flatMap(token -> authenticationManager.authenticate(token))
+                    .onErrorMap(AuthenticationConfig::mapToError)
                     .map(authentication -> new SecurityContextImpl(authentication));
             }
         };
+    }
+
+    private static Throwable mapToError(Throwable e) {
+        if (e instanceof AuthenticationException) {
+            return new ResponseStatusException(401, e.getMessage(), e);
+        }
+        return e;
     }
 }

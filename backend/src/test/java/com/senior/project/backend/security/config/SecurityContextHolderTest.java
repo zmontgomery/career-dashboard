@@ -18,10 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -88,7 +88,7 @@ public class SecurityContextHolderTest {
         Mono<SecurityContext> context = CuT.load(serverWebExchange);
 
         StepVerifier.create(context)
-            .expectError(TokenVerificiationException.class)
+            .expectError(ResponseStatusException.class)
             .verify();
     }
 
@@ -103,7 +103,7 @@ public class SecurityContextHolderTest {
         Mono<SecurityContext> context = CuT.load(serverWebExchange);
 
         StepVerifier.create(context)
-            .expectError(TokenVerificiationException.class)
+            .expectError(ResponseStatusException.class)
             .verify();
     }
 }

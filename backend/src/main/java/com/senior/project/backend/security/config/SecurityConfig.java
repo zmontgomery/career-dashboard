@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -12,7 +13,11 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import com.google.api.client.http.HttpStatusCodes;
 import com.senior.project.backend.util.Endpoints;
+
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 
@@ -43,6 +48,16 @@ public class SecurityConfig {
         });
         http.authenticationManager(authenticationManager);
         http.securityContextRepository(securityContextRepostory);
+        http.exceptionHandling(eh -> {
+            eh.authenticationEntryPoint((swe, exception) -> {
+                if (exception != null) swe.getResponse().setStatusCode(HttpStatusCode.valueOf(401));
+                return Mono.empty();
+            });
+            eh.accessDeniedHandler((swe, exception) -> {
+                if (exception != null) swe.getResponse().setStatusCode(HttpStatusCode.valueOf(403));
+                return Mono.empty();
+            });
+        });
 
         return http.build();
     }

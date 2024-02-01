@@ -117,7 +117,9 @@ export class AuthService {
    * Signs out the user
    */
   signOut() {
-    this.clearAuthData();
+    this.http.post<string>(constructBackendRequest(Endpoints.SIGN_OUT), {}).subscribe(() => {
+      this.clearAuthData();
+    });
   }
 
   /**
@@ -183,6 +185,7 @@ export class AuthService {
    */
   private listenForTokenUpdates() {
     this.token$.subscribe((token) => {
+      console.log(token);
       if (LangUtils.exists(token)) {
         localStorage.setItem(AUTH_TOKEN_STORAGE, token!.getToken());
         localStorage.setItem(TOKEN_ISSUED, token!.getExpiry().getTime().toString());
@@ -190,6 +193,7 @@ export class AuthService {
       } else {
         localStorage.removeItem(AUTH_TOKEN_STORAGE);
         localStorage.removeItem(TOKEN_ISSUED);
+        this.token = undefined;
       }
     });
   }
@@ -204,8 +208,14 @@ export class AuthService {
 
     if (LangUtils.exists(tokenString) && LangUtils.isANumber(tokenIssued)) {
       const token = new Token(tokenString!, new Date(tokenIssued!));
-      this.token = token;
+      if (token.expired()) {
+        this.isAuthenticated = false;
+        this.tokenSubject.next(null);
+        this.userSubject.next(null);
+        return;
+      }
 
+      this.token = token;
       this.isAuthenticated = true;
       this.tokenSubject.next(token);
       this.userSubject.next(null);
