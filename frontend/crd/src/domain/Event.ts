@@ -2,11 +2,10 @@ export interface EventJSON {
   name: string;
   description: string;
   date: string;
-  eventID: string;
+  eventID: number;
   isRecurring: boolean;
   organizer: string;
   location: string;
-  isRequired: boolean;
 }
 
 export class Event {
@@ -18,7 +17,6 @@ export class Event {
     this.isRecurring = json.isRecurring;
     this.organizer = json.organizer;
     this.location = json.location;
-    this.isRequired = json.isRequired;
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = false;
   }
@@ -26,10 +24,9 @@ export class Event {
   name: string;
   description: string;
   date: Date;
-  eventID: string;
+  eventID: number;
   isRecurring: boolean;
   organizer: string;
   location: string;
-  isRequired: boolean;
   isComplete: boolean;
 }

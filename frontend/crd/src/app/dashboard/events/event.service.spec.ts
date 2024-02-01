@@ -27,11 +27,10 @@ describe('EventService', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
+      eventID: 1,
       isRecurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
     }));
     service.getEvents().subscribe(result => {
       expect(result).toEqual(events);
@@ -47,11 +46,10 @@ describe('EventService', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
+      eventID: 1,
       isRecurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
     }));
     
     service.getDashboardEvents(1).subscribe(result => {

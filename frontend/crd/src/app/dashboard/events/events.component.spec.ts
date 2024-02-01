@@ -16,22 +16,20 @@ describe('EventsComponent', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
+      eventID: 1,
       isRecurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
   }))));
 
   eventServiceSpy.getDashboardEvents.and.returnValue(of(Array(new Event({
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
+      eventID: 2,
       isRecurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
   }))));
 
   beforeEach(() => {
