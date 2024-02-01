@@ -23,15 +23,17 @@ describe('EventService', () => {
   });
 
   it('events should return list of events', (done) => {
-    const events = Array(new Event({
+    const eventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: 1,
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
-    }));
+    }
+    
+    const events = Array(new Event(eventJSON));
     service.getEvents().subscribe(result => {
       expect(result).toEqual(events);
       done();
@@ -46,13 +48,17 @@ describe('EventService', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: 1,
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
     }));
     
     service.getDashboardEvents(1).subscribe(result => {
+      //console.log("result");
+      //console.log(result);
+      //console.log("events");
+      //console.log(events)
       expect(result).toEqual(events);
       done();
     });

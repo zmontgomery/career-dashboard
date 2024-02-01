@@ -19,5 +19,5 @@ public class Event {
     private Date date;
     private String location;
     private String organizer;
-
+    private boolean isRecurring;
 }

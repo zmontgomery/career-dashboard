@@ -4,7 +4,7 @@ export interface TaskJSON {
   name: string;
   description: string;
   needsArtifact?: boolean;
-  taskID: number;
+  id: number;
   isRequired: boolean;
   submission: any;
   yearLevel: YearLevel;
@@ -19,7 +19,7 @@ export class Task {
     this.name = json.name;
     this.description = json.description;
     this.needsArtifact = json.needsArtifact;
-    this.taskID = json.taskID;
+    this.taskID = json.id;
     this.isRequired = json.isRequired;
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = true;

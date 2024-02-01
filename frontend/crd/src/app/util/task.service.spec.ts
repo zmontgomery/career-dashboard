@@ -28,7 +28,7 @@ describe('TaskService', () => {
         name: 'task name',
         description: "description",
         needsArtifact: true,
-        taskID: 1,
+        id: 1,
         isRequired: true,
         submission: null,
         yearLevel: YearLevel.Freshman,

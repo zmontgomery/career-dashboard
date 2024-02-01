@@ -2,8 +2,8 @@ export interface EventJSON {
   name: string;
   description: string;
   date: string;
-  eventID: number;
-  isRecurring: boolean;
+  id: number;
+  recurring: boolean;
   organizer: string;
   location: string;
 }
@@ -13,8 +13,8 @@ export class Event {
     this.name = json.name
     this.description = json.description;
     this.date = new Date(json.date);
-    this.eventID = json.eventID;
-    this.isRecurring = json.isRecurring;
+    this.eventID = json.id;
+    this.isRecurring = json.recurring;
     this.organizer = json.organizer;
     this.location = json.location;
     // TODO this should be checked through the submission object or provided by the backend later

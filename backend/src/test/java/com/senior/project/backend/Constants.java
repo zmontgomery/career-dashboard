@@ -40,6 +40,7 @@ public class Constants {
         e1.setDate(new Date());
         e1.setOrganizer("SUNY Oswego");
         e1.setLocation("Field House");
+        e1.setRecurring(true);
 
         e2 = new Event();
         e2.setId(1L);
@@ -48,6 +49,7 @@ public class Constants {
         e2.setDate(new Date());
         e2.setOrganizer("SUNY Oswego");
         e2.setLocation("Field Houes");
+        e2.setRecurring(true);
 
         e3 = new Event();
         e3.setId(1L);
@@ -56,6 +58,7 @@ public class Constants {
         e3.setDate(new Date());
         e3.setOrganizer("SUNY Oswego");
         e3.setLocation("Field Houes");
+        e3.setRecurring(true);
     }
 
     public static final List<Milestone> milestoneDATA = new ArrayList<>();

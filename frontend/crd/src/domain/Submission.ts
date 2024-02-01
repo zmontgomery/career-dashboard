@@ -1,5 +1,5 @@
 export interface SubmissionJSON {
-  submissionID: number;
+  id: number;
   artifactID: number;
   taskID: number;
   studentID: number;
@@ -8,8 +8,7 @@ export interface SubmissionJSON {
 
 export class Submission {
   constructor(json: SubmissionJSON) {
-    this.artifactID = json.artifactID;
-    this.submissionID = json.submissionID;
+    this.submissionID = json.id;
     this.artifactID = json.artifactID;
     this.taskID = json.taskID;
     this.studentID = json.studentID;

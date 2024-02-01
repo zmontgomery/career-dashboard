@@ -17,7 +17,7 @@ describe('MilestonesComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    milestoneID: 1,
+    id: 1,
     description: "sample",
     events: [],
     tasks: [],

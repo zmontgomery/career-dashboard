@@ -16,8 +16,8 @@ describe('EventsComponent', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: 1,
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
   }))));
@@ -26,8 +26,8 @@ describe('EventsComponent', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: 2,
-      isRecurring: true,
+      id: 2,
+      recurring: true,
       organizer: "organizer",
       location: "location",
   }))));

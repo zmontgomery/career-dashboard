@@ -25,22 +25,22 @@ describe('MilestoneService', () => {
     const milestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
-      milestoneID: 1,
+      id: 1,
       description: "sample",
       active: true,
       events: [{
         name: "name",
         description: "description",
         date: new Date().toDateString(),
-        eventID: 1,
-        isRecurring: true,
+        id: 1,
+        recurring: true,
         organizer: "organizer",
         location: "location"
       }],
       tasks: [{
         name: 'task name',
         description: "description",
-        taskID: 1,
+        id: 1,
         isRequired: true,
         submission: 'submission',
         yearLevel: YearLevel.Freshman,
