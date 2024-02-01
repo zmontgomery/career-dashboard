@@ -31,8 +31,6 @@ public class SecurityUtilTest {
 
     @Test
     public void getUser() {
-        Authentication authentication = 
-            new UsernamePasswordAuthenticationToken(null, "", null);
         Mono<User> res = SecurityUtil.getCurrentUser().contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(new SecurityContextImpl())));
 
 
