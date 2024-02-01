@@ -54,18 +54,25 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport) // Generate the report after running tests
 }
 
-// tasks.jacocoTestReport {
-//     group = "Reporting"
-//     description = "Generate Jacoco coverage reports"
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
 
-//     classDirectories.setFrom(
-//             fileTree("${buildDir}/src/main/java/com/senior/project/backend") {
-//                 setExcludes(setOf(
-//                     "/util"
-//                 ))
-//             }
-//     ) 
-// }
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) {
+                exclude(
+                    "**/BackendApplication.class",
+                    "**/MicrosoftKeyset.class",
+                    "**/util/**",
+                    "**/*Router.class",
+                    "**/SecurityConfig.class"
+                )
+            }
+        })
+    )
+}
 
 
 tasks.register("setupEnvironmentVariables") {

@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.security.domain.AuthInformation;
 import com.senior.project.backend.security.domain.TokenPayload;
 
-
 /**
  * Token verifier for a Microsoft token
  * 
@@ -132,6 +131,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
      */
     private TokenPayload validateClaims(String payload) throws TokenVerificiationException {
         try {
+            logger.info(payload);
             // Map to payload class
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -147,6 +147,12 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
 
             // Verify aud
             boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());
+
+            logger.info("" + iatValid);
+            logger.info("" + nbfValid);
+            logger.info("" + expValid);
+            logger.info("" + audValid);
+
 
             // Check results
             if (iatValid && nbfValid && expValid && audValid) return tokenPayload;

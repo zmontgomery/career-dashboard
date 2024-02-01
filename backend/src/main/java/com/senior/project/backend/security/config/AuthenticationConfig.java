@@ -1,6 +1,5 @@
 package com.senior.project.backend.security.config;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,12 +40,11 @@ public class AuthenticationConfig {
     ) {
         return (authentiction) -> {
             return Mono.just(authentiction.getPrincipal().toString())
-                .map(token -> {
+                .flatMap(token -> {
                     try {
-                        LoggerFactory.getLogger(getClass()).info(tokenGenerator.extractEmail(token));
-                        return tokenGenerator.extractEmail(token);
+                        return Mono.just(tokenGenerator.extractEmail(token));
                     } catch (TokenVerificiationException e) {
-                        return "";
+                        return Mono.empty();
                     }
                 })
                 .switchIfEmpty(Mono.error(new TokenVerificiationException("Email could not be extracted from token")))

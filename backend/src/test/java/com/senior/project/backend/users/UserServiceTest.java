@@ -87,7 +87,6 @@ public class UserServiceTest {
             fail("Unknown exception thrown");
             
         }
-
     }
 
     @Test
