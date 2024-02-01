@@ -1,6 +1,5 @@
 package com.senior.project.backend.security;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
