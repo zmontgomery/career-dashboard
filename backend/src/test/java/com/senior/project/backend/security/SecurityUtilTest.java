@@ -22,7 +22,6 @@ public class SecurityUtilTest {
         Context context = ReactiveSecurityContextHolder.withAuthentication(authentication);
         Mono<User> res = SecurityUtil.getCurrentUser().contextWrite(context);
 
-
         StepVerifier.create(res)
             .expectNext(Constants.user1)
             .expectComplete()
@@ -32,7 +31,6 @@ public class SecurityUtilTest {
     @Test
     public void getUser() {
         Mono<User> res = SecurityUtil.getCurrentUser().contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(new SecurityContextImpl())));
-
 
         StepVerifier.create(res)
             .expectError(UsernameNotFoundException.class)
