@@ -131,7 +131,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
      */
     private TokenPayload validateClaims(String payload) throws TokenVerificiationException {
         try {
-            logger.info(payload);
             // Map to payload class
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.senior.project.backend.Constants;
+import com.senior.project.backend.TestUtil;
 import com.senior.project.backend.domain.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -53,13 +54,7 @@ public class UserServiceTest {
     @Test
     public void findUserByEmailUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-
-        try {
-            userService.findByEmailAddress(Constants.user1.getEmail());
-            fail("Error should have been thrown");
-        } catch (EntityNotFoundException e) {
-            return;
-        }
+        TestUtil.testError(() -> userService.findByEmailAddress(Constants.user1.getEmail()), EntityNotFoundException.class);
     }
 
     @Test
@@ -77,16 +72,7 @@ public class UserServiceTest {
     @Test
     public void findByEmailAddressUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        
-        try {
-            userService.findByEmailAddress(Constants.user1.getEmail());
-            fail("Error not thrown");
-        } catch (EntityNotFoundException en) {
-            return;
-        } catch (Exception e) {
-            fail("Unknown exception thrown");
-            
-        }
+        TestUtil.testError(() -> userService.findByEmailAddress(Constants.user1.getEmail()), EntityNotFoundException.class);
     }
 
     @Test
@@ -104,14 +90,6 @@ public class UserServiceTest {
     @Test
     public void findByUsernameUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        
-        try {
-            userService.findByUsername(Constants.user1.getEmail());
-            fail("Error not thrown");
-        } catch (EntityNotFoundException en) {
-            return;
-        } catch (Exception e) {
-            fail("Unknown exception thrown");
-        }
+        TestUtil.testError(() -> userService.findByUsername(Constants.user1.getEmail()), EntityNotFoundException.class);
     }
 }

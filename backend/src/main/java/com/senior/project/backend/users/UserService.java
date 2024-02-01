@@ -32,6 +32,12 @@ public class UserService implements ReactiveUserDetailsService {
         return Flux.fromIterable(repository.findAll());
     }
 
+    /**
+     * Retrieves a user from the database using their email address
+     * @param email - the email address belonging to the suer
+     * @return the user
+     * @throws EntityNotFoundException if the user with the provided email does not exist
+     */
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
         LoggerFactory.getLogger(getClass()).info(email);
@@ -42,6 +48,11 @@ public class UserService implements ReactiveUserDetailsService {
         }
     }
 
+    /**
+     * Loads a user from their email address
+     * @param username the email of the user
+     * @return the user as a userdetails object
+     */
     @Override
     public Mono<UserDetails> findByUsername(String username) {
         return findByEmailAddress(username)

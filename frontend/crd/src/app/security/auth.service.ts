@@ -185,7 +185,6 @@ export class AuthService {
    */
   private listenForTokenUpdates() {
     this.token$.subscribe((token) => {
-      console.log(token);
       if (LangUtils.exists(token)) {
         localStorage.setItem(AUTH_TOKEN_STORAGE, token!.getToken());
         localStorage.setItem(TOKEN_ISSUED, token!.getExpiry().getTime().toString());

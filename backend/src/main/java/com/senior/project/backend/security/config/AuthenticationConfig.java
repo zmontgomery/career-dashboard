@@ -90,6 +90,11 @@ public class AuthenticationConfig {
         };
     }
 
+    /**
+     * Converts an AuthenticationException into a 401 status exception
+     * @param e - the original error
+     * @return the new 401 error
+     */
     private static Throwable mapToError(Throwable e) {
         if (e instanceof AuthenticationException) {
             return new ResponseStatusException(401, e.getMessage(), e);

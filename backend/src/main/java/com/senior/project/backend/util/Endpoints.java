@@ -64,6 +64,9 @@ public enum Endpoints {
         return stringToEndpoint.get(path);
     }
 
+    /**
+     * Gets all open routes
+     */
     public static String[] getOpenRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
             .filter(r -> !r.getNeedsAuthentication())
