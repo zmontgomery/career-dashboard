@@ -4,6 +4,8 @@ import { Task } from 'src/domain/Task';
 import { TaskService } from 'src/app/util/task.service';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
 
 @Component({
   selector: 'app-task-main-page',
@@ -20,7 +22,8 @@ export class TaskMainPageComponent implements OnDestroy {
 
   constructor(
     private taskService: TaskService,
-    private router: Router
+    private router: Router,
+    public matDialog: MatDialog
   ) {
   }
 
@@ -41,6 +44,21 @@ export class TaskMainPageComponent implements OnDestroy {
   editTask(name: string) {
     //const encodedName = encodeURIComponent(name);
     //this.router.navigate(['/admin/task-edit', encodedName]);
+  }
+
+  openTaskEditModal(name: string, task: Task | null) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    dialogConfig.data = {
+      name: name,
+      task: task
+    }
+
+    const modalDialog = this.matDialog.open(TaskEditModalComponent, dialogConfig);
   }
 
 }

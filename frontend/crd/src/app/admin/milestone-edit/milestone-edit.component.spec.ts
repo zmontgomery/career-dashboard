@@ -14,12 +14,17 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-
+import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
+import { MatDialog, MatDialogConfig, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('MilestoneEditComponent', () => {
   let component: MilestoneEditComponent;
   let fixture: ComponentFixture<MilestoneEditComponent>;
+  let httpMock: HttpTestingController;
   const paramMap = new BehaviorSubject(convertToParamMap({ name: 'name'  }));
   const activatedRouteMock = {
     params: paramMap.asObservable(),
@@ -55,21 +60,45 @@ describe('MilestoneEditComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        TaskEditModalModule,
+        MatDialogModule,
+        HttpClientTestingModule, 
+        HttpClientModule, 
       ],
       declarations: [MilestoneEditComponent],
       providers: [
         {provide: ActivatedRoute, useValue: activatedRouteMock},
         {provide: MilestoneService, useValue: milestoneServiceSpy},
-        {provide: TaskService, useValue: taskServiceSpy}
+        {provide: TaskService, useValue: taskServiceSpy},
+        MatDialog
       ]
     });
     fixture = TestBed.createComponent(MilestoneEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+
+  it('should open the TaskEditModal in a MatDialog', () => {
+    spyOn(component.matDialog,'open').and.callThrough();
+    component.openTaskEditModal("testing", null);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    dialogConfig.data = {
+      name: "testing",
+      task: null
+    }
+
+    expect(component.matDialog.open).toHaveBeenCalledWith(TaskEditModalComponent, dialogConfig);
   });
 });

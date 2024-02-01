@@ -26,6 +26,7 @@ import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.modul
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module';
+import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module
     MilestoneEditModule,
     MatGridListModule,
     MatListModule,
-    TaskMainPageModule
+    TaskMainPageModule,
+    TaskEditModalModule
   ],
   providers: [
       {provide: 'SocialAuthServiceConfig',

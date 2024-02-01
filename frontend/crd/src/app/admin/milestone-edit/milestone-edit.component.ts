@@ -8,6 +8,8 @@ import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractCon
 import { TaskService } from 'src/app/util/task.service';
 import { Task } from 'src/domain/Task';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
 
 @Component({
   selector: 'app-milestone-edit',
@@ -36,7 +38,8 @@ export class MilestoneEditComponent {
     private router: Router,
     private milestoneService: MilestoneService,
     private taskService: TaskService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public matDialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -124,6 +127,21 @@ export class MilestoneEditComponent {
   saveMilestone() {
     //TODO: check that all fields are in
     console.log("saving!");
+  }
+
+  openTaskEditModal(name: string, task: Task | null) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    dialogConfig.data = {
+      name: name,
+      task: task
+    }
+    // https://material.angular.io/components/dialog/overview
+    const modalDialog = this.matDialog.open(TaskEditModalComponent, dialogConfig);
   }
 
 }

@@ -5,6 +5,7 @@ import { RouterLink } from "@angular/router";
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from "@angular/material/button";
 import { MatTabsModule } from '@angular/material/tabs';
+import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     RouterLink, 
     MatButtonModule,
     MatListModule,
-    MatTabsModule
+    MatTabsModule,
+    TaskEditModalModule
   ]
 })
 export class TaskMainPageModule { }

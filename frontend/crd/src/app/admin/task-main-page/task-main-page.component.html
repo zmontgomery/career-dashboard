@@ -6,9 +6,12 @@
                     <mat-list-item>
                         <span matListItemTitle>{{task.name}}</span>
                         <span matListItemLine>{{task.description}}</span>
-                        <button mat-button (click)="editTask(task.name)">EDIT</button>
+                        <button mat-button (click)="openTaskEditModal(task.name, task)">EDIT</button>
                     </mat-list-item>
                 </ng-container>
+                <mat-list-item class="new-task" (click)="openTaskEditModal(yearLevel, null)">
+                    Create New {{yearLevel}} Task
+                </mat-list-item>
             </mat-list>
         </mat-tab>
     </div>
