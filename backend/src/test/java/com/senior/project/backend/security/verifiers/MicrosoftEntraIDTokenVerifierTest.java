@@ -1,7 +1,9 @@
 package com.senior.project.backend.security.verifiers;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+import com.senior.project.backend.TestUtil;
 import com.senior.project.backend.security.domain.AuthInformation;
 import org.jose4j.lang.JoseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
+import java.security.KeyPair;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -40,24 +43,53 @@ public class MicrosoftEntraIDTokenVerifierTest {
     @Test
     public void unhappyPathStructure() throws TokenVerificiationException {
         String invalidToken = ":)";
-
-        try {
-            CuT.verifiyIDToken(invalidToken);
-            fail("Token should have been validated");
-        } catch(Exception e) {
-            return;
-        }
+        TestUtil.testError(() -> CuT.verifiyIDToken(invalidToken), TokenVerificiationException.class);
     }
 
     @Test
     public void unhappyPathSignature() throws TokenVerificiationException {
         String invalidToken = "1.2.3";
+        TestUtil.testError(() -> CuT.verifiyIDToken(invalidToken), TokenVerificiationException.class);
+    }
 
-        try {
-            CuT.verifiyIDToken(invalidToken);
-            fail("Token should not have been validated");
-        } catch(Exception e) {
-            return;
-        }
+    @Test
+    public void happy() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+
+        when(microsoftKeyset.getKeySet()).thenReturn(TestUtil.getKeyset(pair));
+        when(authInformation.getMsClientId()).thenReturn("client_id");
+
+        String email = CuT.verifiyIDToken(TestUtil.generateValidToken(pair));
+
+        assertEquals("success@winning.com", email);
+    }
+
+    @Test
+    public void invalidSignature() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+        KeyPair pair2 = TestUtil.getKey();
+
+        when(microsoftKeyset.getKeySet()).thenReturn(TestUtil.getKeyset(pair));
+
+        TestUtil.testError(() -> CuT.verifiyIDToken(TestUtil.generateValidToken(pair2)), TokenVerificiationException.class);
+    }
+
+    @Test
+    public void noJwk() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+
+        when(microsoftKeyset.getKeySet()).thenReturn(TestUtil.getKeyset(pair));
+
+        TestUtil.testError(() -> CuT.verifiyIDToken(TestUtil.generateTokenWithKID(pair, "2")), TokenVerificiationException.class);
+    }
+
+    @Test
+    public void expired() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+
+        when(microsoftKeyset.getKeySet()).thenReturn(TestUtil.getKeyset(pair));
+        when(authInformation.getMsClientId()).thenReturn("client_id");
+
+        TestUtil.testError(() -> CuT.verifiyIDToken(TestUtil.generateExpiredToken(pair)), TokenVerificiationException.class);
     }
 }
