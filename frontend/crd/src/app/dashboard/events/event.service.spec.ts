@@ -40,11 +40,11 @@ describe('EventService', () => {
     });
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.EVENTS));
     expect(request.request.method).toEqual('GET');
-    request.flush(events)
+    request.flush(Array(eventJSON))
   });
 
   it('dashboard_events should return list of events', (done) => {
-    const events = Array(new Event({
+    const eventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
@@ -52,7 +52,9 @@ describe('EventService', () => {
       recurring: true,
       organizer: "organizer",
       location: "location",
-    }));
+    }
+    
+    const events = Array(new Event(eventJSON)); 
     
     service.getDashboardEvents(1).subscribe(result => {
       //console.log("result");
@@ -65,7 +67,7 @@ describe('EventService', () => {
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, {key: 'pageNum', value: 1}));
 
     expect(request.request.method).toEqual('GET');
-    request.flush(events)
+    request.flush(Array(eventJSON))
   });
 
 
