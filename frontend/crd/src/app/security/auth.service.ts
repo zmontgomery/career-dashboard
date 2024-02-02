@@ -117,7 +117,9 @@ export class AuthService {
    * Signs out the user
    */
   signOut() {
-    this.clearAuthData();
+    this.http.post<string>(constructBackendRequest(Endpoints.SIGN_OUT), {}).subscribe(() => {
+      this.clearAuthData();
+    });
   }
 
   /**
@@ -167,6 +169,7 @@ export class AuthService {
    */
   private listenForGoogleSignIn() {
     this.googleAuthService.authState.subscribe((state) => {
+      console.log(state);
       if (LangUtils.exists(state)) {
           if (!this.isAuthenticated) {
             this.signIn(this.createLoginRequest(state.idToken, TokenType.GOOGLE)).subscribe((res) => {
@@ -189,6 +192,7 @@ export class AuthService {
       } else {
         localStorage.removeItem(AUTH_TOKEN_STORAGE);
         localStorage.removeItem(TOKEN_ISSUED);
+        this.token = undefined;
       }
     });
   }
@@ -203,8 +207,14 @@ export class AuthService {
 
     if (LangUtils.exists(tokenString) && LangUtils.isANumber(tokenIssued)) {
       const token = new Token(tokenString!, new Date(tokenIssued!));
-      this.token = token;
+      if (token.expired()) {
+        this.isAuthenticated = false;
+        this.tokenSubject.next(null);
+        this.userSubject.next(null);
+        return;
+      }
 
+      this.token = token;
       this.isAuthenticated = true;
       this.tokenSubject.next(token);
       this.userSubject.next(null);
