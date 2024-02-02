@@ -41,3 +41,12 @@ Partially Hydrated devs - Senior Project
 - `cd backend`
 - `./gradlew test`
 - coverage found in backend/build/reports/jacoco/test/html/index.html
+
+# Deploying
+- `cd frontend/crd`
+- `npm run build`
+- cd back to project home
+- `cd backend`
+- environment variables must be created or passed in when creating the jar
+- `./gradlew build`
+- jar is located at backend/build/libs/backend-X.X.X.jar
