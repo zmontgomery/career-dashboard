@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {TasksService} from "./tasks.service";
-import {Tasks} from "../domain/Tasks";
+import {Task} from "../../domain/Task";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 describe('TasksService', () => {
