@@ -182,6 +182,6 @@ public class AuthHandlerTest {
             .returnResult()
             .getResponseBody();
 
-        assertEquals("", result);
+        assertEquals("User has signed out.", result);
     }
 }

@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -21,8 +24,9 @@ import org.springframework.util.ReflectionUtils;
 public abstract class AbstractDomainObjectTest<T> {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private T CuT;
+    protected T CuT;
     private Map<String, Object> fieldValueMap;
+    private List<Method> excludedMethods;
 
     @SafeVarargs
     public AbstractDomainObjectTest(T CuT, Pair<String, Object>... pairs) {
@@ -32,6 +36,35 @@ public abstract class AbstractDomainObjectTest<T> {
         for (Pair<String, Object> p : pairs) {
             fieldValueMap.put(p.getKey(), p.getValue());
         }
+
+        if (excludedMethods().size() > 0 && getTestClass() == null) 
+            fail("getTestClass must be defined");
+
+        excludedMethods = new LinkedList<>();
+        try {
+            for (String methodName: excludedMethods()) {
+                Method method = getTestClass().getMethod(methodName);
+                excludedMethods.add(method);
+            }
+        } catch (NoSuchMethodException nsme) {
+            fail(nsme.getMessage());
+        } catch (SecurityException se) {
+            fail(se.getMessage());
+        }
+    }
+
+    /**
+     * Override to exclude methods from the test
+     * @return
+     * @throws SecurityException 
+     * @throws NoSuchMethodException 
+     */
+    protected List<String> excludedMethods() {
+        return List.of();
+    }
+
+    protected Class<T> getTestClass() {
+        return null;
     }
 
     @Test
@@ -51,11 +84,15 @@ public abstract class AbstractDomainObjectTest<T> {
             Method buildMethod = null;
             for (Method m : methods) {
                 if (m.getName().equals("build")) buildMethod = m;
-                if (!isObjectMethod(m)) {
+                if (!isObjectMethod(m) && !excludedMethods.contains(m)) {
                     Object value = fieldValueMap.get(m.getName());
                     m.setAccessible(true);
                     logger.info("Running Builder Test: " + m.getName());
-                    m.invoke(builder, value);
+                    try {
+                        m.invoke(builder, value);
+                    } catch (IllegalArgumentException iae) {
+                        fail(String.format("Test failed for method %s", m.getName()));
+                    }
                 }
             }
 
@@ -71,7 +108,8 @@ public abstract class AbstractDomainObjectTest<T> {
         for (Method m : methods) {
             if ((m.getName().startsWith("get") || 
                     m.getName().startsWith("is")) &&
-                    !m.getName().equals("getClass")
+                    !m.getName().equals("getClass") &&
+                    !excludedMethods.contains(m)
             ) {
                 String fieldName = extractFieldName(m.getName(), "get", "is");
                 Object expected = fieldValueMap.get(fieldName);
@@ -79,7 +117,11 @@ public abstract class AbstractDomainObjectTest<T> {
 
                 logger.info("Running " + m.getName() + " test");
 
-                assertEquals(expected.getClass(), actual.getClass());
+                assertNotNull(expected, String.format("Test failed for method %s", m.getName()));
+                assertNotNull(actual, String.format("Test failed for method %s", m.getName()));
+                assertEquals(expected.getClass(), actual.getClass(), 
+                    String.format("Test failed for method %s", m.getName())
+                );
                 assertEquals(expected, actual);
             }
         }
@@ -91,7 +133,7 @@ public abstract class AbstractDomainObjectTest<T> {
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(CuT.getClass());
         T clone = (T) CuT.getClass().getDeclaredConstructor().newInstance();
         for (Method m : methods) {
-            if ((m.getName().startsWith("set"))
+            if ((m.getName().startsWith("set") && !excludedMethods.contains(m))
             ) {
                 String fieldName = extractFieldName(m.getName(), "set");
                 Object value = fieldValueMap.get(fieldName);

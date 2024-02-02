@@ -63,7 +63,7 @@ describe('AuthService', () => {
   });
 
   describe('Token initialization', () => {
-    const token = new Token('token', new Date(1000));
+    const token = new Token('token', new Date(Date.now()));
     let count = 0;
 
     function untilAllDone(c: number, done: DoneFn) {
@@ -99,27 +99,27 @@ describe('AuthService', () => {
       }
     });
 
-    it('should retrieve token from local storage', (done) => {
+    it('should retrieve token from local storage', fakeAsync(() => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token.getExpiry().getTime());
 
       service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
 
-      expect(service.getToken()?.getToken()).toEqual(token.getToken());
-      expect(service.getToken()?.getExpiry()).toEqual(token.getExpiry());
-      expect(service.authenticated()).toBeTrue();
-
       sub1 = service.token$.subscribe((t) => {
         expect(t?.getToken()).toEqual(token.getToken());
         expect(t?.getExpiry()).toEqual(token.getExpiry());
-        untilAllDone(2, done);
       });
 
       sub2 = service.user$.subscribe((u) => {
         expect(u).toBeNull();
-        untilAllDone(2, done);
       });
-    });
+
+      tick(1000);
+
+      expect(service.getToken()?.getToken()).toEqual(token.getToken());
+      expect(service.getToken()?.getExpiry()).toEqual(token.getExpiry());
+      expect(service.authenticated()).toBeTrue();
+    }));
 
     it('should fail when token from local storage is null', (done) => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
@@ -142,6 +142,15 @@ describe('AuthService', () => {
     it('should fail when there is nothing in local storage', (done) => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
+
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+
+      assertFailure(done);
+    });
+
+    it('should fail when token is expired', (done) => {
+      (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue('token');
+      (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(0);
 
       service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
 
@@ -320,16 +329,21 @@ describe('AuthService', () => {
     });
   });
 
-  it('should sign out', () => {
+  it('should sign out', fakeAsync(() => {
     // @ts-ignore
     service.isAuthenticated = true;
+
+    //@ts-ignore
+    service.token = 'hello';
     
     service.signOut();
+    tick(1000);
 
     //@ts-ignore
     expect(service.user).toBeFalsy();
     expect(service.authenticated()).toBeFalse();
-  });
+    expect(service.getToken()).toBeFalsy();
+  }));
 
   it('should clear expire token', () => {
     // @ts-ignore
