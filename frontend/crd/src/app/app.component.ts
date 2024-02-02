@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { AuthService } from './security/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,7 @@ export class AppComponent {
 
   constructor(private readonly authService: AuthService) {}
 
-  ms() {
-    this.authService.loginRedirectMS();
-  }
-
-  logout() {
-    this.authService.signOut();
+  isAuthenticated(): Observable<Boolean> {
+    return this.authService.isAuthenticated$;
   }
 }

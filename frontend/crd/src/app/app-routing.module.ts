@@ -5,14 +5,22 @@ import {PortfolioComponent} from "./portfolio/portfolio.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {MilestonesPageComponent} from "./milestones-page/milestones-page.component";
 import {ApiDocumentationsComponent} from "./api-documentations/api-documentations.component";
+import { LoginPageComponent } from './security/login-page/login-page.component';
+import { authGuard, noAuthGuard } from './security/auth-guard';
 
 const routes: Routes = [
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'portfolio', component: PortfolioComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'milestones', component: MilestonesPageComponent},
-  {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
-  {path: 'swagger', component: ApiDocumentationsComponent},
+  {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
+  { path: 'dashboard', 
+    children: [
+      {path: '', component: DashboardComponent, canActivate: [authGuard]},
+      {path: 'hello', component: ApiDocumentationsComponent, canActivate: [authGuard]}], 
+  },
+  {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
+  {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard]},
+  {path: '**', component: ApiDocumentationsComponent},
 ];
 
 @NgModule({

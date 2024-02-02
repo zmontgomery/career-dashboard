@@ -21,12 +21,13 @@ import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
 import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { LoginPageModule } from './security/login-page/login-page.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
-    NavbarComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +55,6 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
       }
     ),
     SocialLoginModule,
-    GoogleSigninButtonModule,
     DashboardModule,
     PortfolioModule,
     ProfileModule,
@@ -64,6 +64,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
+    LoginPageModule,
     CarouselModule
   ],
   providers: [
@@ -73,7 +74,12 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider("10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com") // your client id
+            provider: new GoogleLoginProvider(
+              "10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com",
+              {
+                oneTapEnabled: false,
+              }
+            ) // your client id
           }
         ]
       }
