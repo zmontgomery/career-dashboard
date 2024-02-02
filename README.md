@@ -19,7 +19,10 @@ Partially Hydrated devs - Senior Project
 
 # Running the app
 - open a terminal and navigate to the backend directory
-- run `CRD_DB_PASSWORD={your_password} ./gradlew bootrun`
+- this assumes a gmail is being used for the email notifications. If you wish to use a different gmail account use 
+- the environment variable EMAIL_USERNAME
+- for further email and other configuration options see backend/src/main/resources/application.properties
+- run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} ./gradlew bootrun`
 - or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
 - open another terminal and navigate to the frontend/crd directory
 - run `npm start`
