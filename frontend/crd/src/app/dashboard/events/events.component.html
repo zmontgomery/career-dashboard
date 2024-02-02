@@ -1,22 +1,22 @@
-<!--<mat-card>-->
-<!--  <mat-card-header>-->
-<!--    <h2>-->
-<!--      Events-->
-<!--    </h2>-->
-<!--  </mat-card-header>-->
-<!--  <carousel [itemsPerSlide]="itemsPerSlide"-->
-<!--            [singleSlideOffset]="true"-->
-<!--            [noWrap]="!noWrap"-->
-<!--            [interval]="0"-->
-<!--            [startFromIndex]="0"-->
-<!--            [isAnimated]="true">-->
-<!--    <slide *ngFor="let slide of slides; let index=index">-->
-<!--      <img [src]="slide.img" alt="event image" style="display: block; width: 100%; padding: 1%; background-color: darkslategrey;">-->
-<!--      <div class="carousel-caption">-->
-<!--        <h4>{{slide.name}}</h4>-->
-<!--        <div>{{slide.date}}</div>-->
-<!--        <div>{{slide.description}}</div>-->
-<!--      </div>-->
-<!--    </slide>-->
-<!--    </carousel>-->
-<!--</mat-card>-->
+<mat-card>
+  <mat-card-header>
+    <h2>
+      Events
+    </h2>
+  </mat-card-header>
+  <carousel [itemsPerSlide]="itemsPerSlide"
+            [singleSlideOffset]="true"
+            [noWrap]="!noWrap"
+            [interval]="0"
+            [startFromIndex]="0"
+            [isAnimated]="true">
+    <slide *ngFor="let slide of slides; let index=index">
+      <img [src]="slide.img" alt="event image" style="display: block; width: 100%; padding: 1%; background-color: darkslategrey;">
+      <div class="carousel-caption">
+        <h4>{{slide.name}}</h4>
+        <div>{{slide.date}}</div>
+        <div>{{slide.description}}</div>
+      </div>
+    </slide>
+    </carousel>
+</mat-card>

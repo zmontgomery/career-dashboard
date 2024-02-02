@@ -10,6 +10,7 @@ public enum Endpoints {
     // Domain
     EVENTS("events", true),
     DASHBOARD_EVENTS("dashboard_events", true),
+    DASHBOARD_TASKS("dashboard_tasks", true),
     MILSTONES("milestones", true),
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
