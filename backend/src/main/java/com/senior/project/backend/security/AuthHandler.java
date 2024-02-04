@@ -120,6 +120,7 @@ public class AuthHandler {
      * @return
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
-        return ServerResponse.ok().body(Mono.just(""), String.class);
+        authService.signOut(req);
+        return ServerResponse.ok().body(Mono.just("User has signed out."), String.class);
     }
 }
