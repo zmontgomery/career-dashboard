@@ -3,6 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {FileUploadComponent} from "../file-upload/file-upload.component";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {ArtifactService} from "./artifact.service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-portfolio',
@@ -11,12 +12,12 @@ import {ArtifactService} from "./artifact.service";
 })
 export class PortfolioComponent {
   showUploadButton: boolean = true;
-  pdfURLBase = 'http://localhost:8080/api/portfolio/';
-  pdfURL: string = '';
+  pdfURL: any = '';
 
   constructor(
     public dialog: MatDialog,
-    private readonly artifactService: ArtifactService
+    private readonly artifactService: ArtifactService,
+    private http: HttpClient,
   ) {
     this.updateArtifacts();
   }
@@ -28,8 +29,13 @@ export class PortfolioComponent {
       const resume = artifacts[0]
 
       if (resume !== undefined) {
-        this.pdfURL = this.pdfURLBase + resume.id;
-        this.showUploadButton = false;
+
+        this.http.get(constructBackendRequest(`${Endpoints.PORTFOLIO}/${resume.id}`), { responseType: 'blob'})
+          .subscribe((response) => {
+            const file = new Blob([response], { type: 'application/pdf' });
+            this.pdfURL = URL.createObjectURL(file);
+            this.showUploadButton = false;
+        })
       }
     });
   }
