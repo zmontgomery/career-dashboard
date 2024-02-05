@@ -12,7 +12,7 @@ export class Submission {
     this.artifactID = json.artifactID;
     this.taskID = json.taskID;
     this.studentID = json.studentID;
-    this.submissionDate = json.submissionDate;
+    this.submissionDate = new Date(json.submissionDate);
   }
 
   submissionID: number;

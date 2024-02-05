@@ -57,10 +57,6 @@ describe('EventService', () => {
     const events = Array(new Event(eventJSON)); 
     
     service.getDashboardEvents(1).subscribe(result => {
-      //console.log("result");
-      //console.log(result);
-      //console.log("events");
-      //console.log(events)
       expect(result).toEqual(events);
       done();
     });
