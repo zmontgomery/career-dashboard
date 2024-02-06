@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('MilestoneEditComponent', () => {
@@ -57,7 +57,8 @@ describe('MilestoneEditComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        HttpClientModule
       ],
       declarations: [MilestoneEditComponent],
       providers: [

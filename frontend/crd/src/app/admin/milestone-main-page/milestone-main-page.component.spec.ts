@@ -17,9 +17,10 @@ describe('MilestoneMainPageComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    id: "id",
+    id: 1,
     events: [],
     tasks: [],
+    description: "testing"
   }))));
 
   beforeEach(() => {
