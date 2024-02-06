@@ -18,7 +18,7 @@ import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';import { HttpClientModule } from '@angular/common/http';
 
 
 describe('MilestoneEditComponent', () => {
@@ -35,22 +35,24 @@ describe('MilestoneEditComponent', () => {
     name: "name",
     yearLevel: YearLevel.Freshman,
     id: 1,
+    id: 1,
     events: [],
     tasks: [],
+    description: "testing"
     description: "testing"
   }))));
 
   let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
   taskServiceSpy.getTasks.and.returnValue(of(Array(new Task({
-    name: "name",
-    yearLevel: YearLevel.Freshman,
-    id: 1,
+    name: 'task name',
     description: "description",
+    id: 1,
     isRequired: true,
-    submission: "submission",
+    submission: 'submission',
+    yearLevel: YearLevel.Freshman,
     milestoneID: 1,
-    needsArtifact: true,
-    taskType: "artifact"
+    taskType: 'artifact',
+    artifactName: 'test artifact'
   }))));
 
   beforeEach(() => {
@@ -63,6 +65,7 @@ describe('MilestoneEditComponent', () => {
         ReactiveFormsModule,
         MatCheckboxModule,
         NoopAnimationsModule,
+        HttpClientModule,
         TaskEditModalModule,
         MatDialogModule,
         HttpClientTestingModule, 

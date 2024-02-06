@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
 
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
     ReactiveFormsModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    TaskEditModalModule
+    TaskEditModalModule,
+    HttpClientModule
   ]
 })
 export class MilestoneEditModule { }
