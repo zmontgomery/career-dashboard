@@ -103,10 +103,10 @@ export class TaskEditModalComponent implements OnInit {
       this.http.post(url, updateData).subscribe(data => {
         console.log("task has been updated");
         console.log(data);
+
+        this.closeModal();
       })
     }
-
-    this.closeModal();
   }
 
   closeModal() {

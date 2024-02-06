@@ -59,6 +59,12 @@ export class TaskMainPageComponent implements OnDestroy {
     }
 
     const modalDialog = this.matDialog.open(TaskEditModalComponent, dialogConfig);
+
+    modalDialog.afterClosed().subscribe(result => {
+      //TODO: successful save popup?
+      this.taskService.getTasks(true);
+      this.ngOnInit();
+    })
   }
 
 }
