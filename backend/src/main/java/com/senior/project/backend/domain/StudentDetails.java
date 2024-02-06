@@ -19,13 +19,11 @@ import jakarta.persistence.TemporalType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
-@PrimaryKeyJoinColumn(name = "id")
-public class Student extends User{
-	
+public class StudentDetails extends User{
 	@Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID studentId;
-	
+    private UUID id;
+
+	private UUID userID;
 	private int universityID;
 	private double gpa;
 	private String description;
