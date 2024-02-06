@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {FileUploadComponent} from "../file-upload/file-upload.component";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
+import {User} from "../../domain/User";
 
 @Component({
   selector: 'app-portfolio',
