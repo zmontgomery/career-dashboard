@@ -14,9 +14,10 @@ import java.util.Date;
 public class Event {
     @Id
     private Long id;
-    private Boolean isRequired;
     private String name;
     private String description;
     private Date date;
-
+    private String location;
+    private String organizer;
+    private boolean isRecurring;
 }
