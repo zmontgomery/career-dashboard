@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     // additional query methods if needed
+    // possibly join with events
     @Query("SELECT t FROM Task t")
     List<Task> findAll();
 

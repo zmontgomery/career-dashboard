@@ -134,8 +134,8 @@ export class MilestoneEditComponent {
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
-    dialogConfig.height = "350px";
-    dialogConfig.width = "600px";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
     dialogConfig.data = {
       name: name,
       task: task

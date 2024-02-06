@@ -1,5 +1,6 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
 
 import java.util.Map;
@@ -16,8 +17,12 @@ import reactor.core.publisher.Mono;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final EventRepository eventRepository;
 
-    public TaskService(TaskRepository taskRepository) { this.taskRepository = taskRepository;}
+    public TaskService(TaskRepository taskRepository, EventRepository eventRepository) { 
+        this.taskRepository = taskRepository;
+        this.eventRepository = eventRepository;
+    }
     public Flux<Task> all() {
         return Flux.fromIterable(taskRepository.findAll());
     }
@@ -34,9 +39,28 @@ public class TaskService {
     public Mono<Task> updateTask(long id, Map<String, Object> updates) {
         Task existingTask = taskRepository.findById(id);
 
-        // TODO: add the rest of the task properties 
         if (updates.containsKey("description")) {
             existingTask.description = (String) updates.get("description");
+        }
+        if (updates.containsKey("taskType")) {
+            if (updates.get("taskType").equals("artifact") &&
+                    updates.containsKey("artifactName")) {
+                // don't edit the task type unless an artifact name was given
+                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setEvent(null);
+            }
+            else if (updates.get("taskType").equals("event") &&
+                    updates.containsKey("event")) {
+                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setArtifactName(null);
+            }
+        }
+        if (updates.containsKey("artifactName") && existingTask.getTaskType().equals("artifact")) {
+            existingTask.setArtifactName((String) updates.get("artifactName"));
+        }
+        if (updates.containsKey("event") && existingTask.getTaskType().equals("event")) {
+            Event assignedEvent = eventRepository.findById(Integer.parseInt((String) updates.get("event")));
+            existingTask.setEvent(assignedEvent);
         }
 
         return Mono.just(taskRepository.save(existingTask));

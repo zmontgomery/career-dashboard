@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { YearLevel } from 'src/domain/Milestone';
 import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { Task } from 'src/domain/Task';
-import { FloatLabelType } from '@angular/material/form-field';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 
@@ -48,36 +47,22 @@ export class TaskEditModalComponent implements OnInit {
   }
 
   createForm() {
-    console.log("creating form for");
-    console.log(this.taskName);
-    console.log(this.tYearLevel);
-
     if (this.currentTask) {
       this.taskForm = this.formBuilder.group({
         name: [this.taskName],   //this field is hidden if the task already exists
         description: [this.currentTask.description],
-        taskType: ['artifact' as FloatLabelType], 
-        artifactName: [null],
-        artifactType: [null],
-        event: [null]
+        taskType: [this.currentTask.taskType], 
+        artifactName: [this.currentTask.artifactName],
+        event: [this.currentTask.eventID]
       });
-
-      //TODO: once we can differentiate artifact tasks and event tasks
-      // if (this.currentTask.needsArtifact) {
-      //   this.taskForm.get('taskType')?.setValue('artifact');
-      // }
-      // else {
-      //   this.taskForm.get('taskType')?.setValue('event');
-      // }
     }
 
     else {
       this.taskForm = this.formBuilder.group({
         name: [null, Validators.required],   //this field is hidden if the task already exists
         description: [null],
-        taskType: ['artifact' as FloatLabelType], 
+        taskType: ['artifact'], 
         artifactName: [null],
-        artifactType: [null],
         event: [null]
       });
     }
@@ -97,10 +82,19 @@ export class TaskEditModalComponent implements OnInit {
       if (this.taskForm.get('description')) {
         updateData.description = this.taskForm.get('description')!.value;
       }
-      //TODO: add the rest of the fields
+      if (this.taskForm.get('artifactName') && this.taskForm.get('artifactName')!.value.length > 0) {
+        updateData.artifactName = this.taskForm.get('artifactName')!.value;
+      }
+      if (this.taskForm.get('taskType')) {
+        updateData.taskType = this.taskForm.get('taskType')!.value;
+      }
+      if (this.taskForm.get('event')) {
+        updateData.event = this.taskForm.get('event')!.value;
+      }
 
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
+        console.log(data);
         this.closeModal();
       })
     }

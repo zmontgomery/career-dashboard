@@ -23,14 +23,17 @@
             </mat-radio-group>
           </div>
           <div *ngIf="getTaskType() == 'artifact'">
-            <p>editing an artifact!</p>
             <mat-form-field>
                 <mat-label>Artifact Name</mat-label>
                 <input matInput formControlName="artifactName">
             </mat-form-field>
           </div>
           <div *ngIf="getTaskType() == 'event'">
-            <p>event in progress!</p>
+            <p>For now, enter Event ID</p>
+            <mat-form-field>
+                <mat-label>Select Event</mat-label>
+                <input matInput formControlName="event">
+            </mat-form-field>
           </div>
         <button mat-button type="submit" [disabled]="!taskForm.status">Submit</button>
     </form>

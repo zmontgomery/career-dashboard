@@ -95,8 +95,8 @@ describe('MilestoneEditComponent', () => {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
-    dialogConfig.height = "350px";
-    dialogConfig.width = "600px";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
     dialogConfig.data = {
       name: "testing",
       task: null
