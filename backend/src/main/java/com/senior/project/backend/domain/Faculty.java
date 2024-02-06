@@ -16,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @Generated
 @PrimaryKeyJoinColumn(name = "id")
-public class Faculty extends User{
+public class Faculty extends User {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.UUID)

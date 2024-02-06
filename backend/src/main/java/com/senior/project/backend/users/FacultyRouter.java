@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.senior.project.backend.util.Endpoints;
+
 /**
  * Routes for the faculty
  * 
@@ -16,7 +18,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Component
 public class FacultyRouter {
     @Bean
-    public RouterFunction<ServerResponse> userRoutes(StudentHandler studentHandler) {
-        return route(GET("/api/faculty"), studentHandler::all);
+    public RouterFunction<ServerResponse> facultyRoutes(FacultyHandler facultyHandler) {
+        return route(GET(Endpoints.FACULTY.uri()), facultyHandler::all);
     }
 }

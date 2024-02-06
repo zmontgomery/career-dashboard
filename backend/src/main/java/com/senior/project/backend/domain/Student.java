@@ -20,7 +20,7 @@ import jakarta.persistence.TemporalType;
 @AllArgsConstructor
 @Generated
 @PrimaryKeyJoinColumn(name = "id")
-public class Student extends User{
+public class Student extends User {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.UUID)
