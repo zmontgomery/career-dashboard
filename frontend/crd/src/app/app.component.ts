@@ -18,4 +18,8 @@ export class AppComponent {
   ms() {
     this.authService.loginRedirectMS();
   }
+
+  logout() {
+    this.authService.signOut();
+  }
 }

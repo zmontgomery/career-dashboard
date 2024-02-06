@@ -101,9 +101,6 @@ export class TaskEditModalComponent implements OnInit {
 
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
-        console.log("task has been updated");
-        console.log(data);
-
         this.closeModal();
       })
     }
