@@ -8,6 +8,8 @@ import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractCon
 import { TaskService } from 'src/app/util/task.service';
 import { Task } from 'src/domain/Task';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-milestone-edit',
@@ -36,7 +38,8 @@ export class MilestoneEditComponent {
     private router: Router,
     private milestoneService: MilestoneService,
     private taskService: TaskService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
@@ -77,17 +80,21 @@ export class MilestoneEditComponent {
   }
 
   createMilestoneForm() {
-    this.milestoneForm = this.formBuilder.group({
-      name: [null, Validators.required],   //this field is hidden if the milestone already exists
-      description: [null],
-      tasks: this.listTasks()
-    });
-
     if (this.currentMilestone) {
-      //even if the name field is hidden, this prevents it from being marked as incomplete
-      this.milestoneForm.get('name')?.setValue(this.currentMilestone.name);
-      this.milestoneForm.get('desciption')?.setValue(this.currentMilestone.description);
+      this.milestoneForm = this.formBuilder.group({
+        name: [this.currentMilestone.name],
+        description: [this.currentMilestone.description],
+        tasks: this.listTasks()
+      });
     }
+    else {
+      this.milestoneForm = this.formBuilder.group({
+        name: [null, Validators.required],   //this field is hidden if the milestone already exists
+        description: [null],
+        tasks: this.listTasks()
+      });
+    }
+
   }
 
   listTasks() {
@@ -124,6 +131,25 @@ export class MilestoneEditComponent {
   saveMilestone() {
     //TODO: check that all fields are in
     console.log("saving!");
+    if (this.currentMilestone) {
+      const updateData: any = {};
+
+      updateData.id = this.currentMilestone.milestoneID as unknown as number;
+      if (this.milestoneForm.get('description')) {
+        updateData.description = this.milestoneForm.get('description')!.value;
+      }
+
+      //TODO: assign tasks to milestone
+
+      const url = constructBackendRequest(Endpoints.EDIT_MILESTONE)
+      this.http.post(url, updateData).subscribe(data => {
+        console.log(data);
+        window.alert("Milestone updated");
+        this.milestoneService.getMilestones(true).subscribe(data => {
+          this.back();
+        })
+      })
+    }
   }
 
 }

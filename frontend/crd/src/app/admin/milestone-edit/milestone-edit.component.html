@@ -11,7 +11,7 @@
   <h5>This milestone is for grade level {{mYearLevel}} </h5>
   <mat-form-field>
     <mat-label>Milestone Description</mat-label>
-    <textarea matInput></textarea>
+    <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
   <div *ngFor="let task of tasks.controls; let i=index">
       <mat-checkbox [formControl]="getFormControlTask(task)">
