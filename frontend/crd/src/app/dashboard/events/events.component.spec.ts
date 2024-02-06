@@ -3,7 +3,7 @@ import { EventsComponent } from './events.component';
 import { MatCardModule } from "@angular/material/card";
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
-import { EventService } from "./EventService";
+import { EventService } from "./event.service";
 import { of } from "rxjs";
 import { MockComponent, MockModule } from 'ng-mocks';
 const createSpyObj= jasmine.createSpyObj;
@@ -16,22 +16,20 @@ describe('EventsComponent', () => {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
   }))));
 
   eventServiceSpy.getDashboardEvents.and.returnValue(of(Array(new Event({
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
-      isRecurring: true,
+      id: 2,
+      recurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
   }))));
 
   beforeEach(() => {

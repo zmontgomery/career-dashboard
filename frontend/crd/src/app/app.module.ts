@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { MSAL_GUARD_CONFIG, MSAL_INTERCEPTOR_CONFIG, MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
@@ -13,12 +13,13 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { PortfolioModule } from "./portfolio/portfolio.module";
 import { ApiDocumentationsComponent } from './api-documentations/api-documentations.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { MatTabsModule } from "@angular/material/tabs";
-import { RouterModule } from "@angular/router";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ProfileModule } from "./profile/profile.module";
-import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
-import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
+import {MatTabsModule} from "@angular/material/tabs";
+import {RouterModule} from "@angular/router";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ProfileModule} from "./profile/profile.module";
+import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
+import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
+import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
 import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
@@ -71,18 +72,20 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MilestoneEditModule,
     MatGridListModule
   ],
-  providers: [{
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: true, //keeps the user signed in
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider("10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com") // your client id
-        }
-      ]
-    }
-  }],
+  providers: [
+      {provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: true, //keeps the user signed in
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider("10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com") // your client id
+          }
+        ]
+      }
+    },
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }

@@ -4,10 +4,10 @@ import {Task, TaskJSON} from "./Task";
 export interface MilestoneJSON {
   name: string;
   yearLevel: YearLevel;
-  id: string;
+  id: number;
   events: Array<EventJSON>;
   tasks: Array<TaskJSON>;
-  description?: string;
+  description: string;
 }
 
 export enum YearLevel {
@@ -29,9 +29,9 @@ export class Milestone {
 
     name: string;
     yearLevel: YearLevel;
-    milestoneID: string;
+    milestoneID: number;
     events: Array<Event>;
     tasks: Array<Task>;
     isComplete: boolean;
-    description?: string;
+    description: string;
 }

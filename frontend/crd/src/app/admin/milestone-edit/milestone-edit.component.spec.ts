@@ -29,21 +29,23 @@ describe('MilestoneEditComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    id: "id",
+    id: 1,
     events: [],
     tasks: [],
+    description: "testing"
   }))));
 
   let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
   taskServiceSpy.getTasks.and.returnValue(of(Array(new Task({
-    name: "name",
-    yearLevel: YearLevel.Freshman,
-    id: "id",
+    name: 'task name',
     description: "description",
+    id: 1,
     isRequired: true,
-    submission: "submission",
-    milestoneID: "1",
-    needsArtifact: true
+    submission: 'submission',
+    yearLevel: YearLevel.Freshman,
+    milestoneID: 1,
+    taskType: 'artifact',
+    artifactName: 'test artifact'
   }))));
 
   beforeEach(() => {

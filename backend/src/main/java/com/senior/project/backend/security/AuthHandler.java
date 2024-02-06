@@ -2,6 +2,7 @@ package com.senior.project.backend.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -9,9 +10,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.TokenType;
-import com.senior.project.backend.security.verifiers.TokenVerificiationException;
 import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.security.verifiers.TokenVerifierGetter;
+import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
 
@@ -23,18 +24,22 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthHandler {
 
+    private static final String AUTHORIZATION_HEADER = "X-Authorization";
+
     private final Logger logger = LoggerFactory.getLogger(AuthHandler.class);
 
-    private final AuthRepository repository;
-    private final TokenVerifierGetter tokenVerifierGetter;
+    private final Mono<ServerResponse> authFailedResponse = ServerResponse.status(401).bodyValue("Unauthorized.");
+    private final Mono<ServerResponse> errorResponse = ServerResponse.status(403).bodyValue("An error ocurred during sign in");
+    private final Mono<ServerResponse> refreshErrorResponse = ServerResponse.status(403).bodyValue("An error ocurred when refreshing the token");
 
-    public AuthHandler(
-        AuthRepository repository,
-        TokenVerifierGetter tokenVerifierGetter
-    ) {
-        this.repository = repository;
-        this.tokenVerifierGetter = tokenVerifierGetter;
-    }
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TokenVerifierGetter tokenVerifierGetter;
 
     /**
      * Handler function for signing in
@@ -51,20 +56,60 @@ public class AuthHandler {
         return req.bodyToMono(LoginRequest.class)
             .flatMap(request -> {
                 String idToken = request.getIdToken();
-                TokenType type = request.getType();
+                TokenType type = request.getTokenType();
                 try {
                     TokenVerifier verifier = this.tokenVerifierGetter.getTokenVerifier(type);
-                    String oid = verifier.verifiyIDToken(idToken);
-                    return this.repository.addToken(":)", oid)
-                        .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
-                } catch (TokenVerificiationException e) {
-                    this.logger.error(e.getMessage());
+                    String email = verifier.verifiyIDToken(idToken);
                     
+                    return userService.findByEmailAddress(email)
+                        .flatMap(authService::login)
+                        .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class))
+                        .switchIfEmpty(errorResponse);
+                } catch (Exception e) {
+                    this.logger.error(e.getMessage());
+
                     // Obscure the reason for failure
-                    return ServerResponse.status(403).bodyValue("An error ocurred during sign in");
+                    return errorResponse;
                 }
             });
-    }   
+    } 
+    
+    /**
+     * Handler function for refreshing a token
+     * 
+     * The function takes an incoming token, verifies that it came from this server
+     * and then generates a new token for the user
+     * 
+     * @param req - the server request with the refresh request
+     * @return 
+     *      200 for successful refresh
+     *      403 If an error ocurred during token refresh
+     */
+    public Mono<ServerResponse> refresh(ServerRequest req) {
+        try {
+            String token = req
+                .headers()
+                .header(AUTHORIZATION_HEADER)
+                .get(0)
+                .split("Bearer ")[1];
+
+            return authService.refreshToken(token)
+                .flatMap(res -> ServerResponse.ok().body(Mono.just(res), LoginResponse.class));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return refreshErrorResponse;
+        }
+    }
+
+    /**
+     * Handler function for requests that failed authentication
+     * 
+     * @param req - failed request
+     * @return 401 Unauthorized
+     */
+    public Mono<ServerResponse> authenticationFailed(ServerRequest req) {
+        return authFailedResponse;
+    }
 
     /**
      * Signs out a user
@@ -75,6 +120,7 @@ public class AuthHandler {
      * @return
      */
     public Mono<ServerResponse> signOut(ServerRequest req) {
-        return ServerResponse.ok().body(Mono.just(""), String.class);
+        authService.signOut(req);
+        return ServerResponse.ok().body(Mono.just("User has signed out."), String.class);
     }
 }
