@@ -17,9 +17,10 @@ describe('MilestoneMainPageComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    id: "id",
+    id: 1,
     events: [],
     tasks: [],
+    description: "testing"
   }))));
 
   beforeEach(() => {
@@ -27,6 +28,7 @@ describe('MilestoneMainPageComponent', () => {
       imports: [MatCardModule, MatGridListModule, MatTabsModule, NoopAnimationsModule],
       declarations: [MilestoneMainPageComponent],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
+      teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(MilestoneMainPageComponent);
     component = fixture.componentInstance;

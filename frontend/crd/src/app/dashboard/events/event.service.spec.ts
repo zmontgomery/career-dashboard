@@ -23,36 +23,38 @@ describe('EventService', () => {
   });
 
   it('events should return list of events', (done) => {
-    const events = Array(new Event({
+    const eventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
-    }));
+    }
+    
+    const events = Array(new Event(eventJSON));
     service.getEvents().subscribe(result => {
       expect(result).toEqual(events);
       done();
     });
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.EVENTS));
     expect(request.request.method).toEqual('GET');
-    request.flush(events)
+    request.flush(Array(eventJSON))
   });
 
   it('dashboard_events should return list of events', (done) => {
-    const events = Array(new Event({
+    const eventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
-      eventID: "id",
-      isRecurring: true,
+      id: 1,
+      recurring: true,
       organizer: "organizer",
       location: "location",
-      isRequired: true,
-    }));
+    }
+    
+    const events = Array(new Event(eventJSON)); 
     
     service.getDashboardEvents(1).subscribe(result => {
       expect(result).toEqual(events);
@@ -61,7 +63,7 @@ describe('EventService', () => {
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, {key: 'pageNum', value: 1}));
 
     expect(request.request.method).toEqual('GET');
-    request.flush(events)
+    request.flush(Array(eventJSON))
   });
 
 

@@ -34,21 +34,23 @@ describe('MilestoneEditComponent', () => {
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    id: "id",
+    id: 1,
     events: [],
     tasks: [],
+    description: "testing"
   }))));
 
   let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
   taskServiceSpy.getTasks.and.returnValue(of(Array(new Task({
     name: "name",
     yearLevel: YearLevel.Freshman,
-    id: "id",
+    id: 1,
     description: "description",
     isRequired: true,
     submission: "submission",
-    milestoneID: "1",
-    needsArtifact: true
+    milestoneID: 1,
+    needsArtifact: true,
+    taskType: "artifact"
   }))));
 
   beforeEach(() => {
@@ -72,7 +74,8 @@ describe('MilestoneEditComponent', () => {
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: TaskService, useValue: taskServiceSpy},
         MatDialog
-      ]
+      ],
+      teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(MilestoneEditComponent);
     component = fixture.componentInstance;

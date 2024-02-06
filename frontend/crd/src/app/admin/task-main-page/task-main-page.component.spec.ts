@@ -25,7 +25,8 @@ describe('TaskMainPageComponent', () => {
         MatListModule,
         NoopAnimationsModule
       ],
-      providers: [MatDialog]
+      providers: [MatDialog],
+      teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(TaskMainPageComponent);
     component = fixture.componentInstance;

@@ -34,7 +34,8 @@ describe('TaskEditModalComponent', () => {
         MatDialog, 
         {provide: MatDialogRef, useValue: {}},
         {provide: MAT_DIALOG_DATA, useValue: []},
-      ]
+      ],
+      teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(TaskEditModalComponent);
     component = fixture.componentInstance;
@@ -46,3 +47,5 @@ describe('TaskEditModalComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+

@@ -93,7 +93,7 @@ export class TaskEditModalComponent implements OnInit {
     if (this.currentTask) {
       const updateData: any = {};
 
-      updateData.id = this.currentTask.id as unknown as number;
+      updateData.id = this.currentTask.taskID as unknown as number;
       if (this.taskForm.get('description')) {
         updateData.description = this.taskForm.get('description')!.value;
       }
