@@ -14,9 +14,13 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   title = 'crd';
 
-  constructor(private readonly authService: AuthService) {}
+  noNavBar = ['login']
 
-  isAuthenticated(): Observable<Boolean> {
-    return this.authService.isAuthenticated$;
+  constructor() {}
+
+  needsNavBar(): boolean {
+    return this.noNavBar.every((uri) => {
+      return !location.href.includes(uri);
+    });
   }
 }

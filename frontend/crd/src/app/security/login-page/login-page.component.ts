@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 
@@ -9,7 +9,11 @@ import { Router } from '@angular/router';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor(private readonly authService: AuthService, private router: Router) {}
+  smallButton!: boolean;
+
+  constructor(private readonly authService: AuthService, private router: Router) {
+    this.smallButton = window.outerWidth <= 480;
+  }
 
   ngOnInit(): void {
   }

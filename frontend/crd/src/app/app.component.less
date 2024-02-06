@@ -5,10 +5,16 @@ mat-card-header {
 .app-container {
   width: 100vw;
   height: 100vh;
-  display: block;
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  app-oswego-logo {
+    display: inline-block;
+    height: 100px;
+  }
 }
 
-app-oswego-logo {
-  display: inline-block;
-  height: 100px;
+.body-container {
+  width: 100%;
+  grid-column: auto / span 2;
 }

@@ -13,11 +13,9 @@ export const authGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ) => {
     const authService = inject(AuthService);
-    return authService.isAuthenticated$.pipe(take(1), map((isAuthenticated) => {
-        console.log(next);
-        console.log(next.url.map((p) => p.path).join('/'));
+    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
         if (!isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['login'], {
-            attempted: next.url.map((p) => p.path).join('/')
+            attempted: location.pathname + encodeURI(location.search)
         });
         return true;
     }));
@@ -28,7 +26,7 @@ export const noAuthGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ) => {
     const authService = inject(AuthService);
-    return authService.isAuthenticated$.pipe(take(1), map((isAuthenticated) => {
+    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
         if (isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['dashboard']);
         return true;
     }));

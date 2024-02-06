@@ -10,11 +10,8 @@ import { authGuard, noAuthGuard } from './security/auth-guard';
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
-  { path: 'dashboard', 
-    children: [
-      {path: '', component: DashboardComponent, canActivate: [authGuard]},
-      {path: 'hello', component: ApiDocumentationsComponent, canActivate: [authGuard]}], 
-  },
+  {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
+  {path: 'dashboard/hello', component: ApiDocumentationsComponent, canActivate: [authGuard]},
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},

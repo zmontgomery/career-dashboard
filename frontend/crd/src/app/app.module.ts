@@ -7,7 +7,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
-import { GoogleLoginProvider, GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { MatCardModule } from "@angular/material/card";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { PortfolioModule } from "./portfolio/portfolio.module";
@@ -22,6 +22,7 @@ import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
+import { LogoutButtonModule } from './security/logout-button/logout-button.module';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { LoginPageModule } from './security/login-page/login-page.module';
       }
     ),
     SocialLoginModule,
+    LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
     ProfileModule,
@@ -65,7 +67,7 @@ import { LoginPageModule } from './security/login-page/login-page.module';
     BrowserAnimationsModule,
     OswegoLogoModule,
     LoginPageModule,
-    CarouselModule
+    CarouselModule,
   ],
   providers: [
       {provide: 'SocialAuthServiceConfig',

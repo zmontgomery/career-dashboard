@@ -1,5 +1,8 @@
 <div class="app-container">
   <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
-  <app-navbar *ngIf="isAuthenticated() | async as boolean" else noNavBar></app-navbar>
-  <router-outlet #noNavBar></router-outlet>
+  <app-logout-button></app-logout-button>
+  <div class="body-container">
+    <app-navbar class="navbar" *ngIf="needsNavBar()" else noNavBar></app-navbar>
+    <router-outlet #noNavBar></router-outlet>
+  </div>
 </div>

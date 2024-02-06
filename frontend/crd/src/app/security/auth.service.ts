@@ -124,8 +124,7 @@ export class AuthService {
   signOut() {
     const sub = this.isAuthenticated$.subscribe((auth) => {
       if (!auth) {
-        this.router.navigate(['login']);
-        sub.unsubscribe();
+        location.href = '/login';
       }
     })
 
@@ -276,11 +275,12 @@ export class AuthService {
   }
 
   navigateOffLogin() {
-    const attempted = this.activatedRoute.queryParams.subscribe((p) => {
-      const attemptedNav: string = p['attempted'];
-      const segments = attemptedNav.split('/');
-
-      console.log(segments);
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe((p) => {
+      if ('attempted' in p) {
+        location.href = p['attempted'];
+      } else {
+        location.href = '';
+      }
     });
   }
 }

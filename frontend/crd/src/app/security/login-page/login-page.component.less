@@ -1,4 +1,4 @@
-@import "../../../common";
+@import "../../../common.less";
 
 .login-page {
     display: flex;
@@ -14,10 +14,13 @@
     
         .login-card {
             width: 400px;
-            height: 500px;
+            height: 300px;
             display: flex;
             justify-content: center;
 
+            @media screen and (max-width: @min-screen-width) {
+                width: 300px;
+            }
 
             .card-header {
                 background-color: @oswego-green;
@@ -34,10 +37,26 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                justify-content: center;
 
                 .login-microsoft-button {
                     margin: 5%;
+                    height: 40px;
                     width: 70%;
+
+                    @media screen and (max-width: @min-screen-width) {
+                        width: 85%;
+                    }
+                }
+
+                .login-google-button {
+                    margin: 5%;
+                    height: 60px;
+                    width: 70%;
+
+                    @media screen and (max-width: @min-screen-width) {
+                        width: 85%;
+                    }
                 }
             }
         }
