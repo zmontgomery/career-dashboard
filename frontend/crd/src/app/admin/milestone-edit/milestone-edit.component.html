@@ -23,7 +23,7 @@
           This task is part of milestone ID {{yearTasks[i].milestoneID}}
         </p>
       </div>
-      <button mat-button (click)="openTaskEditModal(yearTasks[i].name, yearTasks[i])">EDIT</button>
+      <button mat-button type='button' (click)="openTaskEditModal(yearTasks[i].name, yearTasks[i])">EDIT</button>
   </div>
   <button mat-button type="submit" [disabled]="!milestoneForm.status">Submit</button>
 </form>

@@ -18,7 +18,7 @@ import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('MilestoneEditComponent', () => {
@@ -35,10 +35,8 @@ describe('MilestoneEditComponent', () => {
     name: "name",
     yearLevel: YearLevel.Freshman,
     id: 1,
-    id: 1,
     events: [],
     tasks: [],
-    description: "testing"
     description: "testing"
   }))));
 
