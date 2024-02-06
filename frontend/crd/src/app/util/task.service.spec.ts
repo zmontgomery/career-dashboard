@@ -28,11 +28,13 @@ describe('TaskService', () => {
         name: 'task name',
         description: "description",
         needsArtifact: true,
-        id: "id",
+        id: 1,
         isRequired: true,
-        submission: 'submission',
+        submission: null,
         yearLevel: YearLevel.Freshman,
-        milestoneID: "1",
+        milestoneID: 1,
+        taskType: 'artifact',
+        artifactName: 'sample'
     }
 
     const tasks = Array(new Task(taskJSON));

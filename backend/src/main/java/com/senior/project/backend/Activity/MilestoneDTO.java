@@ -9,5 +9,6 @@ import lombok.*;
 public class MilestoneDTO {
     private Long id;
     private String name;
+    private String description;
     private YearLevel yearLevel;
 }

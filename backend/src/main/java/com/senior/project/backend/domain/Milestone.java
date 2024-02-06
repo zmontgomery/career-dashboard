@@ -19,6 +19,7 @@ public class Milestone {
     private Long id;
 
     private String name;
+    private String description;
     @OneToMany(mappedBy = "milestone", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("milestone")
     private List<Task> tasks = null;
@@ -28,7 +29,7 @@ public class Milestone {
 
 
     public MilestoneDTO toDTO() {
-        return new MilestoneDTO(this.id, this.name, this.yearLevel);
+        return new MilestoneDTO(this.id, this.name, this.description, this.yearLevel);
     }
 }
 
