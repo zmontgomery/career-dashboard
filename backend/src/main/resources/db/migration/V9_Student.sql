@@ -55,4 +55,4 @@ CREATE TABLE club(
     startDate DATE,
     endDate DATE,
     FOREIGN KEY (studentID) REFERENCES student (studentID)
-)
+);

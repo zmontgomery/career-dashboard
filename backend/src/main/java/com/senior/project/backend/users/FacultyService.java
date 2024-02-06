@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
  * @author Riley Brotz - rcb2957@rit.edu
  */
 @Service
-public class FacultyService extends UserService{
+public class FacultyService{
     @Autowired
     private FacultyRepository repository;
 
