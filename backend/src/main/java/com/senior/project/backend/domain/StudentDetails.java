@@ -6,10 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -19,15 +16,14 @@ import jakarta.persistence.TemporalType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
-public class StudentDetails extends User{
+public class StudentDetails {
 	@Id
     private UUID id;
 
-	private UUID userID;
-	private int universityID;
+	private int universityId;
 	private double gpa;
 	private String description;
-	private String yearLevel;
+	private String degreeLevel;
 
 	@Temporal(value = TemporalType.DATE)
 	private Date graduationYear;
@@ -35,11 +31,11 @@ public class StudentDetails extends User{
 	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date startDate;
 
-	private Project[] projects;
-	private Job[] jobs;
-	private DegreeProgram[] minors;
-	private DegreeProgram[] majors;
-	private Club[] clubs;
-	private Skill[] skills;
-	private Skill[] languages;
+	// private Project[] projects;
+	// private Job[] jobs;
+	// private DegreeProgram[] minors;
+	// private DegreeProgram[] majors;
+	// private Club[] clubs;
+	// private Skill[] skills;
+	// private Skill[] languages;
 }
