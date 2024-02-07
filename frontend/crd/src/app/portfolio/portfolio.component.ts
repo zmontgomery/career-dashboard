@@ -30,7 +30,7 @@ export class PortfolioComponent {
 
       if (resume !== undefined) {
 
-        this.http.get(constructBackendRequest(`${Endpoints.PORTFOLIO}/${resume.id}`), { responseType: 'blob'})
+        this.http.get(constructBackendRequest(`${Endpoints.PORTFOLIO}/${resume.artifactID}`), { responseType: 'blob'})
           .subscribe((response) => {
             const file = new Blob([response], { type: 'application/pdf' });
             this.pdfURL = URL.createObjectURL(file);
