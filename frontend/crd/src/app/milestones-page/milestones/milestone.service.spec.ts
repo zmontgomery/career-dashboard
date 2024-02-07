@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {MilestoneService} from "./milestone.service";
-import {Milestone, YearLevel} from "../../../domain/Milestone";
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { MilestoneService } from "./milestone.service";
+import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 describe('MilestoneService', () => {

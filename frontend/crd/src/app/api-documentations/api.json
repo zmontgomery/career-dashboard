@@ -874,6 +874,48 @@
           }
         }
       }
+    },
+    "/admin": {
+      "get": {
+        "summary": "IN PROGRESS.",
+        "description": "Optional extended description in Markdown.",
+        "tags": ["admin"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Milestone"
+                  },
+                  "example": [
+                    {
+                      "milestoneID": 1,
+                      "name": "Professional Career Package Development",
+                      "description": "complete important steps for the job search",
+                      "yearLevel": "freshman",
+                      "events": [],
+                      "tasks": [
+                        {
+                          "taskID": 1,
+                          "name":"Upload Resume"
+                        },
+                        {
+                          "taskID": 2,
+                          "name":"Create LinkedIn Profile"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
