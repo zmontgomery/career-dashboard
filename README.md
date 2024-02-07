@@ -50,3 +50,11 @@ Partially Hydrated devs - Senior Project
 - environment variables must be created or passed in when creating the jar
 - `./gradlew build`
 - jar is located at backend/build/libs/backend-X.X.X.jar
+
+# Troubleshooting
+- spring may not recognize changes in the db schema and will instead try to recreate tables that already exist
+- if that happens, drop and recreate the db using the following commands (any data not in the migration scripts will be lost)
+  - run `mysql -u backend -p`
+  - enter the password for the backend
+  - run `DROP DATABASE CRD;`
+  - run `CREATE DATABASE CRD;`

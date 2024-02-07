@@ -70,8 +70,9 @@ public class ArtifactService {
                 upload.setFileLocation(destination.toString());
                 upload.setName(filePart.filename());
 
-                // TODO add comment capture
-                upload.setComment("");
+                // TODO: add comment capture
+                // TODO: comment goes in submission
+                //upload.setComment("");
 
                 // Save the file to the specified directory
                 return filePart.transferTo(destination)
