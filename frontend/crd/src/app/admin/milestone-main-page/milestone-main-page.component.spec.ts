@@ -28,6 +28,7 @@ describe('MilestoneMainPageComponent', () => {
       imports: [MatCardModule, MatGridListModule, MatTabsModule, NoopAnimationsModule],
       declarations: [MilestoneMainPageComponent],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
+      teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(MilestoneMainPageComponent);
     component = fixture.componentInstance;

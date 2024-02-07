@@ -10,6 +10,8 @@ import { Task } from 'src/domain/Task';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
 
 @Component({
   selector: 'app-milestone-edit',
@@ -25,6 +27,7 @@ export class MilestoneEditComponent {
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 
   public milestoneName: string = '';
+  private milestoneParam: string = '';
   mYearLevel: YearLevel = YearLevel.Freshman; //default
   yearTasks: Array<Task> = new Array(); //only display tasks of the same year
   public currentMilestone: Milestone | undefined;
@@ -39,26 +42,29 @@ export class MilestoneEditComponent {
     private milestoneService: MilestoneService,
     private taskService: TaskService,
     private formBuilder: FormBuilder,
+    public matDialog: MatDialog,
     private http: HttpClient,
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      //TODO: the param is name for now but change to ID later (maybe)
-      this.milestoneName = decodeURIComponent(params['name']);
+
+      this.milestoneParam = decodeURIComponent(params['name']);
     });
 
     this.milestoneService.getMilestones()
       .pipe(takeUntil(this.destroyed$),
         mergeMap((milestones: Milestone[]) => {
           // if we are creating a new milestone
-          if (YearLevel[this.milestoneName as keyof typeof YearLevel]) {
+          if (YearLevel[this.milestoneParam as keyof typeof YearLevel]) {
             this.mYearLevel = YearLevel[this.milestoneName as keyof typeof YearLevel];
             this.milestoneName = '';
+            this.milestoneParam = '';
           }
 
           milestones.forEach((milestone) => {
-            if (this.milestoneName != '' && milestone.name == this.milestoneName) {
+            if (this.milestoneParam != '' && milestone.milestoneID == +this.milestoneParam) {
+              this.milestoneName = milestone.name;
               this.currentMilestone = milestone;
               this.mYearLevel = milestone.yearLevel;
             }
@@ -150,6 +156,27 @@ export class MilestoneEditComponent {
         })
       })
     }
+  }
+
+  openTaskEditModal(name: string, task: Task | null) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
+    dialogConfig.data = {
+      name: name,
+      task: task
+    }
+    // https://material.angular.io/components/dialog/overview
+    const modalDialog = this.matDialog.open(TaskEditModalComponent, dialogConfig);
+
+    modalDialog.afterClosed().subscribe(result => {
+      //TODO: successful save popup?
+      this.taskService.getTasks(true);
+      this.ngOnInit();
+    })
   }
 
 }
