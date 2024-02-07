@@ -1,17 +1,20 @@
 export interface ArtifactJSON {
-  name: string;
   id: number;
-  comment: string;
+  fileName: string;
+  submissionDate: Date;
+  submission: any; // maybe link to submission object?
 }
 
 export class Artifact {
   constructor(json: ArtifactJSON) {
-    this.name = json.name
-    this.id = json.id;
-    this.comment = json.comment;
+    this.artifactID = json.id;
+    this.fileName = json.fileName;
+    this.submissionDate = json.submissionDate;
+    this.submission = json.submission;
   }
 
-  name: string;
-  id: number;
-  comment: string;
+  artifactID: number;
+  fileName: string;
+  submissionDate: Date;
+  submission: any; // maybe link to submission object?
 }

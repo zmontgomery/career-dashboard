@@ -25,7 +25,7 @@ export class MilestoneService {
       this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES)).subscribe((data) => {
         const mappedData = data.map((milestoneData: any) => {
             return new Milestone(milestoneData)
-          })
+          });
         this.milestoneCache$.next(mappedData)
       })
     }

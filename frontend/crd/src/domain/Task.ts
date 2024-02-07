@@ -3,12 +3,15 @@ import { YearLevel } from "./Milestone";
 export interface TaskJSON {
   name: string;
   description: string;
-  needsArtifact: boolean;
-  id: string;
+  needsArtifact?: boolean;
+  id: number;
   isRequired: boolean;
   submission: any;
   yearLevel: YearLevel;
-  milestoneID: string;
+  milestoneID: number;
+  taskType: string;
+  artifactName?: string;
+  eventID?: number;
 }
 
 export class Task {
@@ -16,7 +19,7 @@ export class Task {
     this.name = json.name;
     this.description = json.description;
     this.needsArtifact = json.needsArtifact;
-    this.id = json.id;
+    this.taskID = json.id;
     this.isRequired = json.isRequired;
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = true;
@@ -24,15 +27,21 @@ export class Task {
     this.submission = json.submission;
     this.yearLevel = json.yearLevel;
     this.milestoneID = json.milestoneID;
+    this.taskType = json.taskType;
+    this.artifactName = json?.artifactName;
+    this.eventID = json?.eventID;
   }
 
   name: string;
   description: string;
-  needsArtifact: boolean;
-  id: string;
+  needsArtifact?: boolean;
+  taskID: number;
   isRequired: boolean;
   isComplete: boolean;
   submission: any;
   yearLevel: YearLevel;
-  milestoneID: string;
+  milestoneID: number;
+  taskType: string;
+  artifactName?: string;
+  eventID?: number;
 }

@@ -7,6 +7,7 @@ export enum Endpoints {
     SIGN_OUT = 'auth/signout',
 
     MILESTONES = 'milestones',
+    EDIT_MILESTONE = 'admin/edit-milestone',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
