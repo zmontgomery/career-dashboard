@@ -23,9 +23,10 @@ describe('ArtifactService', () => {
 
   it('getPortfolioArtifacts should return list of artifacts', () => {
     const artifactJSON = {
-      name: "string",
+      fileName: "string",
       id: 1,
-      comment: "string",
+      submission: "string",
+      submissionDate: new Date(),
     }
 
     const artifacts = Array(new Artifact(artifactJSON));

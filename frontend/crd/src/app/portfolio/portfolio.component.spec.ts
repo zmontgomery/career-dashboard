@@ -22,9 +22,10 @@ describe('PortfolioComponent', () => {
   matDialog.open.and.returnValue(matDialogRef)
   let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getPortfolioArtifacts']);
   const artifact1JSON = {
-    name: "string",
+    fileName: "string",
     id: 1,
-    comment: "string",
+    submissionDate: new Date(),
+    submission: 1,
   }
   const artifact1 = new Artifact(artifact1JSON);
   artifactSvc.getPortfolioArtifacts.and.returnValue(of(
@@ -67,7 +68,7 @@ describe('PortfolioComponent', () => {
 
   it('update Artifacts', () => {
     expect(component.showUploadButton).toBeTrue();
-    const url = constructBackendRequest(`${Endpoints.PORTFOLIO}/${artifact1.id}`)
+    const url = constructBackendRequest(`${Endpoints.PORTFOLIO}/${artifact1.artifactID}`)
     const request = httpMock.expectOne(url);
     expect(request.request.method).toEqual('GET');
     const mockPdfBlob = new Blob(['fake PDF content'], { type: 'application/pdf' });
