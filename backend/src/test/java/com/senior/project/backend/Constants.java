@@ -1,7 +1,6 @@
 package com.senior.project.backend;
 
 import com.senior.project.backend.domain.Event;
-import com.senior.project.backend.domain.FacultyDetails;
 import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.StudentDetails;
 import com.senior.project.backend.domain.Task;
