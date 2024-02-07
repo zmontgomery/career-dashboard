@@ -1,9 +1,9 @@
 package com.senior.project.backend;
 
 import com.senior.project.backend.domain.Event;
-import com.senior.project.backend.domain.Faculty;
+import com.senior.project.backend.domain.FacultyDetails;
 import com.senior.project.backend.domain.Milestone;
-import com.senior.project.backend.domain.Student;
+import com.senior.project.backend.domain.StudentDetails;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.YearLevel;
@@ -163,46 +163,4 @@ public class Constants {
         USERS.add(user1);
         USERS.add(user2);
     }
-
-    public static Student student1;
-    public static Student student2;
-
-    public static final List<Student> STUDENTS = new ArrayList<>();
-
-    static {
-        student1 = new Student();
-        student1.setId(UUID.randomUUID());
-        student1.setEmail("test@test.com");
-        student2 = new Student();
-        student2.setId(UUID.randomUUID());
-        student2.setEmail("test2@test.com");
-
-        STUDENTS.add(student1);
-        STUDENTS.add(student2);
-    }
-
-    public static Faculty faculty1;
-    public static Faculty faculty2;
-
-    public static final List<Faculty> FACULTY = new ArrayList<>();
-
-    static {
-        faculty1 = new Faculty();
-        faculty1.setId(UUID.randomUUID());
-        faculty1.setEmail("faculty_test@test.com");
-        faculty1.setAdmin(false);
-        faculty2 = new Faculty();
-        faculty2.setId(UUID.randomUUID());
-        faculty2.setEmail("faculty_test2@test.com");
-        faculty2.setAdmin(true);
-
-        FACULTY.add(faculty1);
-        FACULTY.add(faculty2);
-    }
 }
-
-
-
-
-
-

@@ -29,7 +29,7 @@ public class Submission {
 
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
-    private Student student;
+    private User student;
 
 	private Date submissionDate;
 	private String comment;
