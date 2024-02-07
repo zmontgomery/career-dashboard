@@ -23,7 +23,7 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-     @InjectMocks
+    @InjectMocks
     private UserService userService;
 
     @Mock
