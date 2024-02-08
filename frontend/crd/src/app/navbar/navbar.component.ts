@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
+  //TODO: add admin/faculty nav links
   navLinks = [
     { path: "/dashboard", label: "Dashboard"},
     { path: "/portfolio", label: "Portfolio"},

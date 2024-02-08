@@ -1,35 +1,36 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MilestonesComponent } from './milestones.component';
-import { of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
+import { of } from "rxjs";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
+import { MilestoneMainPageComponent } from './milestone-main-page.component';
+import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 import { MatCardModule } from "@angular/material/card";
-import { MatExpansionModule } from "@angular/material/expansion";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MilestoneService } from "./milestone.service";
 
-describe('MilestonesComponent', () => {
-  let component: MilestonesComponent;
-  let fixture: ComponentFixture<MilestonesComponent>;
+
+describe('MilestoneMainPageComponent', () => {
+  let component: MilestoneMainPageComponent;
+  let fixture: ComponentFixture<MilestoneMainPageComponent>;
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of(Array(new Milestone({
     name: "name",
     yearLevel: YearLevel.Freshman,
     id: 1,
-    description: "sample",
     events: [],
     tasks: [],
+    description: "testing"
   }))));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule],
+      imports: [MatCardModule, MatGridListModule, MatTabsModule, NoopAnimationsModule],
+      declarations: [MilestoneMainPageComponent],
       providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
-      declarations: [MilestonesComponent]
+      teardown: {destroyAfterEach: false}
     });
-    fixture = TestBed.createComponent(MilestonesComponent);
+    fixture = TestBed.createComponent(MilestoneMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
