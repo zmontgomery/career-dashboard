@@ -10,8 +10,8 @@ describe('MilestoneService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // If your service makes HTTP requests
-      providers: [MilestoneService], // Include the service to be tested
+      imports: [HttpClientTestingModule], 
+      providers: [MilestoneService], 
     });
     service = TestBed.inject(MilestoneService);
     httpMock = TestBed.inject(HttpTestingController);

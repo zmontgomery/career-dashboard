@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TaskEditModalModule } from '../task-edit-modal/task-edit-modal.module';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     MatCheckboxModule,
     MatFormFieldModule,
+    TaskEditModalModule,
     HttpClientModule
   ]
 })

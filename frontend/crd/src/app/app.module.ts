@@ -13,17 +13,20 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { PortfolioModule } from "./portfolio/portfolio.module";
 import { ApiDocumentationsComponent } from './api-documentations/api-documentations.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import {MatTabsModule} from "@angular/material/tabs";
-import {RouterModule} from "@angular/router";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ProfileModule} from "./profile/profile.module";
-import {MilestonesPageModule} from "./milestones-page/milestones-page.module";
-import {OswegoLogoModule} from "./oswego-logo/oswego-logo.module";
+import { MatTabsModule } from "@angular/material/tabs";
+import { RouterModule } from "@angular/router";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ProfileModule } from "./profile/profile.module";
+import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
+import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
 import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
+import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module';
+import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
 
 @NgModule({
   declarations: [
@@ -70,7 +73,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
     CarouselModule,
     MilestoneMainPageModule,
     MilestoneEditModule,
-    MatGridListModule
+    MatGridListModule,
+    MatListModule,
+    TaskMainPageModule,
+    TaskEditModalModule
   ],
   providers: [
       {provide: 'SocialAuthServiceConfig',

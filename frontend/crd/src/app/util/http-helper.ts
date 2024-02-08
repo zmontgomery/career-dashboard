@@ -11,6 +11,7 @@ export enum Endpoints {
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
+    EDIT_TASK = 'admin/edit-task',
     //DASHBOARD_TASKS = 'dashboard_tasks'
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
