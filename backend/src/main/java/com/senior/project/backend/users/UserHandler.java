@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.domain.User;
+import com.senior.project.backend.security.SecurityUtil;
 
 import reactor.core.publisher.Mono;
 
@@ -26,5 +27,14 @@ public class UserHandler {
      */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
         return ServerResponse.ok().body(service.allUsers(), User.class);
+    }
+
+    /**
+     * Gets the current user from the security context and returns it
+     * @param request - request
+     * @return 200 with the user
+     */
+    public Mono<ServerResponse> currentUser(ServerRequest request) {
+        return ServerResponse.ok().body(SecurityUtil.getCurrentUser(), User.class);
     }
 }

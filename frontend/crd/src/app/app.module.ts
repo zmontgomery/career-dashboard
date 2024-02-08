@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
@@ -23,6 +23,7 @@ import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
 import { LogoutButtonModule } from './security/logout-button/logout-button.module';
+import { AuthService } from './security/auth.service';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { LogoutButtonModule } from './security/logout-button/logout-button.modul
     CarouselModule,
   ],
   providers: [
+    provideHttpClient(),
       {provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: true, //keeps the user signed in
@@ -87,6 +89,7 @@ import { LogoutButtonModule } from './security/logout-button/logout-button.modul
       }
     },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: APP_INITIALIZER, useFactory: (authService: AuthService) => () => authService.loadUser(), multi: true, deps: [AuthService]},
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })

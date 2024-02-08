@@ -1,3 +1,4 @@
 <div class="logout-button-container">
-    <button mat-raised-button color="primary">Logout</button>
+    <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
+    <button class="logout-button" mat-raised-button color="primary" (click)="logout()">Logout</button>
 </div>

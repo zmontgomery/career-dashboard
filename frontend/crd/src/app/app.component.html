@@ -1,8 +1,14 @@
 <div class="app-container">
-  <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
-  <app-logout-button></app-logout-button>
+  <div class="header-container">
+    <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
+    <ng-container *ngIf="needsNavBar()">
+      <app-logout-button class="logout-button"></app-logout-button>
+    </ng-container>
+  </div>
   <div class="body-container">
-    <app-navbar class="navbar" *ngIf="needsNavBar()" else noNavBar></app-navbar>
-    <router-outlet #noNavBar></router-outlet>
+    <ng-container *ngIf="needsNavBar()">
+      <app-navbar class="navbar"></app-navbar>
+    </ng-container>
+    <router-outlet></router-outlet>
   </div>
 </div>

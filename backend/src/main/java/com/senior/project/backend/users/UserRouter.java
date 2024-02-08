@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.senior.project.backend.util.Endpoints;
+
 /**
  * Routes for the users
  * 
@@ -17,6 +19,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class UserRouter {
     @Bean
     public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
-        return route(GET("/api/users"), userHandler::all);
+        return route(GET(Endpoints.USERS.uri()), userHandler::all)
+            .andRoute(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser);
     }
 }

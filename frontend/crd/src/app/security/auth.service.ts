@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, filter, map, mergeMap, of, take, tap } from 'rxjs';
-import { User } from './domain/user';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, catchError, filter, map, mergeMap, of, take, tap } from 'rxjs';
+import { User, UserJSON } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { EventMessage, EventType } from '@azure/msal-browser';
@@ -147,6 +147,33 @@ export class AuthService {
     this.clearAuthData();
   }
 
+  /**
+   * Loads the current user from the backend
+   */
+  loadUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.token$.subscribe((token) => {
+        if (LangUtils.exists(token)) {
+          this.http.get<UserJSON>(constructBackendRequest(Endpoints.CURRENT_USER))
+            .pipe(
+              map((u) => new User(u)),
+              catchError(() => of(null))
+            )
+            .subscribe((user) => {
+              if (LangUtils.exists(user)) {
+                this.userSubject.next(user);
+                resolve(null);
+              } else {
+                reject();
+              }
+            });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }
+
   //
   // Private
   //
@@ -227,7 +254,6 @@ export class AuthService {
       this.token = token;
       this.isAuthenticatedSubect.next(true);
       this.tokenSubject.next(token);
-      this.userSubject.next(null);
     } else {
       this.isAuthenticatedSubect.next(false);
       this.tokenSubject.next(null);
