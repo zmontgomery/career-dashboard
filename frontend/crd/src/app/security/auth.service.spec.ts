@@ -86,16 +86,19 @@ describe('AuthService', () => {
       //@ts-ignore
       expect(httpSpy.post).toHaveBeenCalledTimes(1);
       expect(service.getToken()).toBeFalsy();
-      service.user$.subscribe((user) => {
+      const sub = service.user$.subscribe((user) => {
         expect(user).toBeFalsy();
       });
       tick(1000);
   
-      service.isAuthenticated$.subscribe((auth) => {
+      const sub1 = service.isAuthenticated$.subscribe((auth) => {
         expect(auth).toBeFalse();
       });
   
       tick(1000);
+
+      sub.unsubscribe();
+      sub1.unsubscribe();
     }));
   });
 
