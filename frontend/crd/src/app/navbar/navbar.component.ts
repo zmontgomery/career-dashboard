@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../security/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +7,7 @@ import { AuthService } from '../security/auth.service';
 })
 export class NavbarComponent {
 
-  constructor(private readonly authService: AuthService) {} 
+  constructor() {} 
 
   //TODO: add admin/faculty nav links
   navLinks = [
@@ -17,9 +16,4 @@ export class NavbarComponent {
     { path: "/profile", label: "Profile"},
     { path: "/milestones", label: "Milestones"}
   ]
-
-  logout() {
-    this.authService.signOut();
-  }
-
 }

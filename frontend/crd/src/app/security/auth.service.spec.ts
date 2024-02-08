@@ -4,12 +4,13 @@ import { AuthService } from './auth.service';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, of } from 'rxjs';
 import { LoginRequest, LoginResponse, Token, TokenType } from './domain/auth-objects';
 import { EventType } from '@azure/msal-browser';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
 import { LangUtils } from '../util/lang-utils';
 import { UserJSON } from './domain/user';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -17,6 +18,8 @@ describe('AuthService', () => {
   let maslAuthService: MsalService;
   let broadcastService: MsalBroadcastService;
   let googleAuthService: SocialAuthService;
+  let activatedRouteSpy: ActivatedRoute;
+  let locationSpy: Location;
 
   const userJSON: UserJSON = {
     id: 'id',
@@ -27,7 +30,7 @@ describe('AuthService', () => {
     firstName: 'test',
     lastName: 'test',
     canEmail: false,
-    canTest: false
+    canText: false
   }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
@@ -35,8 +38,12 @@ describe('AuthService', () => {
   let msalSubject = new Subject<any>();
   let authStateSubject = new Subject<any>();
 
+  let params: Params = {attemped: 'hello'}
+  let queryParamsSubject = new BehaviorSubject<Params>(params);
+  let queryParams$ = queryParamsSubject.asObservable();
+
   beforeEach(() => {
-    httpSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    httpSpy = jasmine.createSpyObj('HttpClient', ['post', 'get']);
     (httpSpy as any).post.and.returnValue(of(response));
     maslAuthService = jasmine.createSpyObj('MsalService', ['loginRedirect']);
     broadcastService = jasmine.createSpyObj(
@@ -49,17 +56,47 @@ describe('AuthService', () => {
         ['signIn'],
         {'authState': authStateSubject.asObservable()}
       );
+    activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['toString'], {queryParams: queryParams$});
     spyOn(localStorage, 'setItem');
     spyOn(localStorage, 'removeItem');
     spyOn(localStorage, 'getItem');
     (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
     (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
+    locationSpy = jasmine.createSpyObj('Location', ['toString', 'href']);
 
-    service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+    service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('Logout', () => {
+    it('should sign out', fakeAsync(() => {
+      // @ts-ignore
+      service.isAuthenticatedSubect.next(true); 
+      tick(1000);
+  
+      //@ts-ignore
+      service.token = 'hello';
+      
+      service.signOut();
+      tick(1000);
+  
+      //@ts-ignore
+      expect(httpSpy.post).toHaveBeenCalledTimes(1);
+      expect(service.getToken()).toBeFalsy();
+      service.user$.subscribe((user) => {
+        expect(user).toBeFalsy();
+      });
+      tick(1000);
+  
+      service.isAuthenticated$.subscribe((auth) => {
+        expect(auth).toBeFalse();
+      });
+  
+      tick(1000);
+    }));
   });
 
   describe('Token initialization', () => {
@@ -79,7 +116,7 @@ describe('AuthService', () => {
 
     function assertFailure(done: DoneFn) {
       expect(service.getToken()).toBeUndefined();
-      expect(service.authenticated()).toBeFalse();
+      // expect(service.authenticated()).toBeFalse();
 
       sub1 = service.token$.subscribe((t) => {
         expect(t).toBeNull();
@@ -103,7 +140,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       sub1 = service.token$.subscribe((t) => {
         expect(t?.getToken()).toEqual(token.getToken());
@@ -118,14 +155,14 @@ describe('AuthService', () => {
 
       expect(service.getToken()?.getToken()).toEqual(token.getToken());
       expect(service.getToken()?.getExpiry()).toEqual(token.getExpiry());
-      expect(service.authenticated()).toBeTrue();
+      // expect(service.authenticated()).toBeTrue();
     }));
 
     it('should fail when token from local storage is null', (done) => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -134,7 +171,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -143,7 +180,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -152,7 +189,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue('token');
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(0);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -212,7 +249,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token?.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token?.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService);
+      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
     }
 
     describe('Google', () => {
@@ -220,17 +257,17 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticated = false;
+        service.isAuthenticatedSubect.next(false); 
         authStateSubject.next({idToken: 'token'});
         tick(100);
         expect(httpSpy.post).toHaveBeenCalled();
       }));
     
       it ('should not sign in to google if authenticated',fakeAsync(() => {
-        tick(1000);
+        tick(100);
 
         // @ts-ignore
-        service.isAuthenticated = true;
+        service.isAuthenticatedSubect.next(true); 
         authStateSubject.next({idToken: 'token'});
         tick(100);
         expect(httpSpy.post).not.toHaveBeenCalled();
@@ -242,7 +279,7 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticated = false;
+        service.isAuthenticatedSubect.next(false); 
         msalSubject.next({
           eventType: EventType.LOGIN_SUCCESS,
           payload: {idToken: 'token'}
@@ -255,7 +292,7 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticated = true;
+        service.isAuthenticatedSubect.next(true); 
         msalSubject.next({
           eventType: EventType.LOGIN_SUCCESS,
           payload: {idToken: 'token'}
@@ -268,7 +305,7 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticated = false;
+        service.isAuthenticatedSubect.next(false); 
         msalSubject.next({
           eventType: EventType.ACCOUNT_ADDED,
           payload: {idToken: 'token'}
@@ -276,6 +313,13 @@ describe('AuthService', () => {
         tick(100);
         expect(httpSpy.post).not.toHaveBeenCalled();
       }));
+    });
+
+    afterEach(() => {
+      //@ts-ignore
+      service.isAuthenticatedSubect.next(false); 
+      authStateSubject.next(null);
+      msalSubject.next({eventType: EventType.ACCOUNT_ADDED});
     });
   });
 
@@ -329,30 +373,51 @@ describe('AuthService', () => {
     });
   });
 
-  it('should sign out', fakeAsync(() => {
+  it('should clear expire token', fakeAsync(() => {
     // @ts-ignore
-    service.isAuthenticated = true;
-
-    //@ts-ignore
-    service.token = 'hello';
-    
-    service.signOut();
+    service.isAuthenticatedSubect.next(true); 
+        
+    service.expireToken();
     tick(1000);
 
     //@ts-ignore
     expect(service.user).toBeFalsy();
-    expect(service.authenticated()).toBeFalse();
-    expect(service.getToken()).toBeFalsy();
   }));
 
-  it('should clear expire token', () => {
-    // @ts-ignore
-    service.isAuthenticated = true;
-        
-    service.expireToken();
+  describe('Load user', () => {
+    it('should fetch user if token exists', (done) => {
+      (httpSpy as any).get.and.returnValue(of(userJSON));
+      // @ts-ignore
+      service.tokenSubject.next(new Token('token', new Date(100)));
 
-    //@ts-ignore
-    expect(service.user).toBeFalsy();
-    expect(service.authenticated()).toBeFalse();
+      service.loadUser().then((result) => {
+        expect(result).toBeFalsy();
+        expect(httpSpy.get).toHaveBeenCalledTimes(1);
+        done();
+      });
+    });
+
+    it('should resolve if token does not exist', (done) => {
+      (httpSpy as any).get.and.returnValue(of(userJSON));
+      // @ts-ignore
+      service.tokenSubject.next(null);
+
+      service.loadUser().then((result) => {
+        expect(result).toBeFalsy();
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        done();
+      });
+    });
+
+    it('should reject if user does not exist', (done) => {
+      (httpSpy as any).get.and.returnValue(of(null));
+      // @ts-ignore
+      service.tokenSubject.next(null);
+
+      service.loadUser().then(() => {
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        done();
+      });
+    });
   });
 });

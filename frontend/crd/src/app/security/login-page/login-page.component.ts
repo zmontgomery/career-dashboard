@@ -7,22 +7,15 @@ import { Router } from '@angular/router';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.less']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
 
   smallButton!: boolean;
 
-  constructor(private readonly authService: AuthService, private router: Router) {
+  constructor(private readonly authService: AuthService) {
     this.smallButton = window.outerWidth <= 480;
-  }
-
-  ngOnInit(): void {
   }
 
   ms() {
     this.authService.loginRedirectMS();
-  }
-
-  temp() {
-    this.authService.navigateOffLogin();
   }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Injectable, OnInit } from '@angular/core';
+import { AfterViewInit, Inject, Injectable, InjectionToken, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, catchError, filter, map, mergeMap, of, take, tap } from 'rxjs';
 import { User, UserJSON } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
@@ -9,10 +9,19 @@ import { LoginRequest, LoginResponse, LoginResponseJSON, Token, TokenType } from
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 import { LangUtils } from '../util/lang-utils';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
-import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { ActivatedRoute} from '@angular/router';
 
 export const SESSION_KEY = 'session';
+
+export const LOCATION = new InjectionToken<Location>(
+  'Location',
+  {
+      providedIn: 'root',
+      factory(): Location {
+          return location;
+      }
+  }
+);
 
 /**
  * Service used for authentication and checking if the user is authenticated
@@ -35,13 +44,13 @@ export class AuthService {
   user$ = this.userSubject.asObservable();
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly msalAuthService: MsalService,
-    private readonly broadcastService: MsalBroadcastService,
-    private readonly googleAuthService: SocialAuthService,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-  ) { 
+      private readonly http: HttpClient,
+      private readonly msalAuthService: MsalService,
+      private readonly broadcastService: MsalBroadcastService,
+      private readonly googleAuthService: SocialAuthService,
+      private readonly activatedRoute: ActivatedRoute,
+      @Inject(LOCATION) private readonly location: Location,
+    ) { 
     this.isAuthenticatedSubect.next(false);
     this.listenForMSALSignIn();
     this.listenForGoogleSignIn();
@@ -122,9 +131,9 @@ export class AuthService {
    * Signs out the user
    */
   signOut() {
-    const sub = this.isAuthenticated$.subscribe((auth) => {
+    this.isAuthenticated$.subscribe((auth) => {
       if (!auth) {
-        location.href = '/login';
+        this.location.href = '/login';
       }
     })
 
@@ -300,12 +309,12 @@ export class AuthService {
     this.userSubject.next(null);
   }
 
-  navigateOffLogin() {
+  private navigateOffLogin() {
     this.activatedRoute.queryParams.pipe(take(1)).subscribe((p) => {
       if ('attempted' in p) {
-        location.href = p['attempted'];
+        this.location.href = p['attempted'];
       } else {
-        location.href = '';
+        this.location.href = '';
       }
     });
   }
