@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {MilestoneService} from "./milestone.service";
-import {Milestone, YearLevel} from "../../../domain/Milestone";
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { MilestoneService } from "./milestone.service";
+import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 describe('MilestoneService', () => {
@@ -10,8 +10,8 @@ describe('MilestoneService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // If your service makes HTTP requests
-      providers: [MilestoneService], // Include the service to be tested
+      imports: [HttpClientTestingModule], 
+      providers: [MilestoneService], 
     });
     service = TestBed.inject(MilestoneService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -25,27 +25,28 @@ describe('MilestoneService', () => {
     const milestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
-      milestoneID: "id",
+      id: 1,
+      description: "sample",
       active: true,
       events: [{
         name: "name",
         description: "description",
         date: new Date().toDateString(),
-        eventID: "id",
-        isRecurring: true,
+        id: 1,
+        recurring: true,
         organizer: "organizer",
-        location: "location",
-        isRequired: true,
+        location: "location"
       }],
       tasks: [{
         name: 'task name',
         description: "description",
-        needsArtifact: true,
-        id: "id",
+        id: 1,
         isRequired: true,
         submission: 'submission',
         yearLevel: YearLevel.Freshman,
-        milestoneID: "id"
+        milestoneID: 1,
+        taskType: 'artifact',
+        artifactName: 'test artifact'
       }],
     }
 

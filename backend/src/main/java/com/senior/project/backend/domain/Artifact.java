@@ -19,5 +19,4 @@ public class Artifact {
 
 	private String name;
 	private String fileLocation;
-	private String comment;
 }

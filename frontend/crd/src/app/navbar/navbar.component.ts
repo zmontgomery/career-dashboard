@@ -10,6 +10,7 @@ export class NavbarComponent {
 
   constructor(private readonly authService: AuthService) {} 
 
+  //TODO: add admin/faculty nav links
   navLinks = [
     { path: "/dashboard", label: "Dashboard"},
     { path: "/portfolio", label: "Portfolio"},

@@ -13,12 +13,18 @@ public class Task {
     @Id
     private Long id;
     private String name;
-    private String description;
+    public String description;
     private Boolean isRequired;
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
+    private String taskType;
+    private String artifactName;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()
     private Milestone milestone;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private Event event;
 }
