@@ -1,6 +1,7 @@
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlSegmentGroup, UrlTree, createUrlTreeFromSnapshot } from "@angular/router";
 import { AuthService } from "./auth.service";
-import { inject } from "@angular/core";
+import { Inject, inject } from "@angular/core";
+import { map, take, tap } from "rxjs";
 
 /**
  * The guard that prevents routes from being reached when not authenticated
@@ -12,5 +13,21 @@ export const authGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ) => {
     const authService = inject(AuthService);
-    return authService.authenticated();
+    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
+        if (!isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['login'], {
+            attempted: location.pathname + encodeURI(location.search)
+        });
+        return true;
+    }));
+}
+
+export const noAuthGuard: CanActivateFn = (
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
+    const authService = inject(AuthService);
+    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
+        if (isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+        return true;
+    }));
 }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, filter, map, mergeMap, of, tap } from 'rxjs';
-import { User } from './domain/user';
+import { AfterViewInit, Inject, Injectable, InjectionToken, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, catchError, filter, map, mergeMap, of, take, tap } from 'rxjs';
+import { User, UserJSON } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { EventMessage, EventType } from '@azure/msal-browser';
@@ -9,8 +9,19 @@ import { LoginRequest, LoginResponse, LoginResponseJSON, Token, TokenType } from
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 import { LangUtils } from '../util/lang-utils';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
+import { ActivatedRoute} from '@angular/router';
 
 export const SESSION_KEY = 'session';
+
+export const LOCATION = new InjectionToken<Location>(
+  'Location',
+  {
+      providedIn: 'root',
+      factory(): Location {
+          return location;
+      }
+  }
+);
 
 /**
  * Service used for authentication and checking if the user is authenticated
@@ -21,7 +32,8 @@ export const SESSION_KEY = 'session';
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated: boolean;
+  private isAuthenticatedSubect: BehaviorSubject<Boolean> = new BehaviorSubject<Boolean>(false);;
+  isAuthenticated$ = this.isAuthenticatedSubect.asObservable();
 
   private tokenSubject: BehaviorSubject<Token | null> = new BehaviorSubject<Token | null>(null);
   token$ = this.tokenSubject.asObservable();
@@ -32,12 +44,14 @@ export class AuthService {
   user$ = this.userSubject.asObservable();
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly msalAuthService: MsalService,
-    private readonly broadcastService: MsalBroadcastService,
-    private readonly googleAuthService: SocialAuthService,
-  ) { 
-    this.isAuthenticated = false;
+      private readonly http: HttpClient,
+      private readonly msalAuthService: MsalService,
+      private readonly broadcastService: MsalBroadcastService,
+      private readonly googleAuthService: SocialAuthService,
+      private readonly activatedRoute: ActivatedRoute,
+      @Inject(LOCATION) private readonly location: Location,
+    ) { 
+    this.isAuthenticatedSubect.next(false);
     this.listenForMSALSignIn();
     this.listenForGoogleSignIn();
     this.loadToken();
@@ -117,6 +131,12 @@ export class AuthService {
    * Signs out the user
    */
   signOut() {
+    this.isAuthenticated$.subscribe((auth) => {
+      if (!auth) {
+        this.location.href = '/login';
+      }
+    })
+
     this.http.post<string>(constructBackendRequest(Endpoints.SIGN_OUT), {}).subscribe(() => {
       this.clearAuthData();
     });
@@ -137,10 +157,30 @@ export class AuthService {
   }
 
   /**
-   * @returns if the user is authenticated
+   * Loads the current user from the backend
    */
-  authenticated(): boolean {
-    return this.isAuthenticated;
+  loadUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.token$.subscribe((token) => {
+        if (LangUtils.exists(token)) {
+          this.http.get<UserJSON>(constructBackendRequest(Endpoints.CURRENT_USER))
+            .pipe(
+              map((u) => new User(u)),
+              catchError(() => of(null))
+            )
+            .subscribe((user) => {
+              if (LangUtils.exists(user)) {
+                this.userSubject.next(user);
+                resolve(null);
+              } else {
+                reject();
+              }
+            });
+        } else {
+          resolve(null);
+        }
+      });
+    });
   }
 
   //
@@ -154,13 +194,16 @@ export class AuthService {
     this.broadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS))
       .subscribe((result: EventMessage) => {
-          if (!this.isAuthenticated) {
+        this.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
+          if (!isAuthenticated) {
             const payload = result.payload as any;
             const idToken = payload["idToken"];
             this.signIn(this.createLoginRequest(idToken, TokenType.MICROSOFT_ENTRA_ID)).subscribe((res) => {
               this.processResponse(res);
+              this.navigateOffLogin();
             });
           }
+        });
     });
   }
 
@@ -171,11 +214,14 @@ export class AuthService {
     this.googleAuthService.authState.subscribe((state) => {
       console.log(state);
       if (LangUtils.exists(state)) {
-          if (!this.isAuthenticated) {
+        this.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
+          if (!isAuthenticated) {
             this.signIn(this.createLoginRequest(state.idToken, TokenType.GOOGLE)).subscribe((res) => {
               this.processResponse(res);
+              this.navigateOffLogin();
             });
           }
+        });
       }
     });
   }
@@ -208,18 +254,17 @@ export class AuthService {
     if (LangUtils.exists(tokenString) && LangUtils.isANumber(tokenIssued)) {
       const token = new Token(tokenString!, new Date(tokenIssued!));
       if (token.expired()) {
-        this.isAuthenticated = false;
+        this.isAuthenticatedSubect.next(false);
         this.tokenSubject.next(null);
         this.userSubject.next(null);
         return;
       }
 
       this.token = token;
-      this.isAuthenticated = true;
+      this.isAuthenticatedSubect.next(true);
       this.tokenSubject.next(token);
-      this.userSubject.next(null);
     } else {
-      this.isAuthenticated = false;
+      this.isAuthenticatedSubect.next(false);
       this.tokenSubject.next(null);
       this.userSubject.next(null);
     }
@@ -232,7 +277,7 @@ export class AuthService {
    */
   private processResponse(res: LoginResponse) {
     if (LangUtils.exists(res)) {
-      this.isAuthenticated = true;
+      this.isAuthenticatedSubect.next(true);
 
       const token = new Token(res.token, new Date(Date.now()));
       this.tokenSubject.next(token);
@@ -259,8 +304,18 @@ export class AuthService {
    * Clears all data related to authentication
    */
   private clearAuthData() {
-    this.isAuthenticated = false;
+    this.isAuthenticatedSubect.next(false);
     this.tokenSubject.next(null);
     this.userSubject.next(null);
+  }
+
+  private navigateOffLogin() {
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe((p) => {
+      if ('attempted' in p) {
+        this.location.href = p['attempted'];
+      } else {
+        this.location.href = '';
+      }
+    });
   }
 }
