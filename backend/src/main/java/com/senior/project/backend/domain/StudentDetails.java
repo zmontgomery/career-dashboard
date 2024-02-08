@@ -15,6 +15,8 @@ import jakarta.persistence.TemporalType;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode
 @Generated
 public class StudentDetails {
 	@Id
