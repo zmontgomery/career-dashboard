@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.senior.project.backend.security.SecurityUtil;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
@@ -64,7 +66,11 @@ public class User implements UserDetails {
 	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority("USER"));
+		List<SimpleGrantedAuthority> authorities = new LinkedList<>();
+		if (isStudent && studentDetails != null) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.STUDENT.toString()));
+		if (isAdmin) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.ADMIN.toString()));
+		if (isFaculty) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.FACULTY.toString()));
+		return authorities;
 	}
 
 	@JsonIgnore

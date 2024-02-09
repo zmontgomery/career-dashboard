@@ -2,6 +2,9 @@ package com.senior.project.backend.util;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -16,8 +19,8 @@ public enum Endpoints {
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
     USERS("users", true),
-    EDIT_TASK("admin/edit-task", true),
-    EDIT_MILESTONE("admin/edit-milestone", true),
+    EDIT_TASK("admin/edit-task", true, true),
+    EDIT_MILESTONE("admin/edit-milestone", true, true),
 
     // Security
     SIGNIN("auth/signin", false),
@@ -31,10 +34,18 @@ public enum Endpoints {
 
     private String value;
     private boolean needsAuthentication;
+    private boolean isAdmin;
 
     private Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
+        this.isAdmin = false;
+    }
+
+    private Endpoints(String value, boolean needsAuthentication, boolean isAdmin) {
+        this.value = "/api/" + value;
+        this.needsAuthentication = needsAuthentication;
+        this.isAdmin = isAdmin;
     }
 
     //
@@ -47,6 +58,10 @@ public enum Endpoints {
 
     public boolean getNeedsAuthentication() {
         return needsAuthentication;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     //
@@ -78,6 +93,24 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
+            routes[i] = list.get(i);
+        }
+
+        return routes;
+    }
+
+    /**
+     * Gets all admin routes
+     */
+    public static String[] getAdminRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+            .filter(r -> r.isAdmin())
+            .map((r) -> r.uri())
+            .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 
