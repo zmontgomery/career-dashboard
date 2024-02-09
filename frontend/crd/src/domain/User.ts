@@ -1,13 +1,17 @@
 export interface UserJSON{
-    id: String;
-	email: String;
-    phoneNumber: String;
+    id: string;
+	email: string;
+    phoneNumber: string;
 	dateCreated: Date;
     lastLogin: Date;
-	firstName: String;
-	lastName: String;
+	firstName: string;
+	lastName: string;
 	canEmail: boolean;
 	canText: boolean;
+    isFaculty: boolean;
+    isStudent: boolean;
+    isAdmin: boolean;
+    preferredName: string;
 }
 
 export class User{
@@ -19,17 +23,25 @@ export class User{
         this.lastLogin = json.lastLogin;
         this.firstName = json.firstName;
         this.lastName = json.lastName;
+        this.preferredName = json.preferredName;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
+        this.isFaculty = json.isFaculty;
+        this.isStudent = json.isStudent;
+        this.isAdmin = json.isAdmin;
     }
 
-    id: String;
-	email: String;
-    phoneNumber: String;
+    id: string;
+	email: string;
+    phoneNumber: string;
 	dateCreated: Date;
     lastLogin: Date;
-	firstName: String;
-	lastName: String;
+	firstName: string;
+	lastName: string;
 	canEmail: boolean;
 	canText: boolean;
+    isFaculty: boolean;
+    isStudent: boolean;
+    isAdmin: boolean;
+    preferredName: string;
 }
