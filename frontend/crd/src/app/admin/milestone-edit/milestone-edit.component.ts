@@ -173,6 +173,10 @@ export class MilestoneEditComponent {
 
       const url = constructBackendRequest(Endpoints.CREATE_MILESTONE)
       this.http.post(url, newData).subscribe(data => {
+        if (!data) {
+          window.alert("Something went wrong");
+          return;
+        }
         console.log(data);
         window.alert("Milestone created");
         this.milestoneService.getMilestones(true).subscribe(data => {
