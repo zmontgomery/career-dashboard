@@ -57,7 +57,7 @@ export class MilestoneEditComponent {
         mergeMap((milestones: Milestone[]) => {
           // if we are creating a new milestone
           if (YearLevel[this.milestoneParam as keyof typeof YearLevel]) {
-            this.mYearLevel = YearLevel[this.milestoneName as keyof typeof YearLevel];
+            this.mYearLevel = YearLevel[this.milestoneParam as keyof typeof YearLevel];
             this.milestoneName = '';
             this.milestoneParam = '';
           }
@@ -136,7 +136,6 @@ export class MilestoneEditComponent {
 
   saveMilestone() {
     //TODO: check that all fields are in
-    console.log("saving!");
     if (this.currentMilestone) {
       const updateData: any = {};
 
@@ -151,6 +150,31 @@ export class MilestoneEditComponent {
       this.http.post(url, updateData).subscribe(data => {
         console.log(data);
         window.alert("Milestone updated");
+        this.milestoneService.getMilestones(true).subscribe(data => {
+          this.back();
+        })
+      })
+    }
+    else {
+      if(!this.milestoneForm.get('name')?.value) {
+        window.alert("Please add a milestone name"); // probably change to a better error message
+        return;
+      }
+
+      const newData: any = {};
+      newData.name = this.milestoneForm.get('name')!.value;
+      newData.yearLevel = this.mYearLevel;
+
+      if (this.milestoneForm.get('description')) {
+        newData.description = this.milestoneForm.get('description')!.value;
+      }
+
+      //TODO: assign tasks to milestone
+
+      const url = constructBackendRequest(Endpoints.CREATE_MILESTONE)
+      this.http.post(url, newData).subscribe(data => {
+        console.log(data);
+        window.alert("Milestone created");
         this.milestoneService.getMilestones(true).subscribe(data => {
           this.back();
         })

@@ -1,14 +1,14 @@
 <button mat-button (click)="back()">BACK</button>
 
 <form *ngIf="dataLoaded" [formGroup]="milestoneForm" class="mat-dialog-content" (ngSubmit)="saveMilestone()">
-  <mat-form-field *ngIf="milestoneName == ''">
-    <mat-label>Milestone Name</mat-label>
-    <input matInput formControlName="name">
-  </mat-form-field>
   <div *ngIf="currentMilestone">
     <h4>You are currently editing {{milestoneName}} [ID Number {{currentMilestone.milestoneID}}] </h4>
   </div>
   <h5>This milestone is for grade level {{mYearLevel}} </h5>
+  <mat-form-field *ngIf="milestoneName == ''">
+    <mat-label>Milestone Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
   <mat-form-field>
     <mat-label>Milestone Description</mat-label>
     <textarea matInput formControlName="description"></textarea>

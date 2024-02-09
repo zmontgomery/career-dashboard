@@ -8,12 +8,14 @@ export enum Endpoints {
 
     MILESTONES = 'milestones',
     EDIT_MILESTONE = 'admin/edit-milestone',
+    CREATE_MILESTONE = 'admin/create-milestone',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     RESUME = 'portfolio/resume',
     TASKS = 'tasks',
     EDIT_TASK = 'admin/edit-task',
     //DASHBOARD_TASKS = 'dashboard_tasks'
+    CREATE_TASK = 'admin/create-task',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {

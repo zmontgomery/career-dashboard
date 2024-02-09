@@ -1,6 +1,7 @@
 package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Milestone;
+import com.senior.project.backend.domain.YearLevel;
 
 import java.util.Map;
 import org.slf4j.Logger;
@@ -36,5 +37,19 @@ public class MilestoneService {
         //TODO: assign tasks to milestones
 
         return Mono.just(milestoneRepository.save(existingMilestone));
+    }
+
+    public Mono<Milestone> createMilestone(Map<String, Object> data) {
+        Milestone newMilestone = new Milestone();
+
+        newMilestone.setName((String) data.get("name"));
+        newMilestone.setYearLevel(YearLevel.valueOf((String) data.get("yearLevel")));
+
+        if (data.containsKey("description")) {
+            newMilestone.setDescription((String) data.get("description"));
+        }
+        //TODO: assign tasks to milestones
+
+        return Mono.just(milestoneRepository.save(newMilestone));
     }
 }

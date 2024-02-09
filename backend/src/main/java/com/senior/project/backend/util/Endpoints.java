@@ -18,6 +18,8 @@ public enum Endpoints {
     USERS("users", true),
     EDIT_TASK("admin/edit-task", true),
     EDIT_MILESTONE("admin/edit-milestone", true),
+    CREATE_MILESTONE("admin/create-milestone", true),
+    CREATE_TASK("admin/create-task", true),
 
     // Security
     SIGNIN("auth/signin", false),
