@@ -20,8 +20,8 @@ public enum Endpoints {
     RESUME("portfolio/resume", true),
     USERS("users", true),
     CURRENT_USER("current-user", true),
-    EDIT_TASK("admin/edit-task", true),
-    EDIT_MILESTONE("admin/edit-milestone", true),
+    EDIT_TASK("admin/edit-task", true, false, true),
+    EDIT_MILESTONE("admin/edit-milestone", true, false, true),
 
     // Security
     SIGNIN("auth/signin", false),
@@ -36,6 +36,7 @@ public enum Endpoints {
     private String value;
     private boolean needsAuthentication;
     private boolean isAdmin;
+    private boolean isFaculty;
 
     private Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
@@ -43,9 +44,10 @@ public enum Endpoints {
         this.isAdmin = false;
     }
 
-    private Endpoints(String value, boolean needsAuthentication, boolean isAdmin) {
+    private Endpoints(String value, boolean needsAuthentication, boolean isFaculty, boolean isAdmin) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
+        this.isFaculty = isFaculty;
         this.isAdmin = isAdmin;
     }
 
@@ -63,6 +65,10 @@ public enum Endpoints {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public boolean isFaculty() {
+        return isFaculty;
     }
 
     //
@@ -108,6 +114,21 @@ public enum Endpoints {
             .filter(r -> r.isAdmin())
             .map((r) -> r.uri())
             .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            LoggerFactory.getLogger(String.class).info(list.get(i));
+            routes[i] = list.get(i);
+        }
+
+        return routes;
+    }
+
+    public static String[] getFacultyRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+        .filter(r -> r.isFaculty())
+        .map((r) -> r.uri())
+        .toList();
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {

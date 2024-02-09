@@ -6,7 +6,7 @@ import {ProfileComponent} from "./profile/profile.component";
 import {MilestonesPageComponent} from "./milestones-page/milestones-page.component";
 import {ApiDocumentationsComponent} from "./api-documentations/api-documentations.component";
 import { LoginPageComponent } from './security/login-page/login-page.component';
-import { authGuard, noAuthGuard } from './security/auth-guard';
+import { adminRoleGuard, authGuard, noAuthGuard } from './security/auth-guard';
 import { MilestoneEditComponent } from './admin/milestone-edit/milestone-edit.component';
 import { MilestoneMainPageComponent } from './admin/milestone-main-page/milestone-main-page.component';
 import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.component';
@@ -19,11 +19,11 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
   {path: 'admin', redirectTo: '/admin/milestones', pathMatch: 'full'},  //TODO: admin home page
-  {path: 'admin/milestones', component: MilestoneMainPageComponent},
-  {path: 'admin/milestone-edit/:name', component: MilestoneEditComponent},
-  {path: 'admin/tasks', component: TaskMainPageComponent},
+  {path: 'admin/milestones', component: MilestoneMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
+  {path: 'admin/milestone-edit/:name', component: MilestoneEditComponent, canActivate: [authGuard, adminRoleGuard]},
+  {path: 'admin/tasks', component: TaskMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard]},
+  {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: '**', component: ApiDocumentationsComponent},
 ];
 
