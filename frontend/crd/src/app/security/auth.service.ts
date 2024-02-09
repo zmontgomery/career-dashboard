@@ -161,7 +161,7 @@ export class AuthService {
    */
   loadUser(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.token$.subscribe((token) => {
+      this.token$.pipe(take(1)).subscribe((token) => {
         if (LangUtils.exists(token)) {
           this.http.get<UserJSON>(constructBackendRequest(Endpoints.CURRENT_USER))
             .pipe(
@@ -173,6 +173,8 @@ export class AuthService {
                 this.userSubject.next(user);
                 resolve(null);
               } else {
+                this.location.href = '/login';
+                this.clearAuthData();
                 reject();
               }
             });
