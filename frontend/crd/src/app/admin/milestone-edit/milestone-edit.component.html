@@ -14,7 +14,7 @@
     <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
   <div *ngFor="let task of tasks.controls; let i=index">
-      <mat-checkbox [formControl]="getFormControlTask(task)">
+      <mat-checkbox [formControl]="getFormControlTask(task)" (change)="assignTask($event, yearTasks[i])">
           {{yearTasks[i].name}}
           <!-- TODO: edit button  -->
       </mat-checkbox>
@@ -25,5 +25,6 @@
       </div>
       <button mat-button type='button' (click)="openTaskEditModal(yearTasks[i].name, yearTasks[i])">EDIT</button>
   </div>
+  <button mat-button type='button' (click)="openTaskEditModal(mYearLevel, null)">Create New {{mYearLevel}} Task</button><br />
   <button mat-button type="submit" [disabled]="!milestoneForm.status">Submit</button>
 </form>

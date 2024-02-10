@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
-import { Subject, forkJoin, mergeMap, of, takeUntil } from 'rxjs';
+import { Subject, catchError, concatMap, forkJoin, mergeMap, of, takeUntil, throwError } from 'rxjs';
 import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { TaskService } from 'src/app/util/task.service';
 import { Task } from 'src/domain/Task';
@@ -31,6 +31,7 @@ export class MilestoneEditComponent {
   mYearLevel: YearLevel = YearLevel.Freshman; //default
   yearTasks: Array<Task> = new Array(); //only display tasks of the same year
   public currentMilestone: Milestone | undefined;
+  assignedTasks: Array<Task> = new Array();
 
   milestoneForm!: FormGroup;
   dataLoaded: boolean = false;
@@ -106,7 +107,8 @@ export class MilestoneEditComponent {
   listTasks() {
     const taskControlArray = this.yearTasks.map(task => {
       if (this.currentMilestone && task.milestoneID == this.currentMilestone.milestoneID) {
-        return this.formBuilder.control(true)
+        this.assignedTasks.push(task);
+        return this.formBuilder.control(true);
       }
 
       //if this task is already assigned to another milestone, we can't add it to this one
@@ -126,6 +128,18 @@ export class MilestoneEditComponent {
     return this.milestoneForm.get('tasks') as FormArray;
   }
 
+  assignTask(e: any, selectedTask: Task) {
+    if (e.checked) {
+      this.assignedTasks.push(selectedTask);
+    }
+    else {
+      const index = this.assignedTasks.indexOf(selectedTask);
+      if (index > -1) {
+        this.assignedTasks.splice(index, 1);
+     }
+    }
+  }
+
   getFormControlTask(control: AbstractControl): FormControl {
     return control as FormControl;  //otherwise angular doesn't recognize this as a FormControl
   }
@@ -135,8 +149,8 @@ export class MilestoneEditComponent {
   }
 
   saveMilestone() {
-    //TODO: check that all fields are in
     if (this.currentMilestone) {
+      console.log("saving milestone")
       const updateData: any = {};
 
       updateData.id = this.currentMilestone.milestoneID as unknown as number;
@@ -144,16 +158,21 @@ export class MilestoneEditComponent {
         updateData.description = this.milestoneForm.get('description')!.value;
       }
 
-      //TODO: assign tasks to milestone
+      updateData.tasks = [];
+      this.assignedTasks.forEach(task => {
+        updateData.tasks.push(task.taskID);
+      });
 
       const url = constructBackendRequest(Endpoints.EDIT_MILESTONE)
-      this.http.post(url, updateData).subscribe(data => {
-        console.log(data);
-        window.alert("Milestone updated");
-        this.milestoneService.getMilestones(true).subscribe(data => {
-          this.back();
-        })
-      })
+      this.http.post(url, updateData).subscribe(milestone => {
+        if (milestone) {
+          window.alert("Milestone updated");
+        }
+        else {
+          window.alert("Something went wrong");
+        }
+          window.location.reload();
+        });
     }
     else {
       if(!this.milestoneForm.get('name')?.value) {
@@ -169,21 +188,23 @@ export class MilestoneEditComponent {
         newData.description = this.milestoneForm.get('description')!.value;
       }
 
-      //TODO: assign tasks to milestone
+      newData.tasks = [];
+      this.assignedTasks.forEach(task => {
+        newData.tasks.push(task.taskID);
+      });
 
       const url = constructBackendRequest(Endpoints.CREATE_MILESTONE)
-      this.http.post(url, newData).subscribe(data => {
-        if (!data) {
-          window.alert("Something went wrong");
-          return;
+      this.http.post(url, newData).subscribe(milestone => {
+        if (milestone) {
+          console.log(milestone);
+          window.alert("Milestone created");
         }
-        console.log(data);
-        window.alert("Milestone created");
-        this.milestoneService.getMilestones(true).subscribe(data => {
+        else {
+          window.alert("Something went wrong");
+        }
           this.back();
-        })
-      })
-    }
+        });
+      }
   }
 
   openTaskEditModal(name: string, task: Task | null) {
