@@ -1,6 +1,7 @@
 package com.senior.project.backend.Portfolio;
 
 import com.senior.project.backend.domain.Artifact;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,17 @@ public class ArtifactService {
     @Value("${FILE_UPLOAD_DIRECTORY:}")
     private String _uploadDirectory;
 
-    private final String uploadDirectory;
+    private String uploadDirectory;
 
     private final ArtifactRepository artifactRepository;
 
     public ArtifactService(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
-        if (this._uploadDirectory == null) {
+    }
+
+    @PostConstruct
+    private void setUpUploadDirectory() {
+        if (this._uploadDirectory.isEmpty()) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
 
