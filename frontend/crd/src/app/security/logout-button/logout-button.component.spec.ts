@@ -19,7 +19,10 @@ describe('LogoutButtonComponent', () => {
     firstName: 'test',
     lastName: 'test',
     canEmail: false,
-    canText: false
+    canText: false,
+    admin: true,
+    faculty: true,
+    student: true
   }
 
   function setup(user: User | null) {
