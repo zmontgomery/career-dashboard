@@ -1,11 +1,16 @@
 package com.senior.project.backend.notification;
 
+import com.senior.project.backend.domain.Event;
+import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -38,6 +43,19 @@ public class EmailService {
     @PostConstruct
     private void initEmailInfo() {
         this.emailSender = javaMailSender();
+    }
+
+    public void sendWeeklyEventUpdates(User user, LocalDate date, List<Event> events) {
+        String dateStr = date.getMonthValue() + "/" + date.getDayOfMonth();
+
+        StringBuilder eventStr = new StringBuilder();
+        events.forEach(event -> eventStr.append(event.toEmailStr()));
+
+        sendSimpleMessage(user.getEmail(),
+                "Week of " + dateStr + " Events",
+                eventStr.toString()
+        );
+
     }
 
     public void sendSimpleMessage(String to, String subject, String text) {

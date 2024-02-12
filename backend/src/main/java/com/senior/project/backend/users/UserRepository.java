@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,5 +17,8 @@ import com.senior.project.backend.domain.User;
  */
 public interface UserRepository extends JpaRepository<User, UUID> { 
     @Query("SELECT u FROM User u WHERE u.email = :email")
-    public Optional<User> findUserByEmail(@Param("email") String email);
+    Optional<User> findUserByEmail(@Param("email") String email);
+
+    List<User> findUsersByCanEmailIsTrue();
+    List<User> findUsersByCanTextIsTrue();
 }
