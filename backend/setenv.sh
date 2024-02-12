@@ -19,6 +19,11 @@ CRD_DB_PASSWORD=${CRD_DB_PASSWORD:-your_password}
 
 read -p "Enter the super admin: " CRD_SUPER_ADMIN
 
+if [ "$CRD_SUPER_ADMIN" = "" ]; then
+    echo A super user must be specified
+    exit 1
+fi
+
 export CRD_DB_HOST
 export CRD_DB_PORT
 export CRD_DB_NAME
