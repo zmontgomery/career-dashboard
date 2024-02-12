@@ -1,13 +1,11 @@
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlSegmentGroup, UrlTree, createUrlTreeFromSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
 import { AuthService } from "./auth.service";
-import { Inject, inject } from "@angular/core";
-import { map, take, tap } from "rxjs";
+import { inject } from "@angular/core";
+import { map } from "rxjs";
 import { LangUtils } from "../util/lang-utils";
 
 /**
  * The guard that prevents routes from being reached when not authenticated
- * 
- * @returns if the user is authenticated
  */
 export const authGuard: CanActivateFn = (
     next: ActivatedRouteSnapshot,
@@ -22,6 +20,9 @@ export const authGuard: CanActivateFn = (
     }));
 }
 
+/**
+ * The guard that prevents a user from going to the login page if they are already signed in
+ */
 export const noAuthGuard: CanActivateFn = (
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -33,6 +34,9 @@ export const noAuthGuard: CanActivateFn = (
     }));
 }
 
+/**
+ * The guard that only allows faculty through
+ */
 export const facultyRoleGuard: CanActivateFn = (
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -46,6 +50,9 @@ export const facultyRoleGuard: CanActivateFn = (
     }));
 }
 
+/**
+ * The guard that only allows admins to access the page
+ */
 export const adminRoleGuard: CanActivateFn = (
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
