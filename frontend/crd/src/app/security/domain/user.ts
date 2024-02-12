@@ -9,6 +9,7 @@ export interface UserJSON {
     readonly lastLogin: number;
     readonly firstName: string;
     readonly lastName: string;
+    readonly preferredName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
 }
@@ -24,6 +25,7 @@ export class User {
     readonly lastLogin: Date;
     readonly firstName: string;
     readonly lastName: string;
+    readonly preferredName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
 
@@ -35,6 +37,7 @@ export class User {
         this.lastLogin = new Date(json.lastLogin);
         this.firstName = json.firstName;
         this.lastName = json.lastName;
+        this.preferredName = json.preferredName;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
     }
@@ -45,6 +48,7 @@ export class User {
             email: '',
             firstName: 'No',
             lastName: 'User',
+            preferredName: 'No',
             phoneNumber: '0000000000',
             dateCreated: 0,
             lastLogin: 0,
