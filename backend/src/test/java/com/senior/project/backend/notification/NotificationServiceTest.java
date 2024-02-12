@@ -30,7 +30,7 @@ public class NotificationServiceTest {
     public void testWeeklyNotifications() {
         when(userRepository.findUsersByCanEmailIsTrue()).thenReturn(Constants.USERS);
         when(userRepository.findUsersByCanTextIsTrue()).thenReturn(Constants.USERS);
-        when(eventRepository.findEventsInCurrentWeek(any())).thenReturn(Constants.eventDATA);
+        when(eventRepository.findEventsInCurrentWeek(any())).thenReturn(Constants.EVENT_LIST);
         notificationService.weeklyNotifications();
         verify(emailService, times(Constants.USERS.size())).sendWeeklyEventUpdates(any(), any(), any());
     }

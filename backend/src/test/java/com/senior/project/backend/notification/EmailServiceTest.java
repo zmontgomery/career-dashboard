@@ -61,7 +61,7 @@ public class EmailServiceTest {
         ReflectionTestUtils.setField(emailService, "emailSender", javaMailSender);
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
         when(templateEngine.process(eq("emailTemplate"), any())).thenReturn("Content");
-        emailService.sendWeeklyEventUpdates(Constants.user1, LocalDate.now(), Constants.eventDATA);
+        emailService.sendWeeklyEventUpdates(Constants.user1, LocalDate.now(), Constants.EVENT_LIST);
         verify(templateEngine, times(1)).process(eq("emailTemplate"), any());
         verify(javaMailSender, times(1)).createMimeMessage();
     }
