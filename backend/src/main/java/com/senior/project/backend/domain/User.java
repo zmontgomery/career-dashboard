@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,6 +58,7 @@ public class User implements UserDetails {
 	private boolean isStudent;
 	private boolean isAdmin;
 	private boolean isFaculty;
+	private boolean isSuperAdmin;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="student_details_id")
@@ -70,7 +72,8 @@ public class User implements UserDetails {
 		if (isStudent && studentDetails != null) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.STUDENT.toString()));
 		if (isAdmin) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.ADMIN.toString()));
 		if (isFaculty) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.FACULTY.toString()));
-		return authorities;
+		if (isSuperAdmin) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.SUPER_ADMIN.toString()));
+ 		return authorities;
 	}
 
 	@JsonIgnore
@@ -81,6 +84,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
+		LoggerFactory.getLogger(getClass()).info(getAuthorities().toString());
 		return email;
 	}
 

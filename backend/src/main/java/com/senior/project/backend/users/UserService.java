@@ -4,12 +4,14 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.senior.project.backend.domain.User;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -57,5 +59,27 @@ public class UserService implements ReactiveUserDetailsService {
     public Mono<UserDetails> findByUsername(String username) {
         return findByEmailAddress(username)
             .map((u) -> (UserDetails) u);
+    }
+
+    // Email for the super user
+    @Value("${crd.superadmin}") private String superUser;
+
+    /**
+     * Clears all super users and sets the super user specified
+     * by the argument
+     */
+    @PostConstruct
+    public void setSuperUser() {
+        repository.findSuperAdmins()
+            .forEach((u) -> {
+                u.setSuperAdmin(false);
+                repository.save(u);
+            });
+
+        findByEmailAddress(superUser)
+            .subscribe((user) -> {
+                user.setSuperAdmin(true);
+                repository.save(user);
+            });
     }
 }

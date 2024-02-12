@@ -30,6 +30,7 @@ public abstract class SecurityUtil {
     public static enum Roles {
         ADMIN,
         STUDENT,
-        FACULTY
+        FACULTY,
+        SUPER_ADMIN
     }
 }

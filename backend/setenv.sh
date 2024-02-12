@@ -17,11 +17,14 @@ CRD_DB_USERNAME=${CRD_DB_USERNAME:-backend}
 read -p "Enter the database password (default: your_password): " CRD_DB_PASSWORD
 CRD_DB_PASSWORD=${CRD_DB_PASSWORD:-your_password}
 
+read -p "Enter the super admin: " CRD_SUPER_ADMIN
+
 export CRD_DB_HOST
 export CRD_DB_PORT
 export CRD_DB_NAME
 export CRD_DB_USERNAME
 export CRD_DB_PASSWORD
+export CRD_SUPER_ADMIN
 
 echo "Environment variables set:"
 echo "CRD_DB_HOST=$CRD_DB_HOST"
@@ -29,5 +32,6 @@ echo "CRD_DB_PORT=$CRD_DB_PORT"
 echo "CRD_DB_NAME=$CRD_DB_NAME"
 echo "CRD_DB_USERNAME=$CRD_DB_USERNAME"
 echo "CRD_DB_PASSWORD=$CRD_DB_PASSWORD"
+echo "CRD_SUPER_ADMIN=$CRD_SUPER_ADMIN"
 
 ./gradlew :bootrun
