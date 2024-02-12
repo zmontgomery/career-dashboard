@@ -29,7 +29,7 @@ public class NotificationService {
 //    For Testing this will send every minute instead. replace 1 with 5 for every 5 minutes etc.
 //    @Scheduled(cron = "0 */1 * * * *")
     @Scheduled(cron = "0 0 0 * * MON")
-    public void myTaskMethod() {
+    public void weeklyNotifications() {
         LocalDate currentDate = LocalDate.now();
         List<Event> events = this.eventRepository.findEventsInCurrentWeek(currentDate);
 

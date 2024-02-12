@@ -76,7 +76,6 @@ public class EmailService {
         } catch (MessagingException e) {
             logger.error(user.getEmail() + " Failed");
         }
-
     }
 
     public void sendSimpleMessage(String to, String subject, String text) {
