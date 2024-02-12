@@ -43,7 +43,8 @@ public class SecurityConfig {
         http.cors(c -> c.configurationSource(corsConfigurationSource()));
         http.authorizeExchange(e -> {
             e.pathMatchers(Endpoints.getOpenRoutes()).permitAll();
-            e.anyExchange().authenticated();
+            e.pathMatchers("/api/**").authenticated();
+            e.anyExchange().permitAll();
         });
         http.authenticationManager(authenticationManager);
         http.securityContextRepository(securityContextRepostory);
