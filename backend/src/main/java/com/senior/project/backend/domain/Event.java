@@ -24,12 +24,12 @@ public class Event {
     private String organizer;
     private boolean isRecurring;
 
-    public String toEmailStr() {
+    public String formattedDate() {
         // Format the date
-        String formattedDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                 .format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
-        return name + "\n" + formattedDate +
-                "\nDescription: " + description +
-                "\nLocation: " + location + "\n\n";
+//        return name + "\n" + formattedDate +
+//                "\nDescription: " + description +
+//                "\nLocation: " + location + "\n\n";
     }
 }

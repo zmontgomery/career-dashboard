@@ -3,11 +3,16 @@ package com.senior.project.backend.notification;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,9 +40,10 @@ public class EmailService {
     private String tls;
 
     private JavaMailSender emailSender;
+    private final TemplateEngine templateEngine;
 
-    public EmailService() {
-
+    public EmailService(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
     }
 
     @PostConstruct
@@ -46,15 +52,26 @@ public class EmailService {
     }
 
     public void sendWeeklyEventUpdates(User user, LocalDate date, List<Event> events) {
-        String dateStr = date.getMonthValue() + "/" + date.getDayOfMonth();
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(user.getEmail());
+            helper.setSubject("Week of " + date.getMonthValue() + "/" + date.getDayOfMonth() + " Events");
 
-        StringBuilder eventStr = new StringBuilder();
-        events.forEach(event -> eventStr.append(event.toEmailStr()));
+            // Prepare the evaluation context
+            Context context = new Context();
+            context.setVariable("events", events); // Set variables used in the template
 
-        sendSimpleMessage(user.getEmail(),
-                "Week of " + dateStr + " Events",
-                eventStr.toString()
-        );
+            // Create the HTML body using Thymeleaf
+            String htmlContent = templateEngine.process("emailTemplate", context);
+            helper.setText(htmlContent, true);
+
+            // Send email
+            emailSender.send(message);
+
+        } catch (Exception e) {
+            System.out.println(user.getEmail() + " Failed");
+        }
 
     }
 

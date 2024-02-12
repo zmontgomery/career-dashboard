@@ -26,8 +26,8 @@ public class NotificationService {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(cron = "0 */1 * * * *")
-//    @Scheduled(cron = "0 0 0 * * MON")
+//    @Scheduled(cron = "0 */1 * * * *")
+    @Scheduled(cron = "0 0 0 * * MON")
     public void myTaskMethod() {
         // Your task logic here
         System.out.println("Task executed on every Monday");
