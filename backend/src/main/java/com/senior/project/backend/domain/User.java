@@ -84,7 +84,6 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		LoggerFactory.getLogger(getClass()).info(getAuthorities().toString());
 		return email;
 	}
 
