@@ -5,6 +5,8 @@ import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -41,9 +43,11 @@ public class EmailService {
 
     private JavaMailSender emailSender;
     private final TemplateEngine templateEngine;
+    private final Logger logger;
 
     public EmailService(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
+        logger = LoggerFactory.getLogger(EmailService.class);
     }
 
     @PostConstruct
@@ -69,8 +73,8 @@ public class EmailService {
             // Send email
             emailSender.send(message);
 
-        } catch (Exception e) {
-            System.out.println(user.getEmail() + " Failed");
+        } catch (MessagingException e) {
+            logger.error(user.getEmail() + " Failed");
         }
 
     }
