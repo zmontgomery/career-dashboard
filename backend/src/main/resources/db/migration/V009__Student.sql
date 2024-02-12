@@ -5,30 +5,30 @@ CREATE TABLE student_details (
     description VARCHAR(256),
 	graduation_year TIMESTAMP,
 	start_date TIMESTAMP,
-    degree_level VARCHAR(256)
+    year_level ENUM('Freshman', 'Sophomore', 'Junior', 'Senior')
 );
 
--- CREATE TABLE job(
---     jobID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     jobName VARCHAR(256),
---     location VARCHAR(256),
---     description TEXT,
---     startDate DATE,
---     endDate DATE,
---     isCoop BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+/* CREATE TABLE job(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    studentID VARCHAR(256),
+    jobName VARCHAR(256),
+    location VARCHAR(256),
+    description TEXT,
+    startDate DATE,
+    endDate DATE,
+    isCoop BOOLEAN,
+    FOREIGN KEY (studentID) REFERENCES student_details (id)
+);
 
--- CREATE TABLE project(
---     projectID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     projectName VARCHAR(256),
---     description TEXT,
---     startDate DATE,
---     endDate DATE,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+CREATE TABLE project(
+    projectID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID VARCHAR(256),
+    projectName VARCHAR(256),
+    description TEXT,
+    startDate DATE,
+    endDate DATE,
+    FOREIGN KEY (studentID) REFERENCES student_details (id)
+); */
 
 -- CREATE TABLE skill(
 --     skillID INT AUTO_INCREMENT PRIMARY KEY,

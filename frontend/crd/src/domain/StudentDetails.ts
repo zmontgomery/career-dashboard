@@ -7,7 +7,7 @@ export interface StudentDetailsJSON{
     description: string;
     graduationYear: Date;
     startDate: Date;
-    degreeLevel: string;
+    yearLevel: YearLevel;
 }
 
 export class StudentDetails{
@@ -18,7 +18,7 @@ export class StudentDetails{
         this.description = json.description;
         this.graduationYear = json.graduationYear;
         this.startDate = json.startDate;
-        this.degreeLevel = json.degreeLevel;
+        this.yearLevel = json.yearLevel;
     }
 
     id: string;
@@ -27,5 +27,5 @@ export class StudentDetails{
     description: string;
     graduationYear: Date;
     startDate: Date;
-    degreeLevel: string;
+    yearLevel: YearLevel;
 }

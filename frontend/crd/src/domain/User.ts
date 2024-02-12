@@ -1,3 +1,5 @@
+import { StudentDetails, StudentDetailsJSON } from "./StudentDetails";
+
 export interface UserJSON{
     id: string;
 	email: string;
@@ -12,6 +14,7 @@ export interface UserJSON{
     isStudent: boolean;
     isAdmin: boolean;
     preferredName: string;
+    studentDetails: StudentDetailsJSON;
 }
 
 export class User{
@@ -29,6 +32,7 @@ export class User{
         this.isFaculty = json.isFaculty;
         this.isStudent = json.isStudent;
         this.isAdmin = json.isAdmin;
+        this.studentDetails = json.studentDetails;
     }
 
     id: string;
@@ -44,4 +48,5 @@ export class User{
     isStudent: boolean;
     isAdmin: boolean;
     preferredName: string;
+    studentDetails: StudentDetails;
 }

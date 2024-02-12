@@ -25,7 +25,7 @@ public class StudentDetails {
 	private int universityId;
 	private double gpa;
 	private String description;
-	private String degreeLevel;
+	private YearLevel yearLevel;
 
 	@Temporal(value = TemporalType.DATE)
 	private Date graduationYear;
