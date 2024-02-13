@@ -170,7 +170,7 @@ public class Constants {
         artifact2 = new Artifact();
         artifact2.setName("artifact 2 name");
         artifact2.setId(2);
-        artifact2.setFileLocation("location 2");
+        artifact2.setFileLocation("../uploads/location 2");
     }
 
 }
