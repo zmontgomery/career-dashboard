@@ -1,0 +1,45 @@
+<div id="modal-content-wrapper">
+    <form [formGroup]="taskForm" class="mat-dialog-content" (ngSubmit)="saveTask()">
+        <h5>This task is for {{tYearLevel}} </h5>
+        <div *ngIf="taskName == ''">
+            <h4>Create New Task</h4>
+            <mat-form-field *ngIf="taskName == ''">
+                <mat-label>Task Name</mat-label>
+                <input matInput formControlName="name">
+            </mat-form-field>
+        </div>
+        <div *ngIf="taskName != ''">
+          <h4>Editing {{taskName}}</h4>
+        </div>
+        <mat-form-field>
+          <mat-label>Task Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <div>
+            <label>Task type: </label>
+            <mat-radio-group formControlName="taskType">
+              <mat-radio-button value="artifact">Artifact</mat-radio-button>
+              <mat-radio-button value="event">Event</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="getTaskType() == 'artifact'">
+            <mat-form-field>
+                <mat-label>Artifact Name</mat-label>
+                <input matInput formControlName="artifactName">
+            </mat-form-field>
+          </div>
+          <div *ngIf="getTaskType() == 'event'">
+            <p>For now, enter Event ID</p>
+            <mat-form-field>
+                <mat-label>Select Event</mat-label>
+                <input matInput formControlName="event">
+            </mat-form-field>
+          </div>
+        <button mat-button type="submit" [disabled]="!taskForm.status">Submit</button>
+    </form>
+    <footer id="modal-footer">
+        <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
+            Back
+        </button>
+    </footer>
+</div>

@@ -34,7 +34,7 @@ public class UserService implements ReactiveUserDetailsService {
 
     /**
      * Retrieves a user from the database using their email address
-     * @param email - the email address belonging to the suer
+     * @param email - the email address belonging to the user
      * @return the user
      * @throws EntityNotFoundException if the user with the provided email does not exist
      */

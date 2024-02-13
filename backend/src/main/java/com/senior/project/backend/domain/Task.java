@@ -13,7 +13,7 @@ public class Task {
     @Id
     private Long id;
     private String name;
-    private String description;
+    public String description;
     private Boolean isRequired;
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
