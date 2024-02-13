@@ -19,6 +19,11 @@ public enum Endpoints {
     EDIT_TASK("admin/edit-task", true),
     EDIT_MILESTONE("admin/edit-milestone", true),
 
+    // Submissions
+    SUBMISSION("tasks/submission", true),
+    SUBMISSION_ARTIFACT("tasks/submission-artifact", true),
+    SUBMISSION_ARTIFACT_DELETE("tasks/submission-artifact/{id}", false),
+
     // Security
     SIGNIN("auth/signin", false),
     SIGNOUT("auth/signout", false),

@@ -1,5 +1,6 @@
 package com.senior.project.backend.Portfolio;
 
+import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.util.Endpoints;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,6 @@ public class PortfolioRouter {
 
     @Bean
     public RouterFunction<ServerResponse> portfolioRoutes(ArtifactHandler artifactHandler) {
-
         return route(POST(Endpoints.RESUME.uri()), artifactHandler::handleFileUpload);
     }
 }

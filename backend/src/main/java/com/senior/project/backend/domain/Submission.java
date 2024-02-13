@@ -4,33 +4,28 @@ import lombok.*;
 
 import java.util.Date;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
+@Entity
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
 public class Submission {
-	
 	@Id
     private int id;
-	
-	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn
-    private Task task;
+    private int taskId;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Artifact artifact;
 
-	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn
-    private User student;
-
+    private int studentId;
 	private Date submissionDate;
 	private String comment;
 }

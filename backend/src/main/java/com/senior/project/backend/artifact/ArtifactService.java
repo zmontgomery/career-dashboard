@@ -1,6 +1,9 @@
-package com.senior.project.backend.Portfolio;
+package com.senior.project.backend.artifact;
 
 import com.senior.project.backend.domain.Artifact;
+import com.senior.project.backend.security.SecurityUtil;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,8 @@ import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -65,19 +70,47 @@ public class ArtifactService {
                 upload.setFileLocation(destination.toString());
                 upload.setName(filePart.filename());
 
-                // TODO: add comment capture
-                // TODO: comment goes in submission
-                //upload.setComment("");
-
                 // Save the file to the specified directory
                 return filePart.transferTo(destination)
-                        // TODO need to also add to user's portfolio table in DB?
+                        .then(SecurityUtil.getCurrentUser())
+                        .map((user) -> {
+                            upload.setUserId(user.getId());
+                            return upload;
+                        })
                         .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
-                        .thenReturn("File uploaded successfully");
+                        .thenReturn(uniqueFilename);
             }
         );
     }
 
+    /**
+     * Deletes a file if it exists
+     * @param internalName is the unique identifier for the file marked for deletion
+     * @return a message indicating the success
+     */
+    public Mono<String> deleteFile(String internalName) {
+        return SecurityUtil.getCurrentUser()
+                .flatMap((user) -> {
+                    try {
+                        LoggerFactory.getLogger(getClass()).info(internalName);
+                        Artifact a = artifactRepository.findByUniqueIdentifier(internalName);
+                        if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
+                            Path fileToDelete = Paths.get(a.getFileLocation());
+                            Files.deleteIfExists(fileToDelete); // Delete file
+                            artifactRepository.delete(a); // Delete artifact entity
+                            return Mono.just("File deleted successfully");
+                        } else {
+                            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user"));
+                        }
+                    } catch (IOException e) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found"));
+                    }
+                });
+    }
+
+    /**
+     * Validates the file uploaded is below the max size
+     */
     private Mono<Boolean> validateFileSize(FilePart filePart) {
         return filePart
                 .content()

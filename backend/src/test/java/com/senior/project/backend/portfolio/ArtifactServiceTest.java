@@ -1,7 +1,7 @@
 package com.senior.project.backend.portfolio;
 
-import com.senior.project.backend.Portfolio.ArtifactRepository;
-import com.senior.project.backend.Portfolio.ArtifactService;
+import com.senior.project.backend.artifact.ArtifactRepository;
+import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Artifact;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

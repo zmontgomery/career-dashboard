@@ -1,8 +1,9 @@
-package com.senior.project.backend.Portfolio;
+package com.senior.project.backend.artifact;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -17,6 +18,9 @@ public class ArtifactHandler {
         this.artifactService = artifactService;
     }
 
+    /**
+     * Takes the file from the request body and stores it on the server
+     */
     public Mono<ServerResponse> handleFileUpload(ServerRequest request) {
         return request.multipartData()
                 .map(parts -> parts.toSingleValueMap().get("file"))
@@ -31,5 +35,13 @@ public class ArtifactHandler {
                         // spring update it won't break
                         .contentType(MediaType.TEXT_PLAIN)
                         .bodyValue(response));
+    }
+
+    /**
+     * Deletes the file with the given file name
+     */
+    public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
+        return artifactService.deleteFile(request.pathVariable("id"))
+            .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
     }
 }
