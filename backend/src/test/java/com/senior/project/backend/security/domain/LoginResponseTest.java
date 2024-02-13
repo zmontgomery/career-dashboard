@@ -20,4 +20,9 @@ public class LoginResponseTest extends AbstractDomainObjectTest<LoginResponse> {
         );
     }
 
+
+    @Override
+    protected Class<LoginResponse> getTestClass() {
+        return LoginResponse.class;
+    }
 }

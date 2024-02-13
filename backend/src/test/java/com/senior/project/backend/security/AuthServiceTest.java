@@ -3,6 +3,7 @@ package com.senior.project.backend.security;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.jose4j.jwt.NumericDate;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.server.WebSession;
 
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.User;
@@ -112,5 +115,20 @@ public class AuthServiceTest {
         } catch (TokenVerificiationException e) {
             return;
         }
+    }
+
+    @Test
+    public void testSignOut() {
+        ServerRequest request = mock(ServerRequest.class);
+        WebSession webSession = mock(WebSession.class);
+
+        when(webSession.invalidate()).thenReturn(Mono.empty());
+        when(request.session()).thenReturn(Mono.just(webSession));
+
+        Mono<Void> result = CuT.signOut(request);
+
+        StepVerifier.create(result)
+            .expectComplete()
+            .verify();
     }
 }

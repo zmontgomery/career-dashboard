@@ -23,6 +23,7 @@ public class AuthRouter extends AbstractRouter {
     public RouterFunction<ServerResponse> authRotues(AuthHandler handler) {
         return wrapRoutes(
             route(POST(Endpoints.SIGNIN.uri()), handler::signIn)
+            .andRoute(POST(Endpoints.SIGNOUT.uri()), handler::signOut)
             .andRoute(POST(Endpoints.REFRESH.uri()), handler::refresh)
             .andRoute(GET(Endpoints.FAILURE.uri()), handler::authenticationFailed)
         );

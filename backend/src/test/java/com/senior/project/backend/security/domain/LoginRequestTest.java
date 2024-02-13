@@ -14,4 +14,9 @@ public class LoginRequestTest extends AbstractDomainObjectTest<LoginRequest> {
             new Pair<>("tokenType", TYPE)
         );
     }
+
+    @Override
+    protected Class<LoginRequest> getTestClass() {
+        return LoginRequest.class;
+    }
 }

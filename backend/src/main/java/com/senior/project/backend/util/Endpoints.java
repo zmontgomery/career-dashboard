@@ -2,6 +2,8 @@ package com.senior.project.backend.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Enum for endpoints in the system and if they are accessible
@@ -14,9 +16,16 @@ public enum Endpoints {
     MILSTONES("milestones", true),
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
+    USERS("users", true),
+    EDIT_TASK("admin/edit-task", true),
+    EDIT_MILESTONE("admin/edit-milestone", true),
+    PORTFOLIO("portfolio", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),
+    SIGNOUT("auth/signout", false),
     REFRESH("auth/refresh", true),
     FAILURE("auth/fail", false),
 
@@ -60,5 +69,22 @@ public enum Endpoints {
      */
     public static Endpoints toEndpoint(String path) {
         return stringToEndpoint.get(path);
+    }
+
+    /**
+     * Gets all open routes
+     */
+    public static String[] getOpenRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+            .filter(r -> !r.getNeedsAuthentication())
+            .map((r) -> r.uri())
+            .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            routes[i] = list.get(i);
+        }
+
+        return routes;
     }
 }

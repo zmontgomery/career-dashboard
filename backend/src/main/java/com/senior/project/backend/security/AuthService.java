@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.server.WebSession;
 
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
@@ -66,6 +68,10 @@ public class AuthService {
     public Mono<User> findUserFromToken(String token) throws TokenVerificiationException {
         String email = this.tokenGenerator.extractEmail(token);
         return userService.findByEmailAddress(email);
+    }
+
+    public Mono<Void> signOut(ServerRequest request) {
+        return request.session().flatMap(WebSession::invalidate);
     }
 
     /**
