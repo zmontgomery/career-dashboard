@@ -83,6 +83,8 @@ public class MilestoneService {
         if (data.containsKey("description")) {
             newMilestone.setDescription((String) data.get("description"));
         }
+
+        Milestone savedMilestone = milestoneRepository.save(newMilestone);
         
         List<Integer> updatedTaskList = (ArrayList<Integer>) data.get("tasks");
         List<Task> taskList = new ArrayList<>();
@@ -90,14 +92,16 @@ public class MilestoneService {
         for (Integer assignedTaskID : updatedTaskList) {
             try {
                 Task assignedTask = taskRepository.findById(assignedTaskID.longValue());
-                newMilestone.getTasks().add(assignedTask);
                 taskList.add(assignedTask);
+                assignedTask.setMilestone(savedMilestone);
             }
             catch (Exception e) { // task not found
                 continue;
             }
         }
 
-        return Mono.just(milestoneRepository.save(newMilestone));
+        savedMilestone.setTasks(taskList);
+
+        return Mono.just(savedMilestone);
     }
 }

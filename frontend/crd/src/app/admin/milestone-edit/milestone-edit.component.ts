@@ -145,12 +145,13 @@ export class MilestoneEditComponent {
   }
 
   back() {
-    this.router.navigate(['/admin/milestones']);
+    this.router.navigate(['/admin/milestones']).then(() => {
+      window.location.reload();
+    });
   }
 
   saveMilestone() {
     if (this.currentMilestone) {
-      console.log("saving milestone")
       const updateData: any = {};
 
       updateData.id = this.currentMilestone.milestoneID as unknown as number;
@@ -171,7 +172,7 @@ export class MilestoneEditComponent {
         else {
           window.alert("Something went wrong");
         }
-          window.location.reload();
+          this.back();
         });
     }
     else {
@@ -196,7 +197,7 @@ export class MilestoneEditComponent {
       const url = constructBackendRequest(Endpoints.CREATE_MILESTONE)
       this.http.post(url, newData).subscribe(milestone => {
         if (milestone) {
-          console.log(milestone);
+          console.log(milestone)
           window.alert("Milestone created");
         }
         else {
