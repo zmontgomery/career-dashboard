@@ -3,11 +3,15 @@ package com.senior.project.backend.Portfolio;
 import com.senior.project.backend.domain.Artifact;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
@@ -92,5 +96,39 @@ public class ArtifactService {
                         return Mono.just(true);
                     }
                 });
+    }
+
+    public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
+
+        Artifact artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
+
+        Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
+        Path normalizedFilePath = Paths.get(artifact.getFileLocation()).toAbsolutePath().normalize();
+
+        if(!normalizedFilePath.startsWith(normalizedDirectoryPath)) {
+            // should be impossible since we generate a hash for the file location but
+            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "File location is forbidden"));
+        }
+
+        return Mono.justOrEmpty(normalizedFilePath)
+                .flatMap(p -> {
+                    try {
+                        // Create a FileSystemResource for the PDF file
+                        Resource pdfResource = new FileSystemResource(p.toFile());
+
+                        // Return ResponseEntity with headers and PDF resource
+                        return Mono.just(ResponseEntity.ok()
+                                .headers(headers)
+                                .body(pdfResource));
+                    } catch (Exception e) {
+                        // Handle file not found or other errors
+                        return Mono.just(ResponseEntity.notFound().build());
+                    }
+                });
+    }
+
+    public Flux<Artifact> all() {
+        return Flux.fromIterable(artifactRepository.findAll());
     }
 }

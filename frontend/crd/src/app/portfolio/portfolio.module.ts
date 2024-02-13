@@ -7,6 +7,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FileUploadModule} from "../file-upload/file-upload.module";
 import {MatDialogModule} from "@angular/material/dialog";
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {MatDialogModule} from "@angular/material/dialog";
       MatIconModule,
       FileUploadModule,
       MatDialogModule,
+      PdfViewerModule,
     ]
 })
 export class PortfolioModule { }
