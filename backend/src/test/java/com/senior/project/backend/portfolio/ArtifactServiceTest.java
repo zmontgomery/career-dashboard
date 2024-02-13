@@ -1,5 +1,6 @@
 package com.senior.project.backend.portfolio;
 
+import com.senior.project.backend.Constants;
 import com.senior.project.backend.Portfolio.ArtifactRepository;
 import com.senior.project.backend.Portfolio.ArtifactService;
 import com.senior.project.backend.domain.Artifact;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
@@ -22,9 +24,10 @@ import reactor.test.StepVerifier;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -111,4 +114,35 @@ public class ArtifactServiceTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
+
+    @Test
+    public void testGetFileFailPathCheck() {
+        when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact2));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> artifactService.getFile("1", headers).block());
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+    }
+
+    @Test
+    public void testGetFile() {
+        when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        var result = artifactService.getFile("1", headers).block();
+
+        assert result != null;
+        assertTrue(result.getStatusCode().is2xxSuccessful());
+        assertEquals(headers, result.getHeaders());
+        var expectedBody = new FileSystemResource(Paths.get(Constants.artifact1.getFileLocation()).toAbsolutePath().normalize());
+        assertEquals(expectedBody, result.getBody());
+    }
+
+
 }

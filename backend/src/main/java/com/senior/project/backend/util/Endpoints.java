@@ -20,6 +20,9 @@ public enum Endpoints {
     EDIT_MILESTONE("admin/edit-milestone", true),
     CREATE_MILESTONE("admin/create-milestone", true),
     CREATE_TASK("admin/create-task", true),
+    PORTFOLIO("portfolio", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),

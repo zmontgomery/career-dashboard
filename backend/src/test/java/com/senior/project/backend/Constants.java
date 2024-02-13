@@ -1,10 +1,6 @@
 package com.senior.project.backend;
 
-import com.senior.project.backend.domain.Event;
-import com.senior.project.backend.domain.Milestone;
-import com.senior.project.backend.domain.Task;
-import com.senior.project.backend.domain.User;
-import com.senior.project.backend.domain.YearLevel;
+import com.senior.project.backend.domain.*;
 
 import reactor.core.publisher.Mono;
 
@@ -161,4 +157,20 @@ public class Constants {
         USERS.add(user1);
         USERS.add(user2);
     }
+
+    public static Artifact artifact1;
+    public static Artifact artifact2;
+    public static final List<Artifact> ARTIFACTS = new ArrayList<>();
+
+    static {
+        artifact1 = new Artifact();
+        artifact1.setName("artifact 1 name");
+        artifact1.setId(1);
+        artifact1.setFileLocation("../uploads/artifactServiceTest");
+        artifact2 = new Artifact();
+        artifact2.setName("artifact 2 name");
+        artifact2.setId(2);
+        artifact2.setFileLocation("location 2");
+    }
+
 }
