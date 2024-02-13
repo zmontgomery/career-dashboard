@@ -102,4 +102,10 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public User(UUID id2, String email2, String phonenumber2, Date datecreated2, Date lastlogin2, String firstname2,
+			String lastname2, boolean canemail2, boolean cantest, StudentDetails studentdetails2, boolean isstudent2,
+			boolean isadmin2, boolean isfaculty2) {
+		//TODO Auto-generated constructor stub
+	}
 }

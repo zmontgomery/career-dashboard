@@ -30,21 +30,21 @@ CREATE TABLE project(
     FOREIGN KEY (studentID) REFERENCES student_details (id)
 ); */
 
--- CREATE TABLE skill(
---     skillID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     skillName VARCHAR(256),
---     isLanguage BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+/* CREATE TABLE skill(
+    skillID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    skillName VARCHAR(256),
+    isLanguage BOOLEAN,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+); */
 
--- CREATE TABLE degreeProgram(
---     programID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     programName VARCHAR(256),
---     isMinor BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+/* CREATE TABLE degreeProgram(
+    programID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
+    programName VARCHAR(256),
+    isMinor BOOLEAN,
+    FOREIGN KEY (studentID) REFERENCES student (studentID)
+); */
 
 -- CREATE TABLE club(
 --     clubID INT AUTO_INCREMENT PRIMARY KEY,

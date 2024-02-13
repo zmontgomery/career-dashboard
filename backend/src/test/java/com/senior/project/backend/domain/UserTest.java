@@ -41,10 +41,10 @@ public class UserTest extends AbstractDomainObjectTest<User> {
                 lastName,
                 canEmail,
                 canTest,
+                studentDetails,
                 isStudent,
                 isAdmin,
-                isFaculty,
-                studentDetails
+                isFaculty
             ),
             new Pair<>("id", id),
             new Pair<>("email", email),

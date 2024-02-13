@@ -18,7 +18,7 @@ export class StudentDetails{
         this.description = json.description;
         this.graduationYear = json.graduationYear;
         this.startDate = json.startDate;
-        this.yearLevel = json.yearLevel;
+        this.yearLevel = json.yearLevel; 
     }
 
     id: string;
