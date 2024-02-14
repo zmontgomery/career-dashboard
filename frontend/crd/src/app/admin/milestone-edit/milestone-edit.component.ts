@@ -42,14 +42,13 @@ export class MilestoneEditComponent {
     private router: Router,
     private milestoneService: MilestoneService,
     private taskService: TaskService,
-    private formBuilder: FormBuilder,
+    public formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    private http: HttpClient,
+    public http: HttpClient,
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-
       this.milestoneParam = decodeURIComponent(params['name']);
     });
 

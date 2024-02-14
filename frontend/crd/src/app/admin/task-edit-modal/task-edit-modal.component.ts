@@ -75,7 +75,6 @@ export class TaskEditModalComponent implements OnInit {
 
   saveTask() {
     if (this.currentTask) {
-      console.log("saving task")
       const updateData: any = {};
 
       updateData.id = this.currentTask.taskID as unknown as number;
@@ -94,7 +93,6 @@ export class TaskEditModalComponent implements OnInit {
 
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
-        console.log("posting")
         this.closeModal();
       })
     }

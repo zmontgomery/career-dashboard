@@ -80,28 +80,6 @@ public class MilestoneService {
         newMilestone.setName((String) data.get("name"));
         newMilestone.setYearLevel(YearLevel.valueOf((String) data.get("yearLevel")));
 
-        if (data.containsKey("description")) {
-            newMilestone.setDescription((String) data.get("description"));
-        }
-
-        Milestone savedMilestone = milestoneRepository.save(newMilestone);
-        
-        List<Integer> updatedTaskList = (ArrayList<Integer>) data.get("tasks");
-        List<Task> taskList = new ArrayList<>();
-
-        for (Integer assignedTaskID : updatedTaskList) {
-            try {
-                Task assignedTask = taskRepository.findById(assignedTaskID.longValue());
-                taskList.add(assignedTask);
-                assignedTask.setMilestone(savedMilestone);
-            }
-            catch (Exception e) { // task not found
-                continue;
-            }
-        }
-
-        savedMilestone.setTasks(taskList);
-
-        return Mono.just(savedMilestone);
+        return Mono.just(milestoneRepository.save(newMilestone));
     }
 }
