@@ -108,9 +108,16 @@
       Resume
     </div>
     <mat-card class="resume-card">
-      <button mat-button (click)="openDialog()">
+      <button mat-button *ngIf="showUploadButton" (click)="openDialog()">
         <mat-icon>upload_file</mat-icon>
       </button>
+      <pdf-viewer
+        *ngIf="!showUploadButton"
+        [src]="pdfURL"
+        [render-text]="true"
+        [original-size]="false"
+        style="width: 400px; height: 500px"
+      ></pdf-viewer>
     </mat-card>
   </div>
 </div>

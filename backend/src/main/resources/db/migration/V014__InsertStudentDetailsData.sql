@@ -3,4 +3,4 @@ VALUES (UUID_TO_BIN(UUID()), 'jrl9984@g.rit.edu', 3.900, 'James', "Jim", "Logan"
     (UUID_TO_BIN(UUID()), 'jts7382@g.rit.edu', 4.000, 'Justin', "Justing", "Swistak", 1, 0),
     (UUID_TO_BIN(UUID()), 'bml2238@g.rit.edu', 3.700, 'Brie', "Brie", "Lindberg", 1, 0),
     (UUID_TO_BIN(UUID()), 'jld7456@g.rit.edu', 3.700, "John", "John", "Davidson", 1, 0),
-    (UUID_TO_BIN(UUID()), 'rcb2957@g.rit.edu', 3.600, '', "Riley", "Brotz", 1, 0);
+    (UUID_TO_BIN(UUID()), '1234567890', 3.600, 'skilled', "Riley", "Brotz", 1, 0);

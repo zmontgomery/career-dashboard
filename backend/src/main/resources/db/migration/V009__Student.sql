@@ -9,7 +9,7 @@ CREATE TABLE student_details (
 );
 
 /* CREATE TABLE job(
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BINARY(16) PRIMARY KEY,
     studentID VARCHAR(256),
     jobName VARCHAR(256),
     location VARCHAR(256),
@@ -30,13 +30,13 @@ CREATE TABLE project(
     FOREIGN KEY (studentID) REFERENCES student_details (id)
 ); */
 
-/* CREATE TABLE skill(
-    skillID INT AUTO_INCREMENT PRIMARY KEY,
-    studentID INT,
+CREATE TABLE skill(
+    id BINARY(16) PRIMARY KEY,
+    studentID BINARY(16),
     skillName VARCHAR(256),
     isLanguage BOOLEAN,
-    FOREIGN KEY (studentID) REFERENCES student (studentID)
-); */
+    FOREIGN KEY (studentID) REFERENCES student_details (id)
+);
 
 /* CREATE TABLE degreeProgram(
     programID INT AUTO_INCREMENT PRIMARY KEY,
