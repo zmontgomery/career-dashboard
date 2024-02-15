@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.senior.project.backend.domain.User;
@@ -77,6 +78,7 @@ public class UserService implements ReactiveUserDetailsService {
             });
 
         findByEmailAddress(superUser)
+            .switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("User %s is not in database.", superUser))))
             .subscribe((user) -> {
                 user.setSuperAdmin(true);
                 repository.save(user);
