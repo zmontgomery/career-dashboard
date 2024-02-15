@@ -22,6 +22,12 @@ public enum Endpoints {
     CURRENT_USER("current-user", true),
     EDIT_TASK("admin/edit-task", true, false, true),
     EDIT_MILESTONE("admin/edit-milestone", true, false, true),
+    PORTFOLIO("portfolio", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
+
+    // TODO remove this
+    EMAIL("send-email", false),
 
     // Security
     SIGNIN("auth/signin", false),
