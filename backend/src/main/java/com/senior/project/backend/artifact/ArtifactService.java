@@ -6,7 +6,6 @@ import com.senior.project.backend.security.SecurityUtil;
 
 import jakarta.annotation.PostConstruct;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
