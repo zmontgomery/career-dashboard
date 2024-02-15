@@ -21,6 +21,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    // email
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
@@ -76,8 +79,17 @@ tasks.jacocoTestReport {
 
 
 tasks.register("setupEnvironmentVariables") {
-    if (System.getenv("CRD_DB_PASSWORD") == null) {
-        throw IllegalStateException("Required environment variable is not defined: CRD_DB_PASSWORD")
+
+    // For runtime check see backend/src/main/java/com/senior/project/backend/BackendApplication.java
+    // Add any other required environment variables here
+    val envVars = listOf("CRD_DB_PASSWORD", "EMAIL_PASSWORD")
+
+    val missingVars = mutableListOf<String>()
+    envVars.forEach {
+        System.getenv(it)?: missingVars.add(it)
+    }
+    if (missingVars.isNotEmpty()) {
+        throw IllegalStateException("Required environment variables are not defined: $missingVars")
     }
 }
 

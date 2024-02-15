@@ -1,14 +1,10 @@
-package com.senior.project.backend.artifact;
+package com.senior.project.backend.Portfolio;
 
 import com.senior.project.backend.domain.Artifact;
-import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.SecurityUtil;
-
 import jakarta.annotation.PostConstruct;
-
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,15 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class ArtifactService {
@@ -34,13 +27,17 @@ public class ArtifactService {
     @Value("${FILE_UPLOAD_DIRECTORY:}")
     private String _uploadDirectory;
 
-    private final String uploadDirectory;
+    private String uploadDirectory;
 
     private final ArtifactRepository artifactRepository;
 
     public ArtifactService(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
-        if (this._uploadDirectory == null) {
+    }
+
+    @PostConstruct
+    private void setUpUploadDirectory() {
+        if (this._uploadDirectory.isEmpty()) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
 
@@ -51,23 +48,7 @@ public class ArtifactService {
         }
     }
 
-    public Mono<Artifact> findById(int id) {
-        Optional<Artifact> artifact =  artifactRepository.findById((long) id);
-        if (artifact.isPresent()) {
-            return Mono.just(artifact.get());
-        }
-        return Mono.empty();
-    }
-
-    public Mono<Artifact> findByUniqueFilename(String filename) {
-        Optional<Artifact> artifact =  artifactRepository.findByUniqueIdentifier(filename);
-        if (artifact.isPresent()) {
-            return Mono.just(artifact.get());
-        }
-        return Mono.empty();
-    }
-
-    public Mono<Integer> processFile(FilePart filePart) {
+    public Mono<String> processFile(FilePart filePart) {
         return validateFileSize(filePart).flatMap(
             (result) -> {
                 String extension;
@@ -93,64 +74,19 @@ public class ArtifactService {
                 upload.setFileLocation(destination.toString());
                 upload.setName(filePart.filename());
 
+                // TODO: add comment capture
+                // TODO: comment goes in submission
+                //upload.setComment("");
+
                 // Save the file to the specified directory
                 return filePart.transferTo(destination)
-                        .then(SecurityUtil.getCurrentUser())
-                        .map((user) -> {
-                            LoggerFactory.getLogger(getClass()).info("\n\n\n" + user.toString() + "\n\n\n");
-                            upload.setUserId(user.getId());
-                            return upload;
-                        })
-                        .flatMap((artifact) -> Mono.just(artifactRepository.save(artifact)))
-                        .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
-                        .map((artifact) -> artifact.getId());
+                        // TODO need to also add to user's portfolio table in DB?
+                        .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
+                        .thenReturn("File uploaded successfully");
             }
         );
     }
 
-    /**
-     * Deletes a file if it exists
-     * @param internalName is the unique identifier for the file marked for deletion
-     * @return a message indicating the success
-     */
-    public Mono<String> deleteFile(String internalName) {
-        return SecurityUtil.getCurrentUser()
-                .flatMap((user) -> {
-                    Optional<Artifact> a = artifactRepository.findByUniqueIdentifier(internalName);
-                    if (a.isPresent()) {
-                        return deleteFile(a.get(), user);
-                    }
-                    return Mono.empty();
-                });
-    }
-
-    public Mono<String> deleteFile(int id) {
-        if (id == NO_FILE_ID) return Mono.just("Success");
-        return SecurityUtil.getCurrentUser()
-                .flatMap((user) -> {
-                    Artifact a = artifactRepository.findById((long) id).get();
-                    return deleteFile(a, user);
-                });
-    }
-
-    public Mono<String> deleteFile(Artifact a, User user) {
-        try {
-            if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
-                Path fileToDelete = Paths.get(a.getFileLocation());
-                Files.deleteIfExists(fileToDelete); // Delete file
-                artifactRepository.delete(a); // Delete artifact entity
-                return Mono.just("File deleted successfully");
-            } else {
-                return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user"));
-            }
-        } catch (IOException e) {
-            return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found"));
-        }
-    }
-
-    /**
-     * Validates the file uploaded is below the max size
-     */
     private Mono<Boolean> validateFileSize(FilePart filePart) {
         return filePart
                 .content()
@@ -165,38 +101,6 @@ public class ArtifactService {
                         return Mono.just(true);
                     }
                 });
-    }
-
-    private static final int NO_FILE_ID = 1;
-    private static final Artifact NO_FILE = Artifact.builder()
-        .name("No File")
-        .fileLocation("N/A")
-        .build();
-
-    /**
-     * Clears out the files if the database is reset and adds
-     * the default NO_FILE artifact
-     */
-    @PostConstruct
-    private void initArtifacts() {
-        try {
-            long artifactCount = artifactRepository.count();
-            if (artifactCount <= 1) {
-                Path uploads = Paths.get(this.uploadDirectory);
-
-                if (Files.exists(uploads)) {
-                    Files.walk(uploads)
-                        .map(Path::toFile)
-                        .forEach(File::delete);
-                } 
-                Files.createDirectories(uploads);
-                
-
-                if (artifactCount == 0) artifactRepository.saveAndFlush(NO_FILE);   
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
