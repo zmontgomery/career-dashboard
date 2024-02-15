@@ -13,6 +13,7 @@ import lombok.*;
 @Generated
 @Getter
 @Setter
+@Builder
 @Entity
 public class Artifact {
 	@Id

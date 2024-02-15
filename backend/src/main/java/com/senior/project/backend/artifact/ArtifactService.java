@@ -112,13 +112,12 @@ public class ArtifactService {
     public Mono<String> deleteFile(int id) {
         return SecurityUtil.getCurrentUser()
                 .flatMap((user) -> {
-                    LoggerFactory.getLogger(getClass()).info("CHECKPOINT 2");
                     Artifact a = artifactRepository.findById((long) id).get();
                     return deleteFile(a, user);
                 });
     }
 
-    private Mono<String> deleteFile(Artifact a, User user) {
+    public Mono<String> deleteFile(Artifact a, User user) {
         try {
             if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
                 Path fileToDelete = Paths.get(a.getFileLocation());
@@ -153,18 +152,29 @@ public class ArtifactService {
                 });
     }
 
+    private static final Artifact NO_FILE = Artifact.builder()
+        .name("No File")
+        .fileLocation("N/A")
+        .build();
+
     /**
      * Clears out the files if the database is reset
      */
     @PostConstruct
-    private void clearUploads() {
+    private void initArtifacts() {
         try {
             if (artifactRepository.count() == 0) {
                 Path uploads = Paths.get(this.uploadDirectory);
 
-                Files.walk(uploads)
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+                if (Files.exists(uploads)) {
+                    Files.walk(uploads)
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+                } else {
+                    Files.createDirectories(uploads);
+                }
+
+                artifactRepository.saveAndFlush(NO_FILE);   
             }
         } catch (IOException e) {
             e.printStackTrace();

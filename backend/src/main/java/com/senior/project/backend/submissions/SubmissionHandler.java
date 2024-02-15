@@ -3,7 +3,6 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -27,14 +26,12 @@ public class SubmissionHandler {
             .flatMap((submission) -> submissionService.addSubmission(submission))
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to submit.")))
             .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
-            .collectList()
-            .map((submissions) -> {
-                submissions.stream().forEach((a) -> {
-                    LoggerFactory.getLogger(getClass()).info("CHECKPOINT");
-                    artifactService.deleteFile(a.getId());
-                });
-                return submissions;
+            .flatMap((submission) -> {
+                int artifactId = submission.getArtifactId();
+                return submissionService.scrubArtifact(submission)
+                    .map((s) -> artifactId);
             })
+            .flatMap((artifactId) -> artifactService.deleteFile(artifactId))
             .then(serverRequest.bodyToMono(Submission.class))
             .flatMap((sub) -> ServerResponse.ok().bodyValue(sub));
     }

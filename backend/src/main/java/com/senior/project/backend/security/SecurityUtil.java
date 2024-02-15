@@ -1,5 +1,6 @@
 package com.senior.project.backend.security;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -19,6 +20,10 @@ public abstract class SecurityUtil {
      */
     public static Mono<User> getCurrentUser() {
         return ReactiveSecurityContextHolder.getContext()
+        .map(context -> {
+            LoggerFactory.getLogger(String.class).info(context.getAuthentication().getPrincipal().toString());
+            return context;
+        })  
             .map(context -> (User) context.getAuthentication().getPrincipal())
             .onErrorMap(er -> new UsernameNotFoundException("No user found in context."));
     }
