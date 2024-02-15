@@ -3,7 +3,6 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -50,9 +49,6 @@ public class SubmissionHandler {
             })
             .flatMap((artifactId) -> artifactService.deleteFile(artifactId))
             .collectList()
-            .flatMap((s) -> {
-                LoggerFactory.getLogger(getClass()).info("ahhhhhhhhhhhh");
-                return ServerResponse.ok().bodyValue(newSubmission);
-            });
+            .flatMap((s) -> ServerResponse.ok().bodyValue(newSubmission));
     }
 }
