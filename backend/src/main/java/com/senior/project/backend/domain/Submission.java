@@ -22,4 +22,13 @@ public class Submission {
     private UUID studentId;
 	private Date submissionDate;
 	private String comment;
+
+    public void from(Submission submission) {
+        this.id = submission.id;
+        this.taskId = submission.taskId;
+        this.artifactId = submission.artifactId;
+        this.studentId = submission.studentId;
+        this.submissionDate = submission.submissionDate;
+        this.comment = submission.comment;
+    }
 }

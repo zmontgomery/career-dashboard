@@ -3,6 +3,7 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,26 @@ public class SubmissionHandler {
     @Autowired
     ArtifactService artifactService;
 
+    /**
+     * Handles processing of a submission
+     * 
+     * Each task for each student can only have one submission, therefore
+     * future submissions have to overriden. This reactor chain adds the new 
+     * submission and collects all the previous submissions. It would then
+     * set the artifact id to the "NO_FILE" artifact and delete the prior
+     * artifact
+     * 
+     * @return 200 if operation is successful.
+     */
     public Mono<ServerResponse> handleSubmission(ServerRequest serverRequest) {
+        final Submission newSubmission = new Submission();
         return serverRequest.bodyToMono(Submission.class)
             .flatMap((submission) -> submissionService.addSubmission(submission))
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to submit.")))
+            .map((submission) -> {
+                newSubmission.from(submission);
+                return submission;
+            })
             .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
             .flatMap((submission) -> {
                 int artifactId = submission.getArtifactId();
@@ -32,7 +49,10 @@ public class SubmissionHandler {
                     .map((s) -> artifactId);
             })
             .flatMap((artifactId) -> artifactService.deleteFile(artifactId))
-            .then(serverRequest.bodyToMono(Submission.class))
-            .flatMap((sub) -> ServerResponse.ok().bodyValue(sub));
+            .collectList()
+            .flatMap((s) -> {
+                LoggerFactory.getLogger(getClass()).info("ahhhhhhhhhhhh");
+                return ServerResponse.ok().bodyValue(newSubmission);
+            });
     }
 }

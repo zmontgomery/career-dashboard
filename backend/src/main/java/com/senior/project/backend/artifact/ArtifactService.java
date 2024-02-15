@@ -110,6 +110,7 @@ public class ArtifactService {
     }
 
     public Mono<String> deleteFile(int id) {
+        if (id == NO_FILE_ID) return Mono.just("Success");
         return SecurityUtil.getCurrentUser()
                 .flatMap((user) -> {
                     Artifact a = artifactRepository.findById((long) id).get();
@@ -122,7 +123,6 @@ public class ArtifactService {
             if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
                 Path fileToDelete = Paths.get(a.getFileLocation());
                 Files.deleteIfExists(fileToDelete); // Delete file
-                LoggerFactory.getLogger(getClass()).info("DELETING");
                 artifactRepository.delete(a); // Delete artifact entity
                 return Mono.just("File deleted successfully");
             } else {
@@ -152,29 +152,32 @@ public class ArtifactService {
                 });
     }
 
+    private static final int NO_FILE_ID = 1;
     private static final Artifact NO_FILE = Artifact.builder()
         .name("No File")
         .fileLocation("N/A")
         .build();
 
     /**
-     * Clears out the files if the database is reset
+     * Clears out the files if the database is reset and adds
+     * the default NO_FILE artifact
      */
     @PostConstruct
     private void initArtifacts() {
         try {
-            if (artifactRepository.count() == 0) {
+            long artifactCount = artifactRepository.count();
+            if (artifactCount <= 1) {
                 Path uploads = Paths.get(this.uploadDirectory);
 
                 if (Files.exists(uploads)) {
                     Files.walk(uploads)
                         .map(Path::toFile)
                         .forEach(File::delete);
-                } else {
-                    Files.createDirectories(uploads);
-                }
+                } 
+                Files.createDirectories(uploads);
+                
 
-                artifactRepository.saveAndFlush(NO_FILE);   
+                if (artifactCount == 0) artifactRepository.saveAndFlush(NO_FILE);   
             }
         } catch (IOException e) {
             e.printStackTrace();
