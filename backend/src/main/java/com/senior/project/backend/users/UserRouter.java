@@ -19,6 +19,7 @@ import com.senior.project.backend.util.Endpoints;
 public class UserRouter {
     @Bean
     public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
-        return route(GET(Endpoints.USERS.uri()), userHandler::all);
+        return route(GET(Endpoints.USERS.uri()), userHandler::all)
+            .andRoute(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser);
     }
 }
