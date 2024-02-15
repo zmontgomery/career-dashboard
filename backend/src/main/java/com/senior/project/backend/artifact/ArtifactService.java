@@ -1,7 +1,10 @@
 package com.senior.project.backend.artifact;
 
 import com.senior.project.backend.domain.Artifact;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
+
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +19,10 @@ import reactor.core.publisher.Mono;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class ArtifactService {
@@ -42,6 +47,14 @@ public class ArtifactService {
         } else {
             this.uploadDirectory = this._uploadDirectory;
         }
+    }
+
+    public Mono<Artifact> findById(int id) {
+        Optional<Artifact> artifact =  artifactRepository.findById((long) id);
+        if (artifact.isPresent()) {
+            return Mono.just(artifact.get());
+        }
+        return Mono.empty();
     }
 
     public Mono<String> processFile(FilePart filePart) {
@@ -91,21 +104,34 @@ public class ArtifactService {
     public Mono<String> deleteFile(String internalName) {
         return SecurityUtil.getCurrentUser()
                 .flatMap((user) -> {
-                    try {
-                        LoggerFactory.getLogger(getClass()).info(internalName);
-                        Artifact a = artifactRepository.findByUniqueIdentifier(internalName);
-                        if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
-                            Path fileToDelete = Paths.get(a.getFileLocation());
-                            Files.deleteIfExists(fileToDelete); // Delete file
-                            artifactRepository.delete(a); // Delete artifact entity
-                            return Mono.just("File deleted successfully");
-                        } else {
-                            return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user"));
-                        }
-                    } catch (IOException e) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found"));
-                    }
+                    Artifact a = artifactRepository.findByUniqueIdentifier(internalName);
+                    return deleteFile(a, user);
                 });
+    }
+
+    public Mono<String> deleteFile(int id) {
+        return SecurityUtil.getCurrentUser()
+                .flatMap((user) -> {
+                    LoggerFactory.getLogger(getClass()).info("CHECKPOINT 2");
+                    Artifact a = artifactRepository.findById((long) id).get();
+                    return deleteFile(a, user);
+                });
+    }
+
+    private Mono<String> deleteFile(Artifact a, User user) {
+        try {
+            if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
+                Path fileToDelete = Paths.get(a.getFileLocation());
+                Files.deleteIfExists(fileToDelete); // Delete file
+                LoggerFactory.getLogger(getClass()).info("DELETING");
+                artifactRepository.delete(a); // Delete artifact entity
+                return Mono.just("File deleted successfully");
+            } else {
+                return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user"));
+            }
+        } catch (IOException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found"));
+        }
     }
 
     /**
@@ -125,5 +151,23 @@ public class ArtifactService {
                         return Mono.just(true);
                     }
                 });
+    }
+
+    /**
+     * Clears out the files if the database is reset
+     */
+    @PostConstruct
+    private void clearUploads() {
+        try {
+            if (artifactRepository.count() == 0) {
+                Path uploads = Paths.get(this.uploadDirectory);
+
+                Files.walk(uploads)
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

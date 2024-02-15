@@ -20,6 +20,7 @@ public class SubmissionRouter {
         ArtifactHandler artifactHandler    
     ) {
         return route(POST(Endpoints.SUBMISSION_ARTIFACT.uri()), artifactHandler::handleFileUpload)
-            .andRoute(DELETE(Endpoints.SUBMISSION_ARTIFACT_DELETE.uri()), artifactHandler::handleFileDelete);
+            .andRoute(DELETE(Endpoints.SUBMISSION_ARTIFACT_DELETE.uri()), artifactHandler::handleFileDelete)
+            .andRoute(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission);
     }
 }
