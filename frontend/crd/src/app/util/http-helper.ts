@@ -15,7 +15,10 @@ export enum Endpoints {
     USERS = 'users',
     CURRENT_USER = 'current-user',
     EDIT_TASK = 'admin/edit-task',
-    //DASHBOARD_TASKS = 'dashboard_tasks'
+    SUBMISSION = 'tasks/submission',
+
+    // Artifacts
+    ARTIFACT = 'artifact/',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {

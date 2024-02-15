@@ -22,8 +22,10 @@ public enum Endpoints {
 
     // Submissions
     SUBMISSION("tasks/submission", true),
-    SUBMISSION_ARTIFACT("tasks/submission-artifact", false),
-    SUBMISSION_ARTIFACT_DELETE("tasks/submission-artifact/{id}", false),
+
+    // Artifacts
+    ARTIFACT("artifact/", true),
+    ARTIFACT_ID("artifact/{id}", true),
 
     // Security
     SIGNIN("auth/signin", false),

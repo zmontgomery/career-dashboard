@@ -6,6 +6,7 @@ import com.senior.project.backend.security.SecurityUtil;
 
 import jakarta.annotation.PostConstruct;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,15 @@ public class ArtifactService {
         return Mono.empty();
     }
 
-    public Mono<String> processFile(FilePart filePart) {
+    public Mono<Artifact> findByUniqueFilename(String filename) {
+        Optional<Artifact> artifact =  artifactRepository.findByUniqueIdentifier(filename);
+        if (artifact.isPresent()) {
+            return Mono.just(artifact.get());
+        }
+        return Mono.empty();
+    }
+
+    public Mono<Integer> processFile(FilePart filePart) {
         return validateFileSize(filePart).flatMap(
             (result) -> {
                 String extension;
@@ -86,11 +95,13 @@ public class ArtifactService {
                 return filePart.transferTo(destination)
                         .then(SecurityUtil.getCurrentUser())
                         .map((user) -> {
+                            LoggerFactory.getLogger(getClass()).info("\n\n\n" + user.toString() + "\n\n\n");
                             upload.setUserId(user.getId());
                             return upload;
                         })
-                        .then(Mono.fromRunnable(() -> artifactRepository.save(upload)))
-                        .thenReturn(uniqueFilename);
+                        .flatMap((artifact) -> Mono.just(artifactRepository.save(artifact)))
+                        .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
+                        .map((artifact) -> artifact.getId());
             }
         );
     }
@@ -103,8 +114,11 @@ public class ArtifactService {
     public Mono<String> deleteFile(String internalName) {
         return SecurityUtil.getCurrentUser()
                 .flatMap((user) -> {
-                    Artifact a = artifactRepository.findByUniqueIdentifier(internalName);
-                    return deleteFile(a, user);
+                    Optional<Artifact> a = artifactRepository.findByUniqueIdentifier(internalName);
+                    if (a.isPresent()) {
+                        return deleteFile(a.get(), user);
+                    }
+                    return Mono.empty();
                 });
     }
 

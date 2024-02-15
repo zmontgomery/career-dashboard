@@ -32,7 +32,7 @@ public class ArtifactHandler {
                         // return plain text instead and handle it in angular instead.
                         // Want to explicitly return plain text so if this is ever fixed in a
                         // spring update it won't break
-                        .contentType(MediaType.TEXT_PLAIN)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
     }
 
@@ -40,7 +40,7 @@ public class ArtifactHandler {
      * Deletes the file with the given file name
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
-        return artifactService.deleteFile(request.pathVariable("id"))
+        return artifactService.deleteFile(Integer.parseInt(request.pathVariable("id")))
             .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
     }
 }

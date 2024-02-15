@@ -1,6 +1,8 @@
-import {Component, Inject} from '@angular/core';
+import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { catchError, of } from 'rxjs';
+import { SubmissionService } from '../submissions/submission.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -16,11 +18,14 @@ export class FileUploadComponent {
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
 
+  @Output() artifactIdEmitter: EventEmitter<number> = new EventEmitter();
+
 
   constructor(
     private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: { url:string },
     private dialogRef: MatDialogRef<FileUploadComponent>,
+    private readonly submissionService: SubmissionService
   ) {
     this.url = data.url;
   }
@@ -30,7 +35,6 @@ export class FileUploadComponent {
     const file: File = event.target.files[0];
 
     if (file) {
-
       if (file.size > this.maxSizeBytes) {
         alert(`File size exceeds the maximum allowed size (${this.maxSizeMegaBytes} MB).`)
         // Display an error message or perform other actions
@@ -49,19 +53,19 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      const upload$ = this.http.post(this.url, formData, { responseType: 'text' });
+      const upload$ = this.http.post<number>(this.url, formData);
 
       this.status = 'uploading';
 
-      upload$.subscribe({
-        next: () => {
-          this.status = 'success';
-          setTimeout(() => {this.dialogRef.close()}, 1000)
-        },
-        error: (error: any) => {
+      upload$.pipe(
+        catchError((error) => {
           this.status = 'fail';
-          return console.log(error);
-        },
+          console.log(error);
+          return of(0);
+        })
+      ).subscribe((artifactId) => {
+        this.status = 'success';
+        setTimeout(() => {this.dialogRef.close()}, 1000);
       });
     }
   }

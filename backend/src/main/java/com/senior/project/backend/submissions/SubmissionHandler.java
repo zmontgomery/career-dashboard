@@ -35,19 +35,24 @@ public class SubmissionHandler {
     public Mono<ServerResponse> handleSubmission(ServerRequest serverRequest) {
         final Submission newSubmission = new Submission();
         return serverRequest.bodyToMono(Submission.class)
-            .flatMap((submission) -> submissionService.addSubmission(submission))
+            .map((submission) -> { // Set artifact id to no file if no artifact is given
+                if (submission.getArtifactId() == 0) submission.setArtifactId(1);
+                return submission;
+            })
+            .flatMap((submission) -> submissionService.addSubmission(submission)) // Add submission
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to submit.")))
-            .map((submission) -> {
+            .map((submission) -> { // Copy submission
                 newSubmission.from(submission);
                 return submission;
             })
+            // Get previous submissions
             .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
-            .flatMap((submission) -> {
+            .flatMap((submission) -> { // Save artifact id and remove the previous artifact from the submission
                 int artifactId = submission.getArtifactId();
                 return submissionService.scrubArtifact(submission)
                     .map((s) -> artifactId);
             })
-            .flatMap((artifactId) -> artifactService.deleteFile(artifactId))
+            .flatMap((artifactId) -> artifactService.deleteFile(artifactId)) // Delete the old artifacts
             .collectList()
             .flatMap((s) -> ServerResponse.ok().bodyValue(newSubmission));
     }

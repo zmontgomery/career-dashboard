@@ -1,23 +1,38 @@
 export interface SubmissionJSON {
   id: number;
-  artifactID: number;
-  taskID: number;
-  studentID: number;
+  artifactId: number;
+  taskId: number;
+  studentId: string;
   submissionDate: Date;
 }
 
 export class Submission {
   constructor(json: SubmissionJSON) {
-    this.submissionID = json.id;
-    this.artifactID = json.artifactID;
-    this.taskID = json.taskID;
-    this.studentID = json.studentID;
+    this.submissionId = json.id;
+    this.artifactId = json.artifactId;
+    this.taskId = json.taskId;
+    this.studentId = json.studentId;
     this.submissionDate = new Date(json.submissionDate);
   }
 
-  submissionID: number;
-  artifactID: number;
-  taskID: number;
-  studentID: number;
+  static make(
+    artifactId: number,
+    taskId: number,
+    studentId: string,
+    submissionDate: Date
+  ): Submission {
+    return new Submission({
+      id: 0,
+      artifactId,
+      taskId,
+      studentId,
+      submissionDate
+    });
+  }
+
+  submissionId: number;
+  artifactId: number;
+  taskId: number;
+  studentId: string;
   submissionDate: Date;
 }

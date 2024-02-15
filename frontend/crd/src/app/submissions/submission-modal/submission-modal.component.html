@@ -1,0 +1,44 @@
+<div class="submission-modal-container">
+    <div class="submission-modal-header">
+        {{artifactId}}
+    </div>
+    <mat-dialog-content class="submission-modal-body">
+        <div class="file-upload-container">
+            <button mat-raised-button color="primary" class="select-button" (click)="fileInput.click()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{file == null ? "Select": "Change Selection"}}</span>
+                <input #fileInput type="file" accept="application/pdf,application/docx" (change)="onChange($event)" style="display:none;" />
+            </button>
+        
+            <div *ngIf="file">
+                <section class="file-info">
+                    File details:
+                    <ul>
+                    <li>Name: {{file.name}}</li>
+                    <li>Type: {{file.type}}</li>
+                    <li>Size: {{file.size}} bytes</li>
+                    </ul>
+                </section>
+            
+                <button mat-raised-button color="primary" (click)="onUpload()">
+                    <mat-icon>upload</mat-icon>
+                    Upload the file
+                </button>
+            
+                <section [ngSwitch]="status">
+                    <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
+                    <p *ngSwitchCase="'success'">✅ Done!</p>
+                    <p *ngSwitchCase="'fail'">❌ Error!</p>
+                    <p *ngSwitchDefault>😶 Waiting to upload...</p>
+                </section>
+            </div>
+        </div>
+
+        <!-- TODO make MAT text area -->
+        <textarea></textarea> 
+    </mat-dialog-content>
+    <div class="submission-modal-buttons">
+        <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+    </div>
+</div>

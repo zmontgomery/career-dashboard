@@ -1,5 +1,6 @@
-package com.senior.project.backend.submissions;
+package com.senior.project.backend.artifact;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -8,16 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.util.Endpoints;
 
 @Component
-public class SubmissionRouter {
+public class ArtifactRouter {
     @Bean
-    public RouterFunction<ServerResponse> submissionRoutes(
-        SubmissionHandler submissionHandler,
-        ArtifactHandler artifactHandler    
-    ) {
-        return route(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission);
+    public RouterFunction<ServerResponse> artifactRoutes(ArtifactHandler artifactHandler) {
+        return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleFileUpload)
+            .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete);
     }
 }
