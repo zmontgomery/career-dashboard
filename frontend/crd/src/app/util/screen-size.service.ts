@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {debounceTime, fromEvent, map, Observable} from "rxjs";
+import {debounceTime, fromEvent, map, Observable, startWith} from "rxjs";
 
 
 @Injectable({
@@ -32,6 +32,7 @@ export class ScreenSizeService {
     this.screenSize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(500))
       .pipe(map(grabScreenSize))
+      .pipe(startWith(grabScreenSize()))
 
     this.isMobile$ = this.screenSize$.pipe(map(checkScreenSize))
   }
