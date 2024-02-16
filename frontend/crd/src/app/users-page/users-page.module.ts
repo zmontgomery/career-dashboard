@@ -4,6 +4,7 @@ import { UsersPageComponent } from './users-page.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import {RouterLink} from "@angular/router";
     MatButtonModule,
     NgOptimizedImage,
     RouterLink,
+    MatPaginatorModule,
   ],
 })
 export class UsersPageModule { }
