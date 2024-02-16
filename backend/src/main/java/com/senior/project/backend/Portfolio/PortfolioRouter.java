@@ -18,14 +18,10 @@ public class PortfolioRouter {
 
     @Bean
     public RouterFunction<ServerResponse> portfolioRoutes(ArtifactHandler artifactHandler) {
-<<<<<<< HEAD
-        return route(POST(Endpoints.RESUME.uri()), artifactHandler::handleFileUpload);
-=======
         // TODO do something special here if coming from resume url
         return route(POST(Endpoints.RESUME.uri()), artifactHandler::handleFileUpload)
                 .andRoute(POST(Endpoints.PORTFOLIO.uri()), artifactHandler::handleFileUpload)
                 .andRoute(GET(Endpoints.ARTIFACT_LIST.uri()), artifactHandler::all)
                 .andRoute(GET(Endpoints.SINGLE_ARTIFACT.uri()), artifactHandler::servePdf);
->>>>>>> main
     }
 }

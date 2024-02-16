@@ -1,13 +1,8 @@
 package com.senior.project.backend.portfolio;
 
-<<<<<<< HEAD
 import com.senior.project.backend.artifact.ArtifactRepository;
 import com.senior.project.backend.artifact.ArtifactService;
-=======
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.Portfolio.ArtifactRepository;
-import com.senior.project.backend.Portfolio.ArtifactService;
->>>>>>> main
 import com.senior.project.backend.domain.Artifact;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +44,7 @@ public class ArtifactServiceTest {
 
     @Test
     public void testProcessFile() throws NoSuchFieldException, IllegalAccessException {
-        when(artifactRepository.save(any())).thenReturn(new Artifact());
+        when(artifactRepository.save(any())).thenReturn(Artifact.builder().id(1).build());
 
         FilePart filePart = mock(FilePart.class);
 
@@ -68,8 +63,8 @@ public class ArtifactServiceTest {
         uploadDirectoryField.setAccessible(true); // Make the private field accessible
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
-        Mono<String> result = artifactService.processFile(filePart);
-        StepVerifier.create(result).expectNext("File uploaded successfully").expectComplete().verify();
+        Mono<Integer> result = artifactService.processFile(filePart);
+        StepVerifier.create(result).expectNext(1).expectComplete().verify();
     }
 
     @Test

@@ -16,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.core.io.Resource;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -167,40 +170,7 @@ public class ArtifactService {
                 });
     }
 
-    private static final int NO_FILE_ID = 1;
-    private static final Artifact NO_FILE = Artifact.builder()
-        .name("No File")
-        .fileLocation("N/A")
-        .build();
-
-    /**
-     * Clears out the files if the database is reset and adds
-     * the default NO_FILE artifact
-     */
-    @PostConstruct
-    private void initArtifacts() {
-        try {
-            long artifactCount = artifactRepository.count();
-            if (artifactCount <= 1) {
-                Path uploads = Paths.get(this.uploadDirectory);
-
-                if (Files.exists(uploads)) {
-                    Files.walk(uploads)
-                        .map(Path::toFile)
-                        .forEach(File::delete);
-                } 
-                Files.createDirectories(uploads);
-                
-
-                if (artifactCount == 0) artifactRepository.saveAndFlush(NO_FILE);   
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
-
         Artifact artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
 
@@ -231,5 +201,37 @@ public class ArtifactService {
 
     public Flux<Artifact> all() {
         return Flux.fromIterable(artifactRepository.findAll());
+    }
+
+    private static final int NO_FILE_ID = 1;
+    private static final Artifact NO_FILE = Artifact.builder()
+        .name("No File")
+        .fileLocation("N/A")
+        .build();
+
+    /**
+     * Clears out the files if the database is reset and adds
+     * the default NO_FILE artifact
+     */
+    @PostConstruct
+    private void initArtifacts() {
+        try {
+            long artifactCount = artifactRepository.count();
+            if (artifactCount <= 1) {
+                Path uploads = Paths.get(this.uploadDirectory);
+
+                if (Files.exists(uploads)) {
+                    Files.walk(uploads)
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+                } 
+                Files.createDirectories(uploads);
+                
+
+                if (artifactCount == 0) artifactRepository.saveAndFlush(NO_FILE);   
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

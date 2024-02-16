@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
-    // additional query methods if needed
-
     @Query("SELECT a FROM Artifact a WHERE a.fileLocation LIKE %:internalName")
     public Optional<Artifact> findByUniqueIdentifier(@Param("internalName") String internalName);
 }

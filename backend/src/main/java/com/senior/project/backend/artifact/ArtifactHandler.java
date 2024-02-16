@@ -49,6 +49,7 @@ public class ArtifactHandler {
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
         return artifactService.deleteFile(Integer.parseInt(request.pathVariable("id")))
             .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
+    }
 
     public Mono<ServerResponse> servePdf(ServerRequest request) {
         String artifactID = request.pathVariable("artifactID");

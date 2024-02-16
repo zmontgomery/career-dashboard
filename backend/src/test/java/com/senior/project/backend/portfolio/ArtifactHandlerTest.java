@@ -1,12 +1,7 @@
 package com.senior.project.backend.portfolio;
 
-<<<<<<< HEAD
-=======
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.Portfolio.ArtifactHandler;
-import com.senior.project.backend.Portfolio.ArtifactService;
 import com.senior.project.backend.domain.Artifact;
->>>>>>> main
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
