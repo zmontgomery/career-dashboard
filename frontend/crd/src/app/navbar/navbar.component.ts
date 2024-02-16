@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import {AuthService} from "../security/auth.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {User} from "../security/domain/user";
 
 @Component({
   selector: 'app-navbar',
@@ -7,13 +10,40 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
-  constructor() {} 
+  constructor(
+    private readonly authService: AuthService
+  ) {
+    authService.user$.pipe(takeUntilDestroyed()).subscribe((user: User | null) => {
+      if (user?.admin) {
+        // Admin specific links in future?
+        this.navLinks = this.adminLinks;
+      }
+      else if (user?.faculty) {
+        this.navLinks = this.facultyLinks;
+      }
+      else {
+        this.navLinks = this.studentLinks
+      }
+    })
+  }
 
-  //TODO: add admin/faculty nav links
-  navLinks = [
+
+  navLinks: Array<{path: string, label: string}> = [];
+
+  studentLinks = [
     { path: "/dashboard", label: "Dashboard"},
     { path: "/portfolio", label: "Portfolio"},
     { path: "/profile", label: "Profile"},
     { path: "/milestones", label: "Milestones"}
+  ];
+
+  facultyLinks = [
+    { path: "/faculty/users", label: "Users"},
+  ];
+
+  adminLinks = [...this.facultyLinks,
+    { path: "/admin/milestones", label: "MileStones"},
+    { path: "/admin/tasks", label: "Tasks"},
   ]
+
 }
