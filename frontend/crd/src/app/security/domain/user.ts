@@ -16,6 +16,9 @@ export interface UserJSON {
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly studentDetails: StudentDetails;
+    readonly student: boolean;
+    readonly admin: boolean;
+    readonly faculty: boolean;
 }
 
 /**
@@ -33,6 +36,9 @@ export class User {
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly studentDetails: StudentDetails;
+    readonly student: boolean;
+    readonly admin: boolean;
+    readonly faculty: boolean;
 
     constructor(json: UserJSON) {
         this.id = json.id;
@@ -46,6 +52,9 @@ export class User {
         this.canEmail = json.canEmail;
         this.canText = json.canText;
         this.studentDetails = json.studentDetails;
+        this.student = json.student;
+        this.admin = json.admin;
+        this.faculty = json.faculty;
     }
 
     static makeEmpty() {
@@ -60,7 +69,10 @@ export class User {
             lastLogin: 0,
             canEmail: false,
             canText: false,
-            studentDetails: new StudentDetails(StudentDetails.makeEmpty())
+            studentDetails: new StudentDetails(StudentDetails.makeEmpty()),
+            student: true,
+            admin: false,
+            faculty: false,
         });
     }
 }
