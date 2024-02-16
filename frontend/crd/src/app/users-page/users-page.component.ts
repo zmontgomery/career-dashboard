@@ -25,7 +25,7 @@ export class UsersPageComponent implements OnInit {
   dataSource: Array<User>  = [];
 
   currentPage: number = 0;
-  pageSize: number = 25;
+  pageSize: number = 10;
   totalItems: number = 0;
   searchTerm: string = '';
   isMobile$: Observable<boolean>;
