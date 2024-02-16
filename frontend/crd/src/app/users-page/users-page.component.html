@@ -1,11 +1,13 @@
-<h1>Users</h1>
+<div class="users-page-container">
 
-<div class="mat-elevation-z8">
+  <h1>Users</h1>
 
-  <!-- Search Bar -->
-  <mat-form-field appearance="fill">
-    <input matInput placeholder="Search" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
-  </mat-form-field>
+  <div class="search-bar-container">
+    <!-- Search Bar -->
+    <mat-form-field appearance="fill" class="search-bar">
+      <input matInput placeholder="Search" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+    </mat-form-field>
+  </div>
 
   <table mat-table [dataSource]="dataSource">
 
@@ -44,8 +46,8 @@
     </ng-container>
 
     <!-- Assign column definition to table rows -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="(isMobile$ | async) ? mobileColumns: desktopColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: (isMobile$ | async) ? mobileColumns: desktopColumns;"></tr>
   </table>
 
   <!-- Pagination -->

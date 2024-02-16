@@ -3,6 +3,10 @@ import {HttpClient} from "@angular/common/http";
 import {User, UserJSON} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UserSearchResultsJSON} from "./userSearchResult";
+import {PageEvent} from "@angular/material/paginator";
+import {Observable} from "rxjs";
+import {ScreenSizeService} from "../util/screen-size.service";
+
 
 @Component({
   selector: 'app-users-page',
@@ -14,16 +18,24 @@ export class UsersPageComponent implements OnInit {
   // placeholder profile pic site
   profilePicURLBase = 'https://i.pravatar.cc/';
 
-  displayedColumns: string[] = ['picture', 'name', 'email', 'buttons'];
+  mobileColumns: string[] = ['picture', 'name', 'buttons'];
+  desktopColumns: string[] = ['picture', 'name', 'email', 'buttons'];
+  // displayedColumns: string[] = this.mobileColumns;
 
   dataSource: Array<User>  = [];
 
   currentPage: number = 0;
   pageSize: number = 5;
-  totalItems: number = 12;
+  totalItems: number = 0;
   searchTerm: string = '';
+  isMobile$: Observable<boolean>;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private screenSizeSvc: ScreenSizeService,
+  ) {
+    this.isMobile$ = this.screenSizeSvc.isMobile$;
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -52,8 +64,9 @@ export class UsersPageComponent implements OnInit {
   }
 
   // Method to handle page change
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex; // pageIndex starts from 0
+    this.pageSize = event.pageSize;
     this.loadData();
   }
 
