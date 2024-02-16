@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {User, UserJSON} from "../security/domain/user";
+import {User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UserSearchResultsJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
@@ -25,7 +25,7 @@ export class UsersPageComponent implements OnInit {
   dataSource: Array<User>  = [];
 
   currentPage: number = 0;
-  pageSize: number = 5;
+  pageSize: number = 25;
   totalItems: number = 0;
   searchTerm: string = '';
   isMobile$: Observable<boolean>;
@@ -43,24 +43,18 @@ export class UsersPageComponent implements OnInit {
 
   // Method to fetch data from API
   loadData(): void {
-    const apiUrl = constructBackendRequest(Endpoints.USERS,
-      {key:'page', value: this.currentPage},
+    const apiUrl = constructBackendRequest(Endpoints.USERS_SEARCH,
+      {key:'pageOffset', value: this.currentPage},
       {key:'pageSize', value: this.pageSize},
-      {key: 'search', value: this.searchTerm}
+      {key: 'searchTerm', value: this.searchTerm}
       );
-    // this.http.get<UserSearchResultsJSON>(apiUrl).subscribe((searchResults: UserSearchResultsJSON) => {
-    //   // this.dataSource = searchResults.users.map(it => new User(it))
-    //   // this.totalItems = searchResults.totalResults;
-    // });
-    this.http.get<UserJSON[]>(apiUrl).subscribe((searchResults: UserJSON[]) => {
-      const start = (this.currentPage) * this.pageSize
-      const end = start + this.pageSize
-      this.dataSource = searchResults.slice(start, end).map(user => new User(
-        // just get "random" number
-        {...user, id: '250' + searchResults.findIndex(it => it.id == user.id)}
+    this.http.get<UserSearchResultsJSON>(apiUrl).subscribe((searchResults: UserSearchResultsJSON) => {
+      this.dataSource = searchResults.users.map(it => new User(
+        // change id to "random" number for now to support random profile pics
+        {...it, id: '250' + it.email.match(/\d+/g)}
       ));
-      this.totalItems = searchResults.length;
-      });
+      this.totalItems = searchResults.totalResults;
+    });
   }
 
   // Method to handle page change

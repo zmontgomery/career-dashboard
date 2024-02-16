@@ -20,6 +20,7 @@ public enum Endpoints {
     RESUME("portfolio/resume", true),
     USERS("users", true),
     CURRENT_USER("current-user", true),
+    SEARCH_USERS("users/search", true, true, true),
     EDIT_TASK("admin/edit-task", true, false, true),
     EDIT_MILESTONE("admin/edit-milestone", true, false, true),
     PORTFOLIO("portfolio", true),
@@ -39,18 +40,18 @@ public enum Endpoints {
     TEST_NEEDS_AUTH("test/yes", true),
     TEST_NO_AUTH("tests/no", false);
 
-    private String value;
-    private boolean needsAuthentication;
-    private boolean isAdmin;
+    private final String value;
+    private final boolean needsAuthentication;
+    private final boolean isAdmin;
     private boolean isFaculty;
 
-    private Endpoints(String value, boolean needsAuthentication) {
+    Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
         this.isAdmin = false;
     }
 
-    private Endpoints(String value, boolean needsAuthentication, boolean isFaculty, boolean isAdmin) {
+    Endpoints(String value, boolean needsAuthentication, boolean isFaculty, boolean isAdmin) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
         this.isFaculty = isFaculty;
@@ -101,7 +102,7 @@ public enum Endpoints {
     public static String[] getOpenRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
             .filter(r -> !r.getNeedsAuthentication())
-            .map((r) -> r.uri())
+            .map(Endpoints::uri)
             .toList();
 
         String[] routes = new String[list.size()];
@@ -117,8 +118,8 @@ public enum Endpoints {
      */
     public static String[] getAdminRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> r.isAdmin())
-            .map((r) -> r.uri())
+            .filter(Endpoints::isAdmin)
+            .map(Endpoints::uri)
             .toList();
 
         String[] routes = new String[list.size()];
@@ -132,8 +133,8 @@ public enum Endpoints {
 
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-        .filter(r -> r.isFaculty())
-        .map((r) -> r.uri())
+        .filter(Endpoints::isFaculty)
+        .map(Endpoints::uri)
         .toList();
 
         String[] routes = new String[list.size()];
