@@ -20,8 +20,8 @@ public enum Endpoints {
     RESUME("portfolio/resume", true),
     USERS("users", true),
     CURRENT_USER("current-user", true),
-    EDIT_TASK("admin/edit-task", true, false, true),
-    EDIT_MILESTONE("admin/edit-milestone", true, false, true),
+    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
+    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
     PORTFOLIO("portfolio", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
@@ -41,20 +41,18 @@ public enum Endpoints {
 
     private String value;
     private boolean needsAuthentication;
-    private boolean isAdmin;
-    private boolean isFaculty;
+    private Role role;
 
     private Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
-        this.isAdmin = false;
+        this.role = Role.STUDENT;
     }
 
-    private Endpoints(String value, boolean needsAuthentication, boolean isFaculty, boolean isAdmin) {
+    private Endpoints(String value, boolean needsAuthentication, Role role) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
-        this.isFaculty = isFaculty;
-        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
     //
@@ -69,12 +67,8 @@ public enum Endpoints {
         return needsAuthentication;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public boolean isFaculty() {
-        return isFaculty;
+    public Role getRole() {
+        return role;
     }
 
     //
@@ -117,7 +111,7 @@ public enum Endpoints {
      */
     public static String[] getAdminRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> r.isAdmin())
+            .filter(r -> r.getRole() == Role.ADMIN)
             .map((r) -> r.uri())
             .toList();
 
@@ -132,7 +126,7 @@ public enum Endpoints {
 
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-        .filter(r -> r.isFaculty())
+        .filter(r -> r.getRole() == Role.ADMIN || r.getRole() == Role.FACULTY)
         .map((r) -> r.uri())
         .toList();
 
@@ -143,5 +137,11 @@ public enum Endpoints {
         }
 
         return routes;
+    }
+
+    public enum Role {
+        STUDENT,
+        ADMIN,
+        FACULTY
     }
 }
