@@ -5,7 +5,7 @@ import {ScreenSizeService} from "../util/screen-size.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {of} from "rxjs";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UserSearchResults} from "./userSearchResult";
+import {UsersSearchResponse} from "./userSearchResult";
 import {User} from "../security/domain/user";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {FormsModule} from "@angular/forms";
@@ -24,7 +24,7 @@ describe('UsersPageComponent', () => {
     {isMobile$: of(false)});
 
   const users: Array<User> = new Array<User>(10).fill(User.makeEmpty())
-  const results: UserSearchResults = {
+  const results: UsersSearchResponse = {
     totalResults: 100,
     users: users
   }
@@ -58,7 +58,7 @@ describe('UsersPageComponent', () => {
   });
 
   function assertSearchRequest(pageOffset: number, pageSize: number, searchTerm: string,
-                               resultsProvided: UserSearchResults = results,
+                               resultsProvided: UsersSearchResponse = results,
                                expectedDataSource: Array<User> = users
                                ) {
     const url = constructBackendRequest(Endpoints.USERS_SEARCH,

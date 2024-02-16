@@ -1,15 +1,15 @@
 import {User, UserJSON} from "../security/domain/user";
 
-export interface UserSearchResultsJSON {
+export interface UsersSearchResponseJSON {
   readonly totalResults: number;
   readonly users: Array<UserJSON>;
 }
 
-export class UserSearchResults {
+export class UsersSearchResponse {
   readonly totalResults: number;
   readonly users: Array<User>;
 
-  constructor(json: UserSearchResultsJSON) {
+  constructor(json: UsersSearchResponseJSON) {
     this.totalResults = json.totalResults;
     this.users = json.users.map(it => new User(it));
   }

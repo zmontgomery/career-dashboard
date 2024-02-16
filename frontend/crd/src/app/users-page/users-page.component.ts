@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UserSearchResultsJSON} from "./userSearchResult";
+import {UsersSearchResponseJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
 import {Observable} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
@@ -48,7 +48,7 @@ export class UsersPageComponent implements OnInit {
       {key:'pageSize', value: this.pageSize},
       {key: 'searchTerm', value: this.searchTerm}
       );
-    this.http.get<UserSearchResultsJSON>(apiUrl).subscribe((searchResults: UserSearchResultsJSON) => {
+    this.http.get<UsersSearchResponseJSON>(apiUrl).subscribe((searchResults: UsersSearchResponseJSON) => {
       this.dataSource = searchResults.users.map(it => new User(
         // change id to "random" number for now to support random profile pics
         {...it, id: '250' + it.email.match(/\d+/g)}
