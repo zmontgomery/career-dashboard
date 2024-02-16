@@ -1,0 +1,36 @@
+<div class="login-page">  
+    <div class="login-modal">
+        <mat-card class="login-card">
+            <div class="card-header">
+                Login
+            </div>
+            <div class="card-body">
+                <button class="login-microsoft-button" mat-raised-button color="primary" (click)="ms()">Login with Microsoft</button>
+                <ng-container *ngIf="smallButton;else large">
+                    <asl-google-signin-button 
+                        class="login-google-button"
+                        type="standard"
+                        size="large"
+                        shape="rectangular"
+                        text="signin_with"
+                        theme="outline"
+                        width="255"
+                        logo_alignment="left"
+                    ></asl-google-signin-button>
+                </ng-container>
+                <ng-template #large>
+                    <asl-google-signin-button 
+                        class="login-google-button"
+                        type="standard"
+                        size="large"
+                        shape="rectangular"
+                        text="signin_with"
+                        theme="outline"
+                        width="280"
+                        logo_alignment="left"
+                    ></asl-google-signin-button>
+                </ng-template>
+            </div>
+        </mat-card>
+    </div>  
+</div>
