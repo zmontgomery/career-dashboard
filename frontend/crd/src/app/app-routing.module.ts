@@ -21,6 +21,9 @@ const studentRoutes: Routes = [
 
 const facultyRoutes: Routes = [
   {path: 'faculty/users', component: UsersPageComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/portfolio/:id', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/profile/:id', component: ProfileComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/milestones/:id', component: MilestonesPageComponent, canActivate: [authGuard, facultyRoleGuard]},
 ]
 
 const adminRoutes: Routes = [
