@@ -60,7 +60,7 @@ export class User {
             lastLogin: 0,
             canEmail: false,
             canText: false,
-            studentDetails: new StudentDetails({id: '', universityId: '', gpa: 0.000, description: '', graduationYear: new Date(), startDate: new Date(), yearLevel: YearLevel.Freshman})
+            studentDetails: new StudentDetails(StudentDetails.makeEmpty())
         });
     }
 }

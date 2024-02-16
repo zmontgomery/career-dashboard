@@ -43,14 +43,14 @@
         </div>
         <div class="card-body-section-body">
           <!-- PAR HYD DEV NOTE: Needs to loop though all uploaded skills and store them in a list -->
-          <!-- <ul *ngFor="let skill of users.studentDetails.skills">
+          <ul *ngFor="let skill of user.studentDetails.skills">
               <li>{{skill.name}}</li>
-          </ul> -->
-          <ul>
+          </ul>
+          <!-- <ul>
             <li>Skill 1</li>
             <li>Skill 2</li>
             <li>Skill 3</li>
-          </ul>
+          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
@@ -58,14 +58,19 @@
           Projects
         </div>
         <div class="card-body-section-body">
-          <!-- <div *ngFor="let skill of users.studentDetails.projects">
-
-          </div> -->
-          <ul>
+          <div *ngFor="let project of user.studentDetails.projects">
+            <p>{{project.name}}</p>
+            <ul>
+              <li>{{project.description}}</li>
+              <li>{{project.startDate}}</li>
+              <li>{{project.endDate}}</li>
+            </ul>
+          </div>
+          <!-- <ul>
             <li>Project 1</li>
             <li>Project 2</li>
             <li>Project 3</li>
-          </ul>
+          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
@@ -73,11 +78,20 @@
           Jobs
         </div>
         <div class="card-body-section-body">
-          <ul>
+          <div *ngFor="let job of user.studentDetails.jobs">
+            <p>{{job.name}}</p>
+            <ul>
+              <li>{{job.location}}</li>
+              <li>{{job.description}}</li>
+              <li>{{job.startDate}}</li>
+              <li>{{job.endDate}}</li>
+            </ul>
+          </div>
+          <!-- <ul>
             <li>Jobs 1</li>
             <li>Jobs 2</li>
             <li>Jobs 3</li>
-          </ul>
+          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
