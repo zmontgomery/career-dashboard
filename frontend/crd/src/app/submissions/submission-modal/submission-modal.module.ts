@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FileUploadModule } from 'src/app/file-upload/file-upload.module';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -18,6 +19,7 @@ import { FileUploadModule } from 'src/app/file-upload/file-upload.module';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
     FileUploadModule,
     MatDialogModule,
   ],
