@@ -18,6 +18,7 @@ export enum Endpoints {
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
     ARTIFACTS = `${PORTFOLIO}/artifacts`,
+    USERS_SEARCH = 'users/search'
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {

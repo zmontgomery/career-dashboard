@@ -1,6 +1,12 @@
 <h1>Users</h1>
 
 <div class="mat-elevation-z8">
+
+  <!-- Search Bar -->
+  <mat-form-field appearance="fill">
+    <input matInput placeholder="Search" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+  </mat-form-field>
+
   <table mat-table [dataSource]="dataSource">
 
     <!-- Picture Column -->
@@ -47,6 +53,7 @@
     [length]="totalItems"
     [pageSize]="pageSize"
     [pageSizeOptions]="[5, 10, 25, 100]"
+    [pageIndex]="currentPage"
     (page)="onPageChange($event)">
   </mat-paginator>
 </div>
