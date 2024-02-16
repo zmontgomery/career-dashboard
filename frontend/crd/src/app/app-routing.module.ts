@@ -10,6 +10,7 @@ import {adminRoleGuard, authGuard, facultyRoleGuard, noAuthGuard} from './securi
 import { MilestoneEditComponent } from './admin/milestone-edit/milestone-edit.component';
 import { MilestoneMainPageComponent } from './admin/milestone-main-page/milestone-main-page.component';
 import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.component';
+import {UsersPageComponent} from "./users-page/users-page.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
@@ -17,7 +18,7 @@ const routes: Routes = [
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
-  {path: 'faculty/users', component: MilestoneMainPageComponent, canActivate: [authGuard, facultyRoleGuard]}, // TODO student search page
+  {path: 'faculty/users', component: UsersPageComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'admin', redirectTo: '/admin/milestones', pathMatch: 'full'},  //TODO: admin home page
   {path: 'admin/milestones', component: MilestoneMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: 'admin/milestone-edit/:name', component: MilestoneEditComponent, canActivate: [authGuard, adminRoleGuard]},
