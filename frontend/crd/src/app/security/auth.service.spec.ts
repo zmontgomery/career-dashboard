@@ -10,7 +10,7 @@ import { EventType } from '@azure/msal-browser';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
 import { LangUtils } from '../util/lang-utils';
 import { UserJSON } from './domain/user';
-import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -30,7 +30,10 @@ describe('AuthService', () => {
     firstName: 'test',
     lastName: 'test',
     canEmail: false,
-    canText: false
+    canText: false,
+    admin: true,
+    faculty: true,
+    student: true
   }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
