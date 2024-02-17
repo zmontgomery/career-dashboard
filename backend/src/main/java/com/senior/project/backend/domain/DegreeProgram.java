@@ -19,8 +19,8 @@ public class DegreeProgram {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID studentId;
+    private UUID id;
 
-    private String degreeName;
+    private String name;
     private boolean isMinor;
 }

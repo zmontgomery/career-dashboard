@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
@@ -28,6 +30,7 @@ import java.util.List;
 @Generated
 public class StudentDetails {
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
 	private int universityId;
@@ -43,16 +46,16 @@ public class StudentDetails {
 	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date startDate;
 
-	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
 	private List<Project> projects;
 
-	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
 	private List<Job> jobs;
-	// private DegreeProgram[] minors;
+	private DegreeProgram[] minors;
 	// private DegreeProgram[] majors;
 	// private Club[] clubs;
 
-	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
 	private List<Skill> skills;
 	// private Skill[] languages;
 }

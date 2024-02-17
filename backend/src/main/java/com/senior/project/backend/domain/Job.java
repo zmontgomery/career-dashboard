@@ -40,5 +40,5 @@ public class Job {
 
     @ManyToOne
     @JoinColumn(name="student_details_id")
-    private StudentDetails studentDetails;
+    private UUID studentDetailsID;
 }

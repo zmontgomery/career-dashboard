@@ -26,7 +26,7 @@ public class UserTest extends AbstractDomainObjectTest<User> {
     private static final String firstName = "Test";
     private static final String lastName = "Testerson";
     private static final boolean canEmail = false;
-    private static final boolean canTest = false;
+    private static final boolean canText = false;
     private static final StudentDetails studentDetails = StudentDetails.builder().build();
     private static final boolean isAdmin = true;
     private static final boolean isStudent = true;
@@ -44,7 +44,7 @@ public class UserTest extends AbstractDomainObjectTest<User> {
                 firstName,
                 lastName,
                 canEmail,
-                canTest,
+                canText,
                 studentDetails,
                 isStudent,
                 isAdmin,
@@ -60,7 +60,7 @@ public class UserTest extends AbstractDomainObjectTest<User> {
             new Pair<>("firstName", firstName),
             new Pair<>("lastName", lastName),
             new Pair<>("canEmail", canEmail),
-            new Pair<>("canText", canTest),
+            new Pair<>("canText", canText),
             new Pair<>("isStudent", isStudent),
             new Pair<>("isFaculty", isFaculty),
             new Pair<>("isAdmin", isAdmin),

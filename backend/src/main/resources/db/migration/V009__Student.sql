@@ -41,7 +41,7 @@ CREATE TABLE skill(
 CREATE TABLE degree_program(
     id BINARY(16) PRIMARY KEY,
     student_details_id BINARY(16),
-    program_name VARCHAR(256),
+    name VARCHAR(256),
     is_minor BOOLEAN,
     FOREIGN KEY (student_details_id) REFERENCES student_details (id)
 );

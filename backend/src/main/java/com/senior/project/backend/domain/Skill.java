@@ -28,5 +28,5 @@ public class Skill {
 
     @ManyToOne
     @JoinColumn(name="student_details_id")
-    private StudentDetails studentDetails;
+    private UUID studentDetailsID;
 }

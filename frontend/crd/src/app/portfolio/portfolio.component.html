@@ -30,8 +30,16 @@
         </div>
         <div class="card-body-section-body">
           <ul>
-            <li>Majors</li>
-            <li>Minors</li>
+            <li>Majors: 
+              <div *ngFor="let degreeProgram of user.studentDetails.degreePrograms">
+                <li *ngIf="degreeProgram.isMinor == false">{{degreeProgram.name}}</li>
+              </div>
+            </li>
+            <li>Minors:
+              <div *ngFor="let degreeProgram of user.studentDetails.degreePrograms">
+                <li *ngIf="degreeProgram.isMinor == true">{{degreeProgram.name}}</li>
+              </div>
+            </li>
             <li>School Year: {{user.studentDetails.yearLevel}}</li>
             <li>GPA: {{user.studentDetails.gpa}}</li>
           </ul>
