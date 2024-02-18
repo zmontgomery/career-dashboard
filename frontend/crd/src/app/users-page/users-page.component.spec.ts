@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import { UsersPageComponent } from './users-page.component';
 import {ScreenSizeService} from "../util/screen-size.service";
@@ -65,6 +65,7 @@ describe('UsersPageComponent', () => {
       {key:'pageOffset', value:pageOffset},
       {key:'pageSize', value:pageSize},
       {key:'searchTerm', value:searchTerm})
+    tick(1000)
     const request = httpMock.expectOne(url);
     expect(request.request.method).toEqual('GET');
     request.flush(resultsProvided);
