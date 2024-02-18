@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
@@ -6,7 +6,6 @@ import {UsersSearchResponseJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
 import {debounceTime, Observable, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
-
 
 @Component({
   selector: 'app-users-page',
@@ -39,6 +38,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.pageSize = Number(localStorage.getItem('pageSize') ?? 10);
     this.loadData();
     this.searching$.pipe(
       debounceTime(500), // Debounce for 1 second
@@ -73,6 +73,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex; // pageIndex starts from 0
     this.pageSize = event.pageSize;
+    localStorage.setItem('pageSize', this.pageSize.toString())
     this.loadData();
   }
 
