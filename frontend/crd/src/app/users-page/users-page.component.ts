@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UsersSearchResponseJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
-import {Observable} from "rxjs";
+import {debounceTime, Observable, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
 
 
@@ -13,7 +13,7 @@ import {ScreenSizeService} from "../util/screen-size.service";
   templateUrl: './users-page.component.html',
   styleUrls: ['./users-page.component.less']
 })
-export class UsersPageComponent implements OnInit {
+export class UsersPageComponent implements OnInit, OnDestroy {
 
   // placeholder profile pic site
   profilePicURLBase = 'https://i.pravatar.cc/';
@@ -28,6 +28,7 @@ export class UsersPageComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   searchTerm: string = '';
+  private searching$ = new Subject<void>();
   isMobile$: Observable<boolean>;
 
   constructor(
@@ -39,6 +40,17 @@ export class UsersPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.searching$.pipe(
+      debounceTime(500), // Debounce for 1 second
+    )
+      .subscribe(() => {
+          this.currentPage = 0; // Reset to first page when searching
+          this.loadData();
+      });
+  }
+
+  ngOnDestroy() {
+    this.searching$.complete()
   }
 
   // Method to fetch data from API
@@ -66,8 +78,7 @@ export class UsersPageComponent implements OnInit {
 
   // Method to handle search
   onSearch(): void {
-    this.currentPage = 0; // Reset to first page when searching
-    this.loadData();
+    this.searching$.next();
   }
 }
 

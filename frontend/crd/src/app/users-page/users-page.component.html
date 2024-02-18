@@ -7,7 +7,7 @@
 
       <!-- Search Bar -->
       <mat-form-field appearance="fill" class="search-bar">
-        <input matInput placeholder="Search" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+        <input matInput placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
       </mat-form-field>
     </div>
   </div>
