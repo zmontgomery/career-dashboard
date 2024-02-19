@@ -17,6 +17,7 @@ public enum Endpoints {
     DASHBOARD_EVENTS("dashboard_events", true),
     MILSTONES("milestones", true),
     TASKS("tasks", true),
+    TASK_BY_ID("tasks/{id}", true),
     RESUME("portfolio/resume", true),
     USERS("users", true),
     CURRENT_USER("current-user", true),
@@ -31,10 +32,12 @@ public enum Endpoints {
 
     // Submissions
     SUBMISSION("tasks/submission", true),
+    LATEST_SUBMISSION("tasks/submission/{taskId}", true),
 
     // Artifacts
     ARTIFACT("artifact/", true),
     ARTIFACT_ID("artifact/{id}", true),
+    ARTIFACT_FILE("artifact/file/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),

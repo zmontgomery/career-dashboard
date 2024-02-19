@@ -5,11 +5,8 @@ import com.senior.project.backend.domain.Task;
 
 import java.util.Map;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -66,5 +63,9 @@ public class TaskService {
         return Mono.just(taskRepository.save(existingTask));
     }
 
+    public Mono<Task> findById(int id) {
+        Task task = taskRepository.findById((long) id);
+        return task == null ? Mono.empty() : Mono.just(task);
+    }
     
 }

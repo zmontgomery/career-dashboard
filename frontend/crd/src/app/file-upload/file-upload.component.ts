@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Inject, Output} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Component, EventEmitter, Inject, Output, Input} from '@angular/core';
 import { catchError, of } from 'rxjs';
-import { SubmissionService } from '../submissions/submission.service';
+import { LangUtils } from '../util/lang-utils';
+import { ArtifactService } from './artifact.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -12,8 +11,9 @@ import { SubmissionService } from '../submissions/submission.service';
 export class FileUploadComponent {
   status: "initial" | "uploading" | "success" | "fail" = "initial"; // Variable to store file status
   file: File | null = null; // Variable to store file
+  artifactId: number = 1;
 
-  url: string = ""
+  @Input() url: string = "";
 
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
@@ -22,13 +22,8 @@ export class FileUploadComponent {
 
 
   constructor(
-    private http: HttpClient,
-    @Inject(MAT_DIALOG_DATA) public data: { url:string },
-    private dialogRef: MatDialogRef<FileUploadComponent>,
-    private readonly submissionService: SubmissionService
-  ) {
-    this.url = data.url;
-  }
+    private readonly artifactService: ArtifactService
+  ) { }
 
   // On file Select
   onChange(event: any) {
@@ -47,13 +42,21 @@ export class FileUploadComponent {
     }
   }
 
+  onCancel() {
+    this.file = null;
+    if (this.status === 'success' && this.artifactId !== 1) {
+      this.artifactService.deleteArtifact(this.artifactId).subscribe();
+    }
+    this.artifactIdEmitter.next(0);
+  }
+
   onUpload() {
     if (this.file) {
       const formData = new FormData();
 
       formData.append('file', this.file, this.file.name);
 
-      const upload$ = this.http.post<number>(this.url, formData);
+      const upload$ = this.artifactService.uploadArtifact(this.url, formData);
 
       this.status = 'uploading';
 
@@ -64,14 +67,17 @@ export class FileUploadComponent {
           return of(0);
         })
       ).subscribe((artifactId) => {
+        this.artifactId = artifactId;
+        this.artifactIdEmitter.next(artifactId);
         this.status = 'success';
-        setTimeout(() => {this.dialogRef.close()}, 1000);
       });
     }
   }
 
-  onClose(): void {
-    // Close the dialog when the close button is clicked
-    this.dialogRef.close();
+  formatBytes(): string {
+    if (!LangUtils.exists(this.file)) return '0 bytes';
+    if (this.file!.size > 1000000) return `${(this.file!.size / 1000000).toFixed(2)} mb`
+    else if (this.file!.size > 1000) return `${(this.file!.size / 1000).toFixed(2)} kb`
+    else return `${this.file!.size} bytes`;
   }
 }

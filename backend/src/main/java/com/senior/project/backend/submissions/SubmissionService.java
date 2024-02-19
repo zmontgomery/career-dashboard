@@ -30,6 +30,11 @@ public class SubmissionService {
         return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
     }
 
+    public Flux<Submission> getSubmissions(UUID userId, int taskId) {
+        Date date = new Date(System.currentTimeMillis() + BUFFER_TIME);
+        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
+    }
+
     public Mono<Submission> scrubArtifact(Submission submission) {
         submission.setArtifactId(1);
         return addSubmission(submission);

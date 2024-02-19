@@ -1,6 +1,7 @@
 package com.senior.project.backend.artifact;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -16,6 +17,7 @@ public class ArtifactRouter {
     @Bean
     public RouterFunction<ServerResponse> artifactRoutes(ArtifactHandler artifactHandler) {
         return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleFileUpload)
-            .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete);
+            .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete)
+            .andRoute(GET(Endpoints.ARTIFACT_FILE.uri()), artifactHandler::servePdf);
     }
 }

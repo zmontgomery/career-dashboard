@@ -18,6 +18,7 @@ export enum Endpoints {
 
     // Artifacts
     ARTIFACT = 'artifact/',
+    ARTIFACT_FILE = 'artifact/file',
     
     //DASHBOARD_TASKS = 'dashboard_tasks'
     PORTFOLIO = 'portfolio',

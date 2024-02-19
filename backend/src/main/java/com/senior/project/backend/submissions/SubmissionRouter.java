@@ -1,5 +1,6 @@
 package com.senior.project.backend.submissions;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -18,6 +19,7 @@ public class SubmissionRouter {
         SubmissionHandler submissionHandler,
         ArtifactHandler artifactHandler    
     ) {
-        return route(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission);
+        return route(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission)
+            .andRoute(GET(Endpoints.LATEST_SUBMISSION.uri()), submissionHandler::getLatestSubmission);
     }
 }

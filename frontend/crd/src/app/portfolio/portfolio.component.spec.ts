@@ -8,7 +8,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {FileUploadComponent} from "../file-upload/file-upload.component";
-import {ArtifactService} from "./artifact.service";
+import {ArtifactService} from "../file-upload/artifact.service";
 import {of} from "rxjs";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {Artifact} from "../../domain/Artifact";

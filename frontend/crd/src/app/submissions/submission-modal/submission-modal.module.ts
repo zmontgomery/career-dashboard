@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FileUploadModule } from 'src/app/file-upload/file-upload.module';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -22,6 +23,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     FileUploadModule,
     MatDialogModule,
+    FormsModule
   ],
   exports: [
     SubmissionModalComponent

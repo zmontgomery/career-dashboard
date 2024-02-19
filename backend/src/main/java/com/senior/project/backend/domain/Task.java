@@ -19,6 +19,8 @@ public class Task {
     private YearLevel yearLevel;
     private String taskType;
     private String artifactName;
+    private boolean needsArtifact;
+    private String submissionInstructions;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()

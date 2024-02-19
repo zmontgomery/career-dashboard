@@ -1,0 +1,31 @@
+ALTER TABLE task
+ADD COLUMN needs_artifact BOOLEAN;
+
+ALTER TABLE task
+ADD COLUMN submission_instructions VARCHAR(1024);
+
+UPDATE task
+SET needs_artifact = 0;
+
+UPDATE task
+SET needs_artifact = 1
+WHERE id = 6 OR id = 12;
+
+UPDATE task
+SET submission_instructions = "Leave a comment stating you attended the meeting";
+
+UPDATE task
+SET submission_instructions = "Upload a pdf of your resume"
+WHERE id = 6;
+
+UPDATE task
+SET submission_instructions = "Create a linkedin profile and paste the URL in the comments section"
+WHERE id = 7;
+
+UPDATE task
+SET submission_instructions = "Upload a pdf of your draft cover letter"
+WHERE id = 12;
+
+UPDATE task
+SET submission_instructions = "Apply for graduation and include the link in the comments section"
+WHERE id = 21;
