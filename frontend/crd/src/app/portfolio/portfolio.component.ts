@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {FileUploadComponent} from "../file-upload/file-upload.component";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {ArtifactService} from "../file-upload/artifact.service";
-import {HttpClient} from "@angular/common/http";
 import { TaskService } from '../util/task.service';
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
 import { SubmissionService } from '../submissions/submission.service';
@@ -41,7 +38,6 @@ export class PortfolioComponent {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       this.dialog.open(SubmissionModalComponent, {
         data: {
-          url: constructBackendRequest(Endpoints.ARTIFACT),
           task: task
         }
       })

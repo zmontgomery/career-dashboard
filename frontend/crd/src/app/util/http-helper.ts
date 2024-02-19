@@ -19,11 +19,6 @@ export enum Endpoints {
     // Artifacts
     ARTIFACT = 'artifact/',
     ARTIFACT_FILE = 'artifact/file',
-    
-    //DASHBOARD_TASKS = 'dashboard_tasks'
-    PORTFOLIO = 'portfolio',
-    RESUME = `${PORTFOLIO}/resume`,
-    ARTIFACTS = `${PORTFOLIO}/artifacts`,
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {

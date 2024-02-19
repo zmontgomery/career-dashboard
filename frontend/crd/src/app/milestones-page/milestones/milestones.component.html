@@ -29,7 +29,6 @@
             </div>
           </mat-expansion-panel-header>
           <div>{{task.description}}</div>
-          <app-task-submit-button [task]="task"></app-task-submit-button>
         </mat-expansion-panel>
         <mat-expansion-panel class="event-expansion-panel" *ngFor="let event of milestone.events">
           <mat-expansion-panel-header>

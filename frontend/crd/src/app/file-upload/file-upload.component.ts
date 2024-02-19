@@ -13,8 +13,6 @@ export class FileUploadComponent {
   file: File | null = null; // Variable to store file
   artifactId: number = 1;
 
-  @Input() url: string = "";
-
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
 
@@ -56,7 +54,7 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      const upload$ = this.artifactService.uploadArtifact(this.url, formData);
+      const upload$ = this.artifactService.uploadArtifact(formData);
 
       this.status = 'uploading';
 

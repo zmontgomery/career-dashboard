@@ -17,6 +17,7 @@ public class ArtifactRouter {
     @Bean
     public RouterFunction<ServerResponse> artifactRoutes(ArtifactHandler artifactHandler) {
         return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleFileUpload)
+            .andRoute(GET(Endpoints.ARTIFACT.uri()), artifactHandler::all)
             .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete)
             .andRoute(GET(Endpoints.ARTIFACT_FILE.uri()), artifactHandler::servePdf);
     }

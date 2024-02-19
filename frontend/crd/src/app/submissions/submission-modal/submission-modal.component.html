@@ -11,7 +11,7 @@
 
         <ng-container *ngIf="task.needsArtifact">
             <div class="submission-modal-file-upload">
-                <app-file-upload [url]="url" (artifactIdEmitter)="onArtifactId($event)"></app-file-upload>
+                <app-file-upload (artifactIdEmitter)="onArtifactId($event)"></app-file-upload>
             </div>
         </ng-container> 
 

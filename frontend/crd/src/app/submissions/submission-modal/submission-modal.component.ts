@@ -16,7 +16,6 @@ export class SubmissionModalComponent implements OnDestroy {
   submitted: boolean = false;
   artifactId: number = 0;
   commentString: string = '';
-  url: string;
   task: Task;
 
   private readonly closeTime: number = 100;
@@ -32,7 +31,6 @@ export class SubmissionModalComponent implements OnDestroy {
     },
   ) { 
     this.task = this.data.task;
-    this.url = this.data.url;
   }
 
   ngOnDestroy(): void {

@@ -16,7 +16,7 @@ export class ArtifactService {
 
   // Get all data items
   allArtifacts(): Observable<Artifact[]> {
-    return this.http.get<Artifact[]>(constructBackendRequest(Endpoints.ARTIFACTS))
+    return this.http.get<Artifact[]>(constructBackendRequest(Endpoints.ARTIFACT))
       .pipe(map((data: any) => {
         return data.map((artifactData: ArtifactJSON) => {
           return new Artifact(artifactData)
@@ -28,8 +28,8 @@ export class ArtifactService {
     return this.http.delete<string>(constructBackendRequest(`${Endpoints.ARTIFACT}${artifactId}`));
   }
 
-  uploadArtifact(url: string, formData: FormData): Observable<number> {
-    return this.http.post<number>(url, formData);
+  uploadArtifact(formData: FormData): Observable<number> {
+    return this.http.post<number>(constructBackendRequest(Endpoints.ARTIFACT), formData);
   }
 
   /**
