@@ -12,6 +12,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.senior.project.backend.util.Endpoints;
 
+/**
+ * Endpoints for artifacts
+ */
 @Component
 public class ArtifactRouter {
     @Bean

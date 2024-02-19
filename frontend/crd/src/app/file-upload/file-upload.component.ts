@@ -1,8 +1,11 @@
-import {Component, EventEmitter, Inject, Output, Input} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { LangUtils } from '../util/lang-utils';
 import { ArtifactService } from './artifact.service';
 
+/**
+ * Component to upload artifacts to the server
+ */
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
@@ -23,7 +26,9 @@ export class FileUploadComponent {
     private readonly artifactService: ArtifactService
   ) { }
 
-  // On file Select
+  /**
+   * Loads the file
+   */
   onChange(event: any) {
     const file: File = event.target.files[0];
 
@@ -40,6 +45,9 @@ export class FileUploadComponent {
     }
   }
 
+  /**
+   * Deletes the artifact
+   */
   onCancel() {
     this.file = null;
     if (this.status === 'success' && this.artifactId !== 1) {
@@ -48,6 +56,10 @@ export class FileUploadComponent {
     this.artifactIdEmitter.next(0);
   }
 
+  /**
+   * Uploads a file to the server and returns the artifact id of the newly created
+   * artifact
+   */
   onUpload() {
     if (this.file) {
       const formData = new FormData();
@@ -72,6 +84,9 @@ export class FileUploadComponent {
     }
   }
 
+  /**
+   * Formats the string based on the size of the file
+   */
   formatBytes(): string {
     if (!LangUtils.exists(this.file)) return '0 bytes';
     if (this.file!.size > 1000000) return `${(this.file!.size / 1000000).toFixed(2)} mb`

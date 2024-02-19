@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Repository to interact with the submission table
+ */
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, Long>{
     @Query("SELECT s FROM Submission s WHERE s.submissionDate < :now AND s.studentId = :userId AND s.taskId = :taskId")

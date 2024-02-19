@@ -54,6 +54,9 @@ public class ArtifactService {
         }
     }
 
+    /**
+     * Finds an artifact by its id
+     */
     public Mono<Artifact> findById(int id) {
         Optional<Artifact> artifact =  artifactRepository.findById((long) id);
         if (artifact.isPresent()) {
@@ -62,6 +65,9 @@ public class ArtifactService {
         return Mono.empty();
     }
 
+    /**
+     * Finds an artifact by its unique UUID generated filename from the database
+     */
     public Mono<Artifact> findByUniqueFilename(String filename) {
         Optional<Artifact> artifact =  artifactRepository.findByUniqueIdentifier(filename);
         if (artifact.isPresent()) {
@@ -70,6 +76,9 @@ public class ArtifactService {
         return Mono.empty();
     }
 
+    /**
+     * Stores a file in the uploads folder and adds an artifact object to the database
+     */
     public Mono<Integer> processFile(FilePart filePart) {
         return validateFileSize(filePart).flatMap(
             (result) -> {
@@ -127,6 +136,11 @@ public class ArtifactService {
                 });
     }
 
+    /**
+     * Deletes an artifact based on its id
+     * @param id is the id of the artifact
+     * @return a success message
+     */
     public Mono<String> deleteFile(int id) {
         if (id == NO_FILE_ID) return Mono.just("Success");
         return SecurityUtil.getCurrentUser()
@@ -136,6 +150,12 @@ public class ArtifactService {
                 });
     }
 
+    /**
+     * Deletes an artifact from the upload folder and the database
+     * @param a is the artifact being deleted
+     * @param user is the current user from the security context
+     * @return the deleted file
+     */
     public Mono<String> deleteFile(Artifact a, User user) {
         try {
             if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
@@ -170,6 +190,12 @@ public class ArtifactService {
                 });
     }
 
+    /**
+     * Retreives a file based on its id
+     * @param artifactID
+     * @param headers
+     * @return
+     */
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
         Artifact artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
@@ -199,6 +225,9 @@ public class ArtifactService {
                 });
     }
 
+    /**
+     * @return all artifacts
+     */
     public Flux<Artifact> all() {
         return Flux.fromIterable(artifactRepository.findAll());
     }

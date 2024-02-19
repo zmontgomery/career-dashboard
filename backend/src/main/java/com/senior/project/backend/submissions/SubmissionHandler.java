@@ -63,6 +63,11 @@ public class SubmissionHandler {
             .flatMap((s) -> ServerResponse.ok().bodyValue(newSubmission));
     }
 
+    /**
+     * Retrieves the latest submission for a given task
+     * @param serverRequest
+     * @return
+     */
     public Mono<ServerResponse> getLatestSubmission(ServerRequest serverRequest) {
         return SecurityUtil.getCurrentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Repository to interact with the artifact table
+ */
 @Repository
 public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
     @Query("SELECT a FROM Artifact a WHERE a.fileLocation LIKE %:internalName")

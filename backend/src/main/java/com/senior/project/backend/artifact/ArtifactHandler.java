@@ -14,7 +14,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-
+/**
+ * Handler for interacting with artifacts
+ */
 @Component
 public class ArtifactHandler {
 
@@ -51,6 +53,9 @@ public class ArtifactHandler {
             .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
     }
 
+    /**
+     * Returns the file based on the given artifact id
+     */
     public Mono<ServerResponse> servePdf(ServerRequest request) {
         String artifactID = request.pathVariable("artifactID");
 
@@ -66,8 +71,10 @@ public class ArtifactHandler {
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 
+    /**
+     * Retrieves all artifacts
+     */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
-        // TODO may want way to only get artifacts needed from portfolio page
         return ServerResponse.ok().body(this.artifactService.all(), Artifact.class );
     }
 }

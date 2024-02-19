@@ -12,6 +12,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.util.Endpoints;
 
+/**
+ * Submission routes
+ */
 @Component
 public class SubmissionRouter {
     @Bean

@@ -3,8 +3,6 @@ package com.senior.project.backend.Activity;
 import com.senior.project.backend.domain.Milestone;
 
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +13,6 @@ import reactor.core.publisher.Mono;
 public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
-    private final Logger logger = LoggerFactory.getLogger(MilestoneService.class);
 
     public MilestoneService(MilestoneRepository milestoneRepository) { this.milestoneRepository = milestoneRepository;}
     public Flux<Milestone> all() {
