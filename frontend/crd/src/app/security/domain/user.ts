@@ -33,6 +33,7 @@ export class User {
     readonly firstName: string;
     readonly lastName: string;
     readonly preferredName: string;
+    readonly fullName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly studentDetails: StudentDetails;
@@ -55,6 +56,7 @@ export class User {
         this.student = json.student;
         this.admin = json.admin;
         this.faculty = json.faculty;
+        this.fullName = this.firstName + " " + this.lastName;
     }
 
     static makeEmpty() {

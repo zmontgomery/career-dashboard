@@ -11,6 +11,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Task } from 'src/domain/Task';
 import { YearLevel } from 'src/domain/Milestone';
+import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { of } from 'rxjs';
 
 
 describe('TaskEditModalComponent', () => {
@@ -18,6 +20,9 @@ describe('TaskEditModalComponent', () => {
   let fixture: ComponentFixture<TaskEditModalComponent>;
   let httpMock: HttpTestingController;
   let formBuilder: FormBuilder;
+  let dialogMock = {
+    close: () => { }
+    };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,7 +41,7 @@ describe('TaskEditModalComponent', () => {
       providers: [
         MatDialog,
         FormBuilder,
-        {provide: MatDialogRef, useValue: {}},
+        {provide: MatDialogRef, useValue: dialogMock},
         {provide: MAT_DIALOG_DATA, useValue: []},
       ],
       teardown: {destroyAfterEach: false}
@@ -106,6 +111,34 @@ describe('TaskEditModalComponent', () => {
     expect(component.taskForm.get('artifactName')!.value).toEqual(sampleForm.get('artifactName')!.value);
 
     expect(component.getTaskType()).toEqual('artifact')
+  });
+
+  it('should save task', () => {
+      component.currentTask = new Task({
+        name: 'task name',
+        description: "description",
+        id: 1,
+        isRequired: true,
+        submission: 'submission',
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 1,
+        taskType: 'artifact',
+        artifactName: 'test artifact'
+      });
+    component.createForm();
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: ['artifact'], 
+      artifactName: ['test artifact'],
+      event: [null]
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should create', () => {
