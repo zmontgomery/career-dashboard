@@ -24,6 +24,9 @@ public enum Endpoints {
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
+    // TODO remove this
+    EMAIL("send-email", false),
+
     // Security
     SIGNIN("auth/signin", false),
     SIGNOUT("auth/signout", false),
