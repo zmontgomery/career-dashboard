@@ -35,6 +35,10 @@ public class ActivityRouter extends AbstractRouter {
                     and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), milestoneHandler::update)
                 .andRoute(POST(Endpoints.CREATE_MILESTONE.uri()).
                     and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), milestoneHandler::create)
+                .andRoute(POST(Endpoints.EDIT_EVENT.uri()).
+                    and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), eventHandler::update)
+                .andRoute(POST(Endpoints.CREATE_EVENT.uri()).
+                    and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), eventHandler::create)
             );
     }
 }

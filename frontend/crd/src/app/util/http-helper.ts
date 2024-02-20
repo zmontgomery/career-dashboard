@@ -8,14 +8,12 @@ export enum Endpoints {
 
     // student
     MILESTONES = 'milestones',
-    CREATE_MILESTONE = 'admin/create-milestone',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
     USERS = 'users',
     CURRENT_USER = 'current-user',
     //DASHBOARD_TASKS = 'dashboard_tasks'
-    CREATE_TASK = 'admin/create-task',
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
     ARTIFACTS = `${PORTFOLIO}/artifacts`,
@@ -25,7 +23,11 @@ export enum Endpoints {
 
     // admin
     EDIT_MILESTONE = 'admin/edit-milestone',
+    CREATE_MILESTONE = 'admin/create-milestone',
     EDIT_TASK = 'admin/edit-task',
+    CREATE_TASK = 'admin/create-task',
+    EDIT_EVENT = 'admin/edit-event',
+    CREATE_EVENT = 'admin/create-event',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {

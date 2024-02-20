@@ -3,6 +3,7 @@ import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Event } from "../../../domain/Event";
+import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 
 @Component({
@@ -26,11 +27,8 @@ export class EventEditModalComponent implements OnInit {
   ) {
 
     if (this.modalData.event) {
-      console.log("editing an event")
       this.currentEvent = this.modalData.event;
       this.eventName = this.modalData.event.name;
-      console.log("event datetime:")
-      console.log(this.currentEvent?.date)
     }
     else {
       console.log("creating an event")
@@ -65,7 +63,7 @@ export class EventEditModalComponent implements OnInit {
         location: [null, Validators.required],
         organizer: [null, Validators.required],
         link: [null],
-        buttonLabel: [null],
+        buttonLabel: ['More Info'],
         recurring: [false],
       });
     }
@@ -77,7 +75,71 @@ export class EventEditModalComponent implements OnInit {
   }
 
   saveEvent() {
-    console.log("saving event!")
+    if (this.currentEvent) {
+      const updateData: any = {};
+
+      updateData.id = this.currentEvent.eventID as unknown as number;
+
+      updateData.date = this.eventForm.get('date')!.value;
+      updateData.location = this.eventForm.get('location')!.value;
+      updateData.organizer = this.eventForm.get('organizer')!.value;
+      updateData.isRecurring = this.eventForm.get('recurring')!.value;
+
+      if (this.eventForm.get('description')) {
+        updateData.description = this.eventForm.get('description')!.value;
+      }
+      if (this.eventForm.get('link')) {
+        updateData.eventLink = this.eventForm.get('link')!.value;
+      }
+      if (this.eventForm.get('buttonLabel')) {
+        updateData.buttonLabel = this.eventForm.get('buttonLabel')!.value;
+      }
+
+      const url = constructBackendRequest(Endpoints.EDIT_EVENT)
+      this.http.post(url, updateData).subscribe(data => {
+        if (!data) {
+          window.alert("Something went wrong");
+          return;
+        }
+        window.alert("Event updated");
+        this.closeModal();
+      })
+    }
+    else {
+      const newData: any = {};
+
+      if (!this.eventForm.get('name')?.value) {
+        window.alert("Please add an event name"); // probably change to a better error message
+        return;
+      }
+
+      newData.name = this.eventForm.get('name')!.value;
+      newData.date = this.eventForm.get('date')!.value;
+      newData.location = this.eventForm.get('location')!.value;
+      newData.organizer = this.eventForm.get('organizer')!.value;
+      newData.isRecurring = this.eventForm.get('recurring')!.value;
+
+      if (this.eventForm.get('description')) {
+        newData.description = this.eventForm.get('description')!.value;
+      }
+      if (this.eventForm.get('link')) {
+        newData.eventLink = this.eventForm.get('link')!.value;
+      }
+      if (this.eventForm.get('buttonLabel')) {
+        newData.buttonLabel = this.eventForm.get('buttonLabel')!.value;
+      }
+
+
+      const url = constructBackendRequest(Endpoints.CREATE_EVENT);
+      this.http.post(url, newData).subscribe(data => {
+        if (!data) {
+          window.alert("Something went wrong");
+          return;
+        }
+        window.alert("Event created");
+        this.closeModal();
+      })
+    }
   }
 
 }

@@ -107,7 +107,9 @@ describe('MilestoneEditComponent', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        eventLink: "testing link",
+        buttonLabel: "more info",
       }],
       tasks: [{
         name: 'task name',
@@ -181,7 +183,9 @@ describe('MilestoneEditComponent', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        eventLink: "testing link",
+        buttonLabel: "more info",
       }],
       tasks: [{
         name: 'task name',
@@ -208,7 +212,9 @@ describe('MilestoneEditComponent', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        eventLink: "testing link",
+        buttonLabel: "more info",
       }],
       tasks: [{
         name: 'task name',
