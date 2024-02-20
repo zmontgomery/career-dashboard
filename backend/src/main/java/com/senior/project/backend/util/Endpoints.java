@@ -3,6 +3,7 @@ package com.senior.project.backend.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.senior.project.backend.domain.Role;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public enum Endpoints {
     RESUME("portfolio/resume", true),
     USERS("users", true),
     CURRENT_USER("current-user", true),
-    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
-    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
-    SEARCH_USERS("users/search", true, Role.FACULTY),
+    EDIT_TASK("admin/edit-task", true, Role.Admin),
+    EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
+    SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
@@ -47,7 +48,7 @@ public enum Endpoints {
     Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
-        this.role = Role.STUDENT;
+        this.role = Role.Student;
     }
 
     private Endpoints(String value, boolean needsAuthentication, Role role) {
@@ -112,7 +113,7 @@ public enum Endpoints {
      */
     public static String[] getAdminRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> r.getRole() == Role.ADMIN)
+            .filter(r -> r.getRole() == Role.Admin)
             .map((r) -> r.uri())
             .toList();
 
@@ -127,7 +128,7 @@ public enum Endpoints {
 
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-        .filter(r -> r.getRole() == Role.ADMIN || r.getRole() == Role.FACULTY)
+        .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)
         .map((r) -> r.uri())
         .toList();
 
@@ -138,11 +139,5 @@ public enum Endpoints {
         }
 
         return routes;
-    }
-
-    public enum Role {
-        STUDENT,
-        ADMIN,
-        FACULTY
     }
 }
