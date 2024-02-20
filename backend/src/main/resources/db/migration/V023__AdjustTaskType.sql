@@ -1,14 +1,17 @@
 ALTER TABLE task
-ADD COLUMN needs_artifact BOOLEAN;
-
-ALTER TABLE task
 ADD COLUMN submission_instructions VARCHAR(1024);
 
-UPDATE task
-SET needs_artifact = 0;
+ALTER TABLE task
+DROP COLUMN task_type;
+
+ALTER TABLE task
+ADD COLUMN task_type ENUM("COMMENT", "ARTIFACT", "EVENT");
 
 UPDATE task
-SET needs_artifact = 1
+SET task_type = "COMMENT";
+
+UPDATE task
+SET task_type = "ARTIFACT"
 WHERE id = 6 OR id = 12;
 
 UPDATE task

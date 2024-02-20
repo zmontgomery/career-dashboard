@@ -2,6 +2,7 @@ package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
+import com.senior.project.backend.domain.Task.TaskType;
 
 import java.util.Map;
 
@@ -43,16 +44,16 @@ public class TaskService {
             if (updates.get("taskType").equals("artifact") &&
                     updates.containsKey("artifactName")) {
                 // don't edit the task type unless an artifact name was given
-                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setTaskType(TaskType.valueOf((String) updates.get("taskType")));
                 existingTask.setEvent(null);
             }
             else if (updates.get("taskType").equals("event") &&
                     updates.containsKey("event")) {
-                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setTaskType(TaskType.valueOf((String) updates.get("taskType")));
                 existingTask.setArtifactName(null);
             }
         }
-        if (updates.containsKey("artifactName") && existingTask.getTaskType().equals("artifact")) {
+        if (updates.containsKey("artifactName") && existingTask.getTaskType() == TaskType.ARTIFACT) {
             existingTask.setArtifactName((String) updates.get("artifactName"));
         }
         if (updates.containsKey("event") && existingTask.getTaskType().equals("event")) {

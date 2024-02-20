@@ -24,7 +24,7 @@
         <mat-expansion-panel class="task-expansion-panel" *ngFor="let task of milestone.tasks">
           <mat-expansion-panel-header>
             <div class="flex-vertical-align">
-              <mat-checkbox [disabled]="true" [checked]="task.isComplete" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+              <mat-checkbox [disabled]="true" [checked]="true" color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
               <p>{{task.name}}</p>
             </div>
           </mat-expansion-panel-header>

@@ -89,7 +89,7 @@ export class SubmissionModalComponent implements OnDestroy {
    * Determines if a submission can be made
    */
   canSubmit(): boolean {
-    return this.artifactId > 1 && this.task.needsArtifact!;
+    return this.artifactId > 1 && this.task.needsArtifact();
   }
 
   /**
