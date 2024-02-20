@@ -1,14 +1,17 @@
 package com.senior.project.backend.users;
 
+import com.senior.project.backend.domain.User;
+import com.senior.project.backend.domain.UsersSearchResponse;
+import com.senior.project.backend.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
-import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.SecurityUtil;
-
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+
+import java.util.NoSuchElementException;
 
 /**
  * Handler for users
@@ -36,5 +39,27 @@ public class UserHandler {
      */
     public Mono<ServerResponse> currentUser(ServerRequest request) {
         return ServerResponse.ok().body(SecurityUtil.getCurrentUser(), User.class);
+    }
+
+    /**
+     * Gets users user service parsing query params for paging info and searchTerm
+     * @param request - ServerRequest
+     * @return 200 with body of users in search on page
+     */
+    public Mono<ServerResponse> searchUsers(ServerRequest request) {
+        try {
+            int pageOffset = Integer.parseInt(request.queryParam("pageOffset").orElseThrow());
+            int pageSize = Integer.parseInt(request.queryParam("pageSize").orElseThrow());
+            String searchTerm = request.queryParam("searchTerm").orElseThrow();
+
+            UsersSearchResponse response = new UsersSearchResponse(service.searchAndPageUsers(pageOffset, pageSize, searchTerm));
+
+            return ServerResponse.ok().body(Mono.just(response), UsersSearchResponse.class);
+        }
+        catch (NumberFormatException | NoSuchElementException e) {
+
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "valid query params: pageOffset: number, pageSize: number, searchTerm: string"));
+        }
     }
 }
