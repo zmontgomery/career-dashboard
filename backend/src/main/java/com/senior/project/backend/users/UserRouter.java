@@ -20,6 +20,7 @@ public class UserRouter {
     @Bean
     public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
         return route(GET(Endpoints.USERS.uri()), userHandler::all)
-            .andRoute(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser);
+            .andRoute(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser)
+            .andRoute(GET(Endpoints.SEARCH_USERS.uri()), userHandler::searchUsers);
     }
 }

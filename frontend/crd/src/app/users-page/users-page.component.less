@@ -1,0 +1,43 @@
+@import "../../common";
+
+
+
+.users-page-container {
+  padding: 10px;
+
+  .header-container {
+    display: flex;
+
+    h1 {
+      @media(max-width: 500px) {
+        padding: 10px 10px 0 0;
+      }
+      color: @oswego-green;
+    }
+
+    .search-bar-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+
+      .search-bar {
+        display: flex;
+        width: 50%;
+
+        @media(max-width: 500px) {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+
+
+  .buttons-cell {
+    text-align: right;
+
+    button {
+      width: 100px;
+    }
+  }
+}
