@@ -70,6 +70,9 @@ public class AuthService {
         return userService.findByEmailAddress(email);
     }
 
+    /**
+     * Signs out a user by removeing their session
+     */
     public Mono<Void> signOut(ServerRequest request) {
         return request.session().flatMap(WebSession::invalidate);
     }

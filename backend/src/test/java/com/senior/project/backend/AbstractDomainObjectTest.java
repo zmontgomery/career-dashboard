@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
+
 /**
  * Uses the reflection utils to automatically run tests on getters, setters, and builders
  */
@@ -27,6 +29,7 @@ public abstract class AbstractDomainObjectTest<T> {
     protected T CuT;
     private Map<String, Object> fieldValueMap;
     private List<Method> excludedMethods;
+    private List<Field> fields;
 
     @SafeVarargs
     public AbstractDomainObjectTest(T CuT, Pair<String, Object>... pairs) {
@@ -50,6 +53,12 @@ public abstract class AbstractDomainObjectTest<T> {
             fail(nsme.getMessage());
         } catch (SecurityException se) {
             fail(se.getMessage());
+        }
+
+        fields = new LinkedList<>();
+        Field[] fieldArr = getTestClass().getDeclaredFields();
+        for (Field field : fieldArr) {
+            fields.add(field);
         }
     }
 
@@ -111,7 +120,10 @@ public abstract class AbstractDomainObjectTest<T> {
                     !m.getName().equals("getClass") &&
                     !excludedMethods.contains(m)
             ) {
-                String fieldName = extractFieldName(m.getName(), "get", "is");
+                String fieldName = m.getName();
+                if (fields.stream().noneMatch((f) -> f.getName().equals(m.getName()))) {
+                    fieldName = extractFieldName(m.getName(), "get", "is");
+                }
                 Object expected = fieldValueMap.get(fieldName);
                 Object actual = m.invoke(CuT);
 
@@ -138,7 +150,7 @@ public abstract class AbstractDomainObjectTest<T> {
                 String fieldName = extractFieldName(m.getName(), "set");
                 Object value = fieldValueMap.get(fieldName);
 
-                logger.info("Running " + m.getName() + " test with argument " + value.toString());
+                logger.info("Running " + m.getName() + " test with argument " + value);
 
                 m.invoke(clone, value);
             }

@@ -22,7 +22,7 @@ export class Milestone {
     this.milestoneID = json.id;
     this.events = json.events?.map((event) => new Event(event));
     this.tasks = json.tasks?.map((task) => new Task(task));
-    this.description = json.description;
+    this.description = json?.description;
     // TODO this should be checked through the submission object or provided by the backend later
     this.isComplete = false;
   }
@@ -33,5 +33,5 @@ export class Milestone {
     events: Array<Event>;
     tasks: Array<Task>;
     isComplete: boolean;
-    description: string;
+    description?: string;
 }

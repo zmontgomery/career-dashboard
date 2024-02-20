@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
  * @author Jimmy Logan - jrl9984@rit.edu
  */
 public abstract class SecurityUtil {
+
     /**
      * Retrieves the current user from the security context
      * @return a mono containing the current user
@@ -21,5 +22,15 @@ public abstract class SecurityUtil {
         return ReactiveSecurityContextHolder.getContext()
             .map(context -> (User) context.getAuthentication().getPrincipal())
             .onErrorMap(er -> new UsernameNotFoundException("No user found in context."));
+    }
+
+    /**
+     * The possible roles for the application
+     */
+    public static enum Roles {
+        ADMIN,
+        STUDENT,
+        FACULTY,
+        SUPER_ADMIN
     }
 }

@@ -39,4 +39,9 @@ public class TokenPayloadTest extends AbstractDomainObjectTest <TokenPayload> {
             new Pair<>("ver", VER)
         );
     }
+
+    @Override
+    protected Class<TokenPayload> getTestClass() {
+        return TokenPayload.class;
+    }
 }
