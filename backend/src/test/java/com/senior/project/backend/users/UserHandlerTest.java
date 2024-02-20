@@ -1,16 +1,21 @@
 package com.senior.project.backend.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.senior.project.backend.domain.UsersSearchResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
@@ -33,6 +38,7 @@ public class UserHandlerTest {
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .GET("/api/test", userHandler::all)
+                        .GET("/search", userHandler::searchUsers)
                         .build())
                 .build();
     }
@@ -49,7 +55,44 @@ public class UserHandlerTest {
             .returnResult()
             .getResponseBody();
 
+        assertNotNull(res);
         assertEquals(Constants.USERS.get(0), res.get(0));
         assertEquals(Constants.USERS.get(1), res.get(1));
+    }
+
+    @Test
+    public void testSearchUsersError() {
+        webTestClient.get()
+                .uri("/search")
+                .exchange()
+                .expectStatus()
+                .is4xxClientError();
+    }
+
+    @Test
+    public void testSearchUsers() {
+        int pageOffset = 0;
+        int pageSize = 10;
+        String searchTerm = "search";
+        Pageable pageable = PageRequest.of(pageOffset, pageSize);
+
+        var page = new PageImpl<>(Constants.USERS, pageable, Constants.USERS.size());
+
+        when(userService.searchAndPageUsers(pageOffset, pageSize, searchTerm)).thenReturn(page);
+        UsersSearchResponse response = webTestClient.get()
+                .uri("/search?pageOffset="+pageOffset+
+                        "&pageSize="+pageSize+
+                        "&searchTerm="+searchTerm)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(UsersSearchResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertNotNull(response);
+        assertEquals(Constants.USERS.get(0), response.getUsers().get(0));
+        assertEquals(Constants.USERS.get(1), response.getUsers().get(1));
+        assertEquals(Constants.USERS.size(), response.getTotalResults());
     }
 }

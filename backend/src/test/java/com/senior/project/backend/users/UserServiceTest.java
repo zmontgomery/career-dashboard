@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.senior.project.backend.Constants;
@@ -90,5 +95,20 @@ public class UserServiceTest {
     public void findByUsernameUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
         TestUtil.testError(() -> userService.findByUsername(Constants.user1.getEmail()), EntityNotFoundException.class);
+    }
+
+    @Test
+    public void searchUsers() {
+        int pageOffset = 0;
+        int pageSize = 10;
+        String searchTerm = "search";
+        Pageable pageable = PageRequest.of(pageOffset, pageSize);
+        var page = new PageImpl<>(Constants.USERS, pageable, Constants.USERS.size());
+
+        when(userRepository.findByFullNameContainingIgnoreCase(searchTerm, pageable)).thenReturn(page);
+
+        Page<User> usersPage = userService.searchAndPageUsers(pageOffset, pageSize, searchTerm);
+
+        assertEquals(usersPage, page);
     }
 }
