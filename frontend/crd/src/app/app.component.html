@@ -1,9 +1,14 @@
-<div>
-  <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
-
-  <!-- THESE ARE TEMPORARY AND WILL BE DELETED -->
-  <button (click)="ms()">Login with MS</button>
-  <asl-google-signin-button></asl-google-signin-button>
-  <button (click)="logout()">Logout</button>
-  <app-navbar></app-navbar>
+<div class="app-container">
+  <div class="header-container">
+    <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
+    <ng-container *ngIf="needsNavBar()">
+      <app-logout-button class="logout-button"></app-logout-button>
+    </ng-container>
+  </div>
+  <div class="body-container">
+    <ng-container *ngIf="needsNavBar()">
+      <app-navbar class="navbar"></app-navbar>
+    </ng-container>
+    <router-outlet></router-outlet>
+  </div>
 </div>

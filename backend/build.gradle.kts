@@ -83,7 +83,7 @@ tasks.register("setupEnvironmentVariables") {
 
     // For runtime check see backend/src/main/java/com/senior/project/backend/BackendApplication.java
     // Add any other required environment variables here
-    val envVars = listOf("CRD_DB_PASSWORD", "EMAIL_PASSWORD")
+    val envVars = listOf("CRD_DB_PASSWORD", "EMAIL_PASSWORD", "CRD_SUPER_ADMIN")
 
     val missingVars = mutableListOf<String>()
     envVars.forEach {

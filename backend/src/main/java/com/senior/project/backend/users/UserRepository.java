@@ -21,4 +21,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findUsersByCanEmailIsTrue();
     List<User> findUsersByCanTextIsTrue();
+
+    @Query("SELECT u FROM User u WHERE u.isSuperAdmin = TRUE")
+    List<User> findSuperAdmins();
 }

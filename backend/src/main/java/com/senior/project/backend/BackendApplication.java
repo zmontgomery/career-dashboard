@@ -14,7 +14,7 @@ public class BackendApplication {
 
     public static void main(String[] args) {
 
-        List<String> envVars = Arrays.asList("CRD_DB_PASSWORD", "EMAIL_PASSWORD");
+        List<String> envVars = Arrays.asList("CRD_DB_PASSWORD", "EMAIL_PASSWORD", "CRD_SUPER_ADMIN");
 
         List<String> missingVars = new ArrayList<>();
         for (String var : envVars) {
