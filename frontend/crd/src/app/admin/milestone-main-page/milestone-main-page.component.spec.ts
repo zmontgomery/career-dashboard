@@ -8,6 +8,10 @@ import { MatCardModule } from "@angular/material/card";
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
+import { MilestoneCreateModalComponent } from './milestone-create-modal/milestone-create-modal.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatInputModule } from '@angular/material/input';
 
 
 describe('MilestoneMainPageComponent', () => {
@@ -25,14 +29,41 @@ describe('MilestoneMainPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatGridListModule, MatTabsModule, NoopAnimationsModule],
+      imports: [
+        MatCardModule, 
+        MatGridListModule, 
+        MatTabsModule, 
+        NoopAnimationsModule, 
+        MatDialogModule, 
+        HttpClientModule,
+        MatInputModule
+      ],
       declarations: [MilestoneMainPageComponent],
-      providers: [{provide: MilestoneService, useValue: milestoneServiceSpy}],
+      providers: [
+        MatDialog,
+        {provide: MilestoneService, useValue: milestoneServiceSpy}
+      ],
       teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(MilestoneMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should open the MilestoneCreate in a MatDialog', () => {
+    spyOn(component.matDialog,'open').and.callThrough();
+    component.openMilestoneCreateModal(YearLevel.Freshman);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
+    dialogConfig.data = {
+      yearLevel: YearLevel.Freshman
+    }
+
+    expect(component.matDialog.open).toHaveBeenCalledWith(MilestoneCreateModalComponent, dialogConfig);
   });
 
   it('should create', () => {

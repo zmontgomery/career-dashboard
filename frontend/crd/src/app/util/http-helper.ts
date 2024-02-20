@@ -6,18 +6,26 @@ export enum Endpoints {
     REFRESH = 'auth/refresh',
     SIGN_OUT = 'auth/signout',
 
+    // student
     MILESTONES = 'milestones',
-    EDIT_MILESTONE = 'admin/edit-milestone',
+    CREATE_MILESTONE = 'admin/create-milestone',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
     USERS = 'users',
     CURRENT_USER = 'current-user',
-    EDIT_TASK = 'admin/edit-task',
     //DASHBOARD_TASKS = 'dashboard_tasks'
+    CREATE_TASK = 'admin/create-task',
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
     ARTIFACTS = `${PORTFOLIO}/artifacts`,
+
+    // faculty
+    USERS_SEARCH = 'users/search',
+
+    // admin
+    EDIT_MILESTONE = 'admin/edit-milestone',
+    EDIT_TASK = 'admin/edit-task',
 }
 
 export function constructBackendRequest(segments: string, ...qParams: Array<{key: string, value: string | number}>): string {
