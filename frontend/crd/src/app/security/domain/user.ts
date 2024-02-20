@@ -72,7 +72,7 @@ export class User {
     }
 }
 
-enum Role {
+export enum Role {
   Student = 'Student',
   Faculty = 'Faculty',
   Admin = 'Admin',

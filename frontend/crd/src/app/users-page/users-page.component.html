@@ -36,7 +36,34 @@
     <!-- Role Column -->
     <ng-container matColumnDef="role">
       <th mat-header-cell *matHeaderCellDef>Role</th>
-      <td mat-cell *matCellDef="let element">{{element.role}}</td>
+      <td mat-cell *matCellDef="let element" class="role-cell">
+        <div class="role-container">
+          <ng-container *ngIf="(user$ | async)?.hasAdminPrivileges()">
+            <button mat-icon-button size="10" [matMenuTriggerFor]="roleMenu">
+              <mat-icon>
+                edit
+              </mat-icon>
+            </button>
+
+            <mat-menu #roleMenu>
+              <div style="display: flex; flex-direction: column; padding: 5px 10px;">
+                <button mat-raised-button>
+                  Student
+                </button>
+                <div style="height: 5px"></div>
+                <button mat-raised-button>
+                  Faculty
+                </button>
+                <div style="height: 5px"></div>
+                <button mat-raised-button>
+                  Admin
+                </button>
+              </div>
+            </mat-menu>
+          </ng-container>
+          {{element.role}}
+        </div>
+      </td>
     </ng-container>
 
     <!-- Column with Buttons -->

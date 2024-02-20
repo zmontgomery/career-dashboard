@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {User} from "../security/domain/user";
+import {Role, User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UsersSearchResponseJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
-import {debounceTime, Observable, Subject} from "rxjs";
+import {debounceTime, first, map, Observable, of, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
+import {AuthService} from "../security/auth.service";
 
 @Component({
   selector: 'app-users-page',
@@ -30,11 +31,15 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   private searching$ = new Subject<void>();
   isMobile$: Observable<boolean>;
 
+  user$: Observable<User | null>
+
   constructor(
     private http: HttpClient,
     private screenSizeSvc: ScreenSizeService,
+    private readonly authService: AuthService
   ) {
     this.isMobile$ = this.screenSizeSvc.isMobile$;
+    this.user$ = this.authService.user$;
   }
 
   ngOnInit(): void {
@@ -81,6 +86,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   onSearch(): void {
     this.searching$.next();
   }
+
+  protected readonly Role = Role;
 }
 
 
