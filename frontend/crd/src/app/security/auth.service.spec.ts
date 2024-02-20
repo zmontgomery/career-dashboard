@@ -9,7 +9,7 @@ import { LoginRequest, LoginResponse, Token, TokenType } from './domain/auth-obj
 import { EventType } from '@azure/msal-browser';
 import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
 import { LangUtils } from '../util/lang-utils';
-import { UserJSON } from './domain/user';
+import {Role, UserJSON} from './domain/user';
 import { ActivatedRoute, Params } from '@angular/router';
 
 describe('AuthService', () => {
@@ -31,9 +31,7 @@ describe('AuthService', () => {
     lastName: 'test',
     canEmail: false,
     canText: false,
-    admin: true,
-    faculty: true,
-    student: true
+    role: Role.Admin,
   }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
@@ -50,12 +48,12 @@ describe('AuthService', () => {
     (httpSpy as any).post.and.returnValue(of(response));
     maslAuthService = jasmine.createSpyObj('MsalService', ['loginRedirect']);
     broadcastService = jasmine.createSpyObj(
-        'MsalBroadcaseService', 
+        'MsalBroadcaseService',
         ['toString'],
         {'msalSubject$': msalSubject.asObservable()}
       );
     googleAuthService = jasmine.createSpyObj(
-        'SocialAuthService', 
+        'SocialAuthService',
         ['signIn'],
         {'authState': authStateSubject.asObservable()}
       );
@@ -77,15 +75,15 @@ describe('AuthService', () => {
   describe('Logout', () => {
     it('should sign out', fakeAsync(() => {
       // @ts-ignore
-      service.isAuthenticatedSubect.next(true); 
+      service.isAuthenticatedSubect.next(true);
       tick(1000);
-  
+
       //@ts-ignore
       service.token = 'hello';
-      
+
       service.signOut();
       tick(1000);
-  
+
       //@ts-ignore
       expect(httpSpy.post).toHaveBeenCalledTimes(1);
       expect(service.getToken()).toBeFalsy();
@@ -93,11 +91,11 @@ describe('AuthService', () => {
         expect(user).toBeFalsy();
       });
       tick(1000);
-  
+
       const sub1 = service.isAuthenticated$.subscribe((auth) => {
         expect(auth).toBeFalse();
       });
-  
+
       tick(1000);
 
       sub.unsubscribe();
@@ -219,13 +217,13 @@ describe('AuthService', () => {
   describe('Login redirect', () => {
     it('should login redirect for MS', () => {
       service.loginRedirectMS();
-  
+
       expect(maslAuthService.loginRedirect).toHaveBeenCalledTimes(1);
     });
-  
+
     it('should login redirect for Google', () => {
         service.loginRedirectGoogle();
-  
+
         expect(googleAuthService.signIn).toHaveBeenCalledOnceWith(GoogleLoginProvider.PROVIDER_ID);
     });
   });
@@ -263,17 +261,17 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticatedSubect.next(false); 
+        service.isAuthenticatedSubect.next(false);
         authStateSubject.next({idToken: 'token'});
         tick(100);
         expect(httpSpy.post).toHaveBeenCalled();
       }));
-    
+
       it ('should not sign in to google if authenticated',fakeAsync(() => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticatedSubect.next(true); 
+        service.isAuthenticatedSubect.next(true);
         authStateSubject.next({idToken: 'token'});
         tick(100);
         expect(httpSpy.post).not.toHaveBeenCalled();
@@ -285,7 +283,7 @@ describe('AuthService', () => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticatedSubect.next(false); 
+        service.isAuthenticatedSubect.next(false);
         msalSubject.next({
           eventType: EventType.LOGIN_SUCCESS,
           payload: {idToken: 'token'}
@@ -293,12 +291,12 @@ describe('AuthService', () => {
         tick(100);
         expect(httpSpy.post).toHaveBeenCalled();
       }));
-    
+
       it ('should not sign in to ms if authenticated',fakeAsync(() => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticatedSubect.next(true); 
+        service.isAuthenticatedSubect.next(true);
         msalSubject.next({
           eventType: EventType.LOGIN_SUCCESS,
           payload: {idToken: 'token'}
@@ -306,12 +304,12 @@ describe('AuthService', () => {
         tick(100);
         expect(httpSpy.post).not.toHaveBeenCalled();
       }));
-    
+
       it ('should not sign not to ms if event type is not LOGIN_SUCCESS',fakeAsync(() => {
         tick(100);
 
         // @ts-ignore
-        service.isAuthenticatedSubect.next(false); 
+        service.isAuthenticatedSubect.next(false);
         msalSubject.next({
           eventType: EventType.ACCOUNT_ADDED,
           payload: {idToken: 'token'}
@@ -323,7 +321,7 @@ describe('AuthService', () => {
 
     afterEach(() => {
       //@ts-ignore
-      service.isAuthenticatedSubect.next(false); 
+      service.isAuthenticatedSubect.next(false);
       authStateSubject.next(null);
       msalSubject.next({eventType: EventType.ACCOUNT_ADDED});
     });
@@ -381,8 +379,8 @@ describe('AuthService', () => {
 
   it('should clear expire token', fakeAsync(() => {
     // @ts-ignore
-    service.isAuthenticatedSubect.next(true); 
-        
+    service.isAuthenticatedSubect.next(true);
+
     service.expireToken();
     tick(1000);
 

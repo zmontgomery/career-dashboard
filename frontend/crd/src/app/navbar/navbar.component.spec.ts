@@ -1,34 +1,31 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar.component';
+import {NavbarComponent} from './navbar.component';
 import {AppRoutingModule} from "../app-routing.module";
 import {MatTabsModule} from "@angular/material/tabs";
-import SpyObj = jasmine.SpyObj;
 import {AuthService} from "../security/auth.service";
-import {Subject} from "rxjs";
-import {User} from "../security/domain/user";
+import {map, Subject} from "rxjs";
+import {Role, User, UserJSON} from "../security/domain/user";
+import SpyObj = jasmine.SpyObj;
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let userSubject: Subject<User> = new Subject<User>();
-  let user: User = {
+  let userSubject: Subject<UserJSON> = new Subject<UserJSON>();
+  let user: UserJSON = {
     id: "string",
     email: "string",
     phoneNumber: "string",
-    dateCreated: new Date(),
-    lastLogin: new Date(),
+    dateCreated: 1,
+    lastLogin: 1,
     firstName: 'string',
     lastName: 'string',
-    fullName: 'string string',
     canEmail: true,
     canText: true,
-    student: true,
-    admin: false,
-    faculty: false,
+    role: Role.Student,
   }
   let authSvcSpy: SpyObj<AuthService> = jasmine.createSpyObj('AuthService', [],
-    {user$: userSubject});
+    {user$: userSubject.pipe(map(userJson => new User(userJson)))});
 
 
   beforeEach(() => {
@@ -49,17 +46,17 @@ describe('NavbarComponent', () => {
   });
 
   it('should have student Links', () => {
-    userSubject.next(user);
+    userSubject.next({...user, role: Role.Student});
     expect(component.navLinks).toEqual(component.studentLinks);
   });
 
   it('should have faculty Links', () => {
-    userSubject.next({...user, faculty: true});
+    userSubject.next({...user, role: Role.Faculty});
     expect(component.navLinks).toEqual(component.facultyLinks);
   });
 
   it('should have student Links', () => {
-    userSubject.next({...user, admin: true});
+    userSubject.next({...user, role: Role.Admin});
     expect(component.navLinks).toEqual(component.adminLinks);
   });
 });

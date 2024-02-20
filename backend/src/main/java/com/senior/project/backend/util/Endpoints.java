@@ -19,7 +19,7 @@ public enum Endpoints {
     MILSTONES("milestones", true),
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
-    USERS("users", true),
+    USERS("users", true, Role.Faculty),
     CURRENT_USER("current-user", true),
     EDIT_TASK("admin/edit-task", true, Role.Admin),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
