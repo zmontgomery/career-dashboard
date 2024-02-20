@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { EventMessage, EventType } from '@azure/msal-browser';
 import { AuthService } from './security/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,13 @@ import { AuthService } from './security/auth.service';
 export class AppComponent {
   title = 'crd';
 
-  constructor(private readonly authService: AuthService) {}
+  noNavBar = ['login']
 
-  ms() {
-    this.authService.loginRedirectMS();
-  }
+  constructor() {}
 
-  logout() {
-    this.authService.signOut();
+  needsNavBar(): boolean {
+    return this.noNavBar.every((uri) => {
+      return !location.href.includes(uri);
+    });
   }
 }

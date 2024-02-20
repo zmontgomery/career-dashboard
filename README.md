@@ -19,7 +19,10 @@ Partially Hydrated devs - Senior Project
 
 # Running the app
 - open a terminal and navigate to the backend directory
-- run `CRD_DB_PASSWORD={your_password} ./gradlew bootrun`
+- this assumes a gmail is being used for the email notifications. If you wish to use a different gmail account use 
+- the environment variable EMAIL_USERNAME
+- for further email and other configuration options see backend/src/main/resources/application.properties
+- run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} ./gradlew bootrun`
 - or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
 - open another terminal and navigate to the frontend/crd directory
 - run `npm start`
@@ -38,6 +41,15 @@ Partially Hydrated devs - Senior Project
 - `cd backend`
 - `./gradlew test`
 - coverage found in backend/build/reports/jacoco/test/html/index.html
+
+# Deploying
+- `cd frontend/crd`
+- `npm run build`
+- cd back to project home
+- `cd backend`
+- environment variables must be created or passed in when creating the jar
+- `./gradlew build`
+- jar is located at backend/build/libs/backend-X.X.X.jar
 
 # Troubleshooting
 - spring may not recognize changes in the db schema and will instead try to recreate tables that already exist

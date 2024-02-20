@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -121,6 +122,11 @@ public class ArtifactServiceTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
+        Path artifactPath = Paths.get(Constants.artifact2.getFileLocation());
+
+        ReflectionTestUtils.setField(artifactService, "uploadDirectory", artifactPath.getParent().toAbsolutePath().toString());
+
+        ReflectionTestUtils.setField(artifactService, "uploadDirectory", "");
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class,
                 () -> artifactService.getFile("1", headers).block());
@@ -134,13 +140,16 @@ public class ArtifactServiceTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
+        Path artifact1path = Paths.get(Constants.artifact1.getFileLocation());
+
+        ReflectionTestUtils.setField(artifactService, "uploadDirectory", artifact1path.getParent().toAbsolutePath().toString());
 
         var result = artifactService.getFile("1", headers).block();
 
         assert result != null;
         assertTrue(result.getStatusCode().is2xxSuccessful());
         assertEquals(headers, result.getHeaders());
-        var expectedBody = new FileSystemResource(Paths.get(Constants.artifact1.getFileLocation()).toAbsolutePath().normalize());
+        var expectedBody = new FileSystemResource(artifact1path.toAbsolutePath().normalize());
         assertEquals(expectedBody, result.getBody());
     }
 
