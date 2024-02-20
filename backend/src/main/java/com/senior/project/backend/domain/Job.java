@@ -41,4 +41,8 @@ public class Job {
     @ManyToOne
     @JoinColumn(name="student_details_id")
     private UUID studentDetailsID;
+
+    // @ManyToOne(fetch = FetchType.EAGER)
+    // @JoinColumn(name="student_details_id")
+    // private StudentDetails studentDetails;
 }

@@ -51,7 +51,9 @@ public class StudentDetails {
 
 	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
 	private List<Job> jobs;
-	private DegreeProgram[] minors;
+	
+	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
+	private List<DegreeProgram> minors;
 	// private DegreeProgram[] majors;
 	// private Club[] clubs;
 
