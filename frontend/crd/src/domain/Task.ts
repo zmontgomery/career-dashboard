@@ -1,9 +1,9 @@
 import { YearLevel } from "./Milestone";
 
 export enum TaskType {
-  ARTIFACT = 'artifact',
-  COMMENT = 'comment',
-  EVENT = 'event'
+  ARTIFACT = 'ARTIFACT',
+  COMMENT = 'COMMENT',
+  EVENT = 'EVENT'
 }
 
 export interface TaskJSON {
@@ -45,6 +45,6 @@ export class Task {
   submissionInstructions?: string;
 
   needsArtifact(): boolean {
-    return this.taskType == TaskType.ARTIFACT;
+    return this.taskType === TaskType.ARTIFACT;
   }
 }

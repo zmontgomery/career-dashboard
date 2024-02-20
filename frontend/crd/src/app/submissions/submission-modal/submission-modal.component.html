@@ -9,7 +9,7 @@
             {{task.submissionInstructions}}
         </div>
 
-        <ng-container *ngIf="task.needsArtifact">
+        <ng-container *ngIf="needsArtifact()">
             <div class="submission-modal-file-upload">
                 <app-file-upload (artifactIdEmitter)="onArtifactId($event)"></app-file-upload>
             </div>

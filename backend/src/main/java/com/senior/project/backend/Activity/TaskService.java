@@ -2,7 +2,7 @@ package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
-import com.senior.project.backend.domain.Task.TaskType;
+import com.senior.project.backend.domain.TaskType;
 
 import java.util.Map;
 

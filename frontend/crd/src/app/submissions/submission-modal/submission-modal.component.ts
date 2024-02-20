@@ -98,4 +98,9 @@ export class SubmissionModalComponent implements OnDestroy {
   onArtifactId(id: number) {
     this.artifactId = id;
   }
+
+  needsArtifact(): boolean {
+    console.log(this.task.needsArtifact());
+    return this.task.needsArtifact();
+  }
 }

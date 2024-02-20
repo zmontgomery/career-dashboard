@@ -17,6 +17,7 @@ public class Task {
     private Boolean isRequired;
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
+    @Enumerated(EnumType.STRING)
     private TaskType taskType;
     private String artifactName;
     private String submissionInstructions;
@@ -28,10 +29,4 @@ public class Task {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Event event;
-
-    public static enum TaskType {
-        ARTIFACT,
-        EVENT,
-        COMMENT
-    }
 }
