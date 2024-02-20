@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import com.senior.project.backend.security.SecurityUtil;
 import com.senior.project.backend.util.Endpoints;
 
 import reactor.core.publisher.Mono;
@@ -43,6 +44,7 @@ public class SecurityConfig {
         http.cors(c -> c.configurationSource(corsConfigurationSource()));
         http.authorizeExchange(e -> {
             e.pathMatchers(Endpoints.getOpenRoutes()).permitAll();
+            e.pathMatchers(Endpoints.getAdminRoutes()).hasAuthority(SecurityUtil.Roles.ADMIN.toString());
             e.pathMatchers("/api/**").authenticated();
             e.anyExchange().permitAll();
         });

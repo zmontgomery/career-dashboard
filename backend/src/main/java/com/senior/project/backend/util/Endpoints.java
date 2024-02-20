@@ -2,6 +2,9 @@ package com.senior.project.backend.util;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -16,8 +19,9 @@ public enum Endpoints {
     TASKS("tasks", true),
     RESUME("portfolio/resume", true),
     USERS("users", true),
-    EDIT_TASK("admin/edit-task", true),
-    EDIT_MILESTONE("admin/edit-milestone", true),
+    CURRENT_USER("current-user", true),
+    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
+    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
     CREATE_MILESTONE("admin/create-milestone", true),
     CREATE_TASK("admin/create-task", true),
     PORTFOLIO("portfolio", true),
@@ -39,10 +43,18 @@ public enum Endpoints {
 
     private String value;
     private boolean needsAuthentication;
+    private Role role;
 
     private Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
+        this.role = Role.STUDENT;
+    }
+
+    private Endpoints(String value, boolean needsAuthentication, Role role) {
+        this.value = "/api/" + value;
+        this.needsAuthentication = needsAuthentication;
+        this.role = role;
     }
 
     //
@@ -55,6 +67,10 @@ public enum Endpoints {
 
     public boolean getNeedsAuthentication() {
         return needsAuthentication;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     //
@@ -90,5 +106,44 @@ public enum Endpoints {
         }
 
         return routes;
+    }
+
+    /**
+     * Gets all admin routes
+     */
+    public static String[] getAdminRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+            .filter(r -> r.getRole() == Role.ADMIN)
+            .map((r) -> r.uri())
+            .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            LoggerFactory.getLogger(String.class).info(list.get(i));
+            routes[i] = list.get(i);
+        }
+
+        return routes;
+    }
+
+    public static String[] getFacultyRoutes() {
+        List<String> list = Arrays.stream(Endpoints.values())
+        .filter(r -> r.getRole() == Role.ADMIN || r.getRole() == Role.FACULTY)
+        .map((r) -> r.uri())
+        .toList();
+
+        String[] routes = new String[list.size()];
+        for (int i = 0; i < routes.length; i++) {
+            LoggerFactory.getLogger(String.class).info(list.get(i));
+            routes[i] = list.get(i);
+        }
+
+        return routes;
+    }
+
+    public enum Role {
+        STUDENT,
+        ADMIN,
+        FACULTY
     }
 }
