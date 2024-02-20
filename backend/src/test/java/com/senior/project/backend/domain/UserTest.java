@@ -45,7 +45,6 @@ public class UserTest extends AbstractDomainObjectTest<User> {
                 lastName,
                 canEmail,
                 canText,
-                studentDetails,
                 isStudent,
                 isAdmin,
                 isFaculty,
