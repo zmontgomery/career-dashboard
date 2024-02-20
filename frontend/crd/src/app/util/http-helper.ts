@@ -8,12 +8,14 @@ export enum Endpoints {
 
     // student
     MILESTONES = 'milestones',
+    CREATE_MILESTONE = 'admin/create-milestone',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
     USERS = 'users',
     CURRENT_USER = 'current-user',
     //DASHBOARD_TASKS = 'dashboard_tasks'
+    CREATE_TASK = 'admin/create-task',
     PORTFOLIO = 'portfolio',
     RESUME = `${PORTFOLIO}/resume`,
     ARTIFACTS = `${PORTFOLIO}/artifacts`,

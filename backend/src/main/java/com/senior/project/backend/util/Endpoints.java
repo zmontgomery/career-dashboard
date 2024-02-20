@@ -23,6 +23,8 @@ public enum Endpoints {
     CURRENT_USER("current-user", true),
     EDIT_TASK("admin/edit-task", true, Role.Admin),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.Admin),
+    CREATE_TASK("admin/create-task", true, Role.Admin),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
