@@ -21,6 +21,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findUserByEmail(@Param("email") String email);
 
+    List<User> findUsersByCanEmailIsTrue();
+    List<User> findUsersByCanTextIsTrue();
+
     @Query("SELECT u FROM User u WHERE u.isSuperAdmin = TRUE")
     List<User> findSuperAdmins();
 
