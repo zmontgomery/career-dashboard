@@ -30,6 +30,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module';
 import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
+import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
     MatGridListModule,
     MatListModule,
     TaskMainPageModule,
-    TaskEditModalModule
+    TaskEditModalModule,
+    EventMainPageModule
   ],
   providers: [
     provideHttpClient(),

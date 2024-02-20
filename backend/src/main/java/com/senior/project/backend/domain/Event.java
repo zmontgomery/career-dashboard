@@ -20,4 +20,6 @@ public class Event {
     private String location;
     private String organizer;
     private boolean isRecurring;
+    private String eventLink;
+    private String buttonLabel;
 }

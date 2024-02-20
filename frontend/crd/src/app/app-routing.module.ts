@@ -10,6 +10,7 @@ import {adminRoleGuard, authGuard, facultyRoleGuard, noAuthGuard} from './securi
 import { MilestoneEditComponent } from './admin/milestone-edit/milestone-edit.component';
 import { MilestoneMainPageComponent } from './admin/milestone-main-page/milestone-main-page.component';
 import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.component';
+import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'admin/milestones', component: MilestoneMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: 'admin/milestone-edit/:name', component: MilestoneEditComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: 'admin/tasks', component: TaskMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
+  {path: 'admin/events', component: EventMainPageComponent, canActivate: [authGuard, adminRoleGuard]},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard, adminRoleGuard]},
 ];
