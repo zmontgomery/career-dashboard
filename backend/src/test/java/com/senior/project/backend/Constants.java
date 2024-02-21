@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 public class Constants {
 
-    public static final List<Event> eventDATA = new ArrayList<>();
+    public static final List<Event> EVENT_LIST = new ArrayList<>();
 
     public static Event e1;
     public static Event e2;
@@ -111,10 +111,8 @@ public class Constants {
         m1.setDescription("Description of milestone 1");
         milestoneDATA.add(m1);
 
-
-        var events2 = new ArrayList<Event>();
-        events2.add(e2);
-        events2.add(e3);
+        EVENT_LIST.add(e2);
+        EVENT_LIST.add(e3);
 
         List<Task> tasks2 = new ArrayList<>();
         tasks2.add(task3);

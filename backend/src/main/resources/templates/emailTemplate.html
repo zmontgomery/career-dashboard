@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upcoming Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #235937;
+        }
+        p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Events This Week</h1>
+
+    <ul>
+        <li th:each="event : ${events}">
+            <h2 th:text="${event.name}">Event Title</h2>
+            <p>Date: <span th:text="${event.formattedDate()}">Event Date</span></p>
+            <p>Location: <span th:text="${event.location}">Event Location</span></p>
+            <p>Description: <span th:text="${event.description}">Event Description</span></p>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
