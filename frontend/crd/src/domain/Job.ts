@@ -5,7 +5,7 @@ export interface JobJSON{
     description: string;
     startDate: Date;
     endDate: Date
-    isCoop: boolean;
+    coop: boolean;
     studentDetailsID: string;
 }
 
@@ -17,8 +17,9 @@ export class Job{
         this.description = json.description;
         this.startDate = json.startDate;
         this.endDate = json.endDate;
-        this.isCoop = json.isCoop;
+        this.isCoop = json.coop;
         this.studentDetailsID = json.studentDetailsID;
+        console.log(this.isCoop);
     }
 
     id: string;
@@ -38,7 +39,7 @@ export class Job{
             description: '',
             startDate: new Date(),
             endDate: new Date (),
-            isCoop: false,
+            coop: false,
             studentDetailsID: ''
         })
     }

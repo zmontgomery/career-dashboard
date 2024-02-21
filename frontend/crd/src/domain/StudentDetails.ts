@@ -30,6 +30,8 @@ export class StudentDetails{
         this.projects = json.projects?.map((project) => new Project(project));
         this.skills = json.skills?.map((skill) => new Skill(skill));
         this.jobs = json.jobs?.map((job) => new Job(job));
+        console.log('Upsdf')
+        console.log(json.jobs)
         this.degreePrograms = json.degreePrograms?.map((degreeProgram) => new DegreeProgram(degreeProgram));
     }
 

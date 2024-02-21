@@ -1,4 +1,5 @@
-import { StudentDetails } from "src/domain/StudentDetails";
+import { LangUtils } from "src/app/util/lang-utils";
+import { StudentDetails, StudentDetailsJSON } from "src/domain/StudentDetails";
 
 /**
  * JSON for a user object retrieved from the backend
@@ -14,7 +15,7 @@ export interface UserJSON {
     readonly preferredName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
-    readonly studentDetails: StudentDetails;
+    readonly studentDetails?: StudentDetailsJSON;
     readonly student: boolean;
     readonly admin: boolean;
     readonly faculty: boolean;
@@ -35,12 +36,13 @@ export class User {
     readonly fullName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
-    readonly studentDetails: StudentDetails;
+    readonly studentDetails?: StudentDetails
     readonly student: boolean;
     readonly admin: boolean;
     readonly faculty: boolean;
 
     constructor(json: UserJSON) {
+        console.log('asdf')
         this.id = json.id;
         this.email = json.email;
         this.phoneNumber = json.phoneNumber;
@@ -51,7 +53,9 @@ export class User {
         this.preferredName = json.preferredName;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
-        this.studentDetails = json.studentDetails;
+        if (LangUtils.exists(json.studentDetails)) {
+            this.studentDetails = new StudentDetails(json.studentDetails!)
+        }
         this.student = json.student;
         this.admin = json.admin;
         this.faculty = json.faculty;
@@ -70,7 +74,6 @@ export class User {
             lastLogin: 0,
             canEmail: false,
             canText: false,
-            studentDetails: new StudentDetails(StudentDetails.makeEmpty()),
             student: true,
             admin: false,
             faculty: false,
