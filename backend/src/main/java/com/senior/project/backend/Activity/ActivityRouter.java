@@ -30,8 +30,12 @@ public class ActivityRouter extends AbstractRouter {
                 .andRoute(GET(Endpoints.TASK_BY_ID.uri()), taskHandler::getById)
                 .andRoute(POST(Endpoints.EDIT_TASK.uri()).
                     and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), taskHandler::update)
+                .andRoute(POST(Endpoints.CREATE_TASK.uri()).
+                    and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), taskHandler::create)
                 .andRoute(POST(Endpoints.EDIT_MILESTONE.uri()).
                     and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), milestoneHandler::update)
+                .andRoute(POST(Endpoints.CREATE_MILESTONE.uri()).
+                    and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), milestoneHandler::create)
             );
     }
 }

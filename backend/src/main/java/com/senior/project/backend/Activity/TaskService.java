@@ -3,6 +3,7 @@ package com.senior.project.backend.Activity;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.TaskType;
+import com.senior.project.backend.domain.YearLevel;
 
 import java.util.Map;
 
@@ -68,5 +69,32 @@ public class TaskService {
         Task task = taskRepository.findById((long) id);
         return task == null ? Mono.empty() : Mono.just(task);
     }
+    
+    @Transactional
+    public Mono<Task> createTask(Map<String, Object> data) {
+        Task newTask = new Task();
+
+        newTask.setName((String) data.get("name"));
+        newTask.setYearLevel(YearLevel.valueOf((String) data.get("yearLevel")));
+
+        if (data.containsKey("description")) {
+            newTask.description = (String) data.get("description");
+        }
+
+        if (data.get("taskType").equals("artifact")) {
+            newTask.setTaskType(TaskType.valueOf((String) data.get("taskType")));
+            newTask.setArtifactName((String) data.get("artifactName"));
+            newTask.setEvent(null);
+        }
+        else if (data.get("taskType").equals("event")) {
+            newTask.setTaskType(TaskType.valueOf((String) data.get("taskType")));
+            Event assignedEvent = eventRepository.findById(Integer.parseInt((String) data.get("event")));
+            newTask.setEvent(assignedEvent);
+            newTask.setArtifactName(null);
+        }
+
+        return Mono.just(taskRepository.save(newTask));
+    }
+
     
 }

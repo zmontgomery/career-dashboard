@@ -15,6 +15,12 @@ public enum Endpoints {
     // Events
     EVENTS("events", true),
     DASHBOARD_EVENTS("dashboard_events", true),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
+    CREATE_TASK("admin/create-task", true, Role.ADMIN),
+    SEARCH_USERS("users/search", true, Role.FACULTY),
+    PORTFOLIO("portfolio", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
     // TODO remove this
     EMAIL("send-email", false),
@@ -55,7 +61,7 @@ public enum Endpoints {
     private boolean needsAuthentication;
     private Role role;
 
-    private Endpoints(String value, boolean needsAuthentication) {
+    Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
         this.role = Role.STUDENT;
@@ -107,7 +113,7 @@ public enum Endpoints {
     public static String[] getOpenRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
             .filter(r -> !r.getNeedsAuthentication())
-            .map((r) -> r.uri())
+            .map(Endpoints::uri)
             .toList();
 
         String[] routes = new String[list.size()];
