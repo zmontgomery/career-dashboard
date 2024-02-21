@@ -6,7 +6,6 @@ import com.senior.project.backend.security.SecurityUtil;
 
 import jakarta.annotation.PostConstruct;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
@@ -109,7 +108,6 @@ public class ArtifactService {
                 return filePart.transferTo(destination)
                         .then(SecurityUtil.getCurrentUser())
                         .map((user) -> {
-                            LoggerFactory.getLogger(getClass()).info("\n\n\n" + user.toString() + "\n\n\n");
                             upload.setUserId(user.getId());
                             return upload;
                         })
