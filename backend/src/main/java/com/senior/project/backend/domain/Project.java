@@ -5,6 +5,8 @@ import lombok.*;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,12 +38,8 @@ public class Project {
     @Temporal(value = TemporalType.DATE)
     private Date endDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID studentDetailsID;
-
-    // @ManyToOne(fetch = FetchType.EAGER)
-    // @JoinColumn(name="student_details_id")
-    // private StudentDetails studentDetails;
+    @JsonIgnore
+    private StudentDetails studentDetails;
 }

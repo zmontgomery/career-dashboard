@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,11 +29,8 @@ public class DegreeProgram {
     private String name;
     private boolean isMinor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
-    private UUID studentDetailsID;
-
-    // @ManyToOne(fetch = FetchType.EAGER)
-    // @JoinColumn(name="student_details_id")
-    // private StudentDetails studentDetails;
+    @JsonIgnore
+    private StudentDetails studentDetails;
 }

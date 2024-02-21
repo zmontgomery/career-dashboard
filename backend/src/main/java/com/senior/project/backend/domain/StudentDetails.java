@@ -46,18 +46,18 @@ public class StudentDetails {
 	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date startDate;
 
-	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<Project> projects;
 
-	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<Job> jobs;
 	
-	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
-	private List<DegreeProgram> minors;
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	private List<DegreeProgram> degreePrograms;
 	// private DegreeProgram[] majors;
 	// private Club[] clubs;
 
-	@OneToMany(mappedBy = "studentDetailsID", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<Skill> skills;
 	// private Skill[] languages;
 }

@@ -1,4 +1,3 @@
-import { YearLevel } from "src/domain/Milestone";
 import { StudentDetails } from "src/domain/StudentDetails";
 
 /**

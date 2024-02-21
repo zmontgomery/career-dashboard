@@ -54,11 +54,6 @@
           <ul *ngFor="let skill of user.studentDetails.skills">
               <li>{{skill.name}}</li>
           </ul>
-          <!-- <ul>
-            <li>Skill 1</li>
-            <li>Skill 2</li>
-            <li>Skill 3</li>
-          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
@@ -70,15 +65,10 @@
             <p>{{project.name}}</p>
             <ul>
               <li>{{project.description}}</li>
-              <li>{{project.startDate}}</li>
-              <li>{{project.endDate}}</li>
+              <li>Start Date: {{project.startDate}}</li>
+              <li>End Date: {{project.endDate}}</li>
             </ul>
           </div>
-          <!-- <ul>
-            <li>Project 1</li>
-            <li>Project 2</li>
-            <li>Project 3</li>
-          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
@@ -87,19 +77,16 @@
         </div>
         <div class="card-body-section-body">
           <div *ngFor="let job of user.studentDetails.jobs">
+            <!-- <div *ngIf="job.isCoop == false"> -->
             <p>{{job.name}}</p>
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>{{job.startDate}}</li>
-              <li>{{job.endDate}}</li>
+              <li>Start Date: {{job.startDate}}</li>
+              <li>End Date: {{job.endDate}}</li>
             </ul>
+            <!-- </div> -->
           </div>
-          <!-- <ul>
-            <li>Jobs 1</li>
-            <li>Jobs 2</li>
-            <li>Jobs 3</li>
-          </ul> -->
         </div>
       </div>
       <div class="card-body-section">
