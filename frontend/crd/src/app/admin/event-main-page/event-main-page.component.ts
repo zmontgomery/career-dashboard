@@ -3,6 +3,7 @@ import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from "../../../domain/Event";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EventEditModalComponent } from '../event-edit-modal/event-edit-modal.component';
+import {ImageUploadComponent} from "../image-upload-modal/image-upload.component";
 
 @Component({
   selector: 'app-event-main-page',
@@ -49,6 +50,20 @@ export class EventMainPageComponent implements OnInit {
   }
 
   openEventImageModal(event: Event) {
-    console.log('image edit');
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
+    dialogConfig.data = {
+      event: event
+    }
+
+    const modalDialog = this.matDialog.open(ImageUploadComponent, dialogConfig);
+
+    modalDialog.afterClosed().subscribe(result => {
+      console.log('close image upload')
+    })
   }
 }

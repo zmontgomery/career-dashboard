@@ -29,16 +29,16 @@ export class SubmissionModalComponent implements OnDestroy {
     private readonly artifactService: ArtifactService,
     private readonly authService: AuthService,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { 
+    @Inject(MAT_DIALOG_DATA) public data: {
       url: string,
-      task: Task 
+      task: Task
     },
-  ) { 
+  ) {
     this.task = this.data.task;
   }
 
   /**
-   * Deletes the artifact from the server if it has been uploaded without a 
+   * Deletes the artifact from the server if it has been uploaded without a
    * submission being created
    */
   ngOnDestroy(): void {
@@ -100,7 +100,6 @@ export class SubmissionModalComponent implements OnDestroy {
   }
 
   needsArtifact(): boolean {
-    console.log(this.task.needsArtifact());
     return this.task.needsArtifact();
   }
 }
