@@ -71,8 +71,9 @@ public class Constants {
                 "Meet with academic advisor to discuss current major and class schedule",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Meeting Notes",
+                "instructions",
                 m1,
                 null);
 
@@ -81,8 +82,9 @@ public class Constants {
                 "Detailed description here",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Degreeworks Result",
+                "instructions",
                 m1,
                 null);
 
@@ -91,8 +93,9 @@ public class Constants {
                 "Meet with academic advisor to discuss class schedule and receive PIN for registration",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Registration PIN",
+                "instructions",
                 m1,
                 null);
 
@@ -154,6 +157,7 @@ public class Constants {
         user1 = new User();
         user1.setId(UUID.randomUUID());
         user1.setEmail("test@test.com");
+        user1.setAdmin(true);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
@@ -171,10 +175,14 @@ public class Constants {
         artifact1.setName("artifact 1 name");
         artifact1.setId(1);
         artifact1.setFileLocation("../uploads/artifactServiceTest");
+        artifact1.setUserId(user1.getId());
         artifact2 = new Artifact();
         artifact2.setName("artifact 2 name");
         artifact2.setId(2);
         artifact2.setFileLocation("../uploads/location 2");
+        artifact2.setUserId(user2.getId());
+        ARTIFACTS.add(artifact1);
+        ARTIFACTS.add(artifact2);
     }
 
 }

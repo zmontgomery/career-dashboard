@@ -1,8 +1,6 @@
 package com.senior.project.backend.portfolio;
 
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.Portfolio.ArtifactHandler;
-import com.senior.project.backend.Portfolio.ArtifactService;
 import com.senior.project.backend.domain.Artifact;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
+
+import com.senior.project.backend.artifact.ArtifactHandler;
+import com.senior.project.backend.artifact.ArtifactService;
+
 import java.io.IOException;
 import java.util.List;
 

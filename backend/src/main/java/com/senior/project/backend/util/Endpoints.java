@@ -12,7 +12,7 @@ import java.util.Arrays;
  * Enum for endpoints in the system and if they are accessible
  */
 public enum Endpoints {
-    // Domain
+    // Events
     EVENTS("events", true),
     DASHBOARD_EVENTS("dashboard_events", true),
     MILSTONES("milestones", true),
@@ -33,6 +33,28 @@ public enum Endpoints {
 
     // TODO remove this
     EMAIL("send-email", false),
+
+    // Tasks
+    TASKS("tasks", true),
+    TASK_BY_ID("tasks/{id}", true),
+    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
+
+    // Milestones
+    MILSTONES("milestones", true),
+    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
+
+    // Users
+    USERS("users", true),
+    CURRENT_USER("current-user", true),
+
+    // Submissions
+    SUBMISSION("tasks/submission", true),
+    LATEST_SUBMISSION("tasks/submission/{taskId}", true),
+
+    // Artifacts
+    ARTIFACT("artifact/", true),
+    ARTIFACT_ID("artifact/{id}", true),
+    ARTIFACT_FILE("artifact/file/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),
