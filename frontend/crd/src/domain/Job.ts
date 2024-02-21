@@ -19,7 +19,6 @@ export class Job{
         this.endDate = json.endDate;
         this.isCoop = json.coop;
         this.studentDetailsID = json.studentDetailsID;
-        console.log(this.isCoop);
     }
 
     id: string;

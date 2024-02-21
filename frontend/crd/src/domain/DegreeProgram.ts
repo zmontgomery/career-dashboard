@@ -1,7 +1,7 @@
 export interface DegreeProgramJSON{
     id: string;
     name: string;
-    isMinor: boolean;
+    minor: boolean;
     studentDetailsID: string;
 }
 
@@ -9,7 +9,7 @@ export class DegreeProgram{
     constructor(json: DegreeProgramJSON){
         this.id = json.id;
         this.name = json.name;
-        this.isMinor = json.isMinor;
+        this.isMinor = json.minor;
         this.studentDetailsID = json.studentDetailsID;
     }
 
@@ -22,7 +22,7 @@ export class DegreeProgram{
         return new DegreeProgram({
             id: '',
             name: '',
-            isMinor: false,
+            minor: false,
             studentDetailsID: ''
         })
     }
