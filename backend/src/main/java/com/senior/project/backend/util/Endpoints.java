@@ -15,13 +15,7 @@ public enum Endpoints {
     // Events
     EVENTS("events", true),
     DASHBOARD_EVENTS("dashboard_events", true),
-    MILSTONES("milestones", true),
-    TASKS("tasks", true),
     RESUME("portfolio/resume", true),
-    USERS("users", true),
-    CURRENT_USER("current-user", true),
-    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
-    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
     EDIT_EVENT("admin/edit-event", true, Role.ADMIN),
     CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
     CREATE_TASK("admin/create-task", true, Role.ADMIN),
