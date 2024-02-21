@@ -22,18 +22,13 @@ export class EventEditModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EventEditModalComponent>,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
+    public http: HttpClient,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
 
     if (this.modalData.event) {
       this.currentEvent = this.modalData.event;
       this.eventName = this.modalData.event.name;
-    }
-    else {
-      console.log("creating an event")
-      //this.tYearLevel = this.modalData.name;
-      //this.taskName = '';
     }
   }
 
@@ -95,7 +90,7 @@ export class EventEditModalComponent implements OnInit {
         updateData.buttonLabel = this.eventForm.get('buttonLabel')!.value;
       }
 
-      const url = constructBackendRequest(Endpoints.EDIT_EVENT)
+      const url = constructBackendRequest(Endpoints.EDIT_EVENT);
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
           window.alert("Something went wrong");

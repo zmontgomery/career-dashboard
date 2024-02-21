@@ -27,9 +27,6 @@ export class EventMainPageComponent implements OnInit {
   }
 
   openEventEditModal(event: Event | null) {
-    console.log("clicked on event modal")
-    console.log(event);
-
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
@@ -44,7 +41,6 @@ export class EventMainPageComponent implements OnInit {
 
     modalDialog.afterClosed().subscribe(result => {
       //TODO: successful save popup?
-      //this.eventService.getEvents();
       this.ngOnInit();
     })
   }
