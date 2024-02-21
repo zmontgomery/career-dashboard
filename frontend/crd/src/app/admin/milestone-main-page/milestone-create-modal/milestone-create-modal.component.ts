@@ -26,8 +26,8 @@ export class MilestoneCreateModalComponent implements OnInit {
     public dialogRef: MatDialogRef<MilestoneCreateModalComponent>,
     public formBuilder: FormBuilder,
     public http: HttpClient,
-    private router: Router,
-    private milestoneService: MilestoneService,
+    public router: Router,
+    public milestoneService: MilestoneService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
 

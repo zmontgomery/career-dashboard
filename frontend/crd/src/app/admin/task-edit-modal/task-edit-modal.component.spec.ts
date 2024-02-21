@@ -23,6 +23,22 @@ describe('TaskEditModalComponent', () => {
   let dialogMock = {
     close: () => { }
     };
+  const testTask = new Task({
+    name: 'task name',
+    description: "description",
+    id: 1,
+    isRequired: true,
+    submission: 'submission',
+    yearLevel: YearLevel.Freshman,
+    milestoneID: 1,
+    taskType: 'artifact',
+    artifactName: 'test artifact'
+  });
+
+  const dialogData = {
+    name: "testing",
+    task: testTask
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -42,7 +58,7 @@ describe('TaskEditModalComponent', () => {
         MatDialog,
         FormBuilder,
         {provide: MatDialogRef, useValue: dialogMock},
-        {provide: MAT_DIALOG_DATA, useValue: []},
+        {provide: MAT_DIALOG_DATA, useValue: dialogData},
       ],
       teardown: {destroyAfterEach: false}
     });
@@ -80,23 +96,8 @@ describe('TaskEditModalComponent', () => {
   });
 
   it('should build blank form', () => {
-    component.createForm();
+    component.currentTask = undefined;
 
-    const sampleForm = formBuilder.group({
-      name: [null, Validators.required],
-      description: [null],
-      taskType: ['artifact'], 
-      artifactName: [null],
-      event: [null]
-    });
-
-    expect(component.taskForm.get('name')!.value).toEqual(sampleForm.get('name')!.value);
-    expect(component.taskForm.get('artifactName')!.value).toEqual(sampleForm.get('artifactName')!.value);
-
-    expect(component.getTaskType()).toEqual('artifact')
-  });
-
-  it('should build blank form', () => {
     component.createForm();
 
     const sampleForm = formBuilder.group({
@@ -114,17 +115,17 @@ describe('TaskEditModalComponent', () => {
   });
 
   it('should save task', () => {
-      component.currentTask = new Task({
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        submission: 'submission',
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: 'artifact',
-        artifactName: 'test artifact'
-      });
+    component.currentTask = new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      submission: 'submission',
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: 'artifact',
+      artifactName: 'test artifact'
+    });
     component.createForm();
 
     component.taskForm = formBuilder.group({
@@ -133,6 +134,40 @@ describe('TaskEditModalComponent', () => {
       taskType: ['artifact'], 
       artifactName: ['test artifact'],
       event: [null]
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should create artifact task', () => {
+    component.currentTask = undefined;
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: ['artifact'], 
+      artifactName: ['test artifact'],
+      event: [null]
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should create event task', () => {
+    component.currentTask = undefined;
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: ['event'], 
+      artifactName: [null],
+      event: [1]
     });
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(null));

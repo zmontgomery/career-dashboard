@@ -37,6 +37,7 @@ Partially Hydrated devs - Senior Project
 - `cd frontend/crd`
 - `npm run test-headless`
 - coverage found in frontend/crd/coverage/crd/index.html
+- for more accurate coverage, run `npm run test-headless-coverage`
 ### Back-end
 - `cd backend`
 - `./gradlew test`

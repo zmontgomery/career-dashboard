@@ -8,7 +8,7 @@ export interface TaskJSON {
   isRequired: boolean;
   submission: any;
   yearLevel: YearLevel;
-  milestoneID: number;
+  milestoneID?: number;
   taskType: string;
   artifactName?: string;
   eventID?: number;
@@ -26,7 +26,7 @@ export class Task {
     // TODO replace with constructor call when we add submission objects
     this.submission = json.submission;
     this.yearLevel = json.yearLevel;
-    this.milestoneID = json.milestoneID;
+    this.milestoneID = json?.milestoneID;
     this.taskType = json.taskType;
     this.artifactName = json?.artifactName;
     this.eventID = json?.eventID;
@@ -40,7 +40,7 @@ export class Task {
   isComplete: boolean;
   submission: any;
   yearLevel: YearLevel;
-  milestoneID: number;
+  milestoneID?: number;
   taskType: string;
   artifactName?: string;
   eventID?: number;

@@ -21,7 +21,7 @@ export class TaskMainPageComponent implements OnDestroy {
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 
   constructor(
-    private taskService: TaskService,
+    public taskService: TaskService,
     private router: Router,
     public matDialog: MatDialog
   ) {
@@ -39,11 +39,6 @@ export class TaskMainPageComponent implements OnDestroy {
         this.yearLevels.forEach((yearLevel) => this.taskMap.set(yearLevel, new Array<Task>()));
         tasks.forEach((task) => this.taskMap.get(task.yearLevel)?.push(task));
     });
-  }
-
-  editTask(name: string) {
-    //const encodedName = encodeURIComponent(name);
-    //this.router.navigate(['/admin/task-edit', encodedName]);
   }
 
   openTaskEditModal(name: string, task: Task | null) {
