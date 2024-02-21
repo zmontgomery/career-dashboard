@@ -3,7 +3,22 @@
         <mat-list-item>
             <span matListItemTitle>{{event.name}}</span>
             <span matListItemLine>{{event.description}}</span>
-            <button mat-button (click)="openEventEditModal(event)">EDIT</button>
+        </mat-list-item>
+        <mat-list-item>
+            <div class="buttons-container">
+                <button mat-raised-button color="primary" (click)="openEventEditModal(event)">
+                    <mat-icon >
+                        edit
+                    </mat-icon>
+                    EDIT
+                </button>
+                <button mat-raised-button (click)="openEventImageModal(event)">
+                    <mat-icon >
+                        upload
+                    </mat-icon>
+                    IMAGE
+                </button>
+            </div>
         </mat-list-item>
     </ng-container>
     <mat-list-item class="new-task" (click)="openEventEditModal(null)">

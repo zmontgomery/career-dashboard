@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from "../../../domain/Event";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { EventEditModalComponent } from '../event-edit-modal/event-edit-modal.component';
 
 @Component({
@@ -49,4 +48,7 @@ export class EventMainPageComponent implements OnInit {
     })
   }
 
+  openEventImageModal(event: Event) {
+    console.log('image edit');
+  }
 }
