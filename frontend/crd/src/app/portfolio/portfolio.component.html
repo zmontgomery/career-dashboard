@@ -29,17 +29,19 @@
           Education
         </div>
         <div class="card-body-section-body">
+          Majors: 
           <ul>
-            <li>Majors: 
-              <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
-                <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
-              </div>
-            </li>
-            <li>Minors:
-              <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
-                <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
-              </div>
-            </li>
+            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+              <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
+            </div>
+          </ul>
+          Minors:
+          <ul>
+            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+              <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
+            </div>
+          </ul>
+          <ul>
             <li>School Year: {{user.studentDetails?.yearLevel}}</li>
             <li>GPA: {{user.studentDetails?.gpa}}</li>
           </ul>
