@@ -12,6 +12,21 @@ import { LangUtils } from '../util/lang-utils';
 import { UserJSON } from './domain/user';
 import { ActivatedRoute, Params } from '@angular/router';
 
+export const userJSON: UserJSON = {
+  id: 'id',
+  email: 'test@test.test',
+  phoneNumber: '111-111-1111',
+  dateCreated: 0,
+  lastLogin: 0,
+  firstName: 'test',
+  lastName: 'test',
+  canEmail: false,
+  canText: false,
+  admin: true,
+  faculty: true,
+  student: true
+}
+
 describe('AuthService', () => {
   let service: AuthService;
   let httpSpy: HttpClient;
@@ -20,21 +35,6 @@ describe('AuthService', () => {
   let googleAuthService: SocialAuthService;
   let activatedRouteSpy: ActivatedRoute;
   let locationSpy: Location;
-
-  const userJSON: UserJSON = {
-    id: 'id',
-    email: 'test@test.test',
-    phoneNumber: '111-111-1111',
-    dateCreated: 0,
-    lastLogin: 0,
-    firstName: 'test',
-    lastName: 'test',
-    canEmail: false,
-    canText: false,
-    admin: true,
-    faculty: true,
-    student: true
-  }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
   let request = new LoginRequest({idToken: 'token', tokenType: TokenType.GOOGLE });
