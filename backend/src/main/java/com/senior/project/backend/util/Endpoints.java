@@ -49,6 +49,9 @@ public enum Endpoints {
     ARTIFACT("artifact/", true),
     ARTIFACT_ID("artifact/{id}", true),
     ARTIFACT_FILE("artifact/file/{artifactID}", true),
+    UPLOAD_IMAGE_EVENT("artifact/event/{eventID}", true, Role.ADMIN),
+    USERS_PROFILE_PICTURE("artifact/profile-picture", true),
+    PROFILE_PICTURE("artifact/profile-picture/{userID}", true, Role.FACULTY),
 
     // Security
     SIGNIN("auth/signin", false),

@@ -25,8 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ArtifactService {
@@ -39,6 +38,10 @@ public class ArtifactService {
     private final String uploadDirectory;
 
     private final ArtifactRepository artifactRepository;
+
+    // Make sure to add any filetypes to the getFileExtension method
+    private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);;
+    private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
     public ArtifactService(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
@@ -79,43 +82,60 @@ public class ArtifactService {
      * Stores a file in the uploads folder and adds an artifact object to the database
      */
     public Mono<Integer> processFile(FilePart filePart) {
-        return validateFileSize(filePart).flatMap(
-            (result) -> {
-                String extension;
-                // Check if the file is a PDF based on content type
-                MediaType contentType = filePart.headers().getContentType();
-                if (contentType == null) {
-                    return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Content type provided for file"));
-                } else if (contentType.isCompatibleWith(MediaType.APPLICATION_PDF)){
-                    extension = ".pdf";
-                }
-                // Add more file types here
-                else {
-                    return Mono.error(new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported filetype"));
-                }
+        return validateAndGetPath(filePart, TASK_ARTIFACT_TYPES)
+                .flatMap(destination -> {
+                    Artifact upload = new Artifact();
+                    upload.setFileLocation(destination.toString());
+                    upload.setName(filePart.filename());
 
-                // Generate a unique identifier for the file
-                String uniqueFilename = UUID.randomUUID() + extension;
+                    // Save the file to the specified directory
+                    return filePart.transferTo(destination)
+                            .then(SecurityUtil.getCurrentUser())
+                            .map((user) -> {
+                                upload.setUserId(user.getId());
+                                return upload;
+                            })
+                            .flatMap((artifact) -> Mono.just(artifactRepository.save(artifact)))
+                            .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
+                            .map(Artifact::getId);
+                });
+    }
 
-                // Construct the destination path using the unique identifier
-                Path destination = Paths.get(uploadDirectory, uniqueFilename);
+    public Mono<Integer> processEventImage(FilePart filePart) {
+        return validateAndGetPath(filePart, IMAGE_TYPES)
+                .flatMap(destination -> {
 
-                Artifact upload = new Artifact();
-                upload.setFileLocation(destination.toString());
-                upload.setName(filePart.filename());
+                    Artifact upload = new Artifact();
+                    upload.setFileLocation(destination.toString());
+                    upload.setName(filePart.filename());
 
-                // Save the file to the specified directory
-                return filePart.transferTo(destination)
-                        .then(SecurityUtil.getCurrentUser())
-                        .map((user) -> {
-                            upload.setUserId(user.getId());
-                            return upload;
-                        })
-                        .flatMap((artifact) -> Mono.just(artifactRepository.save(artifact)))
-                        .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
-                        .map((artifact) -> artifact.getId());
-            }
-        );
+                    // Save the file to the specified directory
+                    return filePart.transferTo(destination)
+                            .then(Mono.defer(() -> Mono.just(artifactRepository.save(upload))))
+                            .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
+                            .map(Artifact::getId);
+                });
+    }
+
+    private Mono<Path> validateAndGetPath(FilePart filePart, List<MediaType> acceptableTypes) {
+        return validateFileSize(filePart)
+                .flatMap((filePart1 -> {
+                    // Check if the file is a PDF based on content type
+                    MediaType contentType = filePart.headers().getContentType();
+                    if (contentType == null) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Content type provided for file"));
+                    }
+                    Optional<String> extension = getFileExtension(contentType);
+                    if (!acceptableTypes.contains(contentType) || extension.isEmpty()) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported filetype"));
+                    }
+
+                    // Generate a unique identifier for the file
+                    String uniqueFilename = UUID.randomUUID() + extension.get();
+
+                    // Construct the destination path using the unique identifier
+                    return Mono.just(Paths.get(uploadDirectory, uniqueFilename));
+                }));
     }
 
     /**
@@ -172,7 +192,7 @@ public class ArtifactService {
     /**
      * Validates the file uploaded is below the max size
      */
-    private Mono<Boolean> validateFileSize(FilePart filePart) {
+    private Mono<FilePart> validateFileSize(FilePart filePart) {
         return filePart
                 .content()
                 .reduce(0L, (currentSize, buffer) -> currentSize + buffer.readableByteCount())
@@ -183,7 +203,7 @@ public class ArtifactService {
                                 "File size exceeds the maximum allowed size."
                         ));
                     } else {
-                        return Mono.just(true);
+                        return Mono.just(filePart);
                     }
                 });
     }
@@ -260,5 +280,30 @@ public class ArtifactService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Optional<String> getFileExtension(MediaType mediaType) {
+        // image types
+        if (mediaType.equals(MediaType.IMAGE_JPEG)) {
+            return "jpg".describeConstable();
+        } else if (mediaType.equals(MediaType.IMAGE_PNG)) {
+            return "png".describeConstable();
+        }
+
+        // PDF
+        if (mediaType.equals(MediaType.APPLICATION_PDF)) {
+            return "pdf".describeConstable();
+        }
+
+        // not currently supported because resume viewer won't work
+        // Word documents
+        if (mediaType.equals(MediaType.valueOf("application/msword"))) {
+            return "docx".describeConstable();
+        }
+
+        // Add more mappings as needed
+
+        // If no mapping found, return a empty
+        return Optional.empty();
     }
 }

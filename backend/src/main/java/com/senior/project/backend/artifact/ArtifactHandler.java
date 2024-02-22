@@ -1,8 +1,8 @@
 package com.senior.project.backend.artifact;
 
-import com.senior.project.backend.domain.Artifact;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
@@ -30,10 +31,7 @@ public class ArtifactHandler {
      * Takes the file from the request body and stores it on the server
      */
     public Mono<ServerResponse> handleFileUpload(ServerRequest request) {
-        return request.multipartData()
-                .map(parts -> parts.toSingleValueMap().get("file"))
-                .filter(part -> part instanceof FilePart)
-                .map(part -> (FilePart) part)
+        return getFilePart(request)
                 .flatMap(artifactService::processFile)
                 .flatMap(response -> ServerResponse.ok()
                         // https://github.com/spring-projects/spring-ws/issues/1128
@@ -43,6 +41,25 @@ public class ArtifactHandler {
                         // spring update it won't break
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> handleEventImageUpload(ServerRequest request) {
+        return getFilePart(request)
+                .flatMap(artifactService::processEventImage)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
+    }
+
+    public Mono<ServerResponse> handleProfileImageUpload(ServerRequest request) {
+        return Mono.error(new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED));
+    }
+
+    private static Mono<FilePart> getFilePart(ServerRequest request) {
+        return request.multipartData()
+                .map(parts -> parts.toSingleValueMap().get("file"))
+                .filter(part -> part instanceof FilePart)
+                .map(part -> (FilePart) part);
     }
 
     /**
@@ -71,10 +88,9 @@ public class ArtifactHandler {
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 
-    /**
-     * Retrieves all artifacts
-     */
-    public Mono<ServerResponse> all(ServerRequest serverRequest) {
-        return ServerResponse.ok().body(this.artifactService.all(), Artifact.class );
+    public enum UploadType {
+        TaskArtifact,
+        EventImage,
+        ProfileImage
     }
 }
