@@ -42,7 +42,6 @@ export class User {
     readonly faculty: boolean;
 
     constructor(json: UserJSON) {
-        console.log('asdf')
         this.id = json.id;
         this.email = json.email;
         this.phoneNumber = json.phoneNumber;
