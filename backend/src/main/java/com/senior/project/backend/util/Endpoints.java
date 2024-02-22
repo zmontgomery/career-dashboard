@@ -135,7 +135,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 
@@ -150,7 +149,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 
