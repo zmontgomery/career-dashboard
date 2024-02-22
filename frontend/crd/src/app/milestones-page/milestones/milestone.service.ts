@@ -31,8 +31,8 @@ export class MilestoneService {
 
       return this.http.get<MilestoneJSON[]>(constructBackendRequest(Endpoints.MILESTONES))
         .pipe(
-          catchError(() => {
-            console.log('error');
+          catchError((err) => {
+            console.log(err);
             this.hasBeenRequested = false;
             return of(new Array<MilestoneJSON>());
           }),
