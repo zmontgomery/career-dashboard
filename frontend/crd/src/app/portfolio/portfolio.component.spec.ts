@@ -47,8 +47,7 @@ describe('PortfolioComponent', () => {
       ],
       providers: [
         {provide: MatDialog, useValue: matDialog},
-        {provide: ArtifactService, useValue: artifactSvc},
-        {provide: MsalService}
+        {provide: ArtifactService, useValue: artifactSvc}
       ]
     });
     httpMock = TestBed.inject(HttpTestingController);
