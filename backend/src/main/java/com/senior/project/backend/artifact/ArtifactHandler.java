@@ -36,13 +36,9 @@ public class ArtifactHandler {
                 .map(part -> (FilePart) part)
                 .flatMap(artifactService::processFile)
                 .flatMap(response -> ServerResponse.ok()
-                        // https://github.com/spring-projects/spring-ws/issues/1128
-                        // There seems to be a bug where you can't convert a single string to valid json
-                        // return plain text instead and handle it in angular instead.
-                        // Want to explicitly return plain text so if this is ever fixed in a
-                        // spring update it won't break
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(response));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(response)
+                );
     }
 
     /**

@@ -2,6 +2,7 @@ package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.security.AuthService;
 import com.senior.project.backend.security.SecurityUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -25,6 +27,9 @@ public class SubmissionHandler {
 
     @Autowired
     ArtifactService artifactService;
+
+    @Autowired
+    AuthService authService;
 
     /**
      * Handles processing of a submission
@@ -69,10 +74,11 @@ public class SubmissionHandler {
      * @return
      */
     public Mono<ServerResponse> getLatestSubmission(ServerRequest serverRequest) {
-        return SecurityUtil.getCurrentUser()
+        return authService.currentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
             .map((submissions) -> {
+                System.out.println(submissions.toString());
                 List<Submission> newList = submissions.stream()
                     .sorted((s1, s2) -> s1.getSubmissionDate().before(s2.getSubmissionDate()) ? -1 : 1)
                     .collect(Collectors.toList());

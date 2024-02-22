@@ -25,18 +25,22 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,8 +78,12 @@ public class ArtifactServiceTest {
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         Mono<Integer> result = artifactService.processFile(filePart);
+        result = result.map((a) -> {
+            
+            securityUtil.close();
+            return a;
+        });
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
-        securityUtil.close();
     }
 
     @Test
@@ -130,7 +138,6 @@ public class ArtifactServiceTest {
     @Test
     public void testGetFileFailPathCheck() {
         when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact2));
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         Path artifactPath = Paths.get(Constants.artifact2.getFileLocation());
@@ -225,54 +232,95 @@ public class ArtifactServiceTest {
 
     @Test
     public void testDeleteFileInternalName() {
+        when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
+        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
-        files.when(() -> Files.deleteIfExists(any()));
-        when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
+        files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
+        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile("asdf");
+
+        result = result.map((r) -> {
+            paths.close();
+            files.close(); 
+            securityUtils.close();   
+            return r;
+        });
 
         StepVerifier.create(result)
             .expectNext("File deleted successfully")
-            .expectComplete();
-
-        paths.close();
-        files.close();
+            .expectComplete()
+            .verify();
     }
 
     @Test
     public void testDeleteFileInternalNameEmpty() {
-        when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.empty());
+        when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.empty());
+        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
+        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile("asdf");
 
-        StepVerifier.create(result)
-            .expectComplete();
+        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> {
+            securityUtils.close();
+            return result;
+        }));
+
+        StepVerifier.create(newResult)
+            .expectComplete()
+            .verify();
     }
 
     @Test
     public void testDeleteFileId() {
+        when(artifactRepository.findById(any())).thenReturn(Optional.of(Constants.artifact1));
+        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
-        files.when(() -> Files.deleteIfExists(any()));
-        when(artifactRepository.findById(any())).thenReturn(Optional.of(Constants.artifact1));
-        Mono<String> result = artifactService.deleteFile(0);
+        files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
+        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        Mono<String> result = artifactService.deleteFile(2);
+
+        result = result.map((r) -> {
+            paths.close();
+            files.close(); 
+            securityUtils.close();   
+            
+            return r;
+        });
 
         StepVerifier.create(result)
             .expectNext("File deleted successfully")
-            .expectComplete();
+            .expectComplete()
+            .verify();
+    }
 
-        paths.close();
-        files.close();
+    @Test
+    public void testDeleteFileIdArtfact1() {
+        Mono<String> result = artifactService.deleteFile(1);
+
+        StepVerifier.create(result)
+            .expectNext("Success")
+            .expectComplete()
+            .verify();
     }
 
     @Test
     public void testDeleteFileIdEmpty() {
         when(artifactRepository.findById(any())).thenReturn(Optional.empty());
-        Mono<String> result = artifactService.deleteFile(0);
+        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
+        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        Mono<String> result = artifactService.deleteFile(2);
 
-        StepVerifier.create(result)
-            .expectComplete();
+        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> {
+            securityUtils.close();
+            return result;
+        }));
+
+        StepVerifier.create(newResult)
+            .expectComplete()
+            .verify();
     }
 
     @Test
@@ -280,15 +328,19 @@ public class ArtifactServiceTest {
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
-        files.when(() -> Files.deleteIfExists(any()));
+        files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
         Mono<String> result = artifactService.deleteFile(Constants.artifact1, Constants.user1);
+
+        result = result.map((r) -> {
+            paths.close();
+            files.close(); 
+            return r;
+        });
 
         StepVerifier.create(result)
             .expectNext("File deleted successfully")
-            .expectComplete();
-
-        paths.close();
-        files.close();
+            .expectComplete()
+            .verify();
     }
 
     @Test
@@ -307,13 +359,52 @@ public class ArtifactServiceTest {
             .expectError(ResponseStatusException.class);
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testInitArtifacts() {
+        MockedStatic<Paths> paths = mockStatic(Paths.class);
+        MockedStatic<Files> files = mockStatic(Files.class);
+        Path path = mock(Path.class);
+        File file = mock(File.class);
+        when(artifactRepository.count()).thenReturn(0l);
+        when(artifactRepository.saveAndFlush(any())).thenReturn(Constants.artifact1);
+        paths.when(() -> Paths.get(any())).thenReturn(path);
+        files.when(() -> Files.exists(any())).thenReturn(true);
+        files.when(() -> Files.walk(any())).thenReturn(List.of(path).stream());
+        when(path.toFile()).thenReturn(file);
+        when(file.delete()).thenReturn(true);
+        files.when(() -> Files.createDirectories(any())).thenReturn(path);
 
+        ReflectionTestUtils.invokeMethod(artifactService, "initArtifacts");
+
+        verify(artifactRepository, times(1)).count();
+        verify(path, times(1)).toFile();
+        verify(file, times(1)).delete();
+        verify(artifactRepository, times(1)).saveAndFlush(any());
+        
+        paths.close();
+        files.close();
     }
 
+    @SuppressWarnings("resource")
     @Test
     public void testInitArtifactsError() {
+        MockedStatic<Paths> paths = mockStatic(Paths.class);
+        MockedStatic<Files> files = mockStatic(Files.class);
+        Path path = mock(Path.class);
+        File file = mock(File.class);
+        when(artifactRepository.count()).thenReturn(0l);
+        paths.when(() -> Paths.get(any())).thenReturn(path);
+        files.when(() -> Files.exists(any())).thenReturn(true);
+        files.when(() -> Files.walk(any())).thenThrow(IOException.class);
 
+        ReflectionTestUtils.invokeMethod(artifactService, "initArtifacts");
+
+        verify(path, times(0)).toFile();
+        verify(file, times(0)).delete();
+        verify(artifactRepository, times(0)).saveAndFlush(any());
+        
+        paths.close();
+        files.close();
     }
 }

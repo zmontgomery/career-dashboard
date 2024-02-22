@@ -49,6 +49,7 @@ public class ArtifactHandlerTest {
                         .POST("/test", artifactHandler::handleFileUpload)
                         .GET("/test/{artifactID}", artifactHandler::servePdf)
                         .GET("/all", artifactHandler::all)
+                        .DELETE("/test/{id}", artifactHandler::handleFileDelete)
                         .build())
                 .build();
     }
@@ -124,6 +125,19 @@ public class ArtifactHandlerTest {
     }
 
     @Test
+    public void handleFileDelete() {
+        when(artifactService.deleteFile(1)).thenReturn(Mono.just("test"));
+        String result = webTestClient.delete().uri("/test/1")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertEquals(result, "test");
+    }
+
+    @Test
     public void testAll() {
         Flux<Artifact> eventFlux = Flux.just(Constants.artifact1, Constants.artifact2);
         when(artifactService.all()).thenReturn(eventFlux);
@@ -134,4 +148,6 @@ public class ArtifactHandlerTest {
         assertEquals(Constants.artifact1.getId(), result.get(0).getId());
         assertEquals(Constants.artifact2.getId(), result.get(1).getId());
     }
+
+    
 }

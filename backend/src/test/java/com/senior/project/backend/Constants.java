@@ -4,6 +4,8 @@ import com.senior.project.backend.domain.*;
 
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -167,16 +169,37 @@ public class Constants {
     static {
         artifact1 = new Artifact();
         artifact1.setName("artifact 1 name");
-        artifact1.setId(1);
+        artifact1.setId(2);
         artifact1.setFileLocation("../uploads/artifactServiceTest");
         artifact1.setUserId(user1.getId());
         artifact2 = new Artifact();
         artifact2.setName("artifact 2 name");
-        artifact2.setId(2);
+        artifact2.setId(3);
         artifact2.setFileLocation("../uploads/location 2");
         artifact2.setUserId(user2.getId());
         ARTIFACTS.add(artifact1);
         ARTIFACTS.add(artifact2);
+    }
+
+    public static Submission submission1;
+    public static Submission submission2;
+    public static final List<Submission> SUBMISSIONS = new ArrayList<>();
+
+    static {
+        submission1 = new Submission();
+        submission1.setId(1);
+        submission1.setArtifactId(2);
+        submission1.setTaskId(1);
+        submission1.setComment("comment");
+        submission1.setSubmissionDate(Date.from(Instant.now()));
+        submission2 = new Submission();
+        submission2.setId(2);
+        submission2.setArtifactId(3);
+        submission2.setTaskId(2);
+        submission2.setComment("comment 2");
+        submission2.setSubmissionDate(Date.from(Instant.now().plusMillis(100000)));
+        SUBMISSIONS.add(submission1);
+        SUBMISSIONS.add(submission2);
     }
 
 }

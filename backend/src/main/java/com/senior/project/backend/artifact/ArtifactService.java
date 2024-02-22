@@ -143,8 +143,11 @@ public class ArtifactService {
         if (id == NO_FILE_ID) return Mono.just("Success");
         return SecurityUtil.getCurrentUser()
                 .flatMap((user) -> {
-                    Artifact a = artifactRepository.findById((long) id).get();
-                    return deleteFile(a, user);
+                    Optional<Artifact> a = artifactRepository.findById((long) id);
+                    if (a.isPresent()) {
+                        return deleteFile(a.get(), user);
+                    }
+                    return Mono.empty();
                 });
     }
 
