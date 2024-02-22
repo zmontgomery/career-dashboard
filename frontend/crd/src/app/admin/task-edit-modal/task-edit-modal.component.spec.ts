@@ -9,7 +9,7 @@ import { Form, FormBuilder, ReactiveFormsModule, Validators } from '@angular/for
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Task } from 'src/domain/Task';
+import { Task, TaskType } from 'src/domain/Task';
 import { YearLevel } from 'src/domain/Milestone';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { of } from 'rxjs';
@@ -59,10 +59,9 @@ describe('TaskEditModalComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       });
     component.createForm();
@@ -119,10 +118,9 @@ describe('TaskEditModalComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       });
     component.createForm();

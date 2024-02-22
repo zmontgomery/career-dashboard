@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import { FileUploadComponent } from './file-upload.component';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
@@ -6,17 +6,18 @@ import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {MatIconModule} from "@angular/material/icon";
 import {Renderer2} from "@angular/core";
+import { ArtifactService } from './artifact.service';
+import { constructBackendRequest, Endpoints } from '../util/http-helper';
 
 describe('FileUploadComponent', () => {
   let component: FileUploadComponent;
   let fixture: ComponentFixture<FileUploadComponent>;
   let httpMock: HttpTestingController;
   let renderer: Renderer2;
-  let matDialogRef: jasmine.SpyObj<MatDialogRef<FileUploadComponent>>;
-  const testURL: string = "test-url";
+  let artifactServiceSpy: jasmine.SpyObj<ArtifactService>;
 
   beforeEach(() => {
-    matDialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
+    artifactServiceSpy = jasmine.createSpyObj('ArtifactService', ['deleteArtifact', 'uploadArtifact']);
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
@@ -26,8 +27,7 @@ describe('FileUploadComponent', () => {
       ],
       declarations: [FileUploadComponent],
       providers: [
-        {provide: MAT_DIALOG_DATA, useValue: { url: testURL} },
-        { provide: MatDialogRef, useValue: matDialogRef },
+        {provide: ArtifactService, artifactServiceSpy},
       ]
     });
     httpMock = TestBed.inject(HttpTestingController);
@@ -46,6 +46,8 @@ describe('FileUploadComponent', () => {
     const event = renderer.createElement('input');
     event.target = { files: [mockFile] };
     component.onChange(event)
+    expect(component.status).toBe('initial');
+    expect(component.file).toEqual(mockFile);
   });
 
   function setupUpload() {
@@ -55,31 +57,60 @@ describe('FileUploadComponent', () => {
     component.onChange(event);
 
     component.onUpload();
-
-    const request = httpMock.expectOne(testURL);
-    expect(request.request.method).toEqual('POST');
-    return request;
   }
 
-  it("upload success", fakeAsync (() => {
-    const request = setupUpload();
-    expect(request.request.method).toEqual('POST');
-    request.flush("ok")
-    flush();
-    expect(matDialogRef.close).toHaveBeenCalled();
-  }));
+  it('should delete on cancel', (done) => {
+    component.artifactId = 2;
+    component.status = 'success';
+    component.artifactIdEmitter.subscribe((id) => {
+      expect(id).toEqual(0);
+      done();
+    });
 
-  it("upload failure", fakeAsync (() => {
-    const request = setupUpload();
-    request.flush(null, {status: 404, statusText: "Not Found"})
-    flush();
-    expect(matDialogRef.close).not.toHaveBeenCalled();
-  }));
+    component.onCancel();
 
-  it("close dialog", () => {
-    component.onClose();
-
-    expect(matDialogRef.close).toHaveBeenCalled();
+    expect(component.file).toBeNull();
+    
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.ARTIFACT) + '2');
+    expect(request.request.method).toEqual('DELETE');
   });
 
+  it('should not delete when there is no artifact', (done) => {
+    component.artifactId = 1;
+    component.status = 'success';
+    component.artifactIdEmitter.subscribe((id) => {
+      expect(id).toEqual(0);
+      done();
+    });
+
+    component.onCancel();
+
+    expect(component.file).toBeNull();
+    
+    httpMock.expectNone(constructBackendRequest(Endpoints.ARTIFACT) + '1');
+  });
+
+  it('should upload if file exists', (done) => {
+    setupUpload();
+
+    component.artifactIdEmitter.subscribe((id) => {
+      expect(id).toEqual(2);
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.ARTIFACT));
+    expect(req.request.method).toEqual('POST');
+    req.flush(2);
+
+    expect(component.artifactId).toEqual(2);
+    expect(component.status).toEqual('success');
+  });
+
+  it ('should not upload if file does not exist', () => {
+    component.file = null;
+
+    httpMock.expectNone(constructBackendRequest(Endpoints.ARTIFACT));
+    expect(component.artifactId).toEqual(1);
+    expect(component.status).toEqual('initial');
+  });
 });

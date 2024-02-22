@@ -44,7 +44,6 @@ public class UserService implements ReactiveUserDetailsService {
      */
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
-        LoggerFactory.getLogger(getClass()).info(email);
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {

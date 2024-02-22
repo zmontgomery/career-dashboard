@@ -147,12 +147,6 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             // Verify aud
             boolean audValid = tokenPayload.getAud().equals(authInformation.getMsClientId());
 
-            logger.info("" + iatValid);
-            logger.info("" + nbfValid);
-            logger.info("" + expValid);
-            logger.info("" + audValid);
-
-
             // Check results
             if (iatValid && nbfValid && expValid && audValid) return tokenPayload;
             throw new Exception();
