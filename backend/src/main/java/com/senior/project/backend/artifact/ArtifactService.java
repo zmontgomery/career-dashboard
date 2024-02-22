@@ -285,20 +285,20 @@ public class ArtifactService {
     public static Optional<String> getFileExtension(MediaType mediaType) {
         // image types
         if (mediaType.equals(MediaType.IMAGE_JPEG)) {
-            return "jpg".describeConstable();
+            return ".jpg".describeConstable();
         } else if (mediaType.equals(MediaType.IMAGE_PNG)) {
-            return "png".describeConstable();
+            return ".png".describeConstable();
         }
 
         // PDF
         if (mediaType.equals(MediaType.APPLICATION_PDF)) {
-            return "pdf".describeConstable();
+            return ".pdf".describeConstable();
         }
 
         // not currently supported because resume viewer won't work
         // Word documents
         if (mediaType.equals(MediaType.valueOf("application/msword"))) {
-            return "docx".describeConstable();
+            return ".docx".describeConstable();
         }
 
         // Add more mappings as needed

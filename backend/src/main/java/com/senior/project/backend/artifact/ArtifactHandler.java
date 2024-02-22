@@ -87,10 +87,4 @@ public class ArtifactHandler {
                         .contentType(MediaType.APPLICATION_PDF)
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
-
-    public enum UploadType {
-        TaskArtifact,
-        EventImage,
-        ProfileImage
-    }
 }
