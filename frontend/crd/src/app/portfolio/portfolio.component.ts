@@ -5,8 +5,13 @@ import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import { AuthService } from '../security/auth.service';
 import { LangUtils } from '../util/lang-utils';
 import { User } from '../security/domain/user';
-import {ArtifactService} from "./artifact.service";
 import {HttpClient} from "@angular/common/http";
+import {ArtifactService} from "../file-upload/artifact.service";
+import { TaskService } from '../util/task.service';
+import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
+import { SubmissionService } from '../submissions/submission.service';
+
+const RESUME_TASK_ID = 6;
 
 @Component({
   selector: 'app-portfolio',
@@ -14,18 +19,20 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./portfolio.component.less']
 })
 export class PortfolioComponent implements OnInit{
-  constructor(
-    public dialog: MatDialog, 
-    public authService: AuthService,
-    private readonly artifactService: ArtifactService,
-    private http: HttpClient,
-    ) {
-      this.updateArtifacts();
-    }
 
   user: User = User.makeEmpty();
   showUploadButton: boolean = true;
   pdfURL: any = '';
+
+  constructor(
+    public dialog: MatDialog,
+    private readonly artifactService: ArtifactService,
+    private readonly submissionService: SubmissionService,
+    private readonly taskService: TaskService,
+    private readonly authService: AuthService
+  ) {
+    this.updateArtifacts();
+  }
 
   ngOnInit(): void {
     this.authService.user$.subscribe((user) => {
@@ -36,28 +43,23 @@ export class PortfolioComponent implements OnInit{
   }
 
   private updateArtifacts() {
-    this.artifactService.getPortfolioArtifacts().subscribe((artifacts) => {
-      // need different way to get resume since the name is defined by the user
-      // const resume = artifacts.find((artifact) => artifact.name == "resume.pdf")
-      const resume = artifacts[0]
-
-      if (resume !== undefined) {
-
-        this.http.get(constructBackendRequest(`${Endpoints.PORTFOLIO}/${resume.artifactID}`), { responseType: 'blob'})
-          .subscribe((response) => {
-            const file = new Blob([response], { type: 'application/pdf' });
-            this.pdfURL = URL.createObjectURL(file);
-            this.showUploadButton = false;
-        })
-      }
+    this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
+      this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
+        this.pdfURL = URL.createObjectURL(file);
+        this.showUploadButton = false;
+      });
     });
   }
 
   openDialog(): void {
-    this.dialog.open(FileUploadComponent, {
-      data: {url: constructBackendRequest(Endpoints.RESUME)}
-    })
-      // this could definitely be optimized, but for now we can do this
-      .afterClosed().subscribe(this.updateArtifacts.bind(this))
+    this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
+      this.dialog.open(SubmissionModalComponent, {
+        data: {
+          task: task
+        }
+      })
+        // this could definitely be optimized, but for now we can do this
+        .afterClosed().subscribe(this.updateArtifacts.bind(this))
+    });
   }
 }

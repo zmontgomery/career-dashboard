@@ -7,8 +7,6 @@ import com.senior.project.backend.domain.YearLevel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +18,6 @@ public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
     private final TaskRepository taskRepository;
-    private final Logger logger = LoggerFactory.getLogger(MilestoneService.class);
 
     public MilestoneService(MilestoneRepository milestoneRepository, TaskRepository taskRepository) { 
         this.milestoneRepository = milestoneRepository;
@@ -43,6 +40,7 @@ public class MilestoneService {
             existingMilestone.setDescription((String) updates.get("description"));
         }
 
+        @SuppressWarnings("unchecked")
         List<Integer> updatedTaskList = (ArrayList<Integer>) updates.get("tasks");
         List<Task> taskList = new ArrayList<>();
 
