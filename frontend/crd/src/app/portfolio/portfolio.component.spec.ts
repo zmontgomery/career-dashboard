@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { PortfolioComponent } from './portfolio.component';
 import {MockComponent} from "ng-mocks";
@@ -6,12 +6,16 @@ import {MilestonesComponent} from "../milestones-page/milestones/milestones.comp
 import {MatDialog} from "@angular/material/dialog";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {FileUploadComponent} from "../file-upload/file-upload.component";
 import {ArtifactService} from "../file-upload/artifact.service";
 import {of} from "rxjs";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {Artifact} from "../../domain/Artifact";
+import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
+import { task } from '../util/task.service.spec';
+import { submission1 } from '../submissions/submission.service.spec';
+import { SubmissionService } from '../submissions/submission.service';
+import { TaskService } from '../util/task.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
@@ -20,7 +24,7 @@ describe('PortfolioComponent', () => {
   matDialogRef.afterClosed.and.returnValue(of())
   let matDialog = jasmine.createSpyObj('MatDialog', ['open']);
   matDialog.open.and.returnValue(matDialogRef)
-  let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getPortfolioArtifacts']);
+  let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getArtifactFile']);
   const artifact1JSON = {
     fileName: "string",
     id: 1,
@@ -28,10 +32,12 @@ describe('PortfolioComponent', () => {
     submission: 1,
   }
   const artifact1 = new Artifact(artifact1JSON);
-  artifactSvc.getPortfolioArtifacts.and.returnValue(of(
-    [artifact1,]
-  ))
-  let httpMock: HttpTestingController;
+  const mockPdfBlob = new Blob(['fake PDF content'], { type: 'application/pdf' });
+  artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
+  let submissionService = jasmine.createSpyObj('SubmissionService', ['getLatestSubmission']);
+  submissionService.getLatestSubmission.and.returnValue(of(submission1));
+  let taskService = jasmine.createSpyObj('TaskService', ['findById']);
+  taskService.findById.and.returnValue(of(task));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,13 +49,15 @@ describe('PortfolioComponent', () => {
         MatCardModule,
         MatIconModule,
         HttpClientTestingModule,
+        PdfViewerModule
       ],
       providers: [
         {provide: MatDialog, useValue: matDialog},
         {provide: ArtifactService, useValue: artifactSvc},
+        {provide: SubmissionService, useValue: submissionService},
+        {provide: TaskService, useValue: taskService}
       ]
     });
-    httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(PortfolioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -59,25 +67,18 @@ describe('PortfolioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('open dialog', () => {
-  //   component.openDialog();
-  //   expect(matDialog.open).toHaveBeenCalledWith(FileUploadComponent,
-  //     {data: {url: constructBackendRequest(Endpoints.RESUME)} }
-  //   )
-  // });
+  it('open dialog', fakeAsync(() => {
+    component.openDialog();
+    tick(1000);
+    expect(taskService.findById).toHaveBeenCalled();
+    expect(matDialog.open).toHaveBeenCalledWith(SubmissionModalComponent,
+      {data: {task: task} }
+    )
+  }));
 
-  // it('update Artifacts', () => {
-  //   expect(component.showUploadButton).toBeTrue();
-  //   const url = constructBackendRequest(`${Endpoints.PORTFOLIO}/${artifact1.artifactID}`)
-  //   const request = httpMock.expectOne(url);
-  //   expect(request.request.method).toEqual('GET');
-  //   const mockPdfBlob = new Blob(['fake PDF content'], { type: 'application/pdf' });
-  //   request.flush(mockPdfBlob);
-  //   component.openDialog();
-  //   expect(matDialog.open).toHaveBeenCalledWith(FileUploadComponent,
-  //     {data: {url: constructBackendRequest(Endpoints.RESUME)} }
-  //   )
-  //   expect(component.showUploadButton).toBeFalse();
-  //   expect(component.pdfURL).toBeTruthy();
-  // });
+  it('update Artifacts', fakeAsync(() => {   
+    tick(1000);
+    expect(component.showUploadButton).toBeFalse();
+    expect(component.pdfURL).toBeTruthy();
+  }));
 });
