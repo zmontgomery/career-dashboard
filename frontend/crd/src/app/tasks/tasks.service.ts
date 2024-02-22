@@ -18,24 +18,26 @@ export class TasksService {
   getTasks(): Observable<Task[]> {
     return of([
       new Task({
-        name: "string",
-        description: "string",
+        name: "Task1",
+        description: "Do Task 1",
         needsArtifact: true,
-        id: "1",
+        id: 1,
         isRequired: true,
         submission: "any",
         yearLevel: YearLevel.Freshman,
-        milestoneID: "1",
+        milestoneID: 2,
+        taskType: "Type1",
       }),
       new Task({
-        name: "string2",
-        description: "string2",
+        name: "Task2",
+        description: "Do Task 2",
         needsArtifact: true,
-        id: "2",
+        id: 2,
         isRequired: true,
         submission: "any",
         yearLevel: YearLevel.Sophomore,
-        milestoneID: "1",
+        milestoneID: 2,
+        taskType:"Type2",
       }),
     ]);
     //TODO Fix following code to retrieve task data from API

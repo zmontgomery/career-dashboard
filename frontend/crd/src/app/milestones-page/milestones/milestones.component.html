@@ -29,6 +29,7 @@
             </div>
           </mat-expansion-panel-header>
           <div>{{task.description}}</div>
+          <button (click)="openTask(task)">{{task.name}}</button>
         </mat-expansion-panel>
         <mat-expansion-panel class="event-expansion-panel" *ngFor="let event of milestone.events">
           <mat-expansion-panel-header>

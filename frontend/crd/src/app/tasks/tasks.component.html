@@ -1,8 +1,13 @@
 <div>
   <mat-list class="matList">
   <h3 mat-subheader class="matListTitle">Tasks</h3>
-  <a mat-list-item class="matListItem" *ngFor="let task of tasksList" href={{task.id}}>
-    {{task.name}} {{task.id}}
-  </a>
+<!--  <a mat-list-item class="matListItem" *ngFor="let task of tasksList" href={{task.id}}>-->
+<!--    {{task.name}} {{task.id}}-->
+<!--  </a>-->
+    <button mat-list-item class="matListItem" *ngFor="let task of tasksList" (click)="openTask(task)">{{task.name}} {{task.taskID}}</button>
 </mat-list>
+<!--  <main id="logout-button-holder">-->
+<!--    <button mat-raised-button id="logout-button" (click)="openLogoutModal()">Logout</button>-->
+<!--    <button mat-raised-button id="delete-product-button" (click)="openDeleteProductModal()">Delete Product</button>-->
+<!--  </main>-->
 </div>

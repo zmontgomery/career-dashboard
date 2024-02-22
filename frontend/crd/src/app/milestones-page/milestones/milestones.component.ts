@@ -2,6 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from "./milestone.service";
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import { TasksModalComponent } from "../../tasks-modal/tasks-modal.component";
+
 
 @Component({
   selector: 'app-milestones',
@@ -14,6 +17,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   constructor(
     private milestoneService: MilestoneService,
+    public matDialog: MatDialog
   ) {
   }
 
@@ -28,10 +32,29 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       .subscribe((milestones: Milestone[]) => {
         this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
         milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
-    });
+      });
   }
 
-  milestonesMap: Map<string, Array<Milestone>> = new Map()
+  openTask(task: any) {
+    console.log(task)
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "80%";
+    dialogConfig.width = "60%";
+    dialogConfig.data = {
+      // name: task.name,
+      // title: "TASK",
+      // description: task.description,
+      // actionButtonText: "Complete",
+      // productId: task.id
+      task: task,
+      actionButtonText: "TESTING"
+    }
+    const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
+  }
+    milestonesMap: Map<string, Array<Milestone>> = new Map()
 
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 }

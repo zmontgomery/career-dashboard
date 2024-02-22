@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksComponent } from './tasks.component';
 import {of} from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
-import {Tasks} from "../domain/Tasks";
+import {YearLevel} from "../../domain/Milestone";
+import {Task} from "../../domain/Task";
 import {TasksService} from "./tasks.service";
 
 describe('TasksComponent', () => {

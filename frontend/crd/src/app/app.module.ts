@@ -32,6 +32,10 @@ import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module
 import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
+import { TasksModalModule } from './tasks-modal/tasks-modal.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 @NgModule({
   declarations: [
@@ -85,7 +89,11 @@ import { UsersPageModule } from "./users-page/users-page.module";
     MatListModule,
     TaskMainPageModule,
     TaskEditModalModule,
-    MilestoneCreateModalModule
+    MilestoneCreateModalModule,
+    TaskEditModalModule,
+    MatButtonModule,
+    MatDialogModule,
+    TasksModalModule
   ],
   providers: [
     provideHttpClient(),
