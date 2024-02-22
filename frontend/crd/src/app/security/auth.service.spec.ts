@@ -20,6 +20,7 @@ export const userJSON: UserJSON = {
   lastLogin: 0,
   firstName: 'test',
   lastName: 'test',
+  preferredName: 'test',
   canEmail: false,
   canText: false,
   admin: true,
