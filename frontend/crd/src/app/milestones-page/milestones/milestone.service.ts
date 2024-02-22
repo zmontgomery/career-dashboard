@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Milestone, MilestoneJSON } from "../../../domain/Milestone";
 import { catchError, concatMap, finalize, flatMap, map, mergeMap, Observable, of, ReplaySubject, tap, throwError } from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { LangUtils } from 'src/app/util/lang-utils';
 
 /**
  * A service to retrieve milestone information from the backend
@@ -31,16 +32,15 @@ export class MilestoneService {
 
       return this.http.get<MilestoneJSON[]>(constructBackendRequest(Endpoints.MILESTONES))
         .pipe(
-          catchError((err) => {
-            console.log(err);
-            this.hasBeenRequested = false;
-            return of(new Array<MilestoneJSON>());
-          }),
           map((data: MilestoneJSON[]) => {
-            console.log(data);
-            return data.map((m: MilestoneJSON) => {
-              return new Milestone(m)
-            });
+            if (LangUtils.exists(data)) {
+              return data.map((m: MilestoneJSON) => {
+                return new Milestone(m)
+              });
+            } else {
+              this.hasBeenRequested = false;
+              return [];
+            }
           }),
           mergeMap((data: Milestone[]) => {
             this.milestoneCache.next(data);

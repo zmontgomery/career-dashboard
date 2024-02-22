@@ -4,6 +4,7 @@ import { MilestoneService } from "./milestone.service";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { TaskType } from 'src/domain/Task';
+import { task, taskJSON } from 'src/app/util/task.service.spec';
 
 describe('MilestoneService', () => {
   let service: MilestoneService;
@@ -38,16 +39,7 @@ describe('MilestoneService', () => {
         organizer: "organizer",
         location: "location"
       }],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
+      tasks: [taskJSON],
     }
 
     const milestones = Array(new Milestone(milestoneJSON));
@@ -77,17 +69,7 @@ describe('MilestoneService', () => {
         organizer: "organizer",
         location: "location"
       }],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        submission: 'submission',
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: 'artifact',
-        artifactName: 'test artifact'
-      }],
+      tasks: [taskJSON],
     }    
     // @ts-ignore
     service.hasBeenRequested = true;
@@ -112,9 +94,8 @@ describe('MilestoneService', () => {
       done();
     });
 
-    const errorResponse = { status: 401, statusText: 'Unauthorized.' };
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
     expect(request.request.method).toEqual('GET');
-    request.flush('Unauthorized.', errorResponse);
+    request.flush(null);
   });
 })
