@@ -28,6 +28,7 @@ export class SubmissionService {
    * Retrieves the latest submission for a task
    */
   getLatestSubmission(taskId: number): Observable<Submission> {
-    return this.http.get<Submission>(constructBackendRequest(`${Endpoints.SUBMISSION}/${taskId}`));
+    return this.http.get<SubmissionJSON>(constructBackendRequest(`${Endpoints.SUBMISSION}/${taskId}`))
+      .pipe(map((s) => new Submission(s)));
   }
 }

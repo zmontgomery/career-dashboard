@@ -73,7 +73,7 @@ export class FileUploadComponent {
       upload$.pipe(
         catchError((error) => {
           this.status = 'fail';
-          console.log(error);
+          console.error(error);
           return of(0);
         })
       ).subscribe((artifactId) => {

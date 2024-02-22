@@ -30,7 +30,6 @@ export class SubmissionModalComponent implements OnDestroy {
     private readonly authService: AuthService,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { 
-      url: string,
       task: Task 
     },
   ) { 
@@ -42,7 +41,7 @@ export class SubmissionModalComponent implements OnDestroy {
    * submission being created
    */
   ngOnDestroy(): void {
-    if (this.artifactId !== 0 && this.modalState !== 'submitting') {
+    if (this.artifactId > 1 && this.modalState !== 'submitting') {
       this.artifactService.deleteArtifact(this.artifactId).subscribe(() => {
         setTimeout(() => this.submissionModalRef.close(), this.closeTime);
       });
