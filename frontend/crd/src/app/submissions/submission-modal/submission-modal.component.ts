@@ -99,7 +99,6 @@ export class SubmissionModalComponent implements OnDestroy {
   }
 
   needsArtifact(): boolean {
-    console.log(this.task.needsArtifact());
     return this.task.needsArtifact();
   }
 }
