@@ -12,7 +12,6 @@ import {ArtifactService} from "./artifact.service";
 import {of} from "rxjs";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {Artifact} from "../../domain/Artifact";
-import { MsalService } from '@azure/msal-angular';
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
