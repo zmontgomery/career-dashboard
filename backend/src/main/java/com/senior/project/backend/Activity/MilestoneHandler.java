@@ -29,7 +29,8 @@ public class MilestoneHandler {
             return ServerResponse.ok().body(this.milestoneService.all().map(Milestone::toDTO), MilestoneDTO.class );
         }
 
-        return ServerResponse.ok().body(this.milestoneService.allWithTasks(), Milestone.class);
+        // return ServerResponse.ok().body(this.milestoneService.allWithTasks(), Milestone.class);
+        return ServerResponse.status(401).build();
     }
 
     public Mono<ServerResponse> update(ServerRequest serverRequest) {
