@@ -12,6 +12,7 @@ import {ArtifactService} from "./artifact.service";
 import {of} from "rxjs";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {Artifact} from "../../domain/Artifact";
+import { MsalService } from '@azure/msal-angular';
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
@@ -47,6 +48,7 @@ describe('PortfolioComponent', () => {
       providers: [
         {provide: MatDialog, useValue: matDialog},
         {provide: ArtifactService, useValue: artifactSvc},
+        {provide: MsalService}
       ]
     });
     httpMock = TestBed.inject(HttpTestingController);
