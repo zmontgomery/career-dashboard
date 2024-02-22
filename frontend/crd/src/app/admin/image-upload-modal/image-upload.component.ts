@@ -1,5 +1,7 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {Component, Inject, Injectable, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {UploadType} from "../../file-upload/file-upload.component";
+import {Event} from "../../../domain/Event";
 
 
 @Component({
@@ -10,11 +12,20 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Injectable()
 export class ImageUploadComponent implements OnInit {
 
+  protected uploadType: UploadType;
+  protected uploadID: number | null = null;
+
   constructor(
     public dialogRef: MatDialogRef<ImageUploadComponent>,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
-
+    const event: Event = this.modalData.event;
+    if (event !== undefined) {
+      this.uploadID = event.eventID;
+      this.uploadType = UploadType.EventImage;
+    } else {
+      this.uploadType = UploadType.ProfileImage;
+    }
   }
 
   ngOnInit() {
@@ -25,4 +36,5 @@ export class ImageUploadComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  protected readonly UploadType = UploadType;
 }
