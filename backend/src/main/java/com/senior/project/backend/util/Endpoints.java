@@ -14,18 +14,10 @@ import java.util.Arrays;
 public enum Endpoints {
     // Events
     EVENTS("events", true),
-    DASHBOARD_EVENTS("dashboard_events", true),
-    MILSTONES("milestones", true),
-    TASKS("tasks", true),
-    RESUME("portfolio/resume", true),
-    USERS("users", true),
-    CURRENT_USER("current-user", true),
-    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
-    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
     EDIT_EVENT("admin/edit-event", true, Role.ADMIN),
-    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
-    CREATE_TASK("admin/create-task", true, Role.ADMIN),
     CREATE_EVENT("admin/create-event", true, Role.ADMIN),
+    DASHBOARD_EVENTS("dashboard_events", true),
+    RESUME("portfolio/resume", true),
     SEARCH_USERS("users/search", true, Role.FACULTY),
     PORTFOLIO("portfolio", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
@@ -38,10 +30,12 @@ public enum Endpoints {
     TASKS("tasks", true),
     TASK_BY_ID("tasks/{id}", true),
     EDIT_TASK("admin/edit-task", true, Role.ADMIN),
+    CREATE_TASK("admin/create-task", true, Role.ADMIN),
 
     // Milestones
     MILSTONES("milestones", true),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
 
     // Users
     USERS("users", true),
