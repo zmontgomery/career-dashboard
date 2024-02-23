@@ -1,20 +1,20 @@
 <button mat-button (click)="back()">BACK</button>
 
 <form *ngIf="dataLoaded" [formGroup]="milestoneForm" class="mat-dialog-content" (ngSubmit)="saveMilestone()">
-  <mat-form-field *ngIf="milestoneName == ''">
-    <mat-label>Milestone Name</mat-label>
-    <input matInput formControlName="name">
-  </mat-form-field>
   <div *ngIf="currentMilestone">
     <h4>You are currently editing {{milestoneName}} [ID Number {{currentMilestone.milestoneID}}] </h4>
   </div>
   <h5>This milestone is for grade level {{mYearLevel}} </h5>
+  <mat-form-field *ngIf="milestoneName == ''">
+    <mat-label>Milestone Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
   <mat-form-field>
     <mat-label>Milestone Description</mat-label>
     <textarea matInput formControlName="description"></textarea>
   </mat-form-field>
   <div *ngFor="let task of tasks.controls; let i=index">
-      <mat-checkbox [formControl]="getFormControlTask(task)">
+      <mat-checkbox [formControl]="getFormControlTask(task)" (change)="assignTask($event, yearTasks[i])">
           {{yearTasks[i].name}}
           <!-- TODO: edit button  -->
       </mat-checkbox>
@@ -25,5 +25,6 @@
       </div>
       <button mat-button type='button' (click)="openTaskEditModal(yearTasks[i].name, yearTasks[i])">EDIT</button>
   </div>
+  <button mat-button type='button' (click)="openTaskEditModal(mYearLevel, null)">Create New {{mYearLevel}} Task</button><br />
   <button mat-button type="submit" [disabled]="!milestoneForm.status">Submit</button>
 </form>

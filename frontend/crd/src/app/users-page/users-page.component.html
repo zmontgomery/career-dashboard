@@ -1,0 +1,65 @@
+<div class="users-page-container">
+
+  <div class="header-container">
+    <h1>Users</h1>
+
+    <div class="search-bar-container">
+
+      <!-- Search Bar -->
+      <mat-form-field appearance="fill" class="search-bar">
+        <input matInput placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
+      </mat-form-field>
+    </div>
+  </div>
+
+
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Picture Column -->
+    <ng-container matColumnDef="picture">
+      <th mat-header-cell *matHeaderCellDef>Picture</th>
+      <td mat-cell *matCellDef="let element"><img [ngSrc]="profilePicURLBase + element.id" alt="Profile Picture" width="50" height="50"></td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{element.fullName}}</td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let element">{{element.email}}</td>
+    </ng-container>
+
+    <!-- Column with Buttons -->
+    <ng-container matColumnDef="buttons">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" class="buttons-cell">
+        <button mat-raised-button color="primary" [routerLink]="'/faculty/profile/' + element.id">
+          Profile
+        </button>
+        <button mat-raised-button [routerLink]="'/faculty/portfolio/' + element.id">
+          Portfolio
+        </button>
+        <button mat-raised-button color="primary" [routerLink]="'/faculty/milestones/' + element.id">
+          Milestones
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Assign column definition to table rows -->
+    <tr mat-header-row *matHeaderRowDef="(isMobile$ | async) ? mobileColumns: desktopColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: (isMobile$ | async) ? mobileColumns: desktopColumns;"></tr>
+  </table>
+
+  <!-- Pagination -->
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    [pageIndex]="currentPage"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</div>

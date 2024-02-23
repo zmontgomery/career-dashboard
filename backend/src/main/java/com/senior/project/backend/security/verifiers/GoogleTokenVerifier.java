@@ -45,9 +45,7 @@ public class GoogleTokenVerifier implements TokenVerifier {
     public String verifiyIDToken(String token) throws TokenVerificiationException {
         GoogleIdToken gToken;
         try {
-            logger.info("" + googleIdTokenVerifier);
             gToken = googleIdTokenVerifier.verify(token);
-            logger.info("" + googleIdTokenVerifier);
             return gToken.getPayload().getEmail();
         } catch (Exception e) {
             throw new TokenVerificiationException("Token was not validated");

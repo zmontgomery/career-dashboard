@@ -6,7 +6,7 @@ CREATE TABLE user (
     date_created TIMESTAMP,
     first_name VARCHAR(256),
     preferred_name VARCHAR(256),
-    last_name VARCHAR (256),
+    last_name VARCHAR(256),
     can_email BOOLEAN,
     can_text BOOLEAN
 );

@@ -9,6 +9,8 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MilestoneCreateModalModule } from './milestone-create-modal/milestone-create-modal.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatExpansionModule,
         MatButtonToggleModule,
         MatCheckboxModule,
-        MatGridListModule
+        MatGridListModule,
+        MilestoneCreateModalModule,
+        MatFormFieldModule
     ],
 })
 export class MilestoneMainPageModule { }

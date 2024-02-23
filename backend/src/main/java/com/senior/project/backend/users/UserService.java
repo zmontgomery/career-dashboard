@@ -1,21 +1,22 @@
 package com.senior.project.backend.users;
 
-import java.util.Optional;
-
+import com.senior.project.backend.domain.User;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.senior.project.backend.domain.User;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 /**
  * Service that interacts with the user repository
@@ -43,7 +44,6 @@ public class UserService implements ReactiveUserDetailsService {
      */
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
-        LoggerFactory.getLogger(getClass()).info(email);
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {
@@ -59,7 +59,20 @@ public class UserService implements ReactiveUserDetailsService {
     @Override
     public Mono<UserDetails> findByUsername(String username) {
         return findByEmailAddress(username)
-            .map((u) -> (UserDetails) u);
+            .map((u) -> u);
+    }
+
+    /**
+     * Searches for Users given the searchTerm and provides a paged response, based on the paging information
+     * @param pageOffset current page to grab
+     * @param pageSize size of pages to calculate offset and return size
+     * @param searchTerm string of user partial name
+     * @return List of Users matching the search with paged results
+     */
+    public Page<User> searchAndPageUsers(int pageOffset, int pageSize, String searchTerm) {
+        Pageable pageable = PageRequest.of(pageOffset, pageSize);
+
+        return repository.findByFullNameContainingIgnoreCase(searchTerm, pageable);
     }
 
     // Email for the super user

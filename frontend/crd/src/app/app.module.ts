@@ -1,9 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { environment } from 'src/environments/environment';
@@ -30,6 +29,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module';
 import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
+import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
+import { UsersPageModule } from "./users-page/users-page.module";
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,7 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
     PortfolioModule,
     ProfileModule,
     MilestonesPageModule,
+    UsersPageModule,
     MatCardModule,
     MatTabsModule,
     RouterModule,
@@ -80,7 +83,8 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
     MatGridListModule,
     MatListModule,
     TaskMainPageModule,
-    TaskEditModalModule
+    TaskEditModalModule,
+    MilestoneCreateModalModule,
   ],
   providers: [
     provideHttpClient(),

@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,6 +52,7 @@ public class User implements UserDetails {
 	private Date lastLogin;
 	private String firstName;
 	private String lastName;
+	private String preferredName;
 	private boolean canEmail;
 	private boolean canText;
 	private boolean isStudent;
