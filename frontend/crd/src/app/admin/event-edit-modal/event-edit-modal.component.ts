@@ -107,6 +107,16 @@ export class EventEditModalComponent implements OnInit {
         window.alert("Please add an event name"); // probably change to a better error message
         return;
       }
+      if (!this.eventForm.get('date')?.value) {
+        window.alert("Please set an event date"); // probably change to a better error message
+        return;
+      }
+
+      if (!this.eventForm.get('location')?.value ||
+          !this.eventForm.get('organizer')?.value) {
+        window.alert("Please fill out all event information"); // probably change to a better error message
+        return;
+      }
 
       newData.name = this.eventForm.get('name')!.value;
       newData.date = this.eventForm.get('date')!.value;
