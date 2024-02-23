@@ -1,0 +1,28 @@
+<div class="submission-modal-container">
+    <mat-dialog-content>
+
+        <div class="submission-modal-header">
+            Submit {{task.name}}
+        </div>
+
+        <div class="submission-modal-instructions">
+            {{task.submissionInstructions}}
+        </div>
+
+        <ng-container *ngIf="needsArtifact()">
+            <div class="submission-modal-file-upload">
+                <app-file-upload (artifactIdEmitter)="onArtifactId($event)"></app-file-upload>
+            </div>
+        </ng-container> 
+
+        <mat-form-field class="submission-modal-comments">
+            <textarea matInput [placeholder]="'Comment...'" [(ngModel)]="commentString"></textarea>
+        </mat-form-field>
+
+        <div class="submission-modal-buttons">
+            <button mat-raised-button color="primary" (click)="onCancel()" [disabled]="!isEnabled()">Cancel</button>
+            <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!isEnabled() || !canSubmit()">Submit</button>
+        </div>
+        
+    </mat-dialog-content>
+</div>

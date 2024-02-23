@@ -9,12 +9,24 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.RsaKeyUtil;
 import org.jose4j.lang.JoseException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 
 import java.security.KeyPair;
 
 public abstract class TestUtil {
     public interface ErrorTest {
         void body() throws Exception;
+    }
+
+    public static void setSecurityContext() {
+        ReactiveSecurityContextHolder.getContext().subscribe((c) -> {
+            c.setAuthentication(new UsernamePasswordAuthenticationToken(Constants.user1, "", Constants.user1.getAuthorities()));
+        });
+    }
+
+    public static void clearSecurityContext() {
+        ReactiveSecurityContextHolder.clearContext();
     }
 
     public static void testError(ErrorTest test, Class<? extends Exception> exception) {

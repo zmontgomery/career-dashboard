@@ -18,8 +18,10 @@ public class Task {
     private Boolean isRequired;
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
-    private String taskType;
+    @Enumerated(EnumType.STRING)
+    private TaskType taskType;
     private String artifactName;
+    private String submissionInstructions;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()

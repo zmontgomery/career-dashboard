@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { MilestoneService } from "./milestone.service";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { TaskType } from 'src/domain/Task';
 
 describe('MilestoneService', () => {
   let service: MilestoneService;
@@ -44,10 +45,9 @@ describe('MilestoneService', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     }

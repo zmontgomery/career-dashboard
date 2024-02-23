@@ -1,50 +1,48 @@
+<div class="file-upload-container">
+  <ng-container *ngIf="file == null; else fileDetails">
+    <button class="file-upload-button" mat-button (click)="fileInput.click()">
+      <mat-icon>upload_file</mat-icon>
+      <input #fileInput type="file" accept="application/pdf,application/docx" (change)="onChange($event)" style="display:none;"/>
+    </button>  
+  </ng-container>
+  <ng-template #fileDetails>
+    <div class="file-details-row file-details-row-{{status}}">
+      <mat-icon class="file-details-description">description</mat-icon>
+      <span class="file-details-filename">{{file?.name}}</span>
+      <span class="file-details-size">{{formatBytes()}}</span>
+      <button mat-button (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <ng-container [ngSwitch]="status">
+      <ng-container *ngSwitchCase="'success'">
+        <button class="status-button status-button-success" mat-raised-button color="primary" disabled>
+          <mat-icon>check</mat-icon>
+          Done
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="'uploading'">
+        <button class="status-button status-button-uploading" mat-raised-button disabled>
+          <mat-icon>hourglass_empty</mat-icon>
+          Uploading
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="'error'">
+        <button class="status-button status-button-error" mat-raised-button color="error" disabled>
+          <mat-icon>error</mat-icon>
+          Error Occurred
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <button class="status-button" mat-raised-button color="primary" (click)="onUpload()">
+          <mat-icon>upload</mat-icon>
+          Upload
+        </button>
+      </ng-container>
+    </ng-container>
+  </ng-template>
 
-<div class="header-container">
-
-  <h2>
-    File Upload
-  </h2>
-
-  <button mat-button color="primary" disableRipple="true" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
-
-</div>
-
-
-<mat-dialog-content>
-
-  <button mat-raised-button color="primary" class="select-button" (click)="fileInput.click()">
-    <mat-icon>library_add</mat-icon>
-    <span>{{file == null ? "Select": "Change Selection"}}</span>
-    <input #fileInput type="file" accept="application/pdf,application/docx" (change)="onChange($event)" style="display:none;" />
-  </button>
-
-  <div *ngIf="file">
-    <section class="file-info">
-      File details:
-      <ul>
-        <li>Name: {{file.name}}</li>
-        <li>Type: {{file.type}}</li>
-        <li>Size: {{file.size}} bytes</li>
-      </ul>
-    </section>
-
-    <button mat-raised-button color="primary" (click)="onUpload()">
-      <mat-icon>
-        upload
-      </mat-icon>
-      Upload the file
-    </button>
-
-    <section [ngSwitch]="status">
-      <p *ngSwitchCase="'uploading'">⏳ Uploading...</p>
-      <p *ngSwitchCase="'success'">✅ Done!</p>
-      <p *ngSwitchCase="'fail'">❌ Error!</p>
-      <p *ngSwitchDefault>😶 Waiting to upload...</p>
-    </section>
-  </div>
-</mat-dialog-content>
+</div> 
 
 
 
