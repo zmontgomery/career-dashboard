@@ -56,11 +56,9 @@
                 </div>
                 <div class="card-body-section-body">
                   <ul>
-                    <ul>
-                        <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
-                            <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
-                        </div>
-                    </ul>
+                    <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+                        <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
+                    </div>
                   </ul>
                 </div>
                 <div class="card-body-section-header">
