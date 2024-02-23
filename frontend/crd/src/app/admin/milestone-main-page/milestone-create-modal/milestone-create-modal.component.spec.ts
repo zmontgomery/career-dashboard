@@ -76,6 +76,7 @@ describe('MilestoneCreateModalComponent', () => {
       tasks: [],
       description: "testing"
     }));
+    let spyRouter = spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
 
     component.newMilestone();
     expect(spy).toHaveBeenCalled();
@@ -104,6 +105,7 @@ describe('MilestoneCreateModalComponent', () => {
       name: ""
     }));
     let spyWindow = spyOn(window, 'alert');
+    let spyRouter = spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
 
     component.newMilestone();
 
