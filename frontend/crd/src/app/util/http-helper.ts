@@ -13,10 +13,14 @@ export enum Endpoints {
     TASKS = 'tasks',
     USERS = 'users',
     CURRENT_USER = 'current-user',
+    SUBMISSION = 'tasks/submission',
+
+    // Artifacts
+    ARTIFACT = 'artifact/',
+    ARTIFACT_FILE = 'artifact/file',
+    
     //DASHBOARD_TASKS = 'dashboard_tasks'
     PORTFOLIO = 'portfolio',
-    RESUME = `${PORTFOLIO}/resume`,
-    ARTIFACTS = `${PORTFOLIO}/artifacts`,
 
     // faculty
     USERS_SEARCH = 'users/search',

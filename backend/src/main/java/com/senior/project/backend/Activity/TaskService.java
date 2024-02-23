@@ -2,6 +2,7 @@ package com.senior.project.backend.Activity;
 
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
+import com.senior.project.backend.domain.TaskType;
 import com.senior.project.backend.domain.YearLevel;
 
 import java.util.Map;
@@ -44,16 +45,16 @@ public class TaskService {
             if (updates.get("taskType").equals("artifact") &&
                     updates.containsKey("artifactName")) {
                 // don't edit the task type unless an artifact name was given
-                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setTaskType(TaskType.valueOf((String) updates.get("taskType")));
                 existingTask.setEvent(null);
             }
             else if (updates.get("taskType").equals("event") &&
                     updates.containsKey("event")) {
-                existingTask.setTaskType((String) updates.get("taskType"));
+                existingTask.setTaskType(TaskType.valueOf((String) updates.get("taskType")));
                 existingTask.setArtifactName(null);
             }
         }
-        if (updates.containsKey("artifactName") && existingTask.getTaskType().equals("artifact")) {
+        if (updates.containsKey("artifactName") && existingTask.getTaskType() == TaskType.ARTIFACT) {
             existingTask.setArtifactName((String) updates.get("artifactName"));
         }
         if (updates.containsKey("event") && existingTask.getTaskType().equals("event")) {
@@ -64,6 +65,11 @@ public class TaskService {
         return Mono.just(taskRepository.save(existingTask));
     }
 
+    public Mono<Task> findById(int id) {
+        Task task = taskRepository.findById((long) id);
+        return task == null ? Mono.empty() : Mono.just(task);
+    }
+    
     @Transactional
     public Mono<Task> createTask(Map<String, Object> data) {
         Task newTask = new Task();
@@ -76,12 +82,12 @@ public class TaskService {
         }
 
         if (data.get("taskType").equals("artifact")) {
-            newTask.setTaskType((String) data.get("taskType"));
+            newTask.setTaskType(TaskType.valueOf((String) data.get("taskType")));
             newTask.setArtifactName((String) data.get("artifactName"));
             newTask.setEvent(null);
         }
         else if (data.get("taskType").equals("event")) {
-            newTask.setTaskType((String) data.get("taskType"));
+            newTask.setTaskType(TaskType.valueOf((String) data.get("taskType")));
             Event assignedEvent = eventRepository.findById(Integer.parseInt((String) data.get("event")));
             newTask.setEvent(assignedEvent);
             newTask.setArtifactName(null);

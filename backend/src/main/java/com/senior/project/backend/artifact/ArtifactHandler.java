@@ -1,4 +1,4 @@
-package com.senior.project.backend.Portfolio;
+package com.senior.project.backend.artifact;
 
 import com.senior.project.backend.domain.Artifact;
 import org.springframework.core.io.Resource;
@@ -14,7 +14,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-
+/**
+ * Handler for interacting with artifacts
+ */
 @Component
 public class ArtifactHandler {
 
@@ -24,6 +26,9 @@ public class ArtifactHandler {
         this.artifactService = artifactService;
     }
 
+    /**
+     * Takes the file from the request body and stores it on the server
+     */
     public Mono<ServerResponse> handleFileUpload(ServerRequest request) {
         return request.multipartData()
                 .map(parts -> parts.toSingleValueMap().get("file"))
@@ -31,16 +36,22 @@ public class ArtifactHandler {
                 .map(part -> (FilePart) part)
                 .flatMap(artifactService::processFile)
                 .flatMap(response -> ServerResponse.ok()
-                        // https://github.com/spring-projects/spring-ws/issues/1128
-                        // There seems to be a bug where you can't convert a single string to valid json
-                        // return plain text instead and handle it in angular instead.
-                        // Want to explicitly return plain text so if this is ever fixed in a
-                        // spring update it won't break
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .bodyValue(response));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(response)
+                );
     }
 
+    /**
+     * Deletes the file with the given file name
+     */
+    public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
+        return artifactService.deleteFile(Integer.parseInt(request.pathVariable("id")))
+            .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
+    }
 
+    /**
+     * Returns the file based on the given artifact id
+     */
     public Mono<ServerResponse> servePdf(ServerRequest request) {
         String artifactID = request.pathVariable("artifactID");
 
@@ -56,8 +67,10 @@ public class ArtifactHandler {
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 
+    /**
+     * Retrieves all artifacts
+     */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
-        // TODO may want way to only get artifacts needed from portfolio page
         return ServerResponse.ok().body(this.artifactService.all(), Artifact.class );
     }
 }
