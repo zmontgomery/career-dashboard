@@ -2,6 +2,21 @@
 
 <div class="section-container">
     <div class="section">
+        <div>INSERT PROFILE PICTURE</div>
+        <div class="card-header">{{user.firstName}} {{user.lastName}}</div>
+        <div class="card-body">
+            <p>Preferred Name: {{user.preferredName}}</p>
+            <p>Email: {{user.email}}</p>
+            <p>Phone: {{user.phoneNumber}}</p>
+            <p>Address: </p>
+            <p>LinkedIn: </p>
+
+        </div>
+    </div>
+</div>
+
+<div class="section-container">
+    <div class="section">
         <div class="card-header">
             Details
         </div>
@@ -12,7 +27,7 @@
                     Student ID
                 </div>
                 <div class="card-body-section-body">
-                    1234567890
+                    {{user.studentDetails?.universityId}}
                 </div>
                 <div class="card-body-section-header">
                     Student Status
@@ -24,26 +39,28 @@
                     Year Level
                 </div>
                 <div class="card-body-section-body">
-                    Senior
+                    {{user.studentDetails?.yearLevel}}
                 </div>
                 <div class="card-body-section-header">
                     Majors
                 </div>
                 <div class="card-body-section-body">
-                  <ul>
-                    <li>Major 1</li>
-                    <li>Major 2</li>
-                    <li>Major 3</li>
-                  </ul>
+                    <ul>
+                        <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+                            <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
+                        </div>
+                    </ul>
                 </div>
                 <div class="card-body-section-header">
                     Minor
                 </div>
                 <div class="card-body-section-body">
                   <ul>
-                    <li>Minor 1</li>
-                    <li>Minor 2</li>
-                    <li>Minor 3</li>
+                    <ul>
+                        <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+                            <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
+                        </div>
+                    </ul>
                   </ul>
                 </div>
                 <div class="card-body-section-header">
@@ -60,11 +77,9 @@
                     Language Skills
                 </div>
                 <div class="card-body-section-body">
-                  <ul>
-                    <li>Skill 1</li>
-                    <li>Skill 2</li>
-                    <li>Skill 3</li>
-                  </ul>
+                    <ul *ngFor="let skill of user.studentDetails?.skills">
+                        <li *ngIf="skill.isLanguage">{{skill.name}}</li>
+                    </ul>
                 </div>
                 <div class="card-body-section-header">
                     Academic Year
@@ -83,14 +98,20 @@
                     </ul>
                 </div>
                 <div class="card-body-section-header">
-                    Coops
+                    Coops and Internships
                 </div>
                 <div class="card-body-section-body">
-                    <ul>
-                      <li>Coop 1</li>
-                      <li>Coop 2</li>
-                      <li>Coop 3</li>
-                    </ul>
+                    <div *ngFor="let job of user.studentDetails?.jobs">
+                        <div *ngIf="job.isCoop">
+                            <p>{{job.name}}</p>
+                            <ul>
+                                <li>{{job.location}}</li>
+                                <li>{{job.description}}</li>
+                                <li>Start Date: {{job.startDate}}</li>
+                                <li>End Date: {{job.endDate}}</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
