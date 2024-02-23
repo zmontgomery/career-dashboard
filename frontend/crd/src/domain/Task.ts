@@ -13,7 +13,7 @@ export interface TaskJSON {
   isRequired: boolean;
   yearLevel: YearLevel;
   milestoneID?: number;
-  taskType: string;
+  taskType: TaskType;
   artifactName?: string;
   eventID?: number;
   submissionInstructions?: string;
@@ -39,7 +39,7 @@ export class Task {
   isRequired: boolean;
   yearLevel: YearLevel;
   milestoneID?: number;
-  taskType: string;
+  taskType: TaskType;
   artifactName?: string;
   eventID?: number;
   submissionInstructions?: string;

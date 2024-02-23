@@ -28,10 +28,9 @@ describe('TaskEditModalComponent', () => {
     description: "description",
     id: 1,
     isRequired: true,
-    submission: 'submission',
     yearLevel: YearLevel.Freshman,
     milestoneID: 1,
-    taskType: 'artifact',
+    taskType: TaskType.ARTIFACT,
     artifactName: 'test artifact'
   });
 
@@ -119,10 +118,9 @@ describe('TaskEditModalComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     });
     component.createForm();

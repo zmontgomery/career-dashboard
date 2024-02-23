@@ -146,9 +146,8 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 3,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
 
@@ -193,10 +192,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     });
@@ -206,10 +204,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -217,10 +214,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 2,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 2,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
     
@@ -268,10 +264,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -279,10 +274,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 2,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 2,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
 
@@ -313,10 +307,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     }));
@@ -335,10 +328,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -346,10 +338,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 2,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 2,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
 
@@ -384,10 +375,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     }));
@@ -418,10 +408,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     });
 
