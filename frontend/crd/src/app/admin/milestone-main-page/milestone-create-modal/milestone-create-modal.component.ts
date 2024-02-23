@@ -49,7 +49,7 @@ export class MilestoneCreateModalComponent implements OnInit {
 
   createForm() {
     this.milestoneForm = this.formBuilder.group({
-      name: [null, Validators.required],   //this field is hidden if the task already exists
+      name: [null, Validators.required], 
     });
   }
 
@@ -72,15 +72,10 @@ export class MilestoneCreateModalComponent implements OnInit {
         window.alert("Something went wrong");
         this.closeModal();
       }
-
-      // refresh cache before rerouting
-      this.milestoneService.getMilestones(true).subscribe(data => {
-        const encodedName = encodeURIComponent(newMilestone.milestoneID);
-        this.router.navigate(['/admin/milestone-edit', encodedName], {
-          state: { scrollToTop: true }
-        });
-        this.closeModal();
-      });
+      
+      const encodedName = encodeURIComponent(newMilestone.milestoneID);
+      this.router.navigate(['/admin/milestone-edit', encodedName]);
+      this.closeModal();
     })
   }
 

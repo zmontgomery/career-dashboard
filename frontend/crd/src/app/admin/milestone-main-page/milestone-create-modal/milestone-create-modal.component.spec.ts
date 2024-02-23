@@ -63,7 +63,7 @@ describe('MilestoneCreateModalComponent', () => {
 
   it('should save milestone', () => {
     component.milestoneForm = component.formBuilder.group({
-      name: [null, Validators.required],   //this field is hidden if the task already exists
+      name: [null, Validators.required],
     });
 
     component.milestoneForm.get('name')?.setValue("new")

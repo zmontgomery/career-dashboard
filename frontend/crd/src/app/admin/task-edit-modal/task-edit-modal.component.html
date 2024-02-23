@@ -1,5 +1,5 @@
 <div id="modal-content-wrapper">
-    <form [formGroup]="taskForm" class="mat-dialog-content" (ngSubmit)="saveTask()">
+    <form *ngIf="dataLoaded" [formGroup]="taskForm" class="mat-dialog-content" (ngSubmit)="saveTask()">
         <h5>This task is for {{tYearLevel}} </h5>
         <div *ngIf="taskName == ''">
             <h4>Create New Task</h4>
@@ -32,7 +32,11 @@
             <p>For now, enter Event ID</p>
             <mat-form-field>
                 <mat-label>Select Event</mat-label>
-                <input matInput formControlName="event">
+                <mat-select formControlName="event">
+                  <div *ngFor="let event of eventList">
+                    <mat-option [value]="event.eventID">{{event.name}}</mat-option>
+                  </div>
+                </mat-select>
             </mat-form-field>
           </div>
         <button mat-button type="submit" [disabled]="!taskForm.status">Submit</button>

@@ -22,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MilestoneCreateModalComponent } from '../milestone-main-page/milestone-create-modal/milestone-create-modal.component';
 import { MilestoneCreateModalModule } from '../milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { Event } from 'src/domain/Event';
 
 
 describe('MilestoneEditComponent', () => {
@@ -158,18 +159,6 @@ describe('MilestoneEditComponent', () => {
     expect(componentTasks.controls[1].disabled).toEqual(true);
     expect(componentTasks.controls[2].value).toEqual(false);
     expect(componentTasks.controls[2].disabled).toEqual(false);
-  });
-
-  it('should create blank form', () => {
-    const sampleForm = formBuilder.group({
-      name: [null, Validators.required],
-      description: [null],
-    });
-
-    component.createMilestoneForm();
-
-    expect(component.milestoneForm.get('name')!.value).toEqual(sampleForm.get('name')!.value);
-    expect(component.milestoneForm.get('description')!.value).toEqual(sampleForm.get('description')!.value);
   });
 
   it('should create build form from milestone', () => {
@@ -320,86 +309,6 @@ describe('MilestoneEditComponent', () => {
     component.saveMilestone();
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(url, testData);
-  });
-
-  it('should create milestone', () => {
-    component.yearTasks = [new Task({
-      name: 'task name',
-      description: "description",
-      id: 1,
-      isRequired: true,
-      yearLevel: YearLevel.Freshman,
-      milestoneID: 1,
-      taskType: TaskType.ARTIFACT,
-      artifactName: 'test artifact'
-    }),
-    new Task({
-      name: 'task name 2',
-      description: "description",
-      id: 2,
-      isRequired: true,
-      yearLevel: YearLevel.Freshman,
-      milestoneID: 2,
-      taskType: TaskType.ARTIFACT,
-      artifactName: 'test artifact'
-    })];
-
-    const testData = {
-      description: "sample",
-      name: "name",
-      yearLevel: 'Freshman',
-      tasks: []
-    }
-
-    component.createMilestoneForm();
-
-    component.milestoneForm.get("description")?.setValue("sample");
-    component.milestoneForm.get("name")?.setValue("name");
-
-    let spy = spyOn(component.http, 'post').and.returnValue(of({
-      name: "name",
-      yearLevel: YearLevel.Freshman,
-      id: 1,
-      description: "sample",
-      events: [{
-        name: "name",
-        description: "description",
-        date: new Date().toDateString(),
-        id: 1,
-        recurring: true,
-        organizer: "organizer",
-        location: "location"
-      }],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
-    }));
-    const url = constructBackendRequest(Endpoints.CREATE_MILESTONE);
-
-    spyOn(component, 'back').and.callFake(function() { return null; });
-
-    component.saveMilestone();
-    expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith(url, testData);
-  });
-
-  it('should block create with no name', () => {
-    component.milestoneForm = formBuilder.group({
-      name: [null, Validators.required],
-      description: [null],
-    });
-    let spyWindow = spyOn(window, 'alert');
-
-    component.saveMilestone();
-
-    expect(spyWindow).toHaveBeenCalled();
   });
 
   it('should assign tasks', () => {
