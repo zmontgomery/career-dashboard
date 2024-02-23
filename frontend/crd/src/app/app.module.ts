@@ -86,7 +86,6 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     TaskMainPageModule,
     TaskEditModalModule,
     EventMainPageModule,
-    MilestoneCreateModalModule
     MilestoneCreateModalModule,
   ],
   providers: [
