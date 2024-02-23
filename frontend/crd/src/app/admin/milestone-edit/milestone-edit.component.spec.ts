@@ -5,7 +5,7 @@ import { BehaviorSubject, of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
 import { Milestone, YearLevel } from 'src/domain/Milestone';
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
-import { Task } from 'src/domain/Task';
+import { Task, TaskType } from 'src/domain/Task';
 import { TaskService } from 'src/app/util/task.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from "@angular/material/button";
@@ -50,10 +50,9 @@ describe('MilestoneEditComponent', () => {
     description: "description",
     id: 1,
     isRequired: true,
-    submission: 'submission',
     yearLevel: YearLevel.Freshman,
     milestoneID: 1,
-    taskType: 'artifact',
+    taskType: TaskType.ARTIFACT,
     artifactName: 'test artifact'
   }))));
 
@@ -115,10 +114,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     });
@@ -128,10 +126,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -139,10 +136,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 2,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 2,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -260,10 +256,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     });
