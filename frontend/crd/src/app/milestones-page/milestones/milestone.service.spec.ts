@@ -3,8 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { MilestoneService } from "./milestone.service";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
-import { TaskType } from 'src/domain/Task';
-import { task, taskJSON } from 'src/app/util/task.service.spec';
+import { taskJSON } from 'src/app/util/task.service.spec';
 
 describe('MilestoneService', () => {
   let service: MilestoneService;
