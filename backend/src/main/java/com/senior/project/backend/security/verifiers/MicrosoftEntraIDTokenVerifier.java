@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
 
+import org.hibernate.mapping.Map;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
 import org.jose4j.jwk.JsonWebKey;
@@ -13,6 +14,7 @@ import org.jose4j.jws.JsonWebSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.security.domain.AuthInformation;
@@ -41,11 +43,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     }
 
     /**
-     * Verifies an ID token by verifying its structures, signature, and claims
-     * 
-     * @param token - token being verified
-     * @return - A unique id for the user
-     * @throws TokenVerificiationException - thrown when an error occurs during the verification
+     * {@inheritDoc}
      */
     @Override
     public String verifiyIDToken(String token) throws TokenVerificiationException {
@@ -54,6 +52,25 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         TokenPayload tokenPayload = validateClaims(payload);
         return tokenPayload.getEmail();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String retrieveName(String token) throws TokenVerificiationException {
+        try {
+            JsonWebSignature jws = new JsonWebSignature();
+            jws.setCompactSerialization(token);
+            String payload = jws.getPayload();
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            TokenPayload tokenPayload = mapper.readValue(payload, TokenPayload.class);
+            return tokenPayload.getName();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TokenVerificiationException("Name could not be extracted");
+        }
+    }  
 
     //
     // Private

@@ -185,6 +185,14 @@ export class AuthService {
     });
   }
 
+  signup(user: User) {
+    return this.http.post<UserJSON>(constructBackendRequest(Endpoints.SIGN_UP), user)
+      .pipe(map((user) => new User(user)))
+      .subscribe(() => {
+        this.userSubject.next(user);
+      });
+  }
+
   //
   // Private
   //

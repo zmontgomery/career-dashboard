@@ -10,6 +10,7 @@ import org.springframework.web.server.WebSession;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.verifiers.TokenVerificiationException;
+import com.senior.project.backend.security.verifiers.TokenVerifier;
 import com.senior.project.backend.users.UserService;
 
 import reactor.core.publisher.Mono;
@@ -71,7 +72,7 @@ public class AuthService {
     }
 
     /**
-     * Signs out a user by removeing their session
+     * Signs out a user by removing their session
      */
     public Mono<Void> signOut(ServerRequest request) {
         return request.session().flatMap(WebSession::invalidate);

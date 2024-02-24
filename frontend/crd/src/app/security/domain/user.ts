@@ -1,3 +1,5 @@
+import { LangUtils } from "src/app/util/lang-utils";
+
 /**
  * JSON for a user object retrieved from the backend
  */
@@ -9,6 +11,8 @@ export interface UserJSON {
     readonly lastLogin: number;
     readonly firstName: string;
     readonly lastName: string;
+    readonly preferredName: string;
+    readonly signedUp: boolean;
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly student: boolean;
@@ -28,6 +32,8 @@ export class User {
     readonly firstName: string;
     readonly lastName: string;
     readonly fullName: string;
+    readonly preferredName: string;
+    readonly signedUp: boolean;
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly student: boolean;
@@ -42,6 +48,8 @@ export class User {
         this.lastLogin = new Date(json.lastLogin);
         this.firstName = json.firstName;
         this.lastName = json.lastName;
+        this.preferredName = json.preferredName;
+        this.signedUp = json.signedUp;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
         this.student = json.student;
@@ -56,6 +64,8 @@ export class User {
             email: '',
             firstName: 'No',
             lastName: 'User',
+            preferredName: 'No',
+            signedUp: true,
             phoneNumber: '0000000000',
             dateCreated: 0,
             lastLogin: 0,
@@ -65,5 +75,9 @@ export class User {
             admin: false,
             faculty: false,
         });
+    }
+
+    get name() {
+        return LangUtils.exists(this.preferredName) ? `${this.preferredName} ${this.lastName}` : `${this.firstName} ${this.lastName}`;
     }
 }

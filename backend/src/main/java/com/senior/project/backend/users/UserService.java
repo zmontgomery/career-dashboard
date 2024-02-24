@@ -44,10 +44,11 @@ public class UserService implements ReactiveUserDetailsService {
      */
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
+        System.out.println(user.isPresent());
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {
-            throw new EntityNotFoundException();
+            return Mono.empty();
         }
     }
 
@@ -73,6 +74,10 @@ public class UserService implements ReactiveUserDetailsService {
         Pageable pageable = PageRequest.of(pageOffset, pageSize);
 
         return repository.findByFullNameContainingIgnoreCase(searchTerm, pageable);
+    }
+
+    public Mono<User> createOrUpdateUser(User user) {
+        return Mono.just(repository.saveAndFlush(user));
     }
 
     // Email for the super user

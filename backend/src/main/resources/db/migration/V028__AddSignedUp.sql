@@ -1,0 +1,8 @@
+ALTER TABLE user
+ADD COLUMN signed_up BOOLEAN;
+
+ALTER TABLE user
+MODIFY COLUMN email VARCHAR(256) UNIQUE; 
+
+UPDATE user
+SET signed_up = 1;

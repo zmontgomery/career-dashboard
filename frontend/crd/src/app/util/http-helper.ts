@@ -5,6 +5,7 @@ export enum Endpoints {
     SIGN_IN = 'auth/signin',
     REFRESH = 'auth/refresh',
     SIGN_OUT = 'auth/signout',
+    SIGN_UP = 'auth/signup',
 
     // student
     MILESTONES = 'milestones',

@@ -50,6 +50,7 @@ public enum Endpoints {
     // Security
     SIGNIN("auth/signin", false),
     SIGNOUT("auth/signout", false),
+    SIGNUP("auth/signup", true),
     REFRESH("auth/refresh", true),
     FAILURE("auth/fail", false),
 

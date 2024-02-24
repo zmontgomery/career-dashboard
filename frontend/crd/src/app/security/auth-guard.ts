@@ -1,8 +1,9 @@
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, UrlTree, createUrlTreeFromSnapshot } from "@angular/router";
 import { AuthService } from "./auth.service";
 import { inject } from "@angular/core";
-import { map } from "rxjs";
+import { map, mergeMap, zip, zipWith } from "rxjs";
 import { LangUtils } from "../util/lang-utils";
+import { User } from "./domain/user";
 
 /**
  * The guard that prevents routes from being reached when not authenticated
@@ -12,12 +13,23 @@ export const authGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ) => {
     const authService = inject(AuthService);
-    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
-        if (!isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['login'], {
-            attempted: location.pathname + encodeURI(location.search)
-        });
-        return true;
-    }));
+    return authService.isAuthenticated$.pipe(
+        map((isAuthenticated) => {
+            if (!isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['login'], {
+                attempted: location.pathname + encodeURI(location.search)
+            });
+            return true;
+        }),
+        zipWith(authService.user$),
+        map((result) => {
+            const res = result[0];
+            if (res instanceof UrlTree) return res;
+
+            const user = result[1] as User;
+            if (!user.signedUp) return createUrlTreeFromSnapshot(next.root, ['signup']);
+            return res && user.signedUp;
+        }),
+    );
 }
 
 /**
@@ -63,5 +75,16 @@ export const adminRoleGuard: CanActivateFn = (
             if (user!.admin) return true;
         }
         return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+    }));
+}
+
+export const signedUpGuard: CanActivateFn = (
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
+    const authService = inject(AuthService);
+    return authService.user$.pipe(map((user) => {
+        if (user?.signedUp) return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+        return true;
     }));
 }

@@ -32,6 +32,7 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { SignupPageModule } from './security/signup-page/signup-page.module';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     TaskMainPageModule,
     TaskEditModalModule,
     MilestoneCreateModalModule,
+    SignupPageModule,
   ],
   providers: [
     provideHttpClient(),
