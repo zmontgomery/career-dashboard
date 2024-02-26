@@ -50,6 +50,7 @@ public enum Endpoints {
     ARTIFACT_ID("artifact/{id}", true),
     ARTIFACT_FILE("artifact/file/{artifactID}", true),
     UPLOAD_IMAGE_EVENT("artifact/event/{eventID}", true, Role.ADMIN),
+    IMAGE_EVENT("artifact/image/{artifactID}", true),
     USERS_PROFILE_PICTURE("artifact/profile-picture", true),
     PROFILE_PICTURE("artifact/profile-picture/{userID}", true, Role.FACULTY),
 

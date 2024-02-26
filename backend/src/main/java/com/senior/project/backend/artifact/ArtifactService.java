@@ -1,5 +1,6 @@
 package com.senior.project.backend.artifact;
 
+import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
@@ -38,13 +39,15 @@ public class ArtifactService {
     private final String uploadDirectory;
 
     private final ArtifactRepository artifactRepository;
+    private final EventRepository eventRepository;
 
     // Make sure to add any filetypes to the getFileExtension method
-    private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);;
+    private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);
     private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
-    public ArtifactService(ArtifactRepository artifactRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository) {
         this.artifactRepository = artifactRepository;
+        this.eventRepository = eventRepository;
         if (this._uploadDirectory == null) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
@@ -101,7 +104,7 @@ public class ArtifactService {
                 });
     }
 
-    public Mono<Integer> processEventImage(FilePart filePart) {
+    public Mono<Integer> processEventImage(FilePart filePart, long eventID) {
         return validateAndGetPath(filePart, IMAGE_TYPES)
                 .flatMap(destination -> {
 
@@ -113,7 +116,11 @@ public class ArtifactService {
                     return filePart.transferTo(destination)
                             .then(Mono.defer(() -> Mono.just(artifactRepository.save(upload))))
                             .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
-                            .map(Artifact::getId);
+                            .map(Artifact::getId)
+                            .map((id) -> {
+                                eventRepository.updateImageIdById((long)id, eventID);
+                                return id;
+                            });
                 });
     }
 

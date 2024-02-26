@@ -18,7 +18,8 @@ export enum Endpoints {
     // Artifacts
     ARTIFACT = 'artifact/',
     ARTIFACT_FILE = 'artifact/file',
-    UPLOAD_IMAGE_EVENT = "artifact/event/",
+    UPLOAD_IMAGE_EVENT = "artifact/event",
+    IMAGE_EVENT = 'artifact/image',
     USERS_PROFILE_PICTURE ="artifact/profile-picture",
 
     //DASHBOARD_TASKS = 'dashboard_tasks'

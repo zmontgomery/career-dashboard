@@ -4,6 +4,9 @@ import { Event } from "../../../domain/Event";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EventEditModalComponent } from '../event-edit-modal/event-edit-modal.component';
 import {ImageUploadComponent} from "../image-upload-modal/image-upload.component";
+import {ArtifactService} from "../../file-upload/artifact.service";
+import {Endpoints} from "../../util/http-helper";
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-event-main-page',
@@ -13,17 +16,29 @@ import {ImageUploadComponent} from "../image-upload-modal/image-upload.component
 export class EventMainPageComponent implements OnInit {
 
   events: Array<Event> = []
+  eventUrlsMap: Map<number, string> = new Map<number, string>();
 
   constructor(
     private eventService: EventService,
-    public matDialog: MatDialog
+    public matDialog: MatDialog,
+    private artifactService: ArtifactService,
   ) {
   }
 
   ngOnInit() {
     this.eventService.getEvents().subscribe((events: Event[]) => {
       this.events = events;
+      events.forEach((event) => this.updateImage(event));
     });
+  }
+
+  private updateImage(event: Event) {
+    if (event.imageId != null) {
+      this.artifactService.getImage(event.imageId).pipe(map(
+        (file) => URL.createObjectURL(file))).subscribe((url) => {
+        this.eventUrlsMap = this.eventUrlsMap.set(event.eventID, url);
+      });
+    }
   }
 
   openEventEditModal(event: Event | null) {
@@ -66,4 +81,6 @@ export class EventMainPageComponent implements OnInit {
       console.log('close image upload')
     })
   }
+
+  protected readonly Endpoints = Endpoints;
 }

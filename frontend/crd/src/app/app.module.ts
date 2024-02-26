@@ -38,7 +38,7 @@ import {ImageUploadModule} from "./admin/image-upload-modal/image-upload.module"
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,7 +91,8 @@ import {ImageUploadModule} from "./admin/image-upload-modal/image-upload.module"
   ],
   providers: [
     provideHttpClient(),
-      {provide: 'SocialAuthServiceConfig',
+    {
+      provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: true, //keeps the user signed in
         providers: [
@@ -108,7 +109,12 @@ import {ImageUploadModule} from "./admin/image-upload-modal/image-upload.module"
       }
     },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: APP_INITIALIZER, useFactory: (authService: AuthService) => () => authService.loadUser(), multi: true, deps: [AuthService]},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => () => authService.loadUser(),
+      multi: true,
+      deps: [AuthService]
+    },
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })

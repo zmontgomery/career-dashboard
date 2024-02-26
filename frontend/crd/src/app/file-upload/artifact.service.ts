@@ -43,8 +43,8 @@ export class ArtifactService {
     return this.http.post<number>(constructBackendRequest(Endpoints.ARTIFACT), formData);
   }
 
-  uploadEventImage(formData: FormData, eventId: number): Observable<number> {
-    return this.http.post<number>(constructBackendRequest(Endpoints.UPLOAD_IMAGE_EVENT + eventId), formData);
+  uploadEventImage(formData: FormData, id: number): Observable<number> {
+    return this.http.post<number>(constructBackendRequest(`${Endpoints.UPLOAD_IMAGE_EVENT}/${id}`), formData);
   }
 
   uploadProfilePicture(formData: FormData): Observable<number> {
@@ -60,6 +60,13 @@ export class ArtifactService {
     return this.http.get(constructBackendRequest(`${Endpoints.ARTIFACT_FILE}/${id}`), { responseType: 'blob' })
       .pipe(map((data: any) => {
         return new Blob([data], { type: 'application/pdf' });
+      }));
+  }
+
+  getImage(id: number): Observable<Blob> {
+    return this.http.get(constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${id}`), { responseType: 'blob' })
+      .pipe(map((data: any) => {
+        return new Blob([data], { type: 'image/png' });
       }));
   }
 }

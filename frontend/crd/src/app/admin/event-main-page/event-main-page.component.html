@@ -4,6 +4,9 @@
             <span matListItemTitle>{{event.name}}</span>
             <span matListItemLine>{{event.description}}</span>
         </mat-list-item>
+      <ng-container *ngIf="eventUrlsMap.get(event.eventID) != null">
+        <img [src]="eventUrlsMap.get(event.eventID)" alt="Event image">
+      </ng-container>
         <mat-list-item>
             <div class="buttons-container">
                 <button mat-raised-button color="primary" (click)="openEventEditModal(event)">
@@ -13,7 +16,7 @@
                     EDIT
                 </button>
                 <button mat-raised-button (click)="openEventImageModal(event)">
-                    <mat-icon >
+                    <mat-icon>
                         upload
                     </mat-icon>
                     IMAGE

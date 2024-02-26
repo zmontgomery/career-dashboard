@@ -44,8 +44,15 @@ public class ArtifactHandler {
     }
 
     public Mono<ServerResponse> handleEventImageUpload(ServerRequest request) {
+        long eventID;
+        try {
+            eventID = Long.parseLong(request.pathVariable("eventID"));
+        } catch (NumberFormatException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expected eventID to be valid integer"));
+        }
+
         return getFilePart(request)
-                .flatMap(artifactService::processEventImage)
+                .flatMap((filePart) -> artifactService.processEventImage(filePart, eventID))
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(response));
@@ -85,6 +92,21 @@ public class ArtifactHandler {
         return file.flatMap(responseEntity ->
                 ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_PDF)
+                        .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
+    }
+
+    public Mono<ServerResponse> serveImage(ServerRequest request) {
+        String artifactID = request.pathVariable("artifactID");
+
+        // Set the appropriate headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        Mono<ResponseEntity<Resource>> file = artifactService.getFile(artifactID, headers);
+
+        return file.flatMap(responseEntity ->
+                ServerResponse.ok()
+                        .contentType(MediaType.IMAGE_PNG)
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 }
