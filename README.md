@@ -3,7 +3,7 @@ Partially Hydrated devs - Senior Project
 
 # Installation
 - install jdk17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
-- install node minimum versions v14.20, v16.14 or v18.10. https://nodejs.org/en/download
+- install node minimum version v18.10. https://nodejs.org/en/download
 - install npm if it did not come with node
 - install angular cli https://angular.io/guide/setup-local
 - install mysql 8 from https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/
@@ -38,6 +38,7 @@ Partially Hydrated devs - Senior Project
 - `cd frontend/crd`
 - `npm run test-headless`
 - coverage found in frontend/crd/coverage/crd/index.html
+- for more accurate coverage, run `npm run test-headless-coverage`
 ### Back-end
 - `cd backend`
 - `./gradlew test`
