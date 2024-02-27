@@ -1,10 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TaskService } from './task.service';
-import { Task } from 'src/domain/Task';
+import { Task, TaskType } from 'src/domain/Task';
 import { YearLevel } from 'src/domain/Milestone';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClientModule } from '@angular/common/http';
+
+export const taskJSON =  {
+  name: 'task name',
+  description: "description",
+  needsArtifact: true,
+  id: 1,
+  isRequired: true,
+  yearLevel: YearLevel.Freshman,
+  milestoneID: 1,
+  taskType: TaskType.ARTIFACT,
+  artifactName: 'sample'
+}
+
+export const task = new Task(taskJSON);
 
 describe('TaskService', () => {
   let service: TaskService;
@@ -24,18 +38,6 @@ describe('TaskService', () => {
   });
 
   it('getTasks should return list of tasks', () => {
-    const taskJSON = {
-        name: 'task name',
-        description: "description",
-        needsArtifact: true,
-        id: 1,
-        isRequired: true,
-        submission: null,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: 'artifact',
-        artifactName: 'sample'
-    }
 
     const tasks = Array(new Task(taskJSON));
     service.getTasks().subscribe((result: any) => {
