@@ -5,7 +5,7 @@
             <span matListItemLine>{{event.description}}</span>
         </mat-list-item>
       <ng-container *ngIf="eventUrlsMap.get(event.eventID) != null">
-        <img [src]="eventUrlsMap.get(event.eventID)" alt="Event image">
+        <img [src]="eventUrlsMap.get(event.eventID)" width="480px" height="192px" alt="Event image">
       </ng-container>
         <mat-list-item>
             <div class="buttons-container">

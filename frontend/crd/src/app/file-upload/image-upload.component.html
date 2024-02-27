@@ -6,6 +6,7 @@
     </button>
   </ng-container>
   <ng-template #fileDetails>
+    <img [src]="filePreviewUrl" width="480px" height="192px" alt="uploaded file">
     <div class="file-details-row file-details-row-{{status}}">
       <mat-icon class="file-details-description">description</mat-icon>
       <span class="file-details-filename">{{file?.name}}</span>
@@ -28,9 +29,15 @@
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'error'">
-        <button class="status-button status-button-error" mat-raised-button color="error" disabled>
+        <button class="status-button status-button-error" mat-raised-button color="warn" disabled>
           <mat-icon>error</mat-icon>
           Error Occurred
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="'bad-ratio'">
+        <button class="status-button status-button-error" mat-raised-button color="warn" disabled>
+          <mat-icon>error</mat-icon>
+          Bad aspect ratio
         </button>
       </ng-container>
       <ng-container *ngSwitchDefault>

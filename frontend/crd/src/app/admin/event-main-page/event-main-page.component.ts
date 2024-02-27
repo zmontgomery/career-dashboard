@@ -70,7 +70,7 @@ export class EventMainPageComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
     dialogConfig.height = "75%";
-    dialogConfig.width = "50%";
+    dialogConfig.width = "500px";
     dialogConfig.data = {
       event: event
     }

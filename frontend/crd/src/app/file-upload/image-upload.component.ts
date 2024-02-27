@@ -12,33 +12,26 @@ import { ArtifactService } from './artifact.service';
   styleUrls: ['./image-upload.component.less']
 })
 export class ImageUploadComponent implements OnInit {
-  status: "initial" | "uploading" | "success" | "fail" = "initial"; // Variable to store file status
+  status: "initial" | "uploading" | "success" | "fail" | "bad-ratio" = "initial"; // Variable to store file status
   file: File | null = null; // Variable to store file
+  filePreviewUrl: string = ''
   artifactId: number = 1;
 
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
 
   @Output() artifactIdEmitter: EventEmitter<number> = new EventEmitter();
-  @Input() uploadType: UploadType = UploadType.TaskArtifact;
+  @Input() uploadType: UploadType = UploadType.EventImage;
   @Input() uploadID: number | null = null;
 
-  protected acceptedFileTypes: string = '';
+  protected acceptedFileTypes: string = "png,jpeg";
 
   constructor(
     private readonly artifactService: ArtifactService
   ) { }
 
   ngOnInit() {
-    switch (this.uploadType) {
-      case UploadType.EventImage:
-      case UploadType.ProfileImage:
-        this.acceptedFileTypes = "png,jpeg";
-        break;
-      case UploadType.TaskArtifact:
-        this.acceptedFileTypes = 'application/pdf,application/docx';
-        break;
-    }
+
   }
 
   /**
@@ -56,6 +49,23 @@ export class ImageUploadComponent implements OnInit {
         // File is within the allowed size, proceed with handling
         this.status = "initial";
         this.file = file;
+        this.filePreviewUrl = URL.createObjectURL(file);
+
+        const img = new Image();
+        img.src = this.filePreviewUrl;
+
+        img.onload = () => {
+          const aspectRatio = img.width / img.height;
+
+          if (isNaN(aspectRatio)){
+            console.error('Unable to get image aspect ratio')
+            this.status = 'bad-ratio';
+          }
+          else if(Math.round(aspectRatio * 2) !== 5) {
+            console.error(`photo should be 5 / 2 ration, but was ${aspectRatio}`);
+            this.status = 'bad-ratio';
+          }
+        };
       }
     }
   }
@@ -64,12 +74,9 @@ export class ImageUploadComponent implements OnInit {
    * Deletes the artifact
    */
   onCancel() {
-    // TODO fix for non task artifact canceling
+    this.status = "initial";
     this.file = null;
-    if (this.status === 'success' && this.artifactId !== 1) {
-      this.artifactService.deleteArtifact(this.artifactId).subscribe();
-    }
-    this.artifactIdEmitter.next(0);
+    this.filePreviewUrl = '';
   }
 
   /**
@@ -96,9 +103,6 @@ export class ImageUploadComponent implements OnInit {
         case UploadType.ProfileImage:
           upload$ = this.artifactService.uploadProfilePicture(formData)
           break;
-        case UploadType.TaskArtifact:
-          upload$ = this.artifactService.uploadArtifact(formData);
-          break;
       }
 
       this.status = 'uploading';
@@ -113,6 +117,7 @@ export class ImageUploadComponent implements OnInit {
         this.artifactId = artifactId;
         this.artifactIdEmitter.next(artifactId);
         this.status = 'success';
+        // TODO close after successful upload
       });
     }
   }
@@ -129,7 +134,6 @@ export class ImageUploadComponent implements OnInit {
 }
 
 export enum UploadType {
-  TaskArtifact,
   EventImage,
   ProfileImage
 }
