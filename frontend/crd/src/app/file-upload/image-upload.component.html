@@ -11,7 +11,7 @@
       <mat-icon class="file-details-description">description</mat-icon>
       <span class="file-details-filename">{{file?.name}}</span>
       <span class="file-details-size">{{formatBytes()}}</span>
-      <button mat-button (click)="onCancel()">
+      <button *ngIf="status != 'success'" mat-button (click)="onCancel()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
