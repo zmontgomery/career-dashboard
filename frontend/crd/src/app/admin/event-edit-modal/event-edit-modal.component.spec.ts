@@ -126,6 +126,7 @@ describe('EventEditModalComponent', () => {
     });
 
     const testData = {
+      name: "name",
       description: "description",
       date: new Date(testDate),
       id: 1,
@@ -136,7 +137,8 @@ describe('EventEditModalComponent', () => {
       buttonLabel: "test",
     }
 
-    component.currentEvent = testEvent
+    component.currentEvent = testEvent;
+    component.eventName = "name";
     component.createForm();
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(testEvent));
