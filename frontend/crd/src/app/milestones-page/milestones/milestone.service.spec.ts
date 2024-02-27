@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { MilestoneService } from "./milestone.service";
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
-import { TaskType } from 'src/domain/Task';
+import { taskJSON } from 'src/app/util/task.service.spec';
 
 describe('MilestoneService', () => {
   let service: MilestoneService;
@@ -22,7 +22,7 @@ describe('MilestoneService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('getMilestones should return list of milestones', () => {
+  it('getMilestones should return list of milestones', (done) => {
     const milestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
@@ -40,26 +40,63 @@ describe('MilestoneService', () => {
         eventLink: "sample link",
         buttonLabel: "test",
       }],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
+      tasks: [taskJSON],
     }
 
     const milestones = Array(new Milestone(milestoneJSON));
     service.getMilestones().subscribe((result: any) => {
       expect(result).toEqual(milestones);
+      done();
     });
+
     const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
     expect(request.request.method).toEqual('GET');
     request.flush(Array(milestoneJSON));
   });
 
+  it('getMilestones should return list of milestones if cached and not call http', (done) => {
+    const milestoneJSON = {
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 1,
+      description: "sample",
+      active: true,
+      events: [{
+        name: "name",
+        description: "description",
+        date: new Date().toDateString(),
+        id: 1,
+        recurring: true,
+        organizer: "organizer",
+        location: "location"
+      }],
+      tasks: [taskJSON],
+    }    
+    // @ts-ignore
+    service.hasBeenRequested = true;
 
+    service.getMilestones().subscribe((result: any) => {
+      expect(result).toEqual(milestones);
+      done();
+    });
+
+    const milestones = Array(new Milestone(milestoneJSON));
+    httpMock.expectNone(constructBackendRequest(Endpoints.MILESTONES));
+
+    // @ts-ignore
+    service.milestoneCache.next(milestones);
+  });
+
+  it('getMilestones should attempt refetch on http error', (done) => {
+    service.getMilestones().subscribe((result: any) => {
+      expect(result).toEqual([]);
+      // @ts-ignore
+      expect(service.hasBeenRequested).toBeFalse();
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
+    expect(request.request.method).toEqual('GET');
+    request.flush(null);
+  });
 })
