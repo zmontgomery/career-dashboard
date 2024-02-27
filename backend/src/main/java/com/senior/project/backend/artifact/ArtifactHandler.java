@@ -95,6 +95,7 @@ public class ArtifactHandler {
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 
+    // TODO headers might not matter? may be able to use same serve logic for everything
     public Mono<ServerResponse> serveImage(ServerRequest request) {
         String artifactID = request.pathVariable("artifactID");
 

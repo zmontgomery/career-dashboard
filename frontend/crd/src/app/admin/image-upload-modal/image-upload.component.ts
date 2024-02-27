@@ -14,6 +14,7 @@ export class ImageUploadComponent implements OnInit {
 
   protected uploadType: UploadType;
   protected uploadID: number | null = null;
+  private artifactID: number | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<ImageUploadComponent>,
@@ -33,8 +34,12 @@ export class ImageUploadComponent implements OnInit {
   }
 
   closeModal() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.artifactID);
   }
 
   protected readonly UploadType = UploadType;
+
+  onArtifactId($event: number) {
+    this.artifactID = $event;
+  }
 }

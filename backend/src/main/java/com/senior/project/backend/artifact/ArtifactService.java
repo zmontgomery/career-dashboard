@@ -2,6 +2,7 @@ package com.senior.project.backend.artifact;
 
 import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
+import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
 
@@ -114,6 +115,14 @@ public class ArtifactService {
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
+                            .then(Mono.defer(() -> {
+                                Event event = eventRepository.findById(eventID);
+                                if (event.getImageId() != null) {
+                                    // TODO change event id to use long
+                                    return deleteFile(Math.toIntExact(event.getImageId()));
+                                }
+                                return Mono.empty();
+                            }))
                             .then(Mono.defer(() -> Mono.just(artifactRepository.save(upload))))
                             .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
                             .map(Artifact::getId)
