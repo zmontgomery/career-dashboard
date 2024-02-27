@@ -1,21 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TasksModalComponent } from './tasks-modal.component';
-import { MatDialog, MatDialogModule, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { Form, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Task } from '../../domain/Task';
-import { YearLevel } from 'src/domain/Milestone';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TasksModalComponent} from './tasks-modal.component';
+import {Task, TaskType} from '../../domain/Task';
+import {YearLevel} from 'src/domain/Milestone';
+import {of} from "rxjs";
+import createSpyObj = jasmine.createSpyObj;
 
 describe('TasksModalComponent', () => {
   let component: TasksModalComponent;
   let fixture: ComponentFixture<TasksModalComponent>;
   let testTask: Task;
+  let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
+  taskServiceSpy.getTasks.and.returnValue(of(Array(new Task({
+    name: 'task name',
+    description: "description",
+    id: 1,
+    isRequired: true,
+    yearLevel: YearLevel.Freshman,
+    milestoneID: 1,
+    taskType: TaskType.ARTIFACT,
+    artifactName: 'test artifact'
+  }))));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -33,10 +37,9 @@ describe('TasksModalComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     });
   });

@@ -78,6 +78,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     UsersPageModule,
     MatCardModule,
     MatTabsModule,
+    TasksModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
@@ -91,7 +92,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     TaskEditModalModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
-    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
     TasksModalModule

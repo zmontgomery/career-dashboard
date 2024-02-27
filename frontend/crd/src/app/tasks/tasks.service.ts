@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
-import {Task} from "../../domain/Task";
+import {Task, TaskType} from "../../domain/Task";
 import {YearLevel} from "../../domain/Milestone";
 
 @Injectable({
@@ -20,24 +20,20 @@ export class TasksService {
       new Task({
         name: "Task1",
         description: "Do Task 1",
-        needsArtifact: true,
         id: 1,
         isRequired: true,
-        submission: "any",
         yearLevel: YearLevel.Freshman,
         milestoneID: 2,
-        taskType: "Type1",
+        taskType: TaskType.ARTIFACT,
       }),
       new Task({
         name: "Task2",
         description: "Do Task 2",
-        needsArtifact: true,
         id: 2,
         isRequired: true,
-        submission: "any",
         yearLevel: YearLevel.Sophomore,
         milestoneID: 2,
-        taskType:"Type2",
+        taskType:TaskType.ARTIFACT
       }),
     ]);
     //TODO Fix following code to retrieve task data from API

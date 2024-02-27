@@ -4,8 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
-import {NgIf} from "@angular/common";
-import {PdfViewerModule} from "ng2-pdf-viewer";
+import {SubmissionModalModule} from "../submissions/submission-modal/submission-modal.module";
+import {TaskSubmitButtonModule} from "../task-submit-button/task-submit-button.module";
+
 
 @NgModule({
   declarations: [
@@ -14,13 +15,13 @@ import {PdfViewerModule} from "ng2-pdf-viewer";
   exports:[
     TasksModalComponent
   ],
-  imports: [
-    MatButtonModule,
-    MatDialogModule,
-    MatCardModule,
-    MatIconModule,
-    NgIf,
-    PdfViewerModule
-  ]
+    imports: [
+        MatButtonModule,
+        MatDialogModule,
+        MatCardModule,
+        MatIconModule,
+        SubmissionModalModule,
+        TaskSubmitButtonModule
+    ]
 })
 export class TasksModalModule { }

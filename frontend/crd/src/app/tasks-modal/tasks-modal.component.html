@@ -26,32 +26,15 @@
 <!--    <p>Task Product ID: {{ modalData.productId}}</p>-->
 <!--  </section>-->
   <div id="modal-body">
-  <div id="">
-    <p>{{modalData.task.yearLevel}}</p>
-    <p style="font-size:30px"><b>Description: </b><br>
-      {{ modalData.task.description }}</p>
-    <p>Task Product ID: {{ modalData.task.taskID}}</p>
-  </div>
-  <div id="1">
-    <div class="section">
-      <div class="card-header">
-        Resume
-      </div>
-      <mat-card class="resume-card">
-        <button mat-button *ngIf="showUploadButton" (click)="openDialog()">
-          <mat-icon>upload_file</mat-icon>
-        </button>
-        <pdf-viewer
-          *ngIf="!showUploadButton"
-          [src]="pdfURL"
-          [render-text]="true"
-          [original-size]="false"
-          style="width: 400px; height: 500px"
-        ></pdf-viewer>
-      </mat-card>
+    <div id="">
+      <p>{{modalData.task.yearLevel}}</p>
+      <p style="font-size:30px"><b>Description: </b><br>
+        {{ modalData.task.description }}</p>
+      <p>Task Product ID: {{ modalData.task.taskID}}</p>
     </div>
+    <app-task-submit-button [task]="modalData.task"></app-task-submit-button>
   </div>
-    </div>
+  <br>
   <footer id="modal-footer">
     <button mat-raised-button id="modal-action-button" (click)="actionFunction()">
       {{ modalData.actionButtonText }}
