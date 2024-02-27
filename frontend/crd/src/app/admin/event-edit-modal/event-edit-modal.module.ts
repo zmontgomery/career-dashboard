@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskEditModalComponent } from './task-edit-modal.component';
+import { EventEditModalComponent } from './event-edit-modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, NativeDateAdapter } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
-    TaskEditModalComponent
+    EventEditModalComponent
   ],
   imports: [
     CommonModule,
@@ -18,8 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    MatRadioModule,
-    MatSelectModule
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
-export class TaskEditModalModule { }
+export class EventEditModalModule { }

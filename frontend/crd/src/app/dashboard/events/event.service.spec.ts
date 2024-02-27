@@ -31,6 +31,8 @@ describe('EventService', () => {
       recurring: true,
       organizer: "organizer",
       location: "location",
+      eventLink: "sample link",
+      buttonLabel: "test",
     }
     
     const events = Array(new Event(eventJSON));
@@ -52,6 +54,8 @@ describe('EventService', () => {
       recurring: true,
       organizer: "organizer",
       location: "location",
+      eventLink: "sample link",
+      buttonLabel: "test",
     }
     
     const events = Array(new Event(eventJSON)); 

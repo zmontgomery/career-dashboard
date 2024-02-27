@@ -29,6 +29,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { TaskMainPageModule } from './admin/task-main-page/task-main-page.module';
 import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.module';
+import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
 import { FileUploadModule } from './file-upload/file-upload.module';
@@ -84,6 +85,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     MatListModule,
     TaskMainPageModule,
     TaskEditModalModule,
+    EventMainPageModule,
     MilestoneCreateModalModule,
   ],
   providers: [
