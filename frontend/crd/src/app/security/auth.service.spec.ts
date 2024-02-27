@@ -1,16 +1,16 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import {fakeAsync, tick} from '@angular/core/testing';
 
-import { AuthService } from './auth.service';
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Subject, Subscription, of } from 'rxjs';
-import { LoginRequest, LoginResponse, Token, TokenType } from './domain/auth-objects';
-import { EventType } from '@azure/msal-browser';
-import { AUTH_TOKEN_STORAGE, TOKEN_ISSUED } from './security-constants';
-import { LangUtils } from '../util/lang-utils';
+import {AuthService} from './auth.service';
+import {MsalBroadcastService, MsalService} from '@azure/msal-angular';
+import {GoogleLoginProvider, SocialAuthService} from '@abacritt/angularx-social-login';
+import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {LoginRequest, LoginResponse, Token, TokenType} from './domain/auth-objects';
+import {EventType} from '@azure/msal-browser';
+import {AUTH_TOKEN_STORAGE, TOKEN_ISSUED} from './security-constants';
+import {LangUtils} from '../util/lang-utils';
 import {Role, UserJSON} from './domain/user';
-import { ActivatedRoute, Params } from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 
 export const userJSON: UserJSON = {
   id: 'id',
@@ -22,9 +22,7 @@ export const userJSON: UserJSON = {
   lastName: 'test',
   canEmail: false,
   canText: false,
-  admin: true,
-  faculty: true,
-  student: true
+  role: Role.Admin,
 }
 
 describe('AuthService', () => {

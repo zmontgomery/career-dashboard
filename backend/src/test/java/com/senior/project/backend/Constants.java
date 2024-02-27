@@ -152,7 +152,7 @@ public class Constants {
         user1 = new User();
         user1.setId(UUID.randomUUID());
         user1.setEmail("test@test.com");
-        user1.setAdmin(true);
+        user1.setRole(Role.Admin);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
