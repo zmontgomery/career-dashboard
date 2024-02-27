@@ -33,7 +33,7 @@ export class TasksService {
         isRequired: true,
         yearLevel: YearLevel.Sophomore,
         milestoneID: 2,
-        taskType:TaskType.ARTIFACT
+        taskType:TaskType.ARTIFACT,
       }),
     ]);
     //TODO Fix following code to retrieve task data from API
