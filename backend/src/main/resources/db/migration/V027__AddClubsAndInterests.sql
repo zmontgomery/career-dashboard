@@ -7,15 +7,15 @@ CREATE TABLE interest(
 
 INSERT INTO interest(id, student_details_id, name) 
 VALUES (UUID_TO_BIN(UUID()), @justinStudentId, 'Security'),
-    (UUID_TO_BIN(UUID()), @justinStudentId, 'Database Management', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Project Management', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Product Owner', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Graphic Design', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Software Development', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Full Stack Development', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Web Engineering', 0),
-    (UUID_TO_BIN(UUID()), @studentId, 'Authentication', 0),
-    (UUID_TO_BIN(UUID()), @studentId, 'Scrum Master', 0);
+    (UUID_TO_BIN(UUID()), @justinStudentId, 'Database Management'),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'Project Management'),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'Product Owner'),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Graphic Design'),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Software Development'),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Full Stack Development'),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Web Engineering'),
+    (UUID_TO_BIN(UUID()), @studentId, 'Authentication'),
+    (UUID_TO_BIN(UUID()), @studentId, 'Scrum Master');
 
 
 CREATE TABLE club(
@@ -29,30 +29,29 @@ CREATE TABLE club(
 
 INSERT INTO club(id, student_details_id, name, start_date, end_date) 
 VALUES (UUID_TO_BIN(UUID()), @justinStudentId, 'Jimmy Appreciation Club', '2023-09-20', '2024-05-13'),
-    (UUID_TO_BIN(UUID()), @justinStudentId, 'Hackathon', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Society of Software Engineers', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Women in Computing', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Cards Club', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Band', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Society of Software Engineers', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'National Society of Leadership and Success', 0),
+    (UUID_TO_BIN(UUID()), @justinStudentId, 'Hackathon', '2022-09-20', '2024-05-13'),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'Society of Software Engineers', '2023-09-20', '2024-05-13'),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'Women in Computing', '2022-10-13', '2024-05-05'),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Cards Club', '2023-02-16', '2023-03-13'),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Band', '2021-08-31', '2023-12-03'),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Society of Software Engineers', '2023-09-01', '2024-05-10'),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'National Society of Leadership and Success', '2022-11-20', '2024-03-10'),
     (UUID_TO_BIN(UUID()), @rileyStudentId, 'Board Game Night', '2022-10-20', '2023-04-30'),
-    (UUID_TO_BIN(UUID()), @studentId, 'Jimmy Appreciation Club', 0),
+    (UUID_TO_BIN(UUID()), @studentId, 'Jimmy Appreciation Club', '2020-08-31', '2024-05-16'),
     (UUID_TO_BIN(UUID()), @studentId, 'Band', '2023-09-20', '2024-05-13');
 
 INSERT INTO skill(id, student_details_id, name, is_language) 
-VALUES (UUID_TO_BIN(UUID()), @justinStudentId, 'Angular', 0),
-    (UUID_TO_BIN(UUID()), @justinStudentId, 'MySQL', 0),
-    (UUID_TO_BIN(UUID()), @justinStudentId, 'Java', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Angular', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'MySQL', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Java', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Angular', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'MySQL', 0),
-    (UUID_TO_BIN(UUID()), @johnStudentId, 'Java', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Angular', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'MySQL', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Java', 0),
-    (UUID_TO_BIN(UUID()), @rileyStudentId, 'React', 0),
-    (UUID_TO_BIN(UUID()), @justinStudentId, 'MongoDB', 0),
-    (UUID_TO_BIN(UUID()), @brieStudentId, 'Python', 0);
+VALUES (UUID_TO_BIN(UUID()), @justinStudentId, 'English', 1),
+    (UUID_TO_BIN(UUID()), @justinStudentId, 'Leet Speak', 1),
+    (UUID_TO_BIN(UUID()), @justinStudentId, 'Mandarin', 1),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'French', 1),
+    (UUID_TO_BIN(UUID()), @brieStudentId, 'English', 1),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'French', 1),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'English', 1),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Japanese', 1),
+    (UUID_TO_BIN(UUID()), @johnStudentId, 'Spanish', 1),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'English', 1),
+    (UUID_TO_BIN(UUID()), @rileyStudentId, 'Spanish', 1),
+    (UUID_TO_BIN(UUID()), @studentId, 'English', 1),
+    (UUID_TO_BIN(UUID()), @studentId, 'Japanese', 1),
+    (UUID_TO_BIN(UUID()), @studentId, 'Klingon', 1);
