@@ -35,6 +35,7 @@ public class EventService {
             return Mono.empty();
         }
 
+        existingEvent.setName((String) updates.get("name"));
         existingEvent.setLocation((String) updates.get("location"));
         existingEvent.setOrganizer((String) updates.get("organizer"));
 

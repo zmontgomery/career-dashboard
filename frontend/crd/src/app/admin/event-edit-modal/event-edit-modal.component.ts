@@ -39,7 +39,7 @@ export class EventEditModalComponent implements OnInit {
   createForm() {
     if (this.currentEvent) {
       this.eventForm = this.formBuilder.group({
-        name: [this.eventName],   //this field is hidden if the task already exists
+        name: [this.eventName],
         date: [this.currentEvent.date],
         description: [this.currentEvent.description],
         location: [this.currentEvent.location],
@@ -52,7 +52,7 @@ export class EventEditModalComponent implements OnInit {
 
     else {
       this.eventForm = this.formBuilder.group({
-        name: [null, Validators.required],   //this field is hidden if the task already exists
+        name: [null, Validators.required],
         date: [null, Validators.required],
         description: [null],
         location: [null, Validators.required],
@@ -75,6 +75,7 @@ export class EventEditModalComponent implements OnInit {
 
       updateData.id = this.currentEvent.eventID as unknown as number;
 
+      updateData.name = this.eventForm.get('name')!.value;
       updateData.date = this.eventForm.get('date')!.value;
       updateData.location = this.eventForm.get('location')!.value;
       updateData.organizer = this.eventForm.get('organizer')!.value;
