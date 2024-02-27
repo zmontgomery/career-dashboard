@@ -65,11 +65,9 @@
                     Clubs
                 </div>
                 <div class="card-body-section-body">
-                  <ul>
-                    <li>Club 1</li>
-                    <li>Club 2</li>
-                    <li>Club 3</li>
-                  </ul>
+                    <ul *ngFor="let club of user.studentDetails?.clubs">
+                        <li>{{club.name}}</li>
+                    </ul>
                 </div>
                 <div class="card-body-section-header">
                     Language Skills
@@ -89,10 +87,8 @@
                     Interests
                 </div>
                 <div class="card-body-section-body">
-                    <ul>
-                      <li>Interest 1</li>
-                      <li>Interest 2</li>
-                      <li>Interest 3</li>
+                    <ul *ngFor="let interest of user.studentDetails?.interests">
+                        <li>{{interest.name}}</li>
                     </ul>
                 </div>
                 <div class="card-body-section-header">

@@ -1,23 +1,26 @@
-export interface ClubJSON{
+export interface InterestJSON{
     id: string;
     name: string;
-    startDate: Date;
-    endDate: Date;
     studentDetailsID: string;
 }
 
-export class Club{
-    constructor(json: ClubJSON){
+export class Interest{
+
+    constructor(json: InterestJSON){
         this.id = json.id;
         this.name = json.name;
-        this.startDate = json.startDate;
-        this.endDate = json.endDate;
         this.studentDetailsID = json.studentDetailsID;
     }
 
     id: string;
     name: string;
-    startDate: Date;
-    endDate: Date;
     studentDetailsID: string;
+
+    static makeEmpty(){
+        return new Interest({
+            id: '',
+            name: '',
+            studentDetailsID: ''
+        });
+    }
 }

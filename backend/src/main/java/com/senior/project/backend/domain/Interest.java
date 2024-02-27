@@ -1,8 +1,5 @@
 package com.senior.project.backend.domain;
 
-import lombok.*;
-
-import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,8 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import lombok.*;
 
 @Entity
 @Data
@@ -23,19 +19,12 @@ import jakarta.persistence.TemporalType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
-public class Club {
-
+public class Interest {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
-
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date startDate;
-
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date endDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
