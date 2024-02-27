@@ -18,6 +18,7 @@ describe('TaskMainPageComponent', () => {
   let component: TaskMainPageComponent;
   let fixture: ComponentFixture<TaskMainPageComponent>;
   let httpMock: HttpTestingController;
+  //@ts-ignore
   let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
   taskServiceSpy.getTasks.and.returnValue(of([new Task({
     name: 'task name',

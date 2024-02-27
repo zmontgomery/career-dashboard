@@ -21,7 +21,7 @@ export class TaskMainPageComponent implements OnDestroy {
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 
   constructor(
-    public taskService: TaskService,
+    private taskService: TaskService,
     private router: Router,
     public matDialog: MatDialog
   ) {
