@@ -31,10 +31,10 @@ public class Club {
 
     private String name;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
+    @Temporal(value = TemporalType.DATE)
     private Date startDate;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
+    @Temporal(value = TemporalType.DATE)
     private Date endDate;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -30,12 +30,6 @@
                     {{user.studentDetails?.universityId}}
                 </div>
                 <div class="card-body-section-header">
-                    Student Status
-                </div>
-                <div class="card-body-section-body">
-                    IDK
-                </div>
-                <div class="card-body-section-header">
                     Year Level
                 </div>
                 <div class="card-body-section-body">
@@ -67,6 +61,8 @@
                 <div class="card-body-section-body">
                     <ul *ngFor="let club of user.studentDetails?.clubs">
                         <li>{{club.name}}</li>
+                        <li>{{club.startDate}}</li>
+                        <li>{{club.endDate}}</li>
                     </ul>
                 </div>
                 <div class="card-body-section-header">
