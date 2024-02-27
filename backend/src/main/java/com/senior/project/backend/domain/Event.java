@@ -1,7 +1,6 @@
 package com.senior.project.backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.ZoneId;
@@ -16,6 +15,7 @@ import java.util.Date;
 @Generated
 public class Event {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
@@ -23,6 +23,8 @@ public class Event {
     private String location;
     private String organizer;
     private boolean isRecurring;
+    private String eventLink;
+    private String buttonLabel;
 
     // Used in Email Template
     public String formattedDate() {

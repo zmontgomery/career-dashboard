@@ -42,8 +42,9 @@ export class NavbarComponent {
   ];
 
   adminLinks = [...this.facultyLinks,
-    { path: "/admin/milestones", label: "MileStones"},
+    { path: "/admin/milestones", label: "Milestones"},
     { path: "/admin/tasks", label: "Tasks"},
+    { path: "/admin/events", label: "Events"},
   ]
 
 }
