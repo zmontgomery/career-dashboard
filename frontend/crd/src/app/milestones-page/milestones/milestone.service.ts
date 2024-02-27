@@ -1,37 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Milestone, MilestoneJSON } from "../../../domain/Milestone";
-import { concatMap, finalize, map, Observable, of, ReplaySubject } from "rxjs";
+import { catchError, concatMap, finalize, flatMap, map, mergeMap, Observable, of, ReplaySubject, tap, throwError } from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { LangUtils } from 'src/app/util/lang-utils';
 
+/**
+ * A service to retrieve milestone information from the backend
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class MilestoneService {
 
-  private milestoneCache$ = new ReplaySubject<any>();
+  private readonly milestoneCache = new ReplaySubject<Milestone[]>();
   private hasBeenRequested = false;
 
   constructor(
-    private http: HttpClient,
-  ) {
-  }
+    private readonly http: HttpClient,
+  ) { }
 
+  /**
+   * Gets all the milestones and caches the response
+   * 
+   * If the cache has data in it, it returns the value of the cache, otherwise
+   * it makes a request to the backend. If an error ocurrs it refreshes the cache
+   */
   getMilestones(forceRefresh?: boolean): Observable<Milestone[]> {
-    // return last value (i.e. cache) from ReplaySubject or add data to it
     if (!this.hasBeenRequested || forceRefresh) {
       this.hasBeenRequested = true;
 
-      this.http.get<Milestone[]>(constructBackendRequest(Endpoints.MILESTONES)).subscribe((data) => {
-        const mappedData = data.map((milestoneData: any) => {
-            return new Milestone(milestoneData)
-          });
-        this.milestoneCache$.next(mappedData)
-      })
+      return this.http.get<MilestoneJSON[]>(constructBackendRequest(Endpoints.MILESTONES))
+        .pipe(
+          map((data: MilestoneJSON[]) => {
+            if (LangUtils.exists(data)) {
+              return data.map((m: MilestoneJSON) => {
+                return new Milestone(m)
+              });
+            } else {
+              this.hasBeenRequested = false;
+              return [];
+            }
+          }),
+          mergeMap((data: Milestone[]) => {
+            this.milestoneCache.next(data);
+            return this.milestoneCache.asObservable();
+          })
+        );
     }
 
-    return this.milestoneCache$.asObservable();
-
+    return this.milestoneCache.asObservable();
   }
 
 }
