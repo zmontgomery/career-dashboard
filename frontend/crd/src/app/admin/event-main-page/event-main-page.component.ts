@@ -78,7 +78,6 @@ export class EventMainPageComponent implements OnInit {
     const modalDialog = this.matDialog.open(ImageUploadComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
-      console.log('after closed');
       event.imageId = result;
       this.updateImage(event);
     })

@@ -192,7 +192,7 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(Artifact a, User user) {
         try {
-            if (a.getUserId().equals(user.getId()) || user.isAdmin()) {
+            if (user.isAdmin() || a.getUserId().equals(user.getId())) {
                 Path fileToDelete = Paths.get(a.getFileLocation());
                 Files.deleteIfExists(fileToDelete); // Delete file
                 artifactRepository.delete(a); // Delete artifact entity
