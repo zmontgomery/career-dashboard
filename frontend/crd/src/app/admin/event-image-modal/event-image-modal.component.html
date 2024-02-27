@@ -1,10 +1,16 @@
-<div id="modal-content-wrapper">
+<mat-dialog-content>
+  <div id="modal-content-wrapper">
+
+    <span class="event-name">{{event.name}}</span>
+    <span class="event-description">{{event.description}}</span>
+
     <app-image-upload (artifactIdEmitter)="onArtifactId($event)" [uploadType]="uploadType" [uploadID]="uploadID">
 
     </app-image-upload>
     <footer id="modal-footer">
-        <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
-            Back
-        </button>
+      <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
+        Back
+      </button>
     </footer>
-</div>
+  </div>
+</mat-dialog-content>

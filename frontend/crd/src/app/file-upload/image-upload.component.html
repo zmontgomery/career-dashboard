@@ -35,9 +35,9 @@
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'bad-ratio'">
-        <button class="status-button status-button-error" mat-raised-button color="warn" disabled>
+        <button class="status-button status-button-bad-ratio" mat-raised-button color="warn" (click)="onUpload()">
           <mat-icon>error</mat-icon>
-          Bad aspect ratio
+          Bad aspect ratio. Image may be distorted
         </button>
       </ng-container>
       <ng-container *ngSwitchDefault>

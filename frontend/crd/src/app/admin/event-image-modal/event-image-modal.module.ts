@@ -10,6 +10,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {FileUploadModule} from "../../file-upload/file-upload.module";
 import {MatButtonModule} from "@angular/material/button";
 import {ImageUploadModule} from "../../file-upload/image-upload.module";
+import {MatListModule} from "@angular/material/list";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {ImageUploadModule} from "../../file-upload/image-upload.module";
     MatNativeDateModule,
     FileUploadModule,
     MatButtonModule,
-    ImageUploadModule
+    ImageUploadModule,
+    MatListModule,
+    MatDialogModule
   ]
 })
 export class EventImageModalModule { }

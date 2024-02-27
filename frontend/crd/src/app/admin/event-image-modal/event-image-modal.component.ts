@@ -15,14 +15,15 @@ export class EventImageModalComponent implements OnInit {
   protected uploadType: UploadType;
   protected uploadID: number | null = null;
   private artifactID: number | null = null;
+  protected event: Event;
 
   constructor(
     public dialogRef: MatDialogRef<EventImageModalComponent>,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
-    const event: Event = this.modalData.event;
-    if (event !== undefined) {
-      this.uploadID = event.eventID;
+    this.event = this.modalData.event;
+    if (this.event !== undefined) {
+      this.uploadID = this.event.eventID;
       this.uploadType = UploadType.EventImage;
     } else {
       this.uploadType = UploadType.ProfileImage;
