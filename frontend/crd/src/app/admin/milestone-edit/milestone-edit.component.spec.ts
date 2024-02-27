@@ -176,7 +176,9 @@ describe('MilestoneEditComponent', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        eventLink: "sample",
+        buttonLabel: "sample"
       }],
       tasks: [{
         name: 'task name',

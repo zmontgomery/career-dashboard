@@ -32,7 +32,9 @@ describe('TaskEditModalComponent', () => {
     id: 1,
     recurring: true,
     organizer: "organizer",
-    location: "location"
+    location: "location",
+    eventLink: "sample",
+    buttonLabel: "sample"
   }))));
   let dialogMock = {
     close: () => { }
@@ -92,7 +94,9 @@ describe('TaskEditModalComponent', () => {
       id: 1,
       recurring: true,
       organizer: "organizer",
-      location: "location"
+      location: "location",
+      eventLink: "sample",
+      buttonLabel: "sample"
     }));
 
     expect(component.eventList).toEqual(testEvents);
