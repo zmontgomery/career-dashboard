@@ -3,7 +3,7 @@ import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from "../../../domain/Event";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EventEditModalComponent } from '../event-edit-modal/event-edit-modal.component';
-import {ImageUploadComponent} from "../image-upload-modal/image-upload.component";
+import {EventImageModalComponent} from "../event-image-modal/event-image-modal.component";
 import {ArtifactService} from "../../file-upload/artifact.service";
 import {Endpoints} from "../../util/http-helper";
 import {map} from "rxjs";
@@ -75,7 +75,7 @@ export class EventMainPageComponent implements OnInit {
       event: event
     }
 
-    const modalDialog = this.matDialog.open(ImageUploadComponent, dialogConfig);
+    const modalDialog = this.matDialog.open(EventImageModalComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
       event.imageId = result;

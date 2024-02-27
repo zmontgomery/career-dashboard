@@ -32,7 +32,7 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
-import {ImageUploadModule} from "./admin/image-upload-modal/image-upload.module";
+import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 
 @NgModule({
   declarations: [
@@ -87,7 +87,7 @@ import {ImageUploadModule} from "./admin/image-upload-modal/image-upload.module"
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
-    ImageUploadModule,
+    EventImageModalModule,
   ],
   providers: [
     provideHttpClient(),

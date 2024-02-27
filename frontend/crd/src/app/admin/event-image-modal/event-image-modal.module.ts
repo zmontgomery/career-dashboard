@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageUploadComponent } from './image-upload.component';
+import { EventImageModalComponent } from './event-image-modal.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,10 +9,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {FileUploadModule} from "../../file-upload/file-upload.module";
 import {MatButtonModule} from "@angular/material/button";
+import {ImageUploadModule} from "../../file-upload/image-upload.module";
 
 @NgModule({
   declarations: [
-    ImageUploadComponent
+    EventImageModalComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +24,8 @@ import {MatButtonModule} from "@angular/material/button";
     MatDatepickerModule,
     MatNativeDateModule,
     FileUploadModule,
-    MatButtonModule
+    MatButtonModule,
+    ImageUploadModule
   ]
 })
-export class ImageUploadModule { }
+export class EventImageModalModule { }

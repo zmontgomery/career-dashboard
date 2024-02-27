@@ -1,0 +1,89 @@
+@import "common";
+
+.mat-icon {
+  margin: 0 !important;
+}
+
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .file-upload-button {
+    display:  flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .file-details-row {
+    font-size: small;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .file-details-description {
+      margin-right: 3px !important;
+    }
+
+    .file-details-filename {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .file-details-size {
+      width: 64px;
+    }
+
+    span {
+      padding-right: 10px;
+    }
+
+    button {
+      padding: 0;
+      display:  flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 24px;
+      max-width: 24px;
+      height: 24px;
+    }
+  }
+
+  .status-button {
+    display: flex;
+    width: 50%;
+
+    .mat-icon {
+      margin-right: 5px !important;
+    }
+  }
+
+  .status-button-success {
+    color: darkslategray;
+
+    .mat-icon {
+      color: @oswego-green;
+    }
+  }
+
+  .status-button-uploading {
+    color: darkslategray;
+  }
+
+  .status-button-error {
+    color: darkslategray;
+
+    .mat-icon {
+      color: red;
+    }
+  }
+}
+
+.select-button {
+  margin-bottom: 16px;
+}

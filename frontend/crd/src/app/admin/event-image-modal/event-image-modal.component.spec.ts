@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImageUploadComponent } from './image-upload.component';
+import { EventImageModalComponent } from './event-image-modal.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -12,15 +12,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 describe('EventEditModalComponent', () => {
-  let component: ImageUploadComponent;
-  let fixture: ComponentFixture<ImageUploadComponent>;
+  let component: EventImageModalComponent;
+  let fixture: ComponentFixture<EventImageModalComponent>;
   let httpMock: HttpTestingController;
   let formBuilder: FormBuilder;
 
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ImageUploadComponent],
+      declarations: [EventImageModalComponent],
       imports: [
         HttpClientTestingModule,
         HttpClientModule,
@@ -41,7 +41,7 @@ describe('EventEditModalComponent', () => {
       ],
       teardown: {destroyAfterEach: false}
     });
-    fixture = TestBed.createComponent(ImageUploadComponent);
+    fixture = TestBed.createComponent(EventImageModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     httpMock = TestBed.inject(HttpTestingController);

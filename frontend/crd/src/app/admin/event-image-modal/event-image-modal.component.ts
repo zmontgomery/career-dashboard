@@ -1,23 +1,23 @@
 import {Component, Inject, Injectable, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {UploadType} from "../../file-upload/file-upload.component";
+import {UploadType} from "../../file-upload/image-upload.component";
 import {Event} from "../../../domain/Event";
 
 
 @Component({
   selector: 'app-image-upload-modal',
-  templateUrl: './image-upload.component.html',
-  styleUrls: ['./image-upload.component.less']
+  templateUrl: './event-image-modal.component.html',
+  styleUrls: ['./event-image-modal.component.less']
 })
 @Injectable()
-export class ImageUploadComponent implements OnInit {
+export class EventImageModalComponent implements OnInit {
 
   protected uploadType: UploadType;
   protected uploadID: number | null = null;
   private artifactID: number | null = null;
 
   constructor(
-    public dialogRef: MatDialogRef<ImageUploadComponent>,
+    public dialogRef: MatDialogRef<EventImageModalComponent>,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
     const event: Event = this.modalData.event;
