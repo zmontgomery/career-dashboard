@@ -57,11 +57,6 @@ export class MilestoneMainPageComponent implements OnDestroy {
     }
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(MilestoneCreateModalComponent, dialogConfig);
-
-    // modalDialog.afterClosed().subscribe(result => {
-    //   //TODO: route to edit page
-    //   this.ngOnInit();
-    // })
   }
 
 }
