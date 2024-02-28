@@ -30,7 +30,6 @@ export class SubmissionModalComponent implements OnDestroy {
     private readonly authService: AuthService,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
-      url: string,
       task: Task
     },
   ) {

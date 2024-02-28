@@ -65,7 +65,7 @@ export class FileUploadComponent {
 
       formData.append('file', this.file, this.file.name);
 
-      let upload$ = this.artifactService.uploadArtifact(formData);
+      const upload$ = this.artifactService.uploadArtifact(formData);
 
       this.status = 'uploading';
 
