@@ -15,8 +15,8 @@ export class Job{
         this.name = json.name;
         this.location = json.location;
         this.description = json.description;
-        this.startDate = json.startDate;
-        this.endDate = json.endDate;
+        this.startDate = new Date(json.startDate);
+        this.endDate = new Date(json.endDate);
         this.isCoop = json.coop;
         this.studentDetailsID = json.studentDetailsID;
     }
