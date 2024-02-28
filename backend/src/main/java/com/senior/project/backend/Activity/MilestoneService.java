@@ -40,6 +40,7 @@ public class MilestoneService {
             existingMilestone.setDescription((String) updates.get("description"));
         }
 
+        @SuppressWarnings("unchecked")
         List<Integer> updatedTaskList = (ArrayList<Integer>) updates.get("tasks");
         List<Task> taskList = new ArrayList<>();
 

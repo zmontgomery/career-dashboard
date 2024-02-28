@@ -22,18 +22,13 @@ export class EventEditModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EventEditModalComponent>,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
+    public http: HttpClient,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
 
     if (this.modalData.event) {
       this.currentEvent = this.modalData.event;
       this.eventName = this.modalData.event.name;
-    }
-    else {
-      console.log("creating an event")
-      //this.tYearLevel = this.modalData.name;
-      //this.taskName = '';
     }
   }
 
@@ -44,7 +39,7 @@ export class EventEditModalComponent implements OnInit {
   createForm() {
     if (this.currentEvent) {
       this.eventForm = this.formBuilder.group({
-        name: [this.eventName],   //this field is hidden if the task already exists
+        name: [this.eventName],
         date: [this.currentEvent.date],
         description: [this.currentEvent.description],
         location: [this.currentEvent.location],
@@ -57,7 +52,7 @@ export class EventEditModalComponent implements OnInit {
 
     else {
       this.eventForm = this.formBuilder.group({
-        name: [null, Validators.required],   //this field is hidden if the task already exists
+        name: [null, Validators.required],
         date: [null, Validators.required],
         description: [null],
         location: [null, Validators.required],
@@ -80,6 +75,7 @@ export class EventEditModalComponent implements OnInit {
 
       updateData.id = this.currentEvent.eventID as unknown as number;
 
+      updateData.name = this.eventForm.get('name')!.value;
       updateData.date = this.eventForm.get('date')!.value;
       updateData.location = this.eventForm.get('location')!.value;
       updateData.organizer = this.eventForm.get('organizer')!.value;
@@ -95,7 +91,7 @@ export class EventEditModalComponent implements OnInit {
         updateData.buttonLabel = this.eventForm.get('buttonLabel')!.value;
       }
 
-      const url = constructBackendRequest(Endpoints.EDIT_EVENT)
+      const url = constructBackendRequest(Endpoints.EDIT_EVENT);
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
           window.alert("Something went wrong");
@@ -110,6 +106,16 @@ export class EventEditModalComponent implements OnInit {
 
       if (!this.eventForm.get('name')?.value) {
         window.alert("Please add an event name"); // probably change to a better error message
+        return;
+      }
+      if (!this.eventForm.get('date')?.value) {
+        window.alert("Please set an event date"); // probably change to a better error message
+        return;
+      }
+
+      if (!this.eventForm.get('location')?.value ||
+          !this.eventForm.get('organizer')?.value) {
+        window.alert("Please fill out all event information"); // probably change to a better error message
         return;
       }
 

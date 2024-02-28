@@ -17,11 +17,7 @@ public enum Endpoints {
     DASHBOARD_EVENTS("dashboard_events", true),
     RESUME("portfolio/resume", true),
     EDIT_EVENT("admin/edit-event", true, Role.ADMIN),
-    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
-    CREATE_TASK("admin/create-task", true, Role.ADMIN),
     CREATE_EVENT("admin/create-event", true, Role.ADMIN),
-    SEARCH_USERS("users/search", true, Role.FACULTY),
-    PORTFOLIO("portfolio", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
@@ -32,14 +28,18 @@ public enum Endpoints {
     TASKS("tasks", true),
     TASK_BY_ID("tasks/{id}", true),
     EDIT_TASK("admin/edit-task", true, Role.ADMIN),
+    CREATE_TASK("admin/create-task", true, Role.ADMIN),
 
     // Milestones
     MILSTONES("milestones", true),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
 
     // Users
     USERS("users", true),
     CURRENT_USER("current-user", true),
+    SEARCH_USERS("users/search", true, Role.FACULTY),
+    PORTFOLIO("portfolio", true),
 
     // Submissions
     SUBMISSION("tasks/submission", true),
@@ -142,7 +142,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 
@@ -157,7 +156,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 

@@ -20,6 +20,11 @@ public class SubmissionService {
     @Autowired
     private SubmissionRepository submissionRepository;
 
+    /**
+     * Adds a submission to the repository
+     * @param submission
+     * @return
+     */
     public Mono<Submission> addSubmission(Submission submission) {
         try {
             return Mono.just(submissionRepository.saveAndFlush(submission));

@@ -5,7 +5,7 @@ import { BehaviorSubject, of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
 import { Milestone, YearLevel } from 'src/domain/Milestone';
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
-import { Task } from 'src/domain/Task';
+import { Task, TaskType } from 'src/domain/Task';
 import { TaskService } from 'src/app/util/task.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from "@angular/material/button";
@@ -21,6 +21,8 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { HttpClientModule } from '@angular/common/http';
 import { MilestoneCreateModalComponent } from '../milestone-main-page/milestone-create-modal/milestone-create-modal.component';
 import { MilestoneCreateModalModule } from '../milestone-main-page/milestone-create-modal/milestone-create-modal.module';
+import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import { Event } from 'src/domain/Event';
 
 
 describe('MilestoneEditComponent', () => {
@@ -49,10 +51,9 @@ describe('MilestoneEditComponent', () => {
     description: "description",
     id: 1,
     isRequired: true,
-    submission: 'submission',
     yearLevel: YearLevel.Freshman,
     milestoneID: 1,
-    taskType: 'artifact',
+    taskType: TaskType.ARTIFACT,
     artifactName: 'test artifact'
   }))));
 
@@ -116,10 +117,9 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     });
@@ -129,10 +129,9 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     }),
     new Task({
@@ -140,28 +139,84 @@ describe('MilestoneEditComponent', () => {
       description: "description",
       id: 2,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 2,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    }),
+    new Task({
+      name: 'task name 3',
+      description: "description",
+      id: 3,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
 
     const componentTasks = component.listTasks();
 
     expect(componentTasks.controls[0].value).toEqual(true);
-    expect(componentTasks.controls[1].value).toEqual(false)
-    expect(componentTasks.controls[1].disabled).toEqual(true);;
+    expect(componentTasks.controls[1].value).toEqual(false);
+    expect(componentTasks.controls[1].disabled).toEqual(true);
+    expect(componentTasks.controls[2].value).toEqual(false);
+    expect(componentTasks.controls[2].disabled).toEqual(false);
   });
 
-  it('should create blank form', () => {
-    // let spy = spyOn(component, 'listTasks').and.returnValue(
-    //   component.formBuilder.array([true])
-    // );
+  it('should create build form from milestone', () => {
+    component.currentMilestone = new Milestone({
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 1,
+      description: "sample",
+      events: [{
+        name: "name",
+        description: "description",
+        date: new Date().toDateString(),
+        id: 1,
+        recurring: true,
+        organizer: "organizer",
+        location: "location",
+        eventLink: "sample",
+        buttonLabel: "sample"
+      }],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        id: 1,
+        isRequired: true,
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      }],
+    });
 
+    component.yearTasks = [new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    }),
+    new Task({
+      name: 'task name 2',
+      description: "description",
+      id: 2,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 2,
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    })];
+    
     const sampleForm = formBuilder.group({
-      name: [null, Validators.required],
-      description: [null],
+      name: ["name", Validators.required],
+      description: ["sample"],
+      tasks: component.listTasks()
     });
 
     component.createMilestoneForm();
@@ -192,13 +247,41 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     });
+
+    component.yearTasks = [new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    }),
+    new Task({
+      name: 'task name 2',
+      description: "description",
+      id: 2,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 2,
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    })];
+
+    component.createMilestoneForm();
+
+    const testData = {
+      description: "sample",
+      id: 1,
+      tasks: [1]
+    }
 
     let spy = spyOn(component.http, 'post').and.returnValue(of({
       name: "name",
@@ -221,18 +304,44 @@ describe('MilestoneEditComponent', () => {
         description: "description",
         id: 1,
         isRequired: true,
-        submission: 'submission',
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
-        taskType: 'artifact',
+        taskType: TaskType.ARTIFACT,
         artifactName: 'test artifact'
       }],
     }));
+    const url = constructBackendRequest(Endpoints.EDIT_MILESTONE);
 
-    spyOn(component, 'back').and.callFake(function() { return null; })
+    spyOn(component, 'back').and.callFake(function() { return null; });
 
     component.saveMilestone();
     expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(url, testData);
+  });
+
+  it('should assign tasks', () => {
+    const testTask = new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.ARTIFACT,
+      artifactName: 'test artifact'
+    });
+
+    const testE = {
+      checked: true
+    }
+
+    component.assignTask(testE, testTask);
+    expect(component.assignedTasks).toEqual([testTask]);
+
+    testE.checked = false;
+
+    component.assignTask(testE, testTask);
+    expect(component.assignedTasks).toEqual([]);
   });
 
   it('should open the TaskEditModal in a MatDialog', () => {

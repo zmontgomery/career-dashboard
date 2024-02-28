@@ -71,7 +71,8 @@ tasks.jacocoTestReport {
                     "**/MicrosoftKeyset.class",
                     "**/util/**",
                     "**/*Router.class",
-                    "**/SecurityConfig.class"
+                    "**/SecurityConfig.class",
+                    "**/*Builder.class"
                 )
             }
         })

@@ -32,9 +32,10 @@ public class EventService {
             existingEvent.setDate((Date) simpleDateFormat.parse((String) updates.get("date")));
         }
         catch (Exception e) {
-            return Mono.empty();
+            return Mono.error(e);
         }
 
+        existingEvent.setName((String) updates.get("name"));
         existingEvent.setLocation((String) updates.get("location"));
         existingEvent.setOrganizer((String) updates.get("organizer"));
 
@@ -64,7 +65,7 @@ public class EventService {
             newEvent.setDate((Date) simpleDateFormat.parse((String) data.get("date")));
         }
         catch (Exception e) {
-            return Mono.empty();
+            return Mono.error(e);
         }
 
         if (data.containsKey("description")) {

@@ -42,7 +42,7 @@ export class SubmissionModalComponent implements OnDestroy {
    * submission being created
    */
   ngOnDestroy(): void {
-    if (this.artifactId !== 0 && this.modalState !== 'submitting') {
+    if (this.artifactId > 1 && this.modalState !== 'submitting') {
       this.artifactService.deleteArtifact(this.artifactId).subscribe(() => {
         setTimeout(() => this.submissionModalRef.close(), this.closeTime);
       });
@@ -89,7 +89,7 @@ export class SubmissionModalComponent implements OnDestroy {
    * Determines if a submission can be made
    */
   canSubmit(): boolean {
-    return this.artifactId > 1 && this.task.needsArtifact();
+    return this.task.needsArtifact() ? this.artifactId > 1 : this.commentString !== '';
   }
 
   /**
