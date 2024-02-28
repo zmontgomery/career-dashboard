@@ -29,15 +29,16 @@ describe('EventMainPageComponent', () => {
     location: "location",
     eventLink: "sample link",
     buttonLabel: "test",
+    imageId: 1,
 }))));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [EventMainPageComponent, EventEditModalComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
-        MatDialogModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
+        MatDialogModule,
         MatTabsModule,
         MatListModule,
         MatFormFieldModule,
@@ -67,8 +68,9 @@ describe('EventMainPageComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     });
-      
+
     spyOn(component.matDialog,'open').and.callThrough();
     component.openEventEditModal(testEvent);
 

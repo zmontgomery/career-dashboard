@@ -77,7 +77,7 @@ describe('FileUploadComponent', () => {
   }));
 
   it("close dialog", () => {
-    component.onClose();
+    component.closeModal();
 
     expect(matDialogRef.close).toHaveBeenCalled();
   });

@@ -22,6 +22,7 @@ describe('EventsComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
   }))));
 
   eventServiceSpy.getDashboardEvents.and.returnValue(of(Array(new Event({
@@ -34,6 +35,7 @@ describe('EventsComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
   }))));
 
   beforeEach(() => {
