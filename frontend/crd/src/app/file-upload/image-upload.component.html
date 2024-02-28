@@ -1,15 +1,31 @@
 <div class="file-upload-container">
-  <ng-container *ngIf="file == null; else fileDetails">
+  <ng-container *ngIf="rawFile == undefined; else fileDetails">
     <button class="file-upload-button" mat-button (click)="fileInput.click()">
       <mat-icon>upload_file</mat-icon>
       <input #fileInput type="file" [accept]="acceptedFileTypes" (change)="onChange($event)" style="display:none;"/>
     </button>
   </ng-container>
   <ng-template #fileDetails>
-    <img [src]="filePreviewUrl" width="480px" height="192px" alt="uploaded file">
+    <ng-container [ngSwitch]="status">
+      <ng-container *ngSwitchCase="'cropping'">
+        <image-cropper
+          [imageFile]="rawFile"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="5 / 2"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded($event)"
+          (cropperReady)="cropperReady()"
+          (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <img [src]="croppedImageUrl" width="480px" alt="uploaded file">
+      </ng-container>
+    </ng-container>
     <div class="file-details-row file-details-row-{{status}}">
       <mat-icon class="file-details-description">description</mat-icon>
-      <span class="file-details-filename">{{file?.name}}</span>
+      <span class="file-details-filename">{{rawFile?.name}}</span>
       <span class="file-details-size">{{formatBytes()}}</span>
       <button *ngIf="status != 'success'" mat-button (click)="onCancel()">
         <mat-icon>close</mat-icon>
@@ -38,6 +54,11 @@
         <button class="status-button status-button-bad-ratio" mat-raised-button color="warn" (click)="onUpload()">
           <mat-icon>error</mat-icon>
           Bad aspect ratio. Image may be distorted
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="'cropping'">
+        <button class="status-button status-button-cropping" mat-raised-button (click)="doneCropping()">
+          Done
         </button>
       </ng-container>
       <ng-container *ngSwitchDefault>

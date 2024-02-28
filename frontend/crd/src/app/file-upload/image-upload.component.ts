@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {catchError, Observable, of} from 'rxjs';
 import { LangUtils } from '../util/lang-utils';
 import { ArtifactService } from './artifact.service';
+import {ImageCroppedEvent, LoadedImage} from "ngx-image-cropper";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 /**
  * Component to upload artifacts to the server
@@ -12,10 +14,11 @@ import { ArtifactService } from './artifact.service';
   styleUrls: ['./image-upload.component.less']
 })
 export class ImageUploadComponent implements OnInit {
-  status: "initial" | "uploading" | "success" | "fail" | "bad-ratio" = "initial"; // Variable to store file status
-  file: File | null = null; // Variable to store file
-  filePreviewUrl: string = ''
+  status: "initial" | "uploading" | "success" | "fail" | "bad-ratio" | "cropping" = "initial"; // Variable to store file status
+  rawFile: File | undefined; // Variable to store file
+  croppedFile: File | undefined; // Variable to store file
   artifactId: number = 1;
+  croppedImageUrl: SafeUrl = '';
 
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
@@ -27,7 +30,8 @@ export class ImageUploadComponent implements OnInit {
   protected acceptedFileTypes: string = "png,jpeg";
 
   constructor(
-    private readonly artifactService: ArtifactService
+    private readonly artifactService: ArtifactService,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit() {
@@ -47,25 +51,8 @@ export class ImageUploadComponent implements OnInit {
         console.error(`File size exceeds the maximum allowed size (${this.maxSizeMegaBytes} MB).`);
       } else {
         // File is within the allowed size, proceed with handling
-        this.status = "initial";
-        this.file = file;
-        this.filePreviewUrl = URL.createObjectURL(file);
-
-        const img = new Image();
-        img.src = this.filePreviewUrl;
-
-        img.onload = () => {
-          const aspectRatio = img.width / img.height;
-
-          if (isNaN(aspectRatio)){
-            console.error('Unable to get image aspect ratio')
-            this.status = 'bad-ratio';
-          }
-          else if(Math.round(aspectRatio * 2) !== 5) {
-            console.error(`photo should be 5 / 2 ration, but was ${aspectRatio}`);
-            this.status = 'bad-ratio';
-          }
-        };
+        this.status = "cropping";
+        this.rawFile = file;
       }
     }
   }
@@ -75,8 +62,8 @@ export class ImageUploadComponent implements OnInit {
    */
   onCancel() {
     this.status = "initial";
-    this.file = null;
-    this.filePreviewUrl = '';
+    this.rawFile = undefined;
+    this.croppedFile = undefined
   }
 
   /**
@@ -84,10 +71,10 @@ export class ImageUploadComponent implements OnInit {
    * artifact
    */
   onUpload() {
-    if (this.file) {
+    if (this.croppedFile) {
       const formData = new FormData();
 
-      formData.append('file', this.file, this.file.name);
+      formData.append('file', this.croppedFile, this.croppedFile.name);
 
       let upload$: Observable<number>;
       switch (this.uploadType) {
@@ -126,10 +113,33 @@ export class ImageUploadComponent implements OnInit {
    * Formats the string based on the size of the file
    */
   formatBytes(): string {
-    if (!LangUtils.exists(this.file)) return '0 bytes';
-    if (this.file!.size > 1000000) return `${(this.file!.size / 1000000).toFixed(2)} mb`
-    else if (this.file!.size > 1000) return `${(this.file!.size / 1000).toFixed(2)} kb`
-    else return `${this.file!.size} bytes`;
+    if (!LangUtils.exists(this.rawFile)) return '0 bytes';
+    if (this.rawFile!.size > 1000000) return `${(this.rawFile!.size / 1000000).toFixed(2)} mb`
+    else if (this.rawFile!.size > 1000) return `${(this.rawFile!.size / 1000).toFixed(2)} kb`
+    else return `${this.rawFile!.size} bytes`;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.objectUrl != null) {
+      this.croppedImageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
+    }
+    // TODO
+    // event.blob can be used to upload the cropped image
+    // this.croppedFile = event.blob;
+  }
+  imageLoaded(image: LoadedImage) {
+    // show cropper
+  }
+  cropperReady() {
+    // cropper ready
+  }
+  loadImageFailed() {
+    // show message
+  }
+
+  doneCropping() {
+    this.status = 'initial'
+    console.log('done cropping')
   }
 }
 
