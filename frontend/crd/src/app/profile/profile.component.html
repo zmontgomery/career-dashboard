@@ -7,7 +7,7 @@
         <div class="card-body">
             <p>Preferred Name: {{user.preferredName}}</p>
             <p>Email: {{user.email}}</p>
-            <p>Phone: {{user.phoneNumber}}</p>7
+            <p>Phone: {{user.phoneNumber}}</p>
             <p>LinkedIn: </p>
 
         </div>
@@ -60,8 +60,8 @@
                 <div class="card-body-section-body">
                     <ul *ngFor="let club of user.studentDetails?.clubs">
                         <li>{{club.name}}</li>
-                        <li>{{club.startDate}}</li>
-                        <li>{{club.endDate}}</li>
+                        <li>{{club.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+                        <li>{{club.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
                     </ul>
                 </div>
                 <div class="card-body-section-header">
@@ -96,8 +96,8 @@
                             <ul>
                                 <li>{{job.location}}</li>
                                 <li>{{job.description}}</li>
-                                <li>Start Date: {{job.startDate}}</li>
-                                <li>End Date: {{job.endDate}}</li>
+                                <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+                                <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
                             </ul>
                         </div>
                     </div>
