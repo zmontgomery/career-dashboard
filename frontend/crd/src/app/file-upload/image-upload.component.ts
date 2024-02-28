@@ -16,7 +16,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 export class ImageUploadComponent implements OnInit {
   status: "initial" | "uploading" | "success" | "fail" | "bad-ratio" | "cropping" = "initial"; // Variable to store file status
   rawFile: File | undefined; // Variable to store file
-  croppedFile: File | undefined; // Variable to store file
+  croppedFile: Blob | undefined | null = null; // Variable to store file
   artifactId: number = 1;
   croppedImageUrl: SafeUrl = '';
 
@@ -63,7 +63,7 @@ export class ImageUploadComponent implements OnInit {
   onCancel() {
     this.status = "initial";
     this.rawFile = undefined;
-    this.croppedFile = undefined
+    this.croppedFile = null
   }
 
   /**
@@ -71,10 +71,10 @@ export class ImageUploadComponent implements OnInit {
    * artifact
    */
   onUpload() {
-    if (this.croppedFile) {
+    if (this.croppedFile != null && this.rawFile != undefined) {
       const formData = new FormData();
 
-      formData.append('file', this.croppedFile, this.croppedFile.name);
+      formData.append('file', this.croppedFile, this.rawFile.name);
 
       let upload$: Observable<number>;
       switch (this.uploadType) {
@@ -123,9 +123,7 @@ export class ImageUploadComponent implements OnInit {
     if (event.objectUrl != null) {
       this.croppedImageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
     }
-    // TODO
-    // event.blob can be used to upload the cropped image
-    // this.croppedFile = event.blob;
+    this.croppedFile = event.blob;
   }
   imageLoaded(image: LoadedImage) {
     // show cropper
