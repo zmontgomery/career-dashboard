@@ -187,9 +187,13 @@ export class AuthService {
 
   signup(user: User) {
     return this.http.post<UserJSON>(constructBackendRequest(Endpoints.SIGN_UP), user)
-      .pipe(map((user) => new User(user)))
-      .subscribe(() => {
-        this.userSubject.next(user);
+      .pipe(
+        map((userData) => new User(userData)),
+        tap((newUser) => this.userSubject.next(newUser))
+      )
+      .subscribe((newUser) => {
+        this.userSubject.next(newUser);
+        this.location.href = '/';
       });
   }
 
@@ -222,7 +226,6 @@ export class AuthService {
    */
   private listenForGoogleSignIn() {
     this.googleAuthService.authState.subscribe((state) => {
-      console.log(state);
       if (LangUtils.exists(state)) {
         this.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
           if (!isAuthenticated) {

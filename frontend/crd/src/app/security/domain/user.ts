@@ -26,16 +26,16 @@ export interface UserJSON {
 export class User {
     readonly id: string;
     readonly email: string;
-    readonly phoneNumber: string;
+    phoneNumber: string;
     readonly dateCreated: Date;
     readonly lastLogin: Date;
     readonly firstName: string;
     readonly lastName: string;
     readonly fullName: string;
-    readonly preferredName: string;
+    preferredName: string;
     readonly signedUp: boolean;
-    readonly canEmail: boolean;
-    readonly canText: boolean;
+    canEmail: boolean;
+    canText: boolean;
     readonly student: boolean;
     readonly admin: boolean;
     readonly faculty: boolean;

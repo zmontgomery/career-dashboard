@@ -1,5 +1,8 @@
 package com.senior.project.backend.security;
 
+import java.time.Instant;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +138,8 @@ public class AuthHandler {
     public Mono<ServerResponse> signUp(ServerRequest req) {
         return req.bodyToMono(User.class)
             .doOnNext(user -> user.setSignedUp(true))
+            .doOnNext(user -> user.setDateCreated(Date.from(Instant.now())))
+            .doOnNext(user -> user.setLastLogin(Date.from(Instant.now())))
             .flatMap(user -> userService.createOrUpdateUser(user))
             .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }
