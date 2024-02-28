@@ -12,14 +12,12 @@
             [showIndicators]="false"
             [isAnimated]="true">
     <slide *ngFor="let slide of slides; let index=index">
-      <mat-card>
-        <img class="event-image" [ngSrc]="slide.img" width="500" height="200" alt="event image">
-        <div class="carousel-caption">
-          <h4>{{slide.name}}</h4>
-          <div>{{slide.date}}</div>
-          <div>{{slide.description}}</div>
-        </div>
-      </mat-card>
+      <img class="event-image" [ngSrc]="slide.img" width="500" height="200" alt="event image">
+      <div class="carousel-caption">
+        <h4>{{slide.name}}</h4>
+        <div>{{slide.date}}</div>
+        <div>{{slide.description}}</div>
+      </div>
     </slide>
     </carousel>
 </mat-card>
