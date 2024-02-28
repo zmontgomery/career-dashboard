@@ -18,6 +18,7 @@ describe('LogoutButtonComponent', () => {
     lastLogin: 0,
     firstName: 'test',
     lastName: 'test',
+    preferredName: 'test',
     canEmail: false,
     canText: false,
     role: Role.Admin,

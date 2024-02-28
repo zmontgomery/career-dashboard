@@ -20,6 +20,7 @@ describe('NavbarComponent', () => {
     lastLogin: 1,
     firstName: 'string',
     lastName: 'string',
+    preferredName: 'string',
     canEmail: true,
     canText: true,
     role: Role.Student,

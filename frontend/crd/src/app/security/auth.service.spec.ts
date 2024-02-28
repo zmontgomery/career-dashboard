@@ -20,6 +20,7 @@ export const userJSON: UserJSON = {
   lastLogin: 0,
   firstName: 'test',
   lastName: 'test',
+  preferredName: 'test',
   canEmail: false,
   canText: false,
   role: Role.Admin,
@@ -28,7 +29,7 @@ export const userJSON: UserJSON = {
 describe('AuthService', () => {
   let service: AuthService;
   let httpSpy: HttpClient;
-  let maslAuthService: MsalService;
+  let msalAuthService: MsalService;
   let broadcastService: MsalBroadcastService;
   let googleAuthService: SocialAuthService;
   let activatedRouteSpy: ActivatedRoute;
@@ -42,6 +43,7 @@ describe('AuthService', () => {
     lastLogin: 0,
     firstName: 'test',
     lastName: 'test',
+    preferredName: 'test',
     canEmail: false,
     canText: false,
     role: Role.Admin,
@@ -59,7 +61,7 @@ describe('AuthService', () => {
   beforeEach(() => {
     httpSpy = jasmine.createSpyObj('HttpClient', ['post', 'get']);
     (httpSpy as any).post.and.returnValue(of(response));
-    maslAuthService = jasmine.createSpyObj('MsalService', ['loginRedirect']);
+    msalAuthService = jasmine.createSpyObj('MsalService', ['loginRedirect']);
     broadcastService = jasmine.createSpyObj(
         'MsalBroadcaseService',
         ['toString'],
@@ -78,7 +80,7 @@ describe('AuthService', () => {
     (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
     locationSpy = jasmine.createSpyObj('Location', ['toString', 'href']);
 
-    service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+    service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
   });
 
   it('should be created', () => {
@@ -157,7 +159,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       sub1 = service.token$.subscribe((t) => {
         expect(t?.getToken()).toEqual(token.getToken());
@@ -179,7 +181,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -188,7 +190,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -197,7 +199,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(undefined);
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(undefined);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -206,7 +208,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue('token');
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(0);
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
 
       assertFailure(done);
     });
@@ -230,8 +232,8 @@ describe('AuthService', () => {
   describe('Login redirect', () => {
     it('should login redirect for MS', () => {
       service.loginRedirectMS();
-
-      expect(maslAuthService.loginRedirect).toHaveBeenCalledTimes(1);
+  
+      expect(msalAuthService.loginRedirect).toHaveBeenCalledTimes(1);
     });
 
     it('should login redirect for Google', () => {
@@ -266,7 +268,7 @@ describe('AuthService', () => {
       (localStorage as any).getItem.withArgs(AUTH_TOKEN_STORAGE).and.returnValue(token?.getToken());
       (localStorage as any).getItem.withArgs(TOKEN_ISSUED).and.returnValue(token?.getExpiry().getTime());
 
-      service = new AuthService(httpSpy, maslAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
+      service = new AuthService(httpSpy, msalAuthService, broadcastService, googleAuthService, activatedRouteSpy, locationSpy);
     }
 
     describe('Google', () => {

@@ -41,6 +41,7 @@ public class User implements UserDetails {
 	private Date lastLogin;
 	private String firstName;
 	private String lastName;
+	private String preferredName;
 	private boolean canEmail;
 	private boolean canText;
 
