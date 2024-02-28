@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import { EventImageModalComponent } from './event-image-modal.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -13,12 +13,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MockComponent} from "ng-mocks";
 import {ImageUploadComponent} from "../../file-upload/image-upload.component";
 import {EventJSON, Event} from "../../../domain/Event";
+import SpyObj = jasmine.SpyObj;
 
 describe('EventImageModalComponent', () => {
   let component: EventImageModalComponent;
   let fixture: ComponentFixture<EventImageModalComponent>;
-  let httpMock: HttpTestingController;
-  let formBuilder: FormBuilder;
   const eventJSON: EventJSON = {
     name: 'string',
     description: 'string',
@@ -32,6 +31,8 @@ describe('EventImageModalComponent', () => {
     imageId: 1,
   }
   let event: Event = new Event(eventJSON);
+  let dialogRefSpy: SpyObj<MatDialogRef<EventImageModalComponent>>;
+  dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close'])
 
 
   beforeEach(() => {
@@ -53,7 +54,7 @@ describe('EventImageModalComponent', () => {
       providers: [
         MatDialog,
         FormBuilder,
-        {provide: MatDialogRef, useValue: {}},
+        {provide: MatDialogRef, useValue: dialogRefSpy},
         {provide: MAT_DIALOG_DATA, useValue: {event}},
       ],
       teardown: {destroyAfterEach: false}
@@ -61,11 +62,22 @@ describe('EventImageModalComponent', () => {
     fixture = TestBed.createComponent(EventImageModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    httpMock = TestBed.inject(HttpTestingController);
-    formBuilder = TestBed.inject(FormBuilder);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('close modal', fakeAsync (() => {
+    // @ts-ignore
+    component.closeModal();
+    tick();
+    expect(dialogRefSpy.close).toHaveBeenCalled();
+  }));
+
+  it('artifact id change', () => {
+    component.onArtifactId(99);
+    // @ts-ignore
+    expect(component.artifactID).toEqual(99);
   });
 });

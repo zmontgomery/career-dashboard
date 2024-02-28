@@ -82,7 +82,7 @@ export class ImageUploadComponent implements OnInit {
           if (this.uploadID == null) {
             console.error('No ID for event');
             this.status = 'fail';
-            upload$ = of(0);
+            return
           } else {
             upload$ = this.artifactService.uploadEventImage(formData, this.uploadID);
           }
