@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSelectModule
   ]
 })
 export class TaskEditModalModule { }

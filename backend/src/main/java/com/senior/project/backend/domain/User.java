@@ -1,5 +1,8 @@
 package com.senior.project.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -13,21 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.senior.project.backend.security.SecurityUtil;
-
-import jakarta.annotation.Nullable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import java.util.*;
 
 @Entity
 @Data
@@ -52,12 +41,12 @@ public class User implements UserDetails {
 	private Date lastLogin;
 	private String firstName;
 	private String lastName;
+	private String preferredName;
 	private boolean canEmail;
 	private boolean canText;
-	private boolean isStudent;
-	private boolean isAdmin;
-	private boolean isFaculty;
-	private boolean isSuperAdmin;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="student_details_id")
@@ -68,10 +57,10 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new LinkedList<>();
-		if (isStudent && studentDetails != null) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.STUDENT.toString()));
-		if (isAdmin) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.ADMIN.toString()));
-		if (isFaculty) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.FACULTY.toString()));
-		if (isSuperAdmin) authorities.add(new SimpleGrantedAuthority(SecurityUtil.Roles.SUPER_ADMIN.toString()));
+		if (isStudent() && studentDetails != null) authorities.add(new SimpleGrantedAuthority(Role.Student.toString()));
+		if (hasAdminPrivileges()) authorities.add(new SimpleGrantedAuthority(Role.Admin.toString()));
+		if (hasFacultyPrivileges()) authorities.add(new SimpleGrantedAuthority(Role.Faculty.toString()));
+		if (hasSuperAdminPrivileges()) authorities.add(new SimpleGrantedAuthority(Role.SuperAdmin.toString()));
  		return authorities;
 	}
 
@@ -109,4 +98,40 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	@JsonIgnore
+	public boolean isStudent() {
+		return this.role == Role.Student;
+	}
+
+	@JsonIgnore
+	public boolean isFaculty() {
+		return this.role == Role.Faculty;
+	}
+
+	@JsonIgnore
+	public boolean isAdmin() {
+		return this.role == Role.Admin;
+	}
+
+	@JsonIgnore
+	public boolean isSuperAdmin() {
+		return this.role == Role.SuperAdmin;
+	}
+
+	@JsonIgnore
+	public boolean hasFacultyPrivileges() {
+		return this.role == Role.Faculty || this.hasAdminPrivileges();
+	}
+
+	@JsonIgnore
+	public boolean hasAdminPrivileges() {
+		return this.role == Role.Admin || this.hasSuperAdminPrivileges();
+	}
+
+	@JsonIgnore
+	public boolean hasSuperAdminPrivileges() {
+		return this.role == Role.SuperAdmin;
+	}
+
 }

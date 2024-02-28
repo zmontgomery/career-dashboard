@@ -1,5 +1,7 @@
 package com.senior.project.backend.security.config;
 
+import com.senior.project.backend.domain.Role;
+import com.senior.project.backend.util.Endpoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +15,6 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import com.senior.project.backend.security.SecurityUtil;
-import com.senior.project.backend.util.Endpoints;
-
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -44,7 +42,7 @@ public class SecurityConfig {
         http.cors(c -> c.configurationSource(corsConfigurationSource()));
         http.authorizeExchange(e -> {
             e.pathMatchers(Endpoints.getOpenRoutes()).permitAll();
-            e.pathMatchers(Endpoints.getAdminRoutes()).hasAuthority(SecurityUtil.Roles.ADMIN.toString());
+            e.pathMatchers(Endpoints.getAdminRoutes()).hasAuthority(Role.Admin.toString());
             e.pathMatchers("/api/**").authenticated();
             e.anyExchange().permitAll();
         });

@@ -36,7 +36,9 @@ describe('MilestoneService', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        eventLink: "sample link",
+        buttonLabel: "test",
       }],
       tasks: [taskJSON],
     }
@@ -66,7 +68,9 @@ describe('MilestoneService', () => {
         id: 1,
         recurring: true,
         organizer: "organizer",
-        location: "location"
+        location: "location",
+        buttonLabel: "sample",
+        eventLink: "sample"
       }],
       tasks: [taskJSON],
     }    
