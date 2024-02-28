@@ -6,7 +6,6 @@ import { EventEditModalComponent } from '../event-edit-modal/event-edit-modal.co
 import {EventImageModalComponent} from "../event-image-modal/event-image-modal.component";
 import {ArtifactService} from "../../file-upload/artifact.service";
 import {Endpoints} from "../../util/http-helper";
-import {map} from "rxjs";
 
 @Component({
   selector: 'app-event-main-page',
@@ -28,17 +27,7 @@ export class EventMainPageComponent implements OnInit {
   ngOnInit() {
     this.eventService.getEvents().subscribe((events: Event[]) => {
       this.events = events;
-      events.forEach((event) => this.updateImage(event));
     });
-  }
-
-  private updateImage(event: Event) {
-    if (event.imageId != null) {
-      this.artifactService.getImage(event.imageId).pipe(map(
-        (file) => URL.createObjectURL(file))).subscribe((url) => {
-        this.eventUrlsMap = this.eventUrlsMap.set(event.eventID, url);
-      });
-    }
   }
 
   openEventEditModal(event: Event | null) {
@@ -79,9 +68,12 @@ export class EventMainPageComponent implements OnInit {
 
     modalDialog.afterClosed().subscribe(result => {
       event.imageId = result;
-      this.updateImage(event);
     })
   }
 
   protected readonly Endpoints = Endpoints;
+
+  eventImageUrl(imageId: number): string {
+    return  this.artifactService.getEventImageUrl(imageId)
+  }
 }

@@ -63,10 +63,7 @@ export class ArtifactService {
       }));
   }
 
-  getImage(id: number): Observable<Blob> {
-    return this.http.get(constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${id}`), { responseType: 'blob' })
-      .pipe(map((data: any) => {
-        return new Blob([data], { type: 'image/png' });
-      }));
+  getEventImageUrl(id: number): string {
+    return constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${id}`);
   }
 }
