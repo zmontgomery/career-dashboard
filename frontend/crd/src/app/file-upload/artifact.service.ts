@@ -63,7 +63,7 @@ export class ArtifactService {
       }));
   }
 
-  getEventImageUrl(id: number): string {
-    return constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${id}`);
+  getEventImageUrl(imageId: number): string {
+    return constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${imageId}`);
   }
 }
