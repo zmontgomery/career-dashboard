@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {catchError, Observable, of} from 'rxjs';
 import { LangUtils } from '../util/lang-utils';
 import { ArtifactService } from './artifact.service';
-import {ImageCroppedEvent, LoadedImage} from "ngx-image-cropper";
+import {ImageCroppedEvent} from "ngx-image-cropper";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 /**
@@ -14,16 +14,16 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
   styleUrls: ['./image-upload.component.less']
 })
 export class ImageUploadComponent implements OnInit {
-  status: "initial" | "uploading" | "success" | "fail" | "bad-ratio" | "cropping" = "initial"; // Variable to store file status
+  status: "initial" | "uploading" | "success" | "fail" | "cropping" = "initial"; // Variable to store file status
   rawFile: File | undefined; // Variable to store file
   croppedFile: Blob | undefined | null = null; // Variable to store file
-  artifactId: number = 1;
   croppedImageUrl: SafeUrl = '';
 
   private maxSizeMegaBytes = 10;
   private maxSizeBytes = this.maxSizeMegaBytes * 1024 * 1024; // 10 MB
 
   @Output() artifactIdEmitter: EventEmitter<number> = new EventEmitter();
+  @Output() closeEmitter: EventEmitter<number> = new EventEmitter();
   @Input() uploadType: UploadType = UploadType.EventImage;
   @Input() uploadID: number | null = null;
 
@@ -101,10 +101,9 @@ export class ImageUploadComponent implements OnInit {
           return of(0);
         })
       ).subscribe((artifactId) => {
-        this.artifactId = artifactId;
         this.artifactIdEmitter.next(artifactId);
         this.status = 'success';
-        // TODO close after successful upload
+        this.closeModal(1000);
       });
     }
   }
@@ -122,22 +121,16 @@ export class ImageUploadComponent implements OnInit {
   imageCropped(event: ImageCroppedEvent) {
     if (event.objectUrl != null) {
       this.croppedImageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
+      this.croppedFile = event.blob;
     }
-    this.croppedFile = event.blob;
-  }
-  imageLoaded(image: LoadedImage) {
-    // show cropper
-  }
-  cropperReady() {
-    // cropper ready
-  }
-  loadImageFailed() {
-    // show message
   }
 
   doneCropping() {
     this.status = 'initial'
-    console.log('done cropping')
+  }
+
+  closeModal(waitTime: number = 0) {
+    this.closeEmitter.emit(waitTime);
   }
 }
 

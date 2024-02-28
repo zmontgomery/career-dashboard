@@ -34,13 +34,13 @@ export class EventImageModalComponent implements OnInit {
 
   }
 
-  closeModal() {
-    this.dialogRef.close(this.artifactID);
+  closeModal(waitTime: number) {
+    setTimeout(() => this.dialogRef.close(this.artifactID), waitTime)
   }
 
   protected readonly UploadType = UploadType;
 
-  onArtifactId($event: number) {
-    this.artifactID = $event;
+  onArtifactId(id: number) {
+    this.artifactID = id;
   }
 }
