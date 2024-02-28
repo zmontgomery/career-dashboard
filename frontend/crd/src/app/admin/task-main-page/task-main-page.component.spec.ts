@@ -7,12 +7,38 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
+import createSpyObj = jasmine.createSpyObj;
+import { of } from 'rxjs';
+import { Task, TaskType } from 'src/domain/Task';
+import { YearLevel } from 'src/domain/Milestone';
+import { TaskService } from 'src/app/util/task.service';
 
 
 describe('TaskMainPageComponent', () => {
   let component: TaskMainPageComponent;
   let fixture: ComponentFixture<TaskMainPageComponent>;
   let httpMock: HttpTestingController;
+  //@ts-ignore
+  let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
+  taskServiceSpy.getTasks.and.returnValue(of([new Task({
+    name: 'task name',
+    description: "description",
+    id: 1,
+    isRequired: true,
+    yearLevel: YearLevel.Freshman,
+    milestoneID: 1,
+    taskType: TaskType.ARTIFACT,
+    artifactName: 'test artifact'
+  }),new Task({
+    name: 'task name',
+    description: "description",
+    id: 2,
+    isRequired: true,
+    yearLevel: YearLevel.Sophomore,
+    milestoneID: 4,
+    taskType: TaskType.ARTIFACT,
+    artifactName: 'test artifact'
+  })]));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,7 +51,7 @@ describe('TaskMainPageComponent', () => {
         MatListModule,
         NoopAnimationsModule
       ],
-      providers: [MatDialog],
+      providers: [MatDialog,{provide: TaskService, useValue: taskServiceSpy},],
       teardown: {destroyAfterEach: false}
     });
     fixture = TestBed.createComponent(TaskMainPageComponent);
@@ -36,6 +62,11 @@ describe('TaskMainPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should populate task map', () => {
+    expect(component.taskMap.get(YearLevel.Freshman)?.length).toEqual(1);
+    expect(component.taskMap.get(YearLevel.Sophomore)?.length).toEqual(1);
   });
 
   it('should open the TaskEditModal in a MatDialog', () => {

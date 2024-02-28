@@ -15,6 +15,8 @@ import java.util.Arrays;
 public enum Endpoints {
     // Events
     EVENTS("events", true),
+    EDIT_EVENT("admin/edit-event", true, Role.Admin),
+    CREATE_EVENT("admin/create-event", true, Role.Admin),
     DASHBOARD_EVENTS("dashboard_events", true),
 
     // Tasks
