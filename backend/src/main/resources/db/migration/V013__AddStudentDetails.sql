@@ -12,8 +12,8 @@ ADD COLUMN is_student BOOLEAN;
 
 SET @id = UUID_TO_BIN(UUID());
 
-INSERT INTO student_details(id, university_id, gpa, description, graduation_year, start_date, degree_level) 
-VALUES (@id, 1, 3.5, "a stduent", null, null, "Senior");
+INSERT INTO student_details(id, university_id, gpa, description, graduation_year, start_date, year_level) 
+VALUES (@id, '1', 3.5, "a stduent", null, null, "Senior");
 
 UPDATE user
 SET user.student_details_id = @id

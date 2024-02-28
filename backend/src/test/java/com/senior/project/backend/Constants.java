@@ -38,6 +38,8 @@ public class Constants {
         e1.setOrganizer("SUNY Oswego");
         e1.setLocation("Field House");
         e1.setRecurring(true);
+        e1.setEventLink("Test Link");
+        e1.setButtonLabel("More Info");
 
         e2 = new Event();
         e2.setId(1L);
@@ -47,6 +49,8 @@ public class Constants {
         e2.setOrganizer("SUNY Oswego");
         e2.setLocation("Field Houes");
         e2.setRecurring(true);
+        e2.setEventLink("Test Link");
+        e2.setButtonLabel("More Info");
 
         e3 = new Event();
         e3.setId(1L);
@@ -56,6 +60,8 @@ public class Constants {
         e3.setOrganizer("SUNY Oswego");
         e3.setLocation("Field Houes");
         e3.setRecurring(true);
+        e3.setEventLink("Test Link");
+        e3.setButtonLabel("More Info");
     }
 
     public static final List<Milestone> milestoneDATA = new ArrayList<>();
@@ -152,7 +158,7 @@ public class Constants {
         user1 = new User();
         user1.setId(UUID.randomUUID());
         user1.setEmail("test@test.com");
-        user1.setAdmin(true);
+        user1.setRole(Role.Admin);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
