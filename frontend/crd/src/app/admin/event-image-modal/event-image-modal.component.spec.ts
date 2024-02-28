@@ -10,12 +10,28 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MockComponent} from "ng-mocks";
+import {ImageUploadComponent} from "../../file-upload/image-upload.component";
+import {EventJSON, Event} from "../../../domain/Event";
 
-describe('EventEditModalComponent', () => {
+describe('EventImageModalComponent', () => {
   let component: EventImageModalComponent;
   let fixture: ComponentFixture<EventImageModalComponent>;
   let httpMock: HttpTestingController;
   let formBuilder: FormBuilder;
+  const eventJSON: EventJSON = {
+    name: 'string',
+    description: 'string',
+    date: 'string',
+    id: 1,
+    recurring: true,
+    organizer: 'string',
+    location: 'string',
+    eventLink: 'string',
+    buttonLabel: 'string',
+    imageId: 1,
+  }
+  let event: Event = new Event(eventJSON);
 
 
   beforeEach(() => {
@@ -31,13 +47,14 @@ describe('EventEditModalComponent', () => {
         NoopAnimationsModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MockComponent(ImageUploadComponent),
       ],
       providers: [
         MatDialog,
         FormBuilder,
         {provide: MatDialogRef, useValue: {}},
-        {provide: MAT_DIALOG_DATA, useValue: []},
+        {provide: MAT_DIALOG_DATA, useValue: {event}},
       ],
       teardown: {destroyAfterEach: false}
     });

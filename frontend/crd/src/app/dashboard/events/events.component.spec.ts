@@ -5,13 +5,15 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./event.service";
 import { of } from "rxjs";
-import { MockComponent, MockModule } from 'ng-mocks';
+import { MockModule } from 'ng-mocks';
+import {ArtifactService} from "../../file-upload/artifact.service";
 const createSpyObj= jasmine.createSpyObj;
 
 describe('EventsComponent', () => {
   let component: EventsComponent;
   let fixture: ComponentFixture<EventsComponent>;
   let eventServiceSpy = createSpyObj('EventService', ['getEvents', 'getDashboardEvents']);
+  let artifactServiceSpy = createSpyObj('ArtifactService', ['getEvents', 'getDashboardEvents']);
   eventServiceSpy.getEvents.and.returnValue(of(Array(new Event({
       name: "name",
       description: "description",
@@ -41,7 +43,10 @@ describe('EventsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatCardModule, MockModule(CarouselModule)],
-      providers: [{provide: EventService, useValue: eventServiceSpy}],
+      providers: [
+        {provide: EventService, useValue: eventServiceSpy},
+        {provide: ArtifactService, useValue: artifactServiceSpy},
+      ],
       declarations: [EventsComponent]
     });
     fixture = TestBed.createComponent(EventsComponent);
