@@ -41,11 +41,6 @@ export class TaskMainPageComponent implements OnDestroy {
     });
   }
 
-  editTask(name: string) {
-    //const encodedName = encodeURIComponent(name);
-    //this.router.navigate(['/admin/task-edit', encodedName]);
-  }
-
   openTaskEditModal(name: string, task: Task | null) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body

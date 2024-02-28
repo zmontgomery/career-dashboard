@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import com.senior.project.backend.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -120,8 +121,8 @@ public class UserServiceTest {
 
     @Test
     public void setSuperUser() {
-        Constants.user1.setSuperAdmin(true);
-        when(userRepository.findSuperAdmins()).thenReturn(Constants.USERS);
+        Constants.user1.setRole(Role.SuperAdmin);
+        when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
         when(userRepository.findUserByEmail(any())).thenReturn(Optional.of(Constants.user2));
 
         userService.setSuperUser();
@@ -130,13 +131,13 @@ public class UserServiceTest {
         verify(userRepository, times(3)).save(any());
         assertTrue(Constants.user2.isSuperAdmin());
 
-        Constants.user2.setSuperAdmin(false);
+        Constants.user2.setRole(Role.SuperAdmin);
     }
 
     @Test
     public void setSuperUserError() {
-        Constants.user1.setSuperAdmin(true);
-        when(userRepository.findSuperAdmins()).thenReturn(Constants.USERS);
+        Constants.user1.setRole(Role.SuperAdmin);
+        when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
         when(userRepository.findUserByEmail(any())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> userService.setSuperUser());

@@ -12,7 +12,7 @@ export interface TaskJSON {
   id: number;
   isRequired: boolean;
   yearLevel: YearLevel;
-  milestoneID: number;
+  milestoneID?: number;
   taskType: TaskType;
   artifactName?: string;
   eventID?: number;
@@ -26,7 +26,7 @@ export class Task {
     this.taskID = json.id;
     this.isRequired = json.isRequired;
     this.yearLevel = json.yearLevel;
-    this.milestoneID = json.milestoneID;
+    this.milestoneID = json?.milestoneID;
     this.taskType = json.taskType;
     this.artifactName = json?.artifactName;
     this.eventID = json?.eventID;
@@ -38,7 +38,7 @@ export class Task {
   taskID: number;
   isRequired: boolean;
   yearLevel: YearLevel;
-  milestoneID: number;
+  milestoneID?: number;
   taskType: TaskType;
   artifactName?: string;
   eventID?: number;
