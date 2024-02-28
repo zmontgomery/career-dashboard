@@ -3,6 +3,7 @@ package com.senior.project.backend.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.senior.project.backend.domain.Role;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -14,32 +15,26 @@ import java.util.Arrays;
 public enum Endpoints {
     // Events
     EVENTS("events", true),
-    EDIT_EVENT("admin/edit-event", true, Role.ADMIN),
-    CREATE_EVENT("admin/create-event", true, Role.ADMIN),
+    EDIT_EVENT("admin/edit-event", true, Role.Admin),
+    CREATE_EVENT("admin/create-event", true, Role.Admin),
     DASHBOARD_EVENTS("dashboard_events", true),
-    RESUME("portfolio/resume", true),
-    SEARCH_USERS("users/search", true, Role.FACULTY),
-    PORTFOLIO("portfolio", true),
-    ARTIFACT_LIST("portfolio/artifacts", true),
-    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
-
-    // TODO remove this
-    EMAIL("send-email", false),
 
     // Tasks
     TASKS("tasks", true),
     TASK_BY_ID("tasks/{id}", true),
-    EDIT_TASK("admin/edit-task", true, Role.ADMIN),
-    CREATE_TASK("admin/create-task", true, Role.ADMIN),
+    EDIT_TASK("admin/edit-task", true, Role.Admin),
+    CREATE_TASK("admin/create-task", true, Role.Admin),
 
     // Milestones
     MILSTONES("milestones", true),
-    EDIT_MILESTONE("admin/edit-milestone", true, Role.ADMIN),
-    CREATE_MILESTONE("admin/create-milestone", true, Role.ADMIN),
+    EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.Admin),
 
     // Users
-    USERS("users", true),
     CURRENT_USER("current-user", true),
+    USERS("users", true, Role.Faculty),
+    SEARCH_USERS("users/search", true, Role.Faculty),
+    PORTFOLIO("portfolio", true),
 
     // Submissions
     SUBMISSION("tasks/submission", true),
@@ -49,6 +44,9 @@ public enum Endpoints {
     ARTIFACT("artifact/", true),
     ARTIFACT_ID("artifact/{id}", true),
     ARTIFACT_FILE("artifact/file/{artifactID}", true),
+    RESUME("portfolio/resume", true),
+    ARTIFACT_LIST("portfolio/artifacts", true),
+    SINGLE_ARTIFACT("portfolio/{artifactID}", true),
 
     // Security
     SIGNIN("auth/signin", false),
@@ -67,7 +65,7 @@ public enum Endpoints {
     Endpoints(String value, boolean needsAuthentication) {
         this.value = "/api/" + value;
         this.needsAuthentication = needsAuthentication;
-        this.role = Role.STUDENT;
+        this.role = Role.Student;
     }
 
     private Endpoints(String value, boolean needsAuthentication, Role role) {
@@ -132,7 +130,7 @@ public enum Endpoints {
      */
     public static String[] getAdminRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> r.getRole() == Role.ADMIN)
+            .filter(r -> r.getRole() == Role.Admin)
             .map((r) -> r.uri())
             .toList();
 
@@ -146,7 +144,7 @@ public enum Endpoints {
 
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-        .filter(r -> r.getRole() == Role.ADMIN || r.getRole() == Role.FACULTY)
+        .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)
         .map((r) -> r.uri())
         .toList();
 
@@ -156,11 +154,5 @@ public enum Endpoints {
         }
 
         return routes;
-    }
-
-    public enum Role {
-        STUDENT,
-        ADMIN,
-        FACULTY
     }
 }
