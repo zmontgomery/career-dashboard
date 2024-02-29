@@ -12,7 +12,7 @@ import { ArtifactService } from './artifact.service';
   styleUrls: ['./file-upload.component.less']
 })
 export class FileUploadComponent {
-  status: "initial" | "uploading" | "success" | "fail" = "initial"; // Variable to store file status
+  status: "initial" | "uploading" | "success" | "error" = "initial"; // Variable to store file status
   file: File | null = null; // Variable to store file
   artifactId: number = 1;
 
@@ -71,7 +71,7 @@ export class FileUploadComponent {
 
       upload$.pipe(
         catchError((error) => {
-          this.status = 'fail';
+          this.status = 'error';
           console.error(error);
           return of(0);
         })

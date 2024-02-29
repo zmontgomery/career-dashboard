@@ -14,7 +14,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
   styleUrls: ['./image-upload.component.less']
 })
 export class ImageUploadComponent implements OnInit {
-  status: "initial" | "uploading" | "success" | "fail" | "cropping" = "initial"; // Variable to store file status
+  status: "initial" | "uploading" | "success" | "error" | "cropping" = "initial"; // Variable to store file status
   rawFile: File | undefined; // Variable to store file
   croppedFile: Blob | undefined | null = null; // Variable to store file
   croppedImageUrl: SafeUrl = '';
@@ -81,9 +81,10 @@ export class ImageUploadComponent implements OnInit {
         case UploadType.EventImage:
           if (this.uploadID == null) {
             console.error('No ID for event');
-            this.status = 'fail';
+            this.status = 'error';
             return
           } else {
+            console.log('uploading event image');
             upload$ = this.artifactService.uploadEventImage(formData, this.uploadID);
           }
           break;
@@ -93,17 +94,29 @@ export class ImageUploadComponent implements OnInit {
       }
 
       this.status = 'uploading';
+      //
+      // upload$.subscribe(
+      //   next: (v) => console.log('next'),
+      //   error: (e) => console.error('error'),
+      //   complete: () => console.info('complete')
+      // )
 
       upload$.pipe(
-        catchError((error) => {
-          this.status = 'fail';
+        // FIXME this does not seem to work so added check for null below
+        catchError(error => {
+          this.status = 'error';
           console.log(error);
           return of(0);
         })
       ).subscribe((artifactId) => {
-        this.artifactIdEmitter.next(artifactId);
-        this.status = 'success';
-        this.closeModal(1000);
+        if (artifactId == null) {
+          this.status = 'error';
+          console.log('fail');
+        } else {
+          this.artifactIdEmitter.next(artifactId);
+          this.status = 'success';
+          this.closeModal(1000);
+        }
       });
     }
   }

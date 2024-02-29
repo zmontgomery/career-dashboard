@@ -199,7 +199,9 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(Artifact a, User user) {
         try {
-            if (user.isAdmin() || a.getUserId().equals(user.getId())) {
+            System.out.println(a);
+            System.out.println(user);
+            if (user.hasAdminPrivileges() || a.getUserId().equals(user.getId())) {
                 Path fileToDelete = Paths.get(a.getFileLocation());
                 Files.deleteIfExists(fileToDelete); // Delete file
                 artifactRepository.delete(a); // Delete artifact entity
@@ -249,7 +251,7 @@ public class ArtifactService {
                             .flatMap(user -> {
                                 System.out.println(user.getId());
                                 System.out.println(artifact.getUserId());
-                                if (!user.isFaculty() && !user.getId().equals(artifact.getUserId())){
+                                if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
                                     return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
                                             "User does not have access to this artifact"));
                                 }
