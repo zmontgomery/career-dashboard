@@ -78,7 +78,7 @@ public class SubmissionHandler {
         return authService.currentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
-            .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)) : Mono.just(submissions))
+            .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)) : Mono.just(submissions))
             .map((submissions) -> {
                 List<Submission> newList = submissions.stream()
                     .sorted((s1, s2) -> s1.getSubmissionDate().before(s2.getSubmissionDate()) ? -1 : 1)
