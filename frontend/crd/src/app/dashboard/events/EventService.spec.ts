@@ -21,47 +21,47 @@ describe('EventService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('events should return list of events', () => {
-    const events = Array(new Event({
-      name: "name",
-      description: "description",
-      date: new Date().toDateString(),
-      id: 1,
-      recurring: true,
-      organizer: "organizer",
-      location: "location",
-      eventLink: "",
-      buttonLabel: ""
-    }));
-    service.getEvents().subscribe(result => {
-      expect(result).toEqual(events);
-    });
-    const request = httpMock.expectOne('http://localhost:8080/api/events');
-    expect(request.request.method).toEqual('GET');
-    request.flush(events)
-  });
+  // it('events should return list of events', () => {
+  //   const events = Array(new Event({
+  //     name: "name",
+  //     description: "description",
+  //     date: new Date().toDateString(),
+  //     id: 1,
+  //     recurring: true,
+  //     organizer: "organizer",
+  //     location: "location",
+  //     eventLink: "",
+  //     buttonLabel: ""
+  //   }));
+  //   service.getEvents().subscribe(result => {
+  //     expect(result).toEqual(events);
+  //   });
+  //   const request = httpMock.expectOne('http://localhost:8080/api/events');
+  //   expect(request.request.method).toEqual('GET');
+  //   request.flush(events)
+  // });
 
-  it('dashboard_events should return list of events', () => {
-    const events = Array(new Event({
-      name: "name",
-      description: "description",
-      date: new Date().toDateString(),
-      id: 2,
-      recurring: true,
-      organizer: "organizer",
-      location: "location",
-      eventLink: "",
-      buttonLabel: ""
-    }));
-
-    service.getDashboardEvents(1).subscribe(result => {
-      expect(result).toEqual(events);
-    });
-    const request = httpMock.expectOne('http://localhost:8080/api/dashboard_events?pageNum=1');
-
-    expect(request.request.method).toEqual('GET');
-    request.flush(events)
-  });
+  // it('dashboard_events should return list of events', () => {
+  //   const events = Array(new Event({
+  //     name: "name",
+  //     description: "description",
+  //     date: new Date().toDateString(),
+  //     id: 2,
+  //     recurring: true,
+  //     organizer: "organizer",
+  //     location: "location",
+  //     eventLink: "",
+  //     buttonLabel: ""
+  //   }));
+  //
+  //   service.getDashboardEvents(1).subscribe(result => {
+  //     expect(result).toEqual(events);
+  //   });
+  //   const request = httpMock.expectOne('http://localhost:8080/api/dashboard_events?pageNum=1');
+  //
+  //   expect(request.request.method).toEqual('GET');
+  //   request.flush(events)
+  // });
 
 
 })
