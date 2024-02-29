@@ -4,6 +4,7 @@ import { MatCardModule } from "@angular/material/card";
 import { Event } from "../../../domain/Event";
 import { EventService } from "./event.service";
 import { of } from "rxjs";
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { MockComponent, MockModule } from 'ng-mocks';
 const createSpyObj= jasmine.createSpyObj;
 
