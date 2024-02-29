@@ -93,6 +93,7 @@ describe('SignupPageComponent', () => {
     const foramtted = fixture.elementRef.nativeElement.getElementsByClassName('password-field')[0].value;
 
     expect(foramtted).toEqual('(123)-456-7890');
+    expect(component.phoneNumber).toEqual(foramtted);
   });
 
   it ('should call sign out on cancel', () => {

@@ -19,7 +19,7 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Data
-@ToString
+// @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated
@@ -43,5 +43,6 @@ public class Job {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
     @JsonIgnore
+    @ToString.Exclude
     private StudentDetails studentDetails;
 }

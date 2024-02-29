@@ -61,6 +61,8 @@ export class SignupPageComponent implements OnInit, OnDestroy {
 
       ref.value = /^[(]*[\d]{0,3}[)]*([\d-]{0,4})*$/.test(val!) ? this.formatPhoneNumber(val!) 
         : val!.substring(0, val!.length - 1);
+      
+      this.phoneNumber = ref.value.replace('(', '').replace(')', '');
     });
 
     this.preferredSub = this.preferredNameControl.valueChanges.subscribe((val) => {
@@ -100,6 +102,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     this.user.preferredName = this.preferredName === '' ? this.user.firstName : this.preferredName;
     this.user.canEmail = this.canEmail;
     this.user.canText = this.canText;
+    console.log(this.phoneNumber);
     this.authService.signup(this.user);
   }
 

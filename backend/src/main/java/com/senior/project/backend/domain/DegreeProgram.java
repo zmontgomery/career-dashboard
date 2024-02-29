@@ -21,7 +21,6 @@ import jakarta.persistence.ManyToOne;
 @AllArgsConstructor
 @Generated
 public class DegreeProgram {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -32,5 +31,6 @@ public class DegreeProgram {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
     @JsonIgnore
+    @ToString.Exclude
     private StudentDetails studentDetails;
 }
