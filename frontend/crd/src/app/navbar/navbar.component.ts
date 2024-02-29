@@ -14,11 +14,11 @@ export class NavbarComponent {
     private readonly authService: AuthService
   ) {
     authService.user$.pipe(takeUntilDestroyed()).subscribe((user: User | null) => {
-      if (user?.admin) {
+      if (user?.hasAdminPrivileges()) {
         // Admin specific links in future?
         this.navLinks = this.adminLinks;
       }
-      else if (user?.faculty) {
+      else if (user?.hasFacultyPrivileges()) {
         this.navLinks = this.facultyLinks;
       }
       else {

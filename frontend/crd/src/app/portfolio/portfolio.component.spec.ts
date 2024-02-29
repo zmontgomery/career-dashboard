@@ -16,6 +16,9 @@ import { SubmissionService } from '../submissions/submission.service';
 import { TaskService } from '../util/task.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { AuthService } from '../security/auth.service';
+import { userJSON } from '../security/auth.service.spec';
+import { User } from '../security/domain/user';
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
@@ -37,6 +40,7 @@ describe('PortfolioComponent', () => {
   let submissionService = jasmine.createSpyObj('SubmissionService', ['getLatestSubmission']);
   submissionService.getLatestSubmission.and.returnValue(of(submission1));
   let taskService = jasmine.createSpyObj('TaskService', ['findById']);
+  let authService = jasmine.createSpyObj('AuthService', ['toString'], {user$:of(new User(userJSON))});
   taskService.findById.and.returnValue(of(task));
 
   beforeEach(() => {
@@ -55,7 +59,8 @@ describe('PortfolioComponent', () => {
         {provide: MatDialog, useValue: matDialog},
         {provide: ArtifactService, useValue: artifactSvc},
         {provide: SubmissionService, useValue: submissionService},
-        {provide: TaskService, useValue: taskService}
+        {provide: TaskService, useValue: taskService},
+        {provide: AuthService, useValue: authService}
       ]
     });
     fixture = TestBed.createComponent(PortfolioComponent);

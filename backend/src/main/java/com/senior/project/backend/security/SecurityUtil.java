@@ -23,14 +23,4 @@ public abstract class SecurityUtil {
             .map(context -> (User) context.getAuthentication().getPrincipal())
             .onErrorMap(er -> new UsernameNotFoundException("No user found in context."));
     }
-
-    /**
-     * The possible roles for the application
-     */
-    public static enum Roles {
-        ADMIN,
-        STUDENT,
-        FACULTY,
-        SUPER_ADMIN
-    }
 }
