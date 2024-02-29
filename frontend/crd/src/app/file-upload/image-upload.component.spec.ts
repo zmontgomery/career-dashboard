@@ -78,11 +78,11 @@ describe('ImageUploadComponent', () => {
     expect(component.formatBytes()).toEqual('0 bytes');
   });
 
-  it('upload fail', () => {
+  it('upload error', () => {
     component.rawFile = file;
     component.croppedFile = file;
     component.onUpload();
-    expect(component.status).toEqual('fail');
+    expect(component.status).toEqual('error');
   });
 
   it('upload uploading', () => {
