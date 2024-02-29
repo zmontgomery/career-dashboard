@@ -105,7 +105,6 @@ export class SignupPageComponent implements OnInit, OnDestroy {
 
   private formatPhoneNumber(input: string): string {
     input = input.replace(/[(]*/g, '').replace(/[)]*/g, '').replace(/[-]*/g, '');
-    console.log(input);
     let area = '';
     let tel = '';
     let ext = '';
