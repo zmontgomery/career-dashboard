@@ -3,7 +3,6 @@ import { User } from '../domain/user';
 import { AuthService } from '../auth.service';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { LangUtils } from 'src/app/util/lang-utils';
 
 @Component({
   selector: 'app-signup-page',
@@ -40,6 +39,9 @@ export class SignupPageComponent implements OnInit, OnDestroy {
       'canText': this.canTextControl,
       'canEmail': this.canEmailControl,
     });
+
+    this.canTextControl.setValue(true);
+    this.canEmailControl.setValue(true);
   } 
 
   nameError = false;
@@ -57,11 +59,8 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     this.phoneSub = this.phoneNumberControl.valueChanges.subscribe((val) => {
       const ref = this.elementRef.nativeElement.getElementsByClassName('password-field')[0];
 
-      if (/^[(]*[\d]{0,3}[)]*([\d-]{0,4})*$/.test(val!)) {
-        ref.value = this.formatPhoneNumber(val!);
-      } else {
-        ref.value = val!.substring(0, val!.length - 1);
-      }
+      ref.value = /^[(]*[\d]{0,3}[)]*([\d-]{0,4})*$/.test(val!) ? this.formatPhoneNumber(val!) 
+        : val!.substring(0, val!.length - 1);
     });
 
     this.preferredSub = this.preferredNameControl.valueChanges.subscribe((val) => {
@@ -79,6 +78,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.phoneSub?.unsubscribe();
+    this.preferredSub?.unsubscribe();
     this.textSub?.unsubscribe();
     this.emailSub?.unsubscribe();
   }

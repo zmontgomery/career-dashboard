@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
 
-import org.hibernate.mapping.Map;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
 import org.jose4j.jwk.JsonWebKey;
@@ -61,6 +60,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         try {
             JsonWebSignature jws = new JsonWebSignature();
             jws.setCompactSerialization(token);
+            setKeyForJWS(jws);
             String payload = jws.getPayload();
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -106,26 +106,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             JsonWebSignature jws = new JsonWebSignature();
             jws.setAlgorithmConstraints(new AlgorithmConstraints(ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA256));
             jws.setCompactSerialization(token);
-            JsonWebKey jwk = null;
-            String kid = jws.getKeyIdHeaderValue();
-            keySet = createKeySet();
-
-            // Get key for the token
-            jwk = extractKey(kid);
-
-            if (jwk == null) {
-                // Refetch the keyset if the keys have been rolled over
-                microsoftKeyset.invalidateCache();
-                keySet = createKeySet();
-                jwk = extractKey(kid);
-
-                if (jwk == null) {
-                    throw new TokenVerificiationException("Token had no key in the key set");
-                }
-            }
-
-            // Set the key
-            jws.setKey(jwk.getKey());
+            setKeyForJWS(jws);
 
             // Verify the token
             if (jws.verifySignature()) {
@@ -217,5 +198,28 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         e.printStackTrace(printWriter);
         logger.error(writer.toString());
         return new TokenVerificiationException(e.getMessage());
+    }
+
+    private void setKeyForJWS(JsonWebSignature jws) throws TokenVerificiationException {
+        JsonWebKey jwk = null;
+        String kid = jws.getKeyIdHeaderValue();
+        keySet = createKeySet();
+
+        // Get key for the token
+        jwk = extractKey(kid);
+
+        if (jwk == null) {
+            // Refetch the keyset if the keys have been rolled over
+            microsoftKeyset.invalidateCache();
+            keySet = createKeySet();
+            jwk = extractKey(kid);
+
+            if (jwk == null) {
+                throw new TokenVerificiationException("Token had no key in the key set");
+            }
+        }
+
+        // Set the key
+        jws.setKey(jwk.getKey());
     }
 }

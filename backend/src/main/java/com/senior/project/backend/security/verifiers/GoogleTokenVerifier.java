@@ -2,12 +2,8 @@ package com.senior.project.backend.security.verifiers;
 
 import java.util.Collections;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
@@ -16,10 +12,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.json.webtoken.JsonWebSignature;
 import com.google.api.client.util.Key;
 import com.senior.project.backend.security.domain.AuthInformation;
-import com.senior.project.backend.security.domain.TokenPayload;
-
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * A TokenVerifier that verifies a token
@@ -28,8 +20,6 @@ import java.util.HashMap;
  */
 @Component
 public class GoogleTokenVerifier implements TokenVerifier {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private NetHttpTransport transport;
     private GsonFactory factory;
@@ -73,6 +63,9 @@ public class GoogleTokenVerifier implements TokenVerifier {
         }
     }   
 
+    /**
+     * Payload class that has the name property
+     */
     public static class PayloadWithName extends Payload {
         @Key("name")
         private String name;

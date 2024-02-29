@@ -1,6 +1,7 @@
 package com.senior.project.backend.security.verifiers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.senior.project.backend.TestUtil;
@@ -91,5 +92,25 @@ public class MicrosoftEntraIDTokenVerifierTest {
         when(authInformation.getMsClientId()).thenReturn("client_id");
 
         TestUtil.testError(() -> CuT.verifiyIDToken(TestUtil.generateExpiredToken(pair)), TokenVerificiationException.class);
+    }
+
+    @Test
+    public void testRetrieveName() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+
+        when(microsoftKeyset.getKeySet()).thenReturn(TestUtil.getKeyset(pair));
+        String token = TestUtil.generateValidToken(pair);
+
+        String actual = CuT.retrieveName(token);
+
+        assertEquals("me", actual);
+    }
+
+    @Test
+    public void testRetrieveNameFailure() throws TokenVerificiationException {
+        KeyPair pair = TestUtil.getKey();
+        String token = TestUtil.generateTokenWithNoName(pair);
+
+        assertThrows(TokenVerificiationException.class, () -> CuT.retrieveName(token));
     }
 }

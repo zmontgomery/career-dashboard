@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
@@ -50,7 +51,9 @@ public class AuthHandler {
      * Handler function for signing in
      * 
      * The function gets the data from the login request and verifies the authentication token
-     * In the case an error ocurrs, the fucntion catches the error
+     * In the case an error ocurrs, the function catches the error
+     * 
+     * If a user who does not exist attempts to sign in, a minimal user is created for them
      * 
      * @param req - the server request with the login request
      * @return 
@@ -140,10 +143,20 @@ public class AuthHandler {
             .doOnNext(user -> user.setSignedUp(true))
             .doOnNext(user -> user.setDateCreated(Date.from(Instant.now())))
             .doOnNext(user -> user.setLastLogin(Date.from(Instant.now())))
+            .doOnNext(user -> user.setRole(Role.Student))
             .flatMap(user -> userService.createOrUpdateUser(user))
             .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }
 
+    /**
+     * Creates a user with minimal details
+     * 
+     * @param tokenVerifier - the service used to extract a name from an id token
+     * @param idToken - the token the name is in
+     * @param email - the email of the user
+     * @return a mono of the created user
+     * @throws TokenVerificiationException
+     */
     private Mono<User> createUser(TokenVerifier tokenVerifier, String idToken, String email) throws TokenVerificiationException {
         String[] name = tokenVerifier.retrieveName(idToken).split(" ");
         String firstName = name[0];
