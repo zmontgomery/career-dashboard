@@ -21,4 +21,6 @@ public class Artifact {
 	private UUID userId;
 	private String name;
 	private String fileLocation;
+	private ArtifactType type;
 }
+

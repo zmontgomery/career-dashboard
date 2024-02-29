@@ -76,34 +76,16 @@ public class ArtifactHandler {
     /**
      * Returns the file based on the given artifact id
      */
-    public Mono<ServerResponse> servePdf(ServerRequest request) {
+    public Mono<ServerResponse> serveFile(ServerRequest request) {
         String artifactID = request.pathVariable("artifactID");
 
         // Set the appropriate headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
 
         Mono<ResponseEntity<Resource>> file = artifactService.getFile(artifactID, headers);
 
         return file.flatMap(responseEntity ->
                 ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
-    }
-
-    // TODO headers might not matter? may be able to use same serve logic for everything
-    public Mono<ServerResponse> serveImage(ServerRequest request) {
-        String artifactID = request.pathVariable("artifactID");
-
-        // Set the appropriate headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-
-        Mono<ResponseEntity<Resource>> file = artifactService.getFile(artifactID, headers);
-
-        return file.flatMap(responseEntity ->
-                ServerResponse.ok()
-                        .contentType(MediaType.IMAGE_PNG)
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 }
