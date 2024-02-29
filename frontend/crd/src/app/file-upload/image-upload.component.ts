@@ -27,7 +27,7 @@ export class ImageUploadComponent implements OnInit {
   @Input() uploadType: UploadType = UploadType.EventImage;
   @Input() uploadID: number | null = null;
 
-  protected acceptedFileTypes: string = "png,jpeg";
+  protected acceptedFileTypes: string = ".png, .jpeg";
 
   constructor(
     private readonly artifactService: ArtifactService,
