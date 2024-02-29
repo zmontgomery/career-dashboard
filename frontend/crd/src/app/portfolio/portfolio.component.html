@@ -6,6 +6,117 @@
       Details
     </div>
     <div class="card-body">
+      <!-- Content for Card 1 goes here -->
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Personal
+        </div>
+        <div class="card-body-section-body">
+          <div class="card-body-section-image">
+
+          </div>
+          <div class="card-body-section-data">
+            <ul>
+              <li>Name: {{user.firstName}} {{user.lastName}}</li>
+              <li>Preferred Name: {{user.preferredName}}</li>
+              <li>Description: {{user.studentDetails?.description}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Education
+        </div>
+        <div class="card-body-section-body">
+          Majors: 
+          <ul>
+            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+              <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
+            </div>
+          </ul>
+          Minors:
+          <ul>
+            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
+              <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
+            </div>
+          </ul>
+          <ul>
+            <li>School Year: {{user.studentDetails?.yearLevel}}</li>
+            <li>GPA: {{user.studentDetails?.gpa}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Skills
+        </div>
+        <div class="card-body-section-body">
+          <!-- PAR HYD DEV NOTE: Needs to loop though all uploaded skills and store them in a list -->
+          <ul *ngFor="let skill of user.studentDetails?.skills">
+              <li>{{skill.name}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Projects
+        </div>
+        <div class="card-body-section-body">
+          <div *ngFor="let project of user.studentDetails?.projects">
+            <p>{{project.name}}</p>
+            <ul>
+              <li>{{project.description}}</li>
+              <li>Start Date: {{project.startDate}}</li>
+              <li>End Date: {{project.endDate}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Jobs
+        </div>
+        <div class="card-body-section-body">
+          <div *ngFor="let job of user.studentDetails?.jobs">
+            <div *ngIf="!job.isCoop">
+            <p>{{job.name}}</p>
+            <ul>
+              <li>{{job.location}}</li>
+              <li>{{job.description}}</li>
+              <li>Start Date: {{job.startDate}}</li>
+              <li>End Date: {{job.endDate}}</li>
+            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Co-ops
+        </div>
+        <div class="card-body-section-body">
+          <div *ngFor="let job of user.studentDetails?.jobs">
+            <div *ngIf="job.isCoop">
+            <p>{{job.name}}</p>
+            <ul>
+              <li>{{job.location}}</li>
+              <li>{{job.description}}</li>
+              <li>Start Date: {{job.startDate}}</li>
+              <li>End Date: {{job.endDate}}</li>
+            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Milestones
+        </div>
+        <div class="card-body-section-body">
+          <app-milestones></app-milestones>
+        </div>
+      </div>
     </div>
   </div>
 

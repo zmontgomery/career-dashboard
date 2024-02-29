@@ -1,0 +1,12 @@
+<mat-list>
+    <ng-container *ngFor="let event of events">
+        <mat-list-item>
+            <span matListItemTitle>{{event.name}}</span>
+            <span matListItemLine>{{event.description}}</span>
+            <button mat-button (click)="openEventEditModal(event)">EDIT</button>
+        </mat-list-item>
+    </ng-container>
+    <mat-list-item class="new-task" (click)="openEventEditModal(null)">
+        Create New Event
+    </mat-list-item>
+</mat-list>

@@ -1,3 +1,6 @@
+import { LangUtils } from "src/app/util/lang-utils";
+import { StudentDetails, StudentDetailsJSON } from "src/domain/StudentDetails";
+
 /**
  * JSON for a user object retrieved from the backend
  */
@@ -9,11 +12,11 @@ export interface UserJSON {
     readonly lastLogin: number;
     readonly firstName: string;
     readonly lastName: string;
+    readonly preferredName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
-    readonly student: boolean;
-    readonly admin: boolean;
-    readonly faculty: boolean;
+    readonly studentDetails?: StudentDetailsJSON;
+    readonly role: Role;
 }
 
 /**
@@ -27,12 +30,12 @@ export class User {
     readonly lastLogin: Date;
     readonly firstName: string;
     readonly lastName: string;
+    readonly preferredName: string;
     readonly fullName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
-    readonly student: boolean;
-    readonly admin: boolean;
-    readonly faculty: boolean;
+    readonly studentDetails?: StudentDetails
+    readonly role: Role;
 
     constructor(json: UserJSON) {
         this.id = json.id;
@@ -42,11 +45,13 @@ export class User {
         this.lastLogin = new Date(json.lastLogin);
         this.firstName = json.firstName;
         this.lastName = json.lastName;
+        this.preferredName = json.preferredName;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
-        this.student = json.student;
-        this.admin = json.admin;
-        this.faculty = json.faculty;
+        if (LangUtils.exists(json.studentDetails)) {
+            this.studentDetails = new StudentDetails(json.studentDetails!)
+        }
+        this.role = json.role;
         this.fullName = this.firstName + " " + this.lastName;
     }
 
@@ -56,14 +61,32 @@ export class User {
             email: '',
             firstName: 'No',
             lastName: 'User',
+            preferredName: 'No',
             phoneNumber: '0000000000',
             dateCreated: 0,
             lastLogin: 0,
             canEmail: false,
             canText: false,
-            student: true,
-            admin: false,
-            faculty: false,
+            role: Role.Student
         });
     }
+
+    hasFacultyPrivileges(): boolean {
+      return this.role == Role.Faculty || this.hasAdminPrivileges();
+    }
+
+    hasAdminPrivileges(): boolean {
+      return this.role == Role.Admin || this.hasSuperAdminPrivileges();
+    }
+
+    hasSuperAdminPrivileges(): boolean {
+      return this.role == Role.SuperAdmin;
+    }
+}
+
+export enum Role {
+  Student = 'Student',
+  Faculty = 'Faculty',
+  Admin = 'Admin',
+  SuperAdmin = 'SuperAdmin'
 }

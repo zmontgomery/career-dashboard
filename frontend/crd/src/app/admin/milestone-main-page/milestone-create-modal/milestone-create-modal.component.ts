@@ -26,8 +26,8 @@ export class MilestoneCreateModalComponent implements OnInit {
     public dialogRef: MatDialogRef<MilestoneCreateModalComponent>,
     public formBuilder: FormBuilder,
     public http: HttpClient,
-    private router: Router,
-    private milestoneService: MilestoneService,
+    public router: Router,
+    public milestoneService: MilestoneService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
 
@@ -49,7 +49,7 @@ export class MilestoneCreateModalComponent implements OnInit {
 
   createForm() {
     this.milestoneForm = this.formBuilder.group({
-      name: [null, Validators.required],   //this field is hidden if the task already exists
+      name: [null, Validators.required], 
     });
   }
 
@@ -72,15 +72,10 @@ export class MilestoneCreateModalComponent implements OnInit {
         window.alert("Something went wrong");
         this.closeModal();
       }
-
-      // refresh cache before rerouting
-      this.milestoneService.getMilestones(true).subscribe(data => {
-        const encodedName = encodeURIComponent(newMilestone.milestoneID);
-        this.router.navigate(['/admin/milestone-edit', encodedName], {
-          state: { scrollToTop: true }
-        });
-        this.closeModal();
-      });
+      
+      const encodedName = encodeURIComponent(newMilestone.milestoneID);
+      this.router.navigate(['/admin/milestone-edit', encodedName]);
+      this.closeModal();
     })
   }
 

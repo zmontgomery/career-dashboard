@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
@@ -84,16 +85,16 @@ public class UserService implements ReactiveUserDetailsService {
      */
     @PostConstruct
     public void setSuperUser() {
-        repository.findSuperAdmins()
+        repository.findUsersByRole(Role.SuperAdmin)
             .forEach((u) -> {
-                u.setSuperAdmin(false);
+                u.setRole(Role.Admin);
                 repository.save(u);
             });
 
         findByEmailAddress(superUser)
             .switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("User %s is not in database.", superUser))))
             .subscribe((user) -> {
-                user.setSuperAdmin(true);
+                user.setRole(Role.SuperAdmin);
                 repository.save(user);
             });
     }

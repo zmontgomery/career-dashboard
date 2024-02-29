@@ -32,7 +32,7 @@ export class MilestoneMainPageComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.milestoneService.getMilestones()
+    this.milestoneService.getMilestones(true)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((milestones: Milestone[]) => {
         this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
@@ -57,11 +57,6 @@ export class MilestoneMainPageComponent implements OnDestroy {
     }
     // https://material.angular.io/components/dialog/overview
     const modalDialog = this.matDialog.open(MilestoneCreateModalComponent, dialogConfig);
-
-    modalDialog.afterClosed().subscribe(result => {
-      //TODO: route to edit page
-      this.ngOnInit();
-    })
   }
 
 }
