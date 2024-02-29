@@ -37,67 +37,73 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { BasePageComponent } from './base-page/base-page/base-page.component';
+import {NgOptimizedImage} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
-    NavbarComponent
+    NavbarComponent,
+    BasePageComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MsalModule.forRoot(
-      new PublicClientApplication({
-        auth: {
-          clientId: "ce4bbce1-ee95-4991-8367-c180902da560", // Application (client) ID from the app registration
-          authority:
-            "https://login.microsoftonline.com/24e2ab17-fa32-435d-833f-93888ce006dd", // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
-          redirectUri: environment.redirectURI, // This is your redirect URI
-        },
-        cache: {
-          cacheLocation: "localStorage",
-          storeAuthStateInCookie: false, // Set to true for Internet Explorer 11
-        },
-      }),
-      {
-        interactionType: InteractionType.Redirect
-      },
-      {
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap: new Map(),
-      }
-    ),
-    SocialLoginModule,
-    LogoutButtonModule,
-    DashboardModule,
-    PortfolioModule,
-    ProfileModule,
-    MilestonesPageModule,
-    UsersPageModule,
-    MatCardModule,
-    MatTabsModule,
-    RouterModule,
-    BrowserAnimationsModule,
-    OswegoLogoModule,
-    LoginPageModule,
-    CarouselModule,
-    MilestoneMainPageModule,
-    MilestoneEditModule,
-    MatGridListModule,
-    MatListModule,
-    TaskMainPageModule,
-    TaskEditModalModule,
-    EventMainPageModule,
-    MilestoneCreateModalModule,
-    MilestoneCreateModalModule,
-    TaskEditModalModule,
-    MatButtonModule,
-    MatDialogModule,
-    TasksModalModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        MsalModule.forRoot(
+            new PublicClientApplication({
+                auth: {
+                    clientId: "ce4bbce1-ee95-4991-8367-c180902da560", // Application (client) ID from the app registration
+                    authority:
+                        "https://login.microsoftonline.com/24e2ab17-fa32-435d-833f-93888ce006dd", // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
+                    redirectUri: environment.redirectURI, // This is your redirect URI
+                },
+                cache: {
+                    cacheLocation: "localStorage",
+                    storeAuthStateInCookie: false, // Set to true for Internet Explorer 11
+                },
+            }),
+            {
+                interactionType: InteractionType.Redirect
+            },
+            {
+                interactionType: InteractionType.Redirect,
+                protectedResourceMap: new Map(),
+            }
+        ),
+        SocialLoginModule,
+        LogoutButtonModule,
+        DashboardModule,
+        PortfolioModule,
+        ProfileModule,
+        MilestonesPageModule,
+        UsersPageModule,
+        MatCardModule,
+        MatTabsModule,
+        TasksModalModule,
+        RouterModule,
+        BrowserAnimationsModule,
+        OswegoLogoModule,
+        LoginPageModule,
+        CarouselModule,
+        MilestoneMainPageModule,
+        MilestoneEditModule,
+        MatGridListModule,
+        MatListModule,
+        TaskMainPageModule,
+        TaskEditModalModule,
+        EventMainPageModule,
+        MilestoneCreateModalModule,
+        MilestoneCreateModalModule,
+        TaskEditModalModule,
+        MatButtonModule,
+        MatDialogModule,
+        NgOptimizedImage,
+        MatIconModule,
+    ],
   providers: [
     provideHttpClient(),
       {provide: 'SocialAuthServiceConfig',
