@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Submission, SubmissionJSON } from 'src/domain/Submission';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 /**
  * Service to interact with artifacts
@@ -29,6 +29,9 @@ export class SubmissionService {
    */
   getLatestSubmission(taskId: number): Observable<Submission> {
     return this.http.get<SubmissionJSON>(constructBackendRequest(`${Endpoints.SUBMISSION}/${taskId}`))
-      .pipe(map((s) => new Submission(s)));
+      .pipe(
+        map((s) => new Submission(s)),
+        catchError(() => of(Submission.makeEmpty())),
+      );
   }
 }

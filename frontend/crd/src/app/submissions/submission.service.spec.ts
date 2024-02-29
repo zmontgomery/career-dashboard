@@ -14,7 +14,17 @@ export const submission1JSON = {
   comment: 'asdf'
 }
 
+export const submission2JSON = {
+  id: 1,
+  artifactId: 2,
+  taskId: 1,
+  studentId: 'asdf',
+  submissionDate: new Date(Date.now()),
+  comment: 'asdf'
+}
+
 export const submission1 = new Submission(submission1JSON);
+export const submission2 = new Submission(submission2JSON);
 
 describe('SubmissionService', () => {
   let service: SubmissionService;
