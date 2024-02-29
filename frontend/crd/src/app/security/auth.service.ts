@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Inject, Injectable, InjectionToken, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription, catchError, filter, map, mergeMap, of, take, tap } from 'rxjs';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, filter, map, mergeMap, of, take } from 'rxjs';
 import { User, UserJSON } from './domain/user';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
@@ -185,11 +185,13 @@ export class AuthService {
     });
   }
 
+  /**
+   * Takes a non signed in user and updates it
+   */
   signup(user: User) {
     return this.http.post<UserJSON>(constructBackendRequest(Endpoints.SIGN_UP), user)
       .pipe(
         map((userData) => new User(userData)),
-        tap((newUser) => this.userSubject.next(newUser))
       )
       .subscribe((newUser) => {
         this.userSubject.next(newUser);

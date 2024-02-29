@@ -27,7 +27,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     private readonly elementRef: ElementRef,
     private readonly authService: AuthService, 
     private readonly formBuilder: FormBuilder
-    ) {
+  ) {
     this.phoneNumberControl = this.formBuilder.control<string>('', [Validators.required, this.lengthValidator(14)]);
     this.preferredNameControl = this.formBuilder.control<string>('', [this.nameValidator(/[\d{}()\]\[|\"?/@#$%^&*=+_<>,:;]]*/g)]);
     this.canTextControl = this.formBuilder.control<boolean>(false);
