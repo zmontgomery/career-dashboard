@@ -1,7 +1,9 @@
 package com.senior.project.backend.artifact;
 
+import com.google.common.base.Supplier;
 import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
+import com.senior.project.backend.domain.ArtifactType;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
@@ -91,6 +93,7 @@ public class ArtifactService {
                     Artifact upload = new Artifact();
                     upload.setFileLocation(destination.toString());
                     upload.setName(filePart.filename());
+                    upload.setType(ArtifactType.SUBMISSION);
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
@@ -112,6 +115,7 @@ public class ArtifactService {
                     Artifact upload = new Artifact();
                     upload.setFileLocation(destination.toString());
                     upload.setName(filePart.filename());
+                    upload.setType(ArtifactType.EVENT_IMAGE);
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
@@ -237,16 +241,30 @@ public class ArtifactService {
         Artifact artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
 
-        Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
-        Path normalizedFilePath = Paths.get(artifact.getFileLocation()).toAbsolutePath().normalize();
+        return Mono.defer(() -> {
+                    if (artifact.getType() == ArtifactType.EVENT_IMAGE) {
+                        return Mono.empty();
+                    }
+                    return SecurityUtil.getCurrentUser()
+                            .flatMap(user -> {
+                                System.out.println(user.getId());
+                                System.out.println(artifact.getUserId());
+                                if (!user.isFaculty() && !user.getId().equals(artifact.getUserId())){
+                                    return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                                            "User does not have access to this artifact"));
+                                }
+                                return Mono.empty();
+                            });
+                })
+                .then(Mono.defer(() -> {
+                    Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
+                    Path normalizedFilePath = Paths.get(artifact.getFileLocation()).toAbsolutePath().normalize();
 
-        if(!normalizedFilePath.startsWith(normalizedDirectoryPath)) {
-            // should be impossible since we generate a hash for the file location but
-            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "File location is forbidden"));
-        }
-
-        return Mono.justOrEmpty(normalizedFilePath)
-                .flatMap(p -> {
+                    if(!normalizedFilePath.startsWith(normalizedDirectoryPath)) {
+                        // should be impossible since we generate a hash for the file location but
+                        return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "File location is forbidden"));
+                    }
+                    var p = normalizedFilePath;
                     try {
                         // Create a FileSystemResource for the PDF file
                         Resource pdfResource = new FileSystemResource(p.toFile());
@@ -259,7 +277,7 @@ public class ArtifactService {
                         // Handle file not found or other errors
                         return Mono.just(ResponseEntity.notFound().build());
                     }
-                });
+                }));
     }
 
     /**
