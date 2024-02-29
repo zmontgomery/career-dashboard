@@ -99,7 +99,7 @@ public class ArtifactHandlerTest {
     }
 
     @Test
-    public void testServePdf() {
+    public void testServeFile() {
         // Mock response entity
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -114,7 +114,6 @@ public class ArtifactHandlerTest {
         webTestClient.get().uri("/test/1")
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_PDF)
                 .expectBody(byte[].class)
                 .isEqualTo(pdfContent);
     }
