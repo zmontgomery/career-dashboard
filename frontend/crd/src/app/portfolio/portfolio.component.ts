@@ -44,9 +44,7 @@ export class PortfolioComponent implements OnInit{
 
   private updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
-      console.log(submission);
       if (submission.hasFile()) {
-        console.log('hooray');
         this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
           this.pdfURL = URL.createObjectURL(file);
           this.showUploadButton = false;
