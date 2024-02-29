@@ -5,46 +5,46 @@ CREATE TABLE student_details (
     description VARCHAR(256),
 	graduation_year TIMESTAMP,
 	start_date TIMESTAMP,
-    degree_level VARCHAR(256)
+    year_level ENUM('Freshman', 'Sophomore', 'Junior', 'Senior')
 );
 
--- CREATE TABLE job(
---     jobID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     jobName VARCHAR(256),
---     location VARCHAR(256),
---     description TEXT,
---     startDate DATE,
---     endDate DATE,
---     isCoop BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+CREATE TABLE job(
+    id BINARY(16) PRIMARY KEY,
+    student_details_id BINARY(16),
+    name VARCHAR(256),
+    location VARCHAR(256),
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    is_coop BOOLEAN,
+    FOREIGN KEY (student_details_id) REFERENCES student_details (id)
+);
 
--- CREATE TABLE project(
---     projectID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     projectName VARCHAR(256),
---     description TEXT,
---     startDate DATE,
---     endDate DATE,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+CREATE TABLE project(
+    id BINARY(16) PRIMARY KEY,
+    student_details_id BINARY(16),
+    name VARCHAR(256),
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    FOREIGN KEY (student_details_id) REFERENCES student_details (id)
+);
 
--- CREATE TABLE skill(
---     skillID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     skillName VARCHAR(256),
---     isLanguage BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+CREATE TABLE skill(
+    id BINARY(16) PRIMARY KEY,
+    student_details_id BINARY(16),
+    name VARCHAR(256),
+    is_language BOOLEAN,
+    FOREIGN KEY (student_details_id) REFERENCES student_details (id)
+);
 
--- CREATE TABLE degreeProgram(
---     programID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     programName VARCHAR(256),
---     isMinor BOOLEAN,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );
+CREATE TABLE degree_program(
+    id BINARY(16) PRIMARY KEY,
+    student_details_id BINARY(16),
+    name VARCHAR(256),
+    is_minor BOOLEAN,
+    FOREIGN KEY (student_details_id) REFERENCES student_details (id)
+);
 
 -- CREATE TABLE club(
 --     clubID INT AUTO_INCREMENT PRIMARY KEY,

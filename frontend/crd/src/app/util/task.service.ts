@@ -44,4 +44,9 @@ export class TaskService {
 
   }
 
+  findById(id: number): Observable<Task> {
+    return this.http.get<TaskJSON>(constructBackendRequest(`${Endpoints.TASKS}/${id}`))
+      .pipe(map((taskJSON) => new Task(taskJSON)));
+  }
+
 }

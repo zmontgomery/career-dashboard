@@ -1,47 +1,50 @@
 import { YearLevel } from "./Milestone";
 
+export enum TaskType {
+  ARTIFACT = 'ARTIFACT',
+  COMMENT = 'COMMENT',
+  EVENT = 'EVENT'
+}
+
 export interface TaskJSON {
   name: string;
   description: string;
-  needsArtifact?: boolean;
   id: number;
   isRequired: boolean;
-  submission: any;
   yearLevel: YearLevel;
-  milestoneID: number;
-  taskType: string;
+  milestoneID?: number;
+  taskType: TaskType;
   artifactName?: string;
   eventID?: number;
+  submissionInstructions?: string;
 }
 
 export class Task {
   constructor(json: TaskJSON) {
     this.name = json.name;
     this.description = json.description;
-    this.needsArtifact = json.needsArtifact;
     this.taskID = json.id;
     this.isRequired = json.isRequired;
-    // TODO this should be checked through the submission object or provided by the backend later
-    this.isComplete = true;
-    // TODO replace with constructor call when we add submission objects
-    this.submission = json.submission;
     this.yearLevel = json.yearLevel;
-    this.milestoneID = json.milestoneID;
+    this.milestoneID = json?.milestoneID;
     this.taskType = json.taskType;
     this.artifactName = json?.artifactName;
     this.eventID = json?.eventID;
+    this.submissionInstructions = json?.submissionInstructions;
   }
 
   name: string;
   description: string;
-  needsArtifact?: boolean;
   taskID: number;
   isRequired: boolean;
-  isComplete: boolean;
-  submission: any;
   yearLevel: YearLevel;
-  milestoneID: number;
-  taskType: string;
+  milestoneID?: number;
+  taskType: TaskType;
   artifactName?: string;
   eventID?: number;
+  submissionInstructions?: string;
+
+  needsArtifact(): boolean {
+    return this.taskType === TaskType.ARTIFACT;
+  }
 }

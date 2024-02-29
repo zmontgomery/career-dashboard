@@ -13,23 +13,40 @@ import java.util.Arrays;
  * Enum for endpoints in the system and if they are accessible
  */
 public enum Endpoints {
-    // Domain
+    // Events
     EVENTS("events", true),
+    EDIT_EVENT("admin/edit-event", true, Role.Admin),
+    CREATE_EVENT("admin/create-event", true, Role.Admin),
     DASHBOARD_EVENTS("dashboard_events", true),
-    MILSTONES("milestones", true),
+
+    // Tasks
     TASKS("tasks", true),
-    RESUME("portfolio/resume", true),
-    USERS("users", true),
-    CURRENT_USER("current-user", true),
+    TASK_BY_ID("tasks/{id}", true),
     EDIT_TASK("admin/edit-task", true, Role.Admin),
+    CREATE_TASK("admin/create-task", true, Role.Admin),
+
+    // Milestones
+    MILSTONES("milestones", true),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
+    CREATE_MILESTONE("admin/create-milestone", true, Role.Admin),
+
+    // Users
+    CURRENT_USER("current-user", true),
+    USERS("users", true, Role.Faculty),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
+
+    // Submissions
+    SUBMISSION("tasks/submission", true),
+    LATEST_SUBMISSION("tasks/submission/{taskId}", true),
+
+    // Artifacts
+    ARTIFACT("artifact/", true),
+    ARTIFACT_ID("artifact/{id}", true),
+    ARTIFACT_FILE("artifact/file/{artifactID}", true),
+    RESUME("portfolio/resume", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
-
-    // TODO remove this
-    EMAIL("send-email", false),
 
     // Security
     SIGNIN("auth/signin", false),
@@ -119,7 +136,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 
@@ -134,7 +150,6 @@ public enum Endpoints {
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
-            LoggerFactory.getLogger(String.class).info(list.get(i));
             routes[i] = list.get(i);
         }
 

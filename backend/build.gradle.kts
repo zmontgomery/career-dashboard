@@ -23,6 +23,7 @@ dependencies {
 
     // email
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.20")
@@ -70,7 +71,8 @@ tasks.jacocoTestReport {
                     "**/MicrosoftKeyset.class",
                     "**/util/**",
                     "**/*Router.class",
-                    "**/SecurityConfig.class"
+                    "**/SecurityConfig.class",
+                    "**/*Builder.class"
                 )
             }
         })

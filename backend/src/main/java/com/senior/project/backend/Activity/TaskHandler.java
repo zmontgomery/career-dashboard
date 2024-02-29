@@ -40,4 +40,25 @@ public class TaskHandler {
             }
         });
     } 
+
+    public Mono<ServerResponse> getById(ServerRequest serverRequest) {
+        return Mono.just(serverRequest.pathVariable("id"))
+            .map(id -> Integer.parseInt(id))
+            .flatMap(id -> taskService.findById(id))
+            .flatMap(task -> ServerResponse.ok().bodyValue(task));
+    }
+    
+    public Mono<ServerResponse> create(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(String.class)
+        .flatMap(json -> {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> jsonMap = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+
+                return ServerResponse.ok().body(taskService.createTask(jsonMap), Task.class);
+            } catch (JsonProcessingException e) {
+                return ServerResponse.badRequest().bodyValue("Invalid JSON format");
+            }
+        });
+    } 
 }

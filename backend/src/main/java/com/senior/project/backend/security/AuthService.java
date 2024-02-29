@@ -92,6 +92,16 @@ public class AuthService {
     }
 
     /**
+     * Gets the current user within the auth service
+     * 
+     * Use this version in handler functions for testing purposes
+     * @return
+     */
+    public Mono<User> currentUser() {
+        return SecurityUtil.getCurrentUser();
+    }
+
+    /**
      * Convers minutes to milliseconds
      * @param min
      * @return

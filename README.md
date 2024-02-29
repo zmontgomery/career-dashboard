@@ -3,7 +3,7 @@ Partially Hydrated devs - Senior Project
 
 # Installation
 - install jdk17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
-- install node minimum versions v14.20, v16.14 or v18.10. https://nodejs.org/en/download
+- install node minimum version v18.10. https://nodejs.org/en/download
 - install npm if it did not come with node
 - install angular cli https://angular.io/guide/setup-local
 - install mysql 8 from https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/
@@ -21,8 +21,9 @@ Partially Hydrated devs - Senior Project
 - open a terminal and navigate to the backend directory
 - this assumes a gmail is being used for the email notifications. If you wish to use a different gmail account use 
 - the environment variable EMAIL_USERNAME
+- The super admin has the ability to edit the admin status of users, and is set as a build parameter at run time
 - for further email and other configuration options see backend/src/main/resources/application.properties
-- run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} ./gradlew bootrun`
+- run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} CRD_SUPER_ADMIN={admin email} ./gradlew bootrun`
 - or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
 - open another terminal and navigate to the frontend/crd directory
 - run `npm start`
@@ -37,6 +38,7 @@ Partially Hydrated devs - Senior Project
 - `cd frontend/crd`
 - `npm run test-headless`
 - coverage found in frontend/crd/coverage/crd/index.html
+- for more accurate coverage, run `npm run test-headless-coverage`
 ### Back-end
 - `cd backend`
 - `./gradlew test`

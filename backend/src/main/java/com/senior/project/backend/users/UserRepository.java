@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findUsersByRole(Role role);
 
+    List<User> findUsersByCanEmailIsTrue();
+    List<User> findUsersByCanTextIsTrue();
 
     @Query("SELECT e FROM User e WHERE CONCAT(e.firstName, ' ', e.lastName) LIKE :name% OR e.lastName LIKE :name%")
     Page<User> findByFullNameContainingIgnoreCase(String name, Pageable pageable);

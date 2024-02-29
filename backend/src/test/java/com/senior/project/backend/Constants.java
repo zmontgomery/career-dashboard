@@ -4,6 +4,7 @@ import com.senior.project.backend.domain.*;
 
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 public class Constants {
 
-    public static final List<Event> eventDATA = new ArrayList<>();
+    public static final List<Event> EVENT_LIST = new ArrayList<>();
 
     public static Event e1;
     public static Event e2;
@@ -37,6 +38,8 @@ public class Constants {
         e1.setOrganizer("SUNY Oswego");
         e1.setLocation("Field House");
         e1.setRecurring(true);
+        e1.setEventLink("Test Link");
+        e1.setButtonLabel("More Info");
 
         e2 = new Event();
         e2.setId(1L);
@@ -46,6 +49,8 @@ public class Constants {
         e2.setOrganizer("SUNY Oswego");
         e2.setLocation("Field Houes");
         e2.setRecurring(true);
+        e2.setEventLink("Test Link");
+        e2.setButtonLabel("More Info");
 
         e3 = new Event();
         e3.setId(1L);
@@ -55,6 +60,8 @@ public class Constants {
         e3.setOrganizer("SUNY Oswego");
         e3.setLocation("Field Houes");
         e3.setRecurring(true);
+        e3.setEventLink("Test Link");
+        e3.setButtonLabel("More Info");
     }
 
     public static final List<Milestone> milestoneDATA = new ArrayList<>();
@@ -65,8 +72,9 @@ public class Constants {
                 "Meet with academic advisor to discuss current major and class schedule",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Meeting Notes",
+                "instructions",
                 m1,
                 null);
 
@@ -75,8 +83,9 @@ public class Constants {
                 "Detailed description here",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Degreeworks Result",
+                "instructions",
                 m1,
                 null);
 
@@ -85,8 +94,9 @@ public class Constants {
                 "Meet with academic advisor to discuss class schedule and receive PIN for registration",
                 true,
                 YearLevel.Freshman,
-                "artifact",
+                TaskType.ARTIFACT,
                 "Registration PIN",
+                "instructions",
                 m1,
                 null);
 
@@ -105,10 +115,8 @@ public class Constants {
         m1.setDescription("Description of milestone 1");
         milestoneDATA.add(m1);
 
-
-        var events2 = new ArrayList<Event>();
-        events2.add(e2);
-        events2.add(e3);
+        EVENT_LIST.add(e2);
+        EVENT_LIST.add(e3);
 
         List<Task> tasks2 = new ArrayList<>();
         tasks2.add(task3);
@@ -150,6 +158,7 @@ public class Constants {
         user1 = new User();
         user1.setId(UUID.randomUUID());
         user1.setEmail("test@test.com");
+        user1.setRole(Role.Admin);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
@@ -165,12 +174,37 @@ public class Constants {
     static {
         artifact1 = new Artifact();
         artifact1.setName("artifact 1 name");
-        artifact1.setId(1);
+        artifact1.setId(2);
         artifact1.setFileLocation("../uploads/artifactServiceTest");
+        artifact1.setUserId(user1.getId());
         artifact2 = new Artifact();
         artifact2.setName("artifact 2 name");
-        artifact2.setId(2);
+        artifact2.setId(3);
         artifact2.setFileLocation("../uploads/location 2");
+        artifact2.setUserId(user2.getId());
+        ARTIFACTS.add(artifact1);
+        ARTIFACTS.add(artifact2);
+    }
+
+    public static Submission submission1;
+    public static Submission submission2;
+    public static final List<Submission> SUBMISSIONS = new ArrayList<>();
+
+    static {
+        submission1 = new Submission();
+        submission1.setId(1);
+        submission1.setArtifactId(2);
+        submission1.setTaskId(1);
+        submission1.setComment("comment");
+        submission1.setSubmissionDate(Date.from(Instant.now()));
+        submission2 = new Submission();
+        submission2.setId(2);
+        submission2.setArtifactId(3);
+        submission2.setTaskId(2);
+        submission2.setComment("comment 2");
+        submission2.setSubmissionDate(Date.from(Instant.now().plusMillis(100000)));
+        SUBMISSIONS.add(submission1);
+        SUBMISSIONS.add(submission2);
     }
 
 }

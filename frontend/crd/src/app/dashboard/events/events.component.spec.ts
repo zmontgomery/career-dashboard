@@ -20,6 +20,8 @@ describe('EventsComponent', () => {
       recurring: true,
       organizer: "organizer",
       location: "location",
+      eventLink: "sample link",
+      buttonLabel: "test",
   }))));
 
   eventServiceSpy.getDashboardEvents.and.returnValue(of(Array(new Event({
@@ -30,6 +32,8 @@ describe('EventsComponent', () => {
       recurring: true,
       organizer: "organizer",
       location: "location",
+      eventLink: "sample link",
+      buttonLabel: "test",
   }))));
 
   beforeEach(() => {

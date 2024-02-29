@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
-import { Subject, forkJoin, mergeMap, of, takeUntil } from 'rxjs';
+import { Subject, catchError, concatMap, forkJoin, mergeMap, of, takeUntil, throwError } from 'rxjs';
 import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { TaskService } from 'src/app/util/task.service';
 import { Task } from 'src/domain/Task';
@@ -27,10 +27,11 @@ export class MilestoneEditComponent {
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 
   public milestoneName: string = '';
-  private milestoneParam: string = '';
+  private milestoneParam!: number;
   mYearLevel: YearLevel = YearLevel.Freshman; //default
   yearTasks: Array<Task> = new Array(); //only display tasks of the same year
-  public currentMilestone: Milestone | undefined;
+  public currentMilestone!: Milestone;
+  assignedTasks: Array<Task> = new Array();
 
   milestoneForm!: FormGroup;
   dataLoaded: boolean = false;
@@ -41,29 +42,21 @@ export class MilestoneEditComponent {
     private router: Router,
     private milestoneService: MilestoneService,
     private taskService: TaskService,
-    private formBuilder: FormBuilder,
+    public formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    private http: HttpClient,
+    public http: HttpClient,
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-
-      this.milestoneParam = decodeURIComponent(params['name']);
+      this.milestoneParam = +decodeURIComponent(params['name']);
     });
 
     this.milestoneService.getMilestones()
       .pipe(takeUntil(this.destroyed$),
         mergeMap((milestones: Milestone[]) => {
-          // if we are creating a new milestone
-          if (YearLevel[this.milestoneParam as keyof typeof YearLevel]) {
-            this.mYearLevel = YearLevel[this.milestoneName as keyof typeof YearLevel];
-            this.milestoneName = '';
-            this.milestoneParam = '';
-          }
-
           milestones.forEach((milestone) => {
-            if (this.milestoneParam != '' && milestone.milestoneID == +this.milestoneParam) {
+            if (milestone.milestoneID == this.milestoneParam) {
               this.milestoneName = milestone.name;
               this.currentMilestone = milestone;
               this.mYearLevel = milestone.yearLevel;
@@ -71,7 +64,7 @@ export class MilestoneEditComponent {
             this.allMilestones.push(milestone);
           });
 
-          return this.taskService.getTasks()
+          return this.taskService.getTasks(true)
         })
       ).subscribe((tasks: Task[]) => {
             this.allTasks = tasks;
@@ -106,7 +99,8 @@ export class MilestoneEditComponent {
   listTasks() {
     const taskControlArray = this.yearTasks.map(task => {
       if (this.currentMilestone && task.milestoneID == this.currentMilestone.milestoneID) {
-        return this.formBuilder.control(true)
+        this.assignedTasks.push(task);
+        return this.formBuilder.control(true);
       }
 
       //if this task is already assigned to another milestone, we can't add it to this one
@@ -126,6 +120,18 @@ export class MilestoneEditComponent {
     return this.milestoneForm.get('tasks') as FormArray;
   }
 
+  assignTask(e: any, selectedTask: Task) {
+    if (e.checked) {
+      this.assignedTasks.push(selectedTask);
+    }
+    else {
+      const index = this.assignedTasks.indexOf(selectedTask);
+      if (index > -1) {
+        this.assignedTasks.splice(index, 1);
+     }
+    }
+  }
+
   getFormControlTask(control: AbstractControl): FormControl {
     return control as FormControl;  //otherwise angular doesn't recognize this as a FormControl
   }
@@ -135,27 +141,30 @@ export class MilestoneEditComponent {
   }
 
   saveMilestone() {
-    //TODO: check that all fields are in
-    console.log("saving!");
-    if (this.currentMilestone) {
-      const updateData: any = {};
+    const updateData: any = {};
 
-      updateData.id = this.currentMilestone.milestoneID as unknown as number;
-      if (this.milestoneForm.get('description')) {
-        updateData.description = this.milestoneForm.get('description')!.value;
-      }
-
-      //TODO: assign tasks to milestone
-
-      const url = constructBackendRequest(Endpoints.EDIT_MILESTONE)
-      this.http.post(url, updateData).subscribe(data => {
-        console.log(data);
-        window.alert("Milestone updated");
-        this.milestoneService.getMilestones(true).subscribe(data => {
-          this.back();
-        })
-      })
+    updateData.id = this.currentMilestone.milestoneID as unknown as number;
+    if (this.milestoneForm.get('description')) {
+      updateData.description = this.milestoneForm.get('description')!.value;
     }
+
+    updateData.tasks = [];
+    this.assignedTasks.forEach(task => {
+      updateData.tasks.push(task.taskID);
+    });
+
+    const url = constructBackendRequest(Endpoints.EDIT_MILESTONE)
+    this.http.post(url, updateData).subscribe(milestone => {
+      if (milestone) {
+        console.log("milestone updated");
+        console.log(milestone);
+        window.alert("Milestone updated");
+      }
+      else {
+        window.alert("Something went wrong");
+      }
+        this.back();
+      });
   }
 
   openTaskEditModal(name: string, task: Task | null) {
@@ -174,7 +183,6 @@ export class MilestoneEditComponent {
 
     modalDialog.afterClosed().subscribe(result => {
       //TODO: successful save popup?
-      this.taskService.getTasks(true);
       this.ngOnInit();
     })
   }

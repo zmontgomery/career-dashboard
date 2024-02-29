@@ -1,11 +1,18 @@
 package com.senior.project.backend.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import com.senior.project.backend.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -110,5 +117,34 @@ public class UserServiceTest {
         Page<User> usersPage = userService.searchAndPageUsers(pageOffset, pageSize, searchTerm);
 
         assertEquals(usersPage, page);
+    }
+
+    @Test
+    public void setSuperUser() {
+        Constants.user1.setRole(Role.SuperAdmin);
+        when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
+        when(userRepository.findUserByEmail(any())).thenReturn(Optional.of(Constants.user2));
+
+        userService.setSuperUser();
+
+        assertFalse(Constants.user1.isSuperAdmin());
+        verify(userRepository, times(3)).save(any());
+        assertTrue(Constants.user2.isSuperAdmin());
+
+        Constants.user2.setRole(Role.SuperAdmin);
+    }
+
+    @Test
+    public void setSuperUserError() {
+        Constants.user1.setRole(Role.SuperAdmin);
+        when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
+        when(userRepository.findUserByEmail(any())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> userService.setSuperUser());
+
+        assertFalse(Constants.user1.isSuperAdmin());
+        verify(userRepository, times(2)).save(any());
+        assertFalse(Constants.user2.isSuperAdmin());
+
     }
 }

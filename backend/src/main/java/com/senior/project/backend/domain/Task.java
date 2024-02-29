@@ -11,14 +11,17 @@ import lombok.*;
 @Generated
 public class Task {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     public String description;
     private Boolean isRequired;
     @Enumerated(EnumType.STRING)
     private YearLevel yearLevel;
-    private String taskType;
+    @Enumerated(EnumType.STRING)
+    private TaskType taskType;
     private String artifactName;
+    private String submissionInstructions;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()

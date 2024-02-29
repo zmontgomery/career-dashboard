@@ -6,7 +6,8 @@ import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractCon
 import { Task } from 'src/domain/Task';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
-
+import { EventService } from 'src/app/dashboard/events/event.service';
+import { Event } from 'src/domain/Event';
 
 
 @Component({
@@ -20,14 +21,17 @@ export class TaskEditModalComponent implements OnInit {
   public taskName: string = '';
   tYearLevel: YearLevel = YearLevel.Freshman; //default
   public currentTask: Task | undefined;
+  public eventList!: Event[];
 
   taskForm!: FormGroup;
+  dataLoaded: boolean = false;
 
 
   constructor(
     public dialogRef: MatDialogRef<TaskEditModalComponent>,
     private formBuilder: FormBuilder,
-    private http: HttpClient,
+    public http: HttpClient,
+    private eventService: EventService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
 
@@ -43,7 +47,11 @@ export class TaskEditModalComponent implements OnInit {
   }
 
   ngOnInit() { 
-    this.createForm();
+    this.eventService.getEvents().subscribe(events => {
+      this.eventList = events;
+      this.dataLoaded = true;
+      this.createForm();
+    })
   }
 
   createForm() {
@@ -59,7 +67,7 @@ export class TaskEditModalComponent implements OnInit {
 
     else {
       this.taskForm = this.formBuilder.group({
-        name: [null, Validators.required],   //this field is hidden if the task already exists
+        name: [null, Validators.required],
         description: [null],
         taskType: ['artifact'], 
         artifactName: [null],
@@ -74,7 +82,6 @@ export class TaskEditModalComponent implements OnInit {
   }
 
   saveTask() {
-
     if (this.currentTask) {
       const updateData: any = {};
 
@@ -82,19 +89,85 @@ export class TaskEditModalComponent implements OnInit {
       if (this.taskForm.get('description')) {
         updateData.description = this.taskForm.get('description')!.value;
       }
-      if (this.taskForm.get('artifactName') && this.taskForm.get('artifactName')!.value.length > 0) {
+
+      //verify data
+      if (this.taskForm.get('taskType')!.value == 'artifact' && (
+            !this.taskForm.get('artifactName')?.value ||
+            this.taskForm.get('artifactName')?.value.length == 0)) {
+        window.alert("Please add an artifact name");
+        return;
+      }
+      else if (this.taskForm.get('taskType')!.value == 'event' && (
+          !this.taskForm.get('event')?.value ||
+          this.taskForm.get('event')?.value.length == 0)) {
+        window.alert("Please select an event");
+        return;
+      }
+
+      if (this.taskForm.get('taskType')!.value == 'artifact') {
+        updateData.taskType = this.taskForm.get('taskType')!.value;
         updateData.artifactName = this.taskForm.get('artifactName')!.value;
       }
-      if (this.taskForm.get('taskType')) {
+      else if (this.taskForm.get('taskType')!.value == 'event') {
         updateData.taskType = this.taskForm.get('taskType')!.value;
-      }
-      if (this.taskForm.get('event')) {
-        updateData.event = this.taskForm.get('event')!.value;
+        updateData.event = "" + this.taskForm.get('event')!.value;  //endpoint expects string
       }
 
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
-        console.log(data);
+        if (!data) {
+          window.alert("Something went wrong");
+          return;
+        }
+        window.alert("Task saved");
+        this.closeModal();
+      })
+    }
+    else {
+      const newData: any = {};
+
+      if (!this.taskForm.get('name')?.value) {
+        window.alert("Please add a task name"); // probably change to a better error message
+        return;
+      }
+
+      newData.name = this.taskForm.get('name')!.value;
+      newData.yearLevel = this.tYearLevel;
+      newData.isRequired = true; // for now
+      if (this.taskForm.get('description')) {
+        newData.description = this.taskForm.get('description')!.value;
+      }
+
+      //verify data
+      if (this.taskForm.get('taskType')!.value == 'artifact' && (
+            !this.taskForm.get('artifactName')?.value ||
+            this.taskForm.get('artifactName')?.value.length == 0)) {
+        window.alert("Please add an artifact name");
+        return;
+      }
+      else if (this.taskForm.get('taskType')!.value == 'event' && (
+          !this.taskForm.get('event')?.value ||
+          this.taskForm.get('event')?.value.length == 0)) {
+        window.alert("Please select an event");
+        return;
+      }
+
+      if (this.taskForm.get('taskType')!.value == 'artifact') {
+        newData.taskType = this.taskForm.get('taskType')!.value;
+        newData.artifactName = this.taskForm.get('artifactName')!.value;
+      }
+      else if (this.taskForm.get('taskType')!.value == 'event') {
+        newData.taskType = this.taskForm.get('taskType')!.value;
+        newData.event = "" + this.taskForm.get('event')!.value;
+      }
+
+      const url = constructBackendRequest(Endpoints.CREATE_TASK);
+      this.http.post(url, newData).subscribe(data => {
+        if (!data) {
+          window.alert("Something went wrong");
+          return;
+        }
+        window.alert("Task created");
         this.closeModal();
       })
     }

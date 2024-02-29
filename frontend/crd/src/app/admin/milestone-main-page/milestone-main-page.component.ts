@@ -3,6 +3,8 @@ import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MilestoneCreateModalComponent } from './milestone-create-modal/milestone-create-modal.component';
 
 @Component({
   selector: 'app-milestone-main-page',
@@ -19,7 +21,8 @@ export class MilestoneMainPageComponent implements OnDestroy {
 
   constructor(
     private milestoneService: MilestoneService,
-    private router: Router
+    private router: Router,
+    public matDialog: MatDialog,
   ) {
   }
 
@@ -29,7 +32,7 @@ export class MilestoneMainPageComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.milestoneService.getMilestones()
+    this.milestoneService.getMilestones(true)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((milestones: Milestone[]) => {
         this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
@@ -40,6 +43,20 @@ export class MilestoneMainPageComponent implements OnDestroy {
   editMilestone(name: string) {
     const encodedName = encodeURIComponent(name);
     this.router.navigate(['/admin/milestone-edit', encodedName]);
+  }
+
+  openMilestoneCreateModal(yearLevel: YearLevel) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "75%";
+    dialogConfig.width = "50%";
+    dialogConfig.data = {
+      yearLevel: yearLevel
+    }
+    // https://material.angular.io/components/dialog/overview
+    const modalDialog = this.matDialog.open(MilestoneCreateModalComponent, dialogConfig);
   }
 
 }
