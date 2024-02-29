@@ -32,5 +32,6 @@ public class DegreeProgram {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="student_details_id")
     @JsonIgnore
+    @ToString.Exclude
     private StudentDetails studentDetails;
 }
