@@ -132,6 +132,6 @@ public class SubmissionHandlerTest {
             .uri("/test/1")
             .exchange()
             .expectStatus()
-            .isNotFound();
+            .isNoContent();
     }
 }
