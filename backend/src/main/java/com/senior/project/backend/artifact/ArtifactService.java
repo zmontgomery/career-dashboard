@@ -85,7 +85,7 @@ public class ArtifactService {
     /**
      * Stores a file in the uploads folder and adds an artifact object to the database
      */
-    public Mono<Integer> processFile(FilePart filePart) {
+    public Mono<Integer> processSubmissionFile(FilePart filePart) {
         return validateAndGetPath(filePart, TASK_ARTIFACT_TYPES)
                 .flatMap(destination -> {
                     Artifact upload = new Artifact();

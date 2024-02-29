@@ -19,7 +19,7 @@ import com.senior.project.backend.util.Endpoints;
 public class ArtifactRouter {
     @Bean
     public RouterFunction<ServerResponse> artifactRoutes(ArtifactHandler artifactHandler) {
-        return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleFileUpload)
+        return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleSubmissionUpload)
             .andRoute(POST(Endpoints.UPLOAD_IMAGE_EVENT.uri()), artifactHandler::handleEventImageUpload)
             .andRoute(POST(Endpoints.USERS_PROFILE_PICTURE.uri()), artifactHandler::handleProfileImageUpload)
             .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete)

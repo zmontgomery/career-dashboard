@@ -30,9 +30,9 @@ public class ArtifactHandler {
     /**
      * Takes the file from the request body and stores it on the server
      */
-    public Mono<ServerResponse> handleFileUpload(ServerRequest request) {
+    public Mono<ServerResponse> handleSubmissionUpload(ServerRequest request) {
         return getFilePart(request)
-                .flatMap(artifactService::processFile)
+                .flatMap(artifactService::processSubmissionFile)
                 .flatMap(response -> ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(response)

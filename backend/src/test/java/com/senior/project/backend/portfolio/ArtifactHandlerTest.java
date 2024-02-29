@@ -42,7 +42,7 @@ public class ArtifactHandlerTest {
     @BeforeEach
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-                        .POST("/test", artifactHandler::handleFileUpload)
+                        .POST("/test", artifactHandler::handleSubmissionUpload)
                         .GET("/test/{artifactID}", artifactHandler::serveFile)
                         .DELETE("/test/{id}", artifactHandler::handleFileDelete)
                         .build())
