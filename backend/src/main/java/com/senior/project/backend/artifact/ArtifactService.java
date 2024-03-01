@@ -120,10 +120,10 @@ public class ArtifactService {
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
                             .then(Mono.defer(() -> {
-                                Event event = eventRepository.findById(eventID);
-                                if (event.getImageId() != null) {
+                                Optional<Event> event = eventRepository.findById(eventID);
+                                if (event.isPresent() && event.get().getImageId() != null) {
                                     // TODO change event id to use long
-                                    return deleteFile(Math.toIntExact(event.getImageId()));
+                                    return deleteFile(Math.toIntExact(event.get().getImageId()));
                                 }
                                 return Mono.empty();
                             }))
@@ -280,13 +280,6 @@ public class ArtifactService {
                         return Mono.just(ResponseEntity.notFound().build());
                     }
                 }));
-    }
-
-    /**
-     * @return all artifacts
-     */
-    public Flux<Artifact> all() {
-        return Flux.fromIterable(artifactRepository.findAll());
     }
 
     private static final int NO_FILE_ID = 1;
