@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-menu',
@@ -12,7 +13,10 @@ export class UserMenuComponent implements OnInit {
 
   user: User = User.makeEmpty();
 
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly  router: Router,
+    ) { }
 
   ngOnInit(): void {
       this.authService.user$.subscribe((user) => {
@@ -27,7 +31,11 @@ export class UserMenuComponent implements OnInit {
   }
 
   openSettings() {
-    // this.router
-    console.log('open settings')
+    this.router.navigate(['/settings'])
+      .then(success => {
+        if (!success) {
+          console.error('Navigation to settings failed')
+        }
+      });
   }
 }
