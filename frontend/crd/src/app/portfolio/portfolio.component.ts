@@ -34,6 +34,10 @@ export class PortfolioComponent implements OnInit{
     this.updateArtifacts();
   }
 
+  formatDate(date: Date){
+    return date.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"});
+  }
+
   ngOnInit(): void {
     this.authService.user$.subscribe((user) => {
       if (LangUtils.exists(user)) {
