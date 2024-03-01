@@ -1,6 +1,8 @@
 package com.senior.project.backend.users;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,7 @@ public class UserRouter {
     public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
         return
             route(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser)
-            .andRoute(GET(Endpoints.SEARCH_USERS.uri()), userHandler::searchUsers);
+            .andRoute(GET(Endpoints.SEARCH_USERS.uri()), userHandler::searchUsers)
+            .andRoute(PUT(Endpoints.UPDATE_ROLES.uri()), userHandler::updateRole);
     }
 }

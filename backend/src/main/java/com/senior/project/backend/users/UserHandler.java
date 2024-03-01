@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.UsersSearchResponse;
 import com.senior.project.backend.security.SecurityUtil;
@@ -10,6 +11,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.NoSuchElementException;
 
@@ -60,6 +62,28 @@ public class UserHandler {
 
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "valid query params: pageOffset: number, pageSize: number, searchTerm: string"));
+        }
+    }
+
+    public Mono<ServerResponse> updateRole(ServerRequest request) {
+        return request.bodyToMono(User.class)
+            .zipWith(SecurityUtil.getCurrentUser())
+            .flatMap(users -> {
+                Role newRole = users.getT1().getRole();
+                if (newRole == Role.Faculty) {}
+            })
+    }
+
+    private Mono<User> updateRoleCheck(User edited, User current) {
+        Role newRole = edited.getRole();
+        Mono<User> returnValue;
+        switch (newRole) {
+            case Admin: 
+                if (current.hasSuperAdminPrivileges()) service.
+                else Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
+                break;
+            default:
+                break;
         }
     }
 }

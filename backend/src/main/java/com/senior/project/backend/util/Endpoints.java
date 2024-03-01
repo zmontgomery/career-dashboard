@@ -33,6 +33,7 @@ public enum Endpoints {
     // Users
     CURRENT_USER("current-user", true),
     USERS("users", true, Role.Faculty),
+    UPDATE_ROLES("users/roles", true, Role.Faculty),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
 

@@ -1,0 +1,23 @@
+<div class="edit-role-menu-container">
+    <button mat-icon-button size="10" [matMenuTriggerFor]="roleMenu">
+      <mat-icon>
+        edit
+      </mat-icon>
+    </button>
+
+    <mat-menu #roleMenu>
+      <div style="display: flex; flex-direction: column; padding: 5px 10px;">
+        <button mat-raised-button>
+          Student
+        </button>
+        <div style="height: 5px"></div>
+        <button mat-raised-button>
+          Faculty
+        </button>
+        <div style="height: 5px"></div>
+        <button mat-raised-button>
+          Admin
+        </button>
+      </div>
+    </mat-menu>
+</div>
