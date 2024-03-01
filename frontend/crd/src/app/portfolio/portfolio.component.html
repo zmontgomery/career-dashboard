@@ -67,8 +67,8 @@
             <p>{{project.name}}</p>
             <ul>
               <li>{{project.description}}</li>
-              <li>Start Date: {{project.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{project.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>Start Date: {{formatDate(project.startDate)}}</li>
+              <li>End Date: {{formatDate(project.endDate)}}</li>
             </ul>
           </div>
         </div>
@@ -84,8 +84,8 @@
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>Start Date: {{formatDate(job.startDate)}}</li>
+              <li>End Date: {{formatDate(job.endDate)}}</li>
             </ul>
             </div>
           </div>
@@ -102,8 +102,8 @@
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>Start Date: {{formatDate(job.startDate)}}</li>
+              <li>End Date: {{formatDate(job.endDate)}}</li>
             </ul>
             </div>
           </div>
@@ -138,6 +138,3 @@
     </mat-card>
   </div>
 </div>
-
-
-
