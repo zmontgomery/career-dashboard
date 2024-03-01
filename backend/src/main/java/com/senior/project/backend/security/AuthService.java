@@ -71,7 +71,7 @@ public class AuthService {
     }
 
     /**
-     * Signs out a user by removeing their session
+     * Signs out a user by removing their session
      */
     public Mono<Void> signOut(ServerRequest request) {
         return request.session().flatMap(WebSession::invalidate);

@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'crd';
 
-  noNavBar = ['login']
+  noNavBar = ['login', 'signup'];
 
   constructor() {}
 

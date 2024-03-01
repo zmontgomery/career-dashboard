@@ -33,6 +33,7 @@ import { EventMainPageModule } from './admin/event-main-page/event-main-page.mod
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { SignupPageModule } from './security/signup-page/signup-page.module';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
+    SignupPageModule,
   ],
   providers: [
     provideHttpClient(),
