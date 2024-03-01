@@ -3,6 +3,7 @@ import { AuthService } from '../auth.service';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
+import {Endpoints} from "../../util/http-helper";
 
 @Component({
   selector: 'app-user-menu',
@@ -12,6 +13,7 @@ import {Router} from "@angular/router";
 export class UserMenuComponent implements OnInit {
 
   user: User = User.makeEmpty();
+  profileURL: string = Endpoints.USERS_PROFILE_PICTURE;
 
   constructor(
     private readonly authService: AuthService,

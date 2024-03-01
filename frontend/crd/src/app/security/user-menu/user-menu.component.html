@@ -1,6 +1,9 @@
 <div class="user-container">
-    <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
-  <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" aria-label="User Menu">Placeholder</button>
+  <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
+  <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" >
+<!--    TODO give default image. Maybe from backend?-->
+    <img [ngSrc]="profileURL" width="30px" height="30px" alt="User Image">
+  </button>
 </div>
 
 <mat-menu class="user-menu" xPosition="before" #userMenu>
@@ -13,3 +16,9 @@
     <span>Settings</span>
   </button>
 </mat-menu>
+
+
+<!--<img class="user-button" [ngSrc]="profileURL" width="30px" height="30px"-->
+<!--     [matMenuTriggerFor]="userMenu" aria-label="User Menu"-->
+<!--&gt;-->
+<!--&lt;!&ndash;  <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" >Placeholder</button>&ndash;&gt;-->
