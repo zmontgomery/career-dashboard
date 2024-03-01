@@ -12,12 +12,14 @@ import { MilestoneMainPageComponent } from './admin/milestone-main-page/mileston
 import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
 import { UsersPageComponent } from "./users-page/users-page.component";
+import {SettingsPageComponent} from "./settings/settings-page.component";
 
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
+  {path: 'settings', component: SettingsPageComponent, canActivate: [authGuard]},
 ]
 
 const facultyRoutes: Routes = [
