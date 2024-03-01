@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
-import { LogoutButtonComponent } from './logout-button.component';
+import { UserMenuComponent } from './user-menu.component';
 import { AuthService } from '../auth.service';
 import { of } from 'rxjs';
 import {Role, User, UserJSON} from '../domain/user';
 
 describe('LogoutButtonComponent', () => {
-  let component: LogoutButtonComponent;
-  let fixture: ComponentFixture<LogoutButtonComponent>;
+  let component: UserMenuComponent;
+  let fixture: ComponentFixture<UserMenuComponent>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   const userJSON: UserJSON = {
@@ -27,12 +27,12 @@ describe('LogoutButtonComponent', () => {
   function setup(user: User | null) {
     authServiceSpy = jasmine.createSpyObj('AuthService', ['signOut'], {user$: of(user)});
     TestBed.configureTestingModule({
-      declarations: [LogoutButtonComponent],
+      declarations: [UserMenuComponent],
       providers: [
         {provide: AuthService, useValue: authServiceSpy},
       ],
     });
-    fixture = TestBed.createComponent(LogoutButtonComponent);
+    fixture = TestBed.createComponent(UserMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }

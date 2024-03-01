@@ -1,0 +1,15 @@
+<div class="user-container">
+    <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
+  <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" aria-label="User Menu">Placeholder</button>
+</div>
+
+<mat-menu class="user-menu" xPosition="before" #userMenu>
+  <button mat-menu-item class="logout-button" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+  <button mat-menu-item class="settings-button" (click)="openSettings()">
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+  </button>
+</mat-menu>

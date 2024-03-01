@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Observable } from 'rxjs';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
 
 @Component({
-  selector: 'app-logout-button',
-  templateUrl: './logout-button.component.html',
-  styleUrls: ['./logout-button.component.less']
+  selector: 'app-user-menu',
+  templateUrl: './user-menu.component.html',
+  styleUrls: ['./user-menu.component.less']
 })
-export class LogoutButtonComponent implements OnInit {
+export class UserMenuComponent implements OnInit {
 
   user: User = User.makeEmpty();
 
@@ -25,5 +24,10 @@ export class LogoutButtonComponent implements OnInit {
 
   logout() {
     this.authService.signOut();
+  }
+
+  openSettings() {
+    // this.router
+    console.log('open settings')
   }
 }
