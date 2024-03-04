@@ -1,5 +1,7 @@
 import {Component, Inject, Injectable, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Observable} from "rxjs";
+import {ArtifactService} from "../artifact.service";
 
 
 @Component({
@@ -9,11 +11,17 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 })
 @Injectable()
 export class ProfileImageModalComponent implements OnInit {
+  uploadStrategy: ((formData: FormData) => Observable<number>) | null;
 
   constructor(
     public dialogRef: MatDialogRef<ProfileImageModalComponent>,
+    private artifactService: ArtifactService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
+    this.uploadStrategy = (data) => {
+      return this.artifactService.uploadProfilePicture(data);
+    }
+    this.uploadStrategy.bind(this);
   }
 
   ngOnInit() {

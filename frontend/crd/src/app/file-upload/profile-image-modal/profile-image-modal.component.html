@@ -1,7 +1,7 @@
 <mat-dialog-content>
   <div id="modal-content-wrapper">
 
-    <app-image-upload (closeEmitter)="closeModal($event)">
+    <app-image-upload (closeEmitter)="closeModal($event)" [uploadStrategy]="uploadStrategy">
 
     </app-image-upload>
   </div>
