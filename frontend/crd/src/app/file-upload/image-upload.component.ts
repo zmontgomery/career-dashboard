@@ -24,6 +24,7 @@ export class ImageUploadComponent implements OnInit {
   @Output() artifactIdEmitter: EventEmitter<number> = new EventEmitter();
   @Output() closeEmitter: EventEmitter<number> = new EventEmitter();
   @Input() uploadStrategy: null | ((formData: FormData) => Observable<number>)  = null;
+  @Input() aspectRatio: number = 1;
 
   protected acceptedFileTypes: string = ".png, .jpeg";
 
