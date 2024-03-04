@@ -25,6 +25,7 @@ export class ImageUploadComponent implements OnInit {
   @Output() closeEmitter: EventEmitter<number> = new EventEmitter();
   @Input() uploadStrategy: null | ((formData: FormData) => Observable<number>)  = null;
   @Input() aspectRatio: number = 1;
+  @Input() roundCropper: boolean = false;
 
   protected acceptedFileTypes: string = ".png, .jpeg";
 

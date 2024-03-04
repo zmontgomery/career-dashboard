@@ -11,13 +11,14 @@
       <ng-container *ngSwitchCase="'cropping'">
         <image-cropper
           [imageFile]="rawFile"
+          [roundCropper]="roundCropper"
           [maintainAspectRatio]="true"
           [aspectRatio]="aspectRatio"
           (imageCropped)="imageCropped($event)"
         ></image-cropper>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <img [src]="croppedImageUrl" width="480px" alt="uploaded file">
+        <img class="cropped-image" [style.width.px]="180 * aspectRatio" [class.round-image]="roundCropper" [src]="croppedImageUrl" alt="uploaded file">
       </ng-container>
     </ng-container>
     <div class="file-details-row file-details-row-{{status}}">
