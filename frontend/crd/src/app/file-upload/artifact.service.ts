@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {map, Observable, of} from "rxjs";
+import {map, Observable} from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import {Artifact, ArtifactJSON} from "../../domain/Artifact";
 
@@ -48,9 +48,7 @@ export class ArtifactService {
   }
 
   uploadProfilePicture(formData: FormData): Observable<number> {
-    console.warn('not yet implemented')
-    return of(0);
-    // return this.http.post<number>(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE), formData);
+    return this.http.post<number>(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE), formData);
   }
 
   /**
