@@ -3,7 +3,7 @@ import { AuthService } from '../auth.service';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
-import {Endpoints} from "../../util/http-helper";
+import {ArtifactService} from "../../file-upload/artifact.service";
 
 @Component({
   selector: 'app-user-menu',
@@ -13,17 +13,24 @@ import {Endpoints} from "../../util/http-helper";
 export class UserMenuComponent implements OnInit {
 
   user: User = User.makeEmpty();
-  profileURL: string = Endpoints.USERS_PROFILE_PICTURE;
+  profileURL: string | null = null;
 
   constructor(
     private readonly authService: AuthService,
     private readonly  router: Router,
+    private readonly artifactService: ArtifactService,
     ) { }
 
   ngOnInit(): void {
       this.authService.user$.subscribe((user) => {
         if (LangUtils.exists(user)) {
           this.user = user!;
+          this.artifactService.getProfilePicture()
+            .subscribe((blob) => {
+              console.log()
+              this.profileURL = URL.createObjectURL(blob);
+              user!.profilePictureURL = this.profileURL;
+            });
         }
       });
   }

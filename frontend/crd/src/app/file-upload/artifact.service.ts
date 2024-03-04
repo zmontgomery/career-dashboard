@@ -57,7 +57,14 @@ export class ArtifactService {
   getArtifactFile(id: number): Observable<Blob> {
     return this.http.get(constructBackendRequest(`${Endpoints.ARTIFACT_FILE}/${id}`), { responseType: 'blob' })
       .pipe(map((data: any) => {
-        return new Blob([data], { type: 'application/pdf' });
+        return new Blob([data]);
+      }));
+  }
+
+  getProfilePicture(): Observable<Blob> {
+    return this.http.get(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE), { responseType: 'blob' })
+      .pipe(map((data: any) => {
+        return new Blob([data]);
       }));
   }
 
