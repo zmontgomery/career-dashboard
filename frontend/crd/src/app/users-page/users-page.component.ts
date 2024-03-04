@@ -4,8 +4,9 @@ import {User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UsersSearchResponseJSON} from "./userSearchResult";
 import {PageEvent} from "@angular/material/paginator";
-import {debounceTime, Observable, Subject} from "rxjs";
+import {debounceTime, firstValueFrom, Observable, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
+import {ArtifactService} from "../file-upload/artifact.service";
 
 @Component({
   selector: 'app-users-page',
@@ -33,6 +34,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private screenSizeSvc: ScreenSizeService,
+    private artifactSvc: ArtifactService,
   ) {
     this.isMobile$ = this.screenSizeSvc.isMobile$;
   }
@@ -61,11 +63,17 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       {key: 'searchTerm', value: this.searchTerm}
       );
     this.http.get<UsersSearchResponseJSON>(apiUrl).subscribe((searchResults: UsersSearchResponseJSON) => {
-      this.dataSource = searchResults.users.map(it => new User(
-        // change id to "random" number for now to support random profile pics
-        {...it, id: '250' + it.email.match(/\d+/g)}
-      ));
+      this.dataSource = searchResults.users.map(it => new User(it));
       this.totalItems = searchResults.totalResults;
+
+      this.dataSource.forEach((user: User) => {
+        if (user.profilePictureId != null)  {
+          this.artifactSvc.getArtifactFile(user.profilePictureId)
+            .subscribe((blob) => {
+              user.profilePictureURL = URL.createObjectURL(blob);
+            })
+        }
+      });
     });
   }
 

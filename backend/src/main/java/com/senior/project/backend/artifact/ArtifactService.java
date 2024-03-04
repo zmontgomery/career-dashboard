@@ -7,6 +7,7 @@ import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
 
+import com.senior.project.backend.users.UserRepository;
 import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -41,14 +42,16 @@ public class ArtifactService {
 
     private final ArtifactRepository artifactRepository;
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
     // Make sure to add any filetypes to the getFileExtension method
     private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);
     private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
-    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository, UserRepository userRepository) {
         this.artifactRepository = artifactRepository;
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         if (this._uploadDirectory == null) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
@@ -137,7 +140,39 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
-        return null;
+        // TODO validate aspect ratio
+        return validateAndGetPath(filePart, IMAGE_TYPES)
+                .flatMap(destination -> {
+
+                    Artifact upload = new Artifact();
+                    upload.setFileLocation(destination.toString());
+                    upload.setName(filePart.filename());
+                    upload.setType(ArtifactType.PROFILE_PICTURE);
+
+                    // Save the file to the specified directory
+                    return filePart.transferTo(destination)
+                            .then(SecurityUtil.getCurrentUser())
+                            .flatMap((user) -> {
+                                upload.setUserId(user.getId());
+
+                                if (user.getProfilePictureId() != null) {
+                                    return deleteFile(user.getProfilePictureId()).map((delete) -> user);
+                                }
+                                return Mono.just(user);
+                            })
+                            .flatMap((user) -> {
+                                artifactRepository.save(upload);
+                                var updatedArtifact = artifactRepository.findByUniqueIdentifier(upload.getFileLocation());
+                                if (updatedArtifact.isPresent()) {
+                                    var id = updatedArtifact.get().getId();
+                                    userRepository.updateProfilePictureId(user.getId(), id);
+                                    return Mono.just(id);
+                                }
+                                else {
+                                    return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact not found after saving"));
+                                }
+                            });
+                });
     }
 
     private Mono<Path> validateAndGetPath(FilePart filePart, List<MediaType> acceptableTypes) {

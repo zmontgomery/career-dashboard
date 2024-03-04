@@ -17,7 +17,7 @@ export interface UserJSON {
     readonly canText: boolean;
     readonly studentDetails?: StudentDetailsJSON;
     readonly role: Role;
-    readonly profilePictureId: string;
+    readonly profilePictureId: number;
 }
 
 /**
@@ -37,7 +37,8 @@ export class User {
     readonly canText: boolean;
     readonly studentDetails?: StudentDetails
     readonly role: Role;
-    readonly profilePictureId: string;
+    readonly profilePictureId: number;
+    profilePictureURL: string | null = null;
 
     constructor(json: UserJSON) {
         this.id = json.id;
@@ -71,7 +72,7 @@ export class User {
             canEmail: false,
             canText: false,
             role: Role.Student,
-            profilePictureId: '',
+            profilePictureId: 0,
         });
     }
 

@@ -7,6 +7,7 @@ import {RouterLink} from "@angular/router";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {FormsModule} from "@angular/forms";
     MatPaginatorModule,
     MatInputModule,
     FormsModule,
+    MatIconModule,
   ],
 })
 export class UsersPageModule { }
