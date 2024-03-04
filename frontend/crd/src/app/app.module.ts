@@ -34,6 +34,7 @@ import { MilestoneCreateModalModule } from './admin/milestone-main-page/mileston
 import { UsersPageModule } from "./users-page/users-page.module";
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 import {SettingsPageModule} from "./settings/settings-page.module";
+import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import {SettingsPageModule} from "./settings/settings-page.module";
     EventMainPageModule,
     MilestoneCreateModalModule,
     EventImageModalModule,
+    ProfileImageModalModule,
     SettingsPageModule,
   ],
   providers: [

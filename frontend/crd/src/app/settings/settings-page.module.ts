@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { SettingsPageComponent } from './settings-page.component';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
     SettingsPageComponent,
   ],
-  imports: [
-    CommonModule,
-  ],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        NgOptimizedImage,
+    ],
 })
 export class SettingsPageModule { }
