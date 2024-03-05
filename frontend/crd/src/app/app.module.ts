@@ -33,7 +33,7 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
-import { FileUploadModule } from './file-upload/file-upload.module';
+import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -43,7 +43,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,10 +97,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     MatDialogModule,
     TasksModalModule
+    EventImageModalModule,
   ],
   providers: [
     provideHttpClient(),
-      {provide: 'SocialAuthServiceConfig',
+    {
+      provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: true, //keeps the user signed in
         providers: [
@@ -117,8 +119,14 @@ import { MatDialogModule } from '@angular/material/dialog';
       }
     },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: APP_INITIALIZER, useFactory: (authService: AuthService) => () => authService.loadUser(), multi: true, deps: [AuthService]},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => () => authService.loadUser(),
+      multi: true,
+      deps: [AuthService]
+    },
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }
+
