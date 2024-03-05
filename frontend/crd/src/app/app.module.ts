@@ -96,7 +96,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MilestoneCreateModalModule,
     MatButtonModule,
     MatDialogModule,
-    TasksModalModule
+    TasksModalModule,
     EventImageModalModule,
   ],
   providers: [

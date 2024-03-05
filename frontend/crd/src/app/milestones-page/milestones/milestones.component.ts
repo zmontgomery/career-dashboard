@@ -36,7 +36,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   openTask(task: any) {
-    console.log(task)
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
@@ -44,13 +43,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     dialogConfig.height = "80%";
     dialogConfig.width = "60%";
     dialogConfig.data = {
-      // name: task.name,
-      // title: "TASK",
-      // description: task.description,
-      // actionButtonText: "Complete",
-      // productId: task.id
-      task: task,
-      actionButtonText: "TESTING"
+      task: task
     }
     const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
   }

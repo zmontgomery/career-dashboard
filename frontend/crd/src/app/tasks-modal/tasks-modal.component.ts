@@ -17,10 +17,6 @@ export class TasksModalComponent implements OnInit{
 
   ngOnInit() { }
 
-  actionFunction() {
-    this.closeModal();
-  }
-
   closeModal() {
     this.dialogRef.close();
   }
