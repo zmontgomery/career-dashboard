@@ -1,3 +1,5 @@
+@import "../../../common";
+
 .user-container {
   height: 100%;
   display: flex;
@@ -9,5 +11,15 @@
     padding: 0;
     min-width: unset;
     height: unset;
+    border-radius: 100%;
+
+    .profile-picture {
+      border-radius: 100%;
+    }
+
+    .profile-picture-placeholder {
+      .mat-icon-size(50px);
+      margin: 0;
+    }
   }
 }

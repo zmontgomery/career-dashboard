@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import {Artifact, ArtifactJSON} from "../../domain/Artifact";
+import * as http from "http";
 
 /**
  * Service to upload artifacts to the backend
@@ -61,10 +62,12 @@ export class ArtifactService {
       }));
   }
 
-  getProfilePicture(): Observable<Blob> {
+  getProfilePicture(): Observable<string | null> {
     return this.http.get(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE), { responseType: 'blob' })
       .pipe(map((data: any) => {
-        return new Blob([data]);
+        if (data != null) {
+          return URL.createObjectURL(new Blob([data]));
+        } else return null;
       }));
   }
 

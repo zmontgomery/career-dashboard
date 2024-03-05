@@ -25,14 +25,14 @@ export const LOCATION = new InjectionToken<Location>(
 
 /**
  * Service used for authentication and checking if the user is authenticated
- * 
+ *
  * @author Jimmy Logan <jrl9984@rit.edu>
  */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubect: BehaviorSubject<Boolean> = new BehaviorSubject<Boolean>(false);;
+  private isAuthenticatedSubect: BehaviorSubject<Boolean> = new BehaviorSubject<Boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubect.asObservable();
 
   private tokenSubject: BehaviorSubject<Token | null> = new BehaviorSubject<Token | null>(null);
@@ -50,7 +50,7 @@ export class AuthService {
       private readonly googleAuthService: SocialAuthService,
       private readonly activatedRoute: ActivatedRoute,
       @Inject(LOCATION) private readonly location: Location,
-    ) { 
+    ) {
     this.isAuthenticatedSubect.next(false);
     this.listenForMSALSignIn();
     this.listenForGoogleSignIn();
@@ -75,7 +75,7 @@ export class AuthService {
   /**
    * Determines if the token needs to be refreshed, and if so,
    * calles the refresh endpoint
-   * 
+   *
    * @returns the token observable
    */
   expiryCheck(): Observable<Token | null> {
@@ -104,7 +104,7 @@ export class AuthService {
 
   /**
    * Signs in the user
-   * 
+   *
    * @param loginRequest - login request to the backend
    * @returns a login response
    */
@@ -117,7 +117,7 @@ export class AuthService {
 
   /**
    * Refreshes a token
-   * 
+   *
    * @returns a login response
    */
   refresh(): Observable<LoginResponse> {
@@ -273,8 +273,8 @@ export class AuthService {
   }
 
   /**
-   * Processes a login response 
-   * 
+   * Processes a login response
+   *
    * @param res - the login response
    */
   private processResponse(res: LoginResponse) {
@@ -290,10 +290,10 @@ export class AuthService {
 
   /**
    * Creates a login request
-   * 
+   *
    * @param token - id token
    * @param tokenType - token source
-   * @returns 
+   * @returns
    */
   private createLoginRequest(token: string, tokenType: TokenType): LoginRequest {
     return new LoginRequest({

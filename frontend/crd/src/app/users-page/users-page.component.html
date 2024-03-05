@@ -19,7 +19,7 @@
     <ng-container matColumnDef="picture">
       <th mat-header-cell *matHeaderCellDef>Picture</th>
       <td mat-cell *matCellDef="let element">
-        <img *ngIf="element.profilePictureURL != null" [src]="element.profilePictureURL" alt="Profile Picture" width="50" height="50">
+        <img class="profile-picture" *ngIf="element.profilePictureURL != null" [src]="element.profilePictureURL" alt="Profile Picture" width="50" height="50">
         <mat-icon *ngIf="element.profilePictureURL == null">account_circle</mat-icon>
       </td>
     </ng-container>

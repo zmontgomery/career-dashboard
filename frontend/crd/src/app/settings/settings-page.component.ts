@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import {Endpoints} from "../util/http-helper";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ProfileImageModalComponent} from "../file-upload/profile-image-modal/profile-image-modal.component";
+import {AuthService} from "../security/auth.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {LangUtils} from "../util/lang-utils";
+import {ArtifactService} from "../file-upload/artifact.service";
 
 @Component({
   selector: 'app-settings',
@@ -10,11 +14,21 @@ import {ProfileImageModalComponent} from "../file-upload/profile-image-modal/pro
 })
 export class SettingsPageComponent {
 
-  profileURL: string = Endpoints.USERS_PROFILE_PICTURE;
+  profileURL: string | null = null;
 
   constructor(
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private artifactService: ArtifactService,
   ) {
+    this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+      if (LangUtils.exists(user)) {
+        this.artifactService.getProfilePicture()
+          .subscribe((url) => {
+            this.profileURL = url;
+          });
+      }
+    });
   }
 
   openProfilePicture() {

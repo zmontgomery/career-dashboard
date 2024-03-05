@@ -4,6 +4,7 @@ import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
 import {ArtifactService} from "../../file-upload/artifact.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-user-menu',
@@ -17,22 +18,23 @@ export class UserMenuComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly  router: Router,
+    private readonly router: Router,
     private readonly artifactService: ArtifactService,
-    ) { }
+    ) {
+    this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+      if (LangUtils.exists(user)) {
+        this.user = user!;
+        this.artifactService.getProfilePicture()
+          .subscribe((url) => {
+            this.profileURL =url;
+          });
+      }
+    });
+  }
+
 
   ngOnInit(): void {
-      this.authService.user$.subscribe((user) => {
-        if (LangUtils.exists(user)) {
-          this.user = user!;
-          this.artifactService.getProfilePicture()
-            .subscribe((blob) => {
-              console.log()
-              this.profileURL = URL.createObjectURL(blob);
-              user!.profilePictureURL = this.profileURL;
-            });
-        }
-      });
+
   }
 
   logout() {
