@@ -44,6 +44,7 @@
             </div>
           </ul>
           <ul>
+            <li>University ID: {{user.studentDetails?.universityId}}</li>
             <li>School Year: {{user.studentDetails?.yearLevel}}</li>
             <li>GPA: {{user.studentDetails?.gpa}}</li>
           </ul>
@@ -56,6 +57,16 @@
         <div class="card-body-section-body">
           <ul *ngFor="let skill of user.studentDetails?.skills">
               <li *ngIf="!skill.isLanguage">{{skill.name}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Language Skills
+        </div>
+        <div class="card-body-section-body">
+          <ul *ngFor="let skill of user.studentDetails?.skills">
+            <li *ngIf="skill.isLanguage">{{skill.name}}</li>
           </ul>
         </div>
       </div>
@@ -119,6 +130,16 @@
             <li>{{club.name}}</li>
             <li>{{club.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
             <li>{{club.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body-section">
+        <div class="card-body-section-header">
+          Interests
+        </div>
+        <div class="card-body-section-body">
+          <ul *ngFor="let interest of user.studentDetails?.interests">
+            <li>{{interest.name}}</li>
           </ul>
         </div>
       </div>
