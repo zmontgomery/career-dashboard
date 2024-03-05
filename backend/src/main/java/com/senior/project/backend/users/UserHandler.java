@@ -39,7 +39,7 @@ public class UserHandler {
      * @return 200 with the user
      */
     public Mono<ServerResponse> currentUser(ServerRequest request) {
-        return ServerResponse.ok().body(SecurityUtil.getCurrentUser(), User.class);
+        return ServerResponse.ok().body(currentUser(), User.class);
     }
 
     /**
@@ -69,8 +69,10 @@ public class UserHandler {
      * @return the user with the new role
      */
     public Mono<ServerResponse> updateRole(ServerRequest request) {
+        currentUser().subscribe((u) -> System.out.println("asdf"));
         return request.bodyToMono(User.class)
-            .zipWith(SecurityUtil.getCurrentUser())
+            .zipWith(currentUser())
+            .doOnNext((users) -> System.out.println(users))
             .flatMap(users -> updateRoleCheck(users.getT1(), users.getT2()))
             .flatMap((user) -> ServerResponse.ok().bodyValue(user));
     }
@@ -88,6 +90,8 @@ public class UserHandler {
      * @return a mono containing the updated user or an error
      */
     private Mono<User> updateRoleCheck(User edited, User current) {
+        System.out.println(edited);
+        System.out.println(current);
         Role newRole = edited.getRole();
         if (newRole == Role.Admin) {
             if (current.hasSuperAdminPrivileges()) return service.createOrUpdateUser(edited);
@@ -96,5 +100,11 @@ public class UserHandler {
             if (current.hasAdminPrivileges()) return service.createOrUpdateUser(edited);
             else return UPDATE_ROLE_ERROR;
         }
+    }
+
+    /** used for tests to replace current user with a mock */
+    public Mono<User> currentUser() {
+        System.out.println("no");
+        return SecurityUtil.getCurrentUser();
     }
 }

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.senior.project.backend.domain.Role;
 import org.junit.jupiter.api.Test;
@@ -129,5 +130,16 @@ public class UserServiceTest {
         assertFalse(Constants.user1.isSuperAdmin());
         verify(userRepository, times(2)).save(any());
         assertFalse(Constants.user2.isSuperAdmin());
+    }
+
+    @Test
+    public void testCreateOrUpdateUser() {
+        when(userRepository.saveAndFlush(any())).thenReturn(Constants.user1);
+        Mono<User> res = userService.createOrUpdateUser(Constants.user2);
+        
+        StepVerifier.create(res)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
     }
 }

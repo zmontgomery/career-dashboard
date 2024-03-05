@@ -40,10 +40,12 @@ export const noAuthGuard: CanActivateFn = (
     state: RouterStateSnapshot,
 ) => {
     const authService = inject(AuthService);
-    return authService.isAuthenticated$.pipe(map((isAuthenticated) => {
-        if (isAuthenticated) return createUrlTreeFromSnapshot(next.root, ['dashboard']);
-        return true;
-    }));
+    return zip(authService.user$, authService.isAuthenticated$).pipe(
+        map(([user, authenticated]) => {
+            if (authenticated) return homePage(user!, next);
+            return true;
+        })
+    );
 }
 
 /**
@@ -58,7 +60,7 @@ export const facultyRoleGuard: CanActivateFn = (
         if (LangUtils.exists(user)) {
             if (user!.hasFacultyPrivileges()) return true;
         }
-        return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+        return createUrlTreeFromSnapshot(next.root, ['users']);
     }));
 }
 
@@ -74,7 +76,7 @@ export const adminRoleGuard: CanActivateFn = (
         if (LangUtils.exists(user)) {
             if (user!.hasAdminPrivileges()) return true;
         }
-        return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+        return createUrlTreeFromSnapshot(next.root, ['admin']);
     }));
 }
 
@@ -84,7 +86,14 @@ export const signedUpGuard: CanActivateFn = (
 ) => {
     const authService = inject(AuthService);
     return authService.user$.pipe(map((user) => {
-        if (user?.signedUp) return createUrlTreeFromSnapshot(next.root, ['dashboard']);
+        if (user?.signedUp) return homePage(user, next);
         return true;
     }));
+}
+
+
+function homePage(user: User, next: ActivatedRouteSnapshot) {
+    if (user.hasAdminPrivileges()) return createUrlTreeFromSnapshot(next.root, ['admin']);
+    else if (user.hasFacultyPrivileges()) return createUrlTreeFromSnapshot(next.root, ['faculty', 'users']);
+    else return createUrlTreeFromSnapshot(next.root, ['dashboard']);
 }

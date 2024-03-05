@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { OswegoLogoComponent } from './oswego-logo.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -13,7 +14,8 @@ import { OswegoLogoComponent } from './oswego-logo.component';
   ],
   imports: [
     CommonModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    MatButtonModule
   ]
 })
 export class OswegoLogoModule { }
