@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { LogoutButtonComponent } from './logout-button.component';
 import { AuthService } from '../auth.service';
 import { of } from 'rxjs';
-import { User, UserJSON } from '../domain/user';
+import {Role, User, UserJSON} from '../domain/user';
 
 describe('LogoutButtonComponent', () => {
   let component: LogoutButtonComponent;
@@ -21,9 +21,7 @@ describe('LogoutButtonComponent', () => {
     preferredName: 'test',
     canEmail: false,
     canText: false,
-    admin: true,
-    faculty: true,
-    student: true
+    role: Role.Admin,
   }
 
   function setup(user: User | null) {
@@ -51,7 +49,7 @@ describe('LogoutButtonComponent', () => {
     expect(component.user).toEqual(user);
   }));
 
-  it('should not load user if does not exist', fakeAsync(() => { 
+  it('should not load user if does not exist', fakeAsync(() => {
     setup(null);
     tick(1000);
     expect(component.user).toEqual(User.makeEmpty());

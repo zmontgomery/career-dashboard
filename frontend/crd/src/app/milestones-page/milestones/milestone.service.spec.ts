@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MilestoneService } from "./milestone.service";
-import { Milestone, YearLevel } from "../../../domain/Milestone";
+import {Milestone, MilestoneJSON, YearLevel} from "../../../domain/Milestone";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { taskJSON } from 'src/app/util/task.service.spec';
 
@@ -11,8 +11,8 @@ describe('MilestoneService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], 
-      providers: [MilestoneService], 
+      imports: [HttpClientTestingModule],
+      providers: [MilestoneService],
     });
     service = TestBed.inject(MilestoneService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -23,12 +23,11 @@ describe('MilestoneService', () => {
   });
 
   it('getMilestones should return list of milestones', (done) => {
-    const milestoneJSON = {
+    const milestoneJSON: MilestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
       id: 1,
       description: "sample",
-      active: true,
       events: [{
         name: "name",
         description: "description",
@@ -39,6 +38,7 @@ describe('MilestoneService', () => {
         location: "location",
         eventLink: "sample link",
         buttonLabel: "test",
+        imageId: 1,
       }],
       tasks: [taskJSON],
     }
@@ -55,12 +55,11 @@ describe('MilestoneService', () => {
   });
 
   it('getMilestones should return list of milestones if cached and not call http', (done) => {
-    const milestoneJSON = {
+    const milestoneJSON: MilestoneJSON = {
       name: "name",
       yearLevel: YearLevel.Freshman,
       id: 1,
       description: "sample",
-      active: true,
       events: [{
         name: "name",
         description: "description",
@@ -70,10 +69,11 @@ describe('MilestoneService', () => {
         organizer: "organizer",
         location: "location",
         buttonLabel: "sample",
-        eventLink: "sample"
+        eventLink: "sample",
+        imageId: 1,
       }],
       tasks: [taskJSON],
-    }    
+    }
     // @ts-ignore
     service.hasBeenRequested = true;
 

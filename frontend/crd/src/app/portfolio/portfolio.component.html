@@ -68,8 +68,8 @@
             <p>{{project.name}}</p>
             <ul>
               <li>{{project.description}}</li>
-              <li>Start Date: {{project.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{project.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>Start Date: {{project.startDate}}</li>
+              <li>End Date: {{project.endDate}}</li>
             </ul>
           </div>
         </div>
@@ -85,8 +85,8 @@
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>Start Date: {{job.startDate}}</li>
+              <li>End Date: {{job.endDate}}</li>
             </ul>
             </div>
           </div>
@@ -99,13 +99,13 @@
         <div class="card-body-section-body">
           <div *ngFor="let job of user.studentDetails?.jobs">
             <div *ngIf="job.isCoop">
-              <p>{{job.name}}</p>
-              <ul>
-                <li>{{job.location}}</li>
-                <li>{{job.description}}</li>
-                <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-                <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              </ul>
+            <p>{{job.name}}</p>
+            <ul>
+              <li>{{job.location}}</li>
+              <li>{{job.description}}</li>
+              <li>Start Date: {{job.startDate}}</li>
+              <li>End Date: {{job.endDate}}</li>
+            </ul>
             </div>
           </div>
         </div>
@@ -151,6 +151,3 @@
     </mat-card>
   </div>
 </div>
-
-
-

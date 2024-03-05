@@ -18,7 +18,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   profilePicURLBase = 'https://i.pravatar.cc/';
 
   mobileColumns: string[] = ['picture', 'name', 'buttons'];
-  desktopColumns: string[] = ['picture', 'name', 'email', 'buttons'];
+  desktopColumns: string[] = ['picture', 'name', 'email', 'role', 'buttons'];
   // displayedColumns: string[] = this.mobileColumns;
 
   dataSource: Array<User>  = [];

@@ -16,9 +16,7 @@ export interface UserJSON {
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly studentDetails?: StudentDetailsJSON;
-    readonly student: boolean;
-    readonly admin: boolean;
-    readonly faculty: boolean;
+    readonly role: Role;
 }
 
 /**
@@ -37,9 +35,7 @@ export class User {
     readonly canEmail: boolean;
     readonly canText: boolean;
     readonly studentDetails?: StudentDetails
-    readonly student: boolean;
-    readonly admin: boolean;
-    readonly faculty: boolean;
+    readonly role: Role;
 
     constructor(json: UserJSON) {
         this.id = json.id;
@@ -55,9 +51,7 @@ export class User {
         if (LangUtils.exists(json.studentDetails)) {
             this.studentDetails = new StudentDetails(json.studentDetails!)
         }
-        this.student = json.student;
-        this.admin = json.admin;
-        this.faculty = json.faculty;
+        this.role = json.role;
         this.fullName = this.firstName + " " + this.lastName;
     }
 
@@ -73,9 +67,26 @@ export class User {
             lastLogin: 0,
             canEmail: false,
             canText: false,
-            student: true,
-            admin: false,
-            faculty: false,
+            role: Role.Student
         });
     }
+
+    hasFacultyPrivileges(): boolean {
+      return this.role == Role.Faculty || this.hasAdminPrivileges();
+    }
+
+    hasAdminPrivileges(): boolean {
+      return this.role == Role.Admin || this.hasSuperAdminPrivileges();
+    }
+
+    hasSuperAdminPrivileges(): boolean {
+      return this.role == Role.SuperAdmin;
+    }
+}
+
+export enum Role {
+  Student = 'Student',
+  Faculty = 'Faculty',
+  Admin = 'Admin',
+  SuperAdmin = 'SuperAdmin'
 }

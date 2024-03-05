@@ -44,7 +44,7 @@ export const facultyRoleGuard: CanActivateFn = (
     const authService = inject(AuthService);
     return authService.user$.pipe(map((user) => {
         if (LangUtils.exists(user)) {
-            if (user!.faculty || user!.admin) return true;
+            if (user!.hasFacultyPrivileges()) return true;
         }
         return createUrlTreeFromSnapshot(next.root, ['dashboard']);
     }));
@@ -60,7 +60,7 @@ export const adminRoleGuard: CanActivateFn = (
     const authService = inject(AuthService);
     return authService.user$.pipe(map((user) => {
         if (LangUtils.exists(user)) {
-            if (user!.admin) return true;
+            if (user!.hasAdminPrivileges()) return true;
         }
         return createUrlTreeFromSnapshot(next.root, ['dashboard']);
     }));

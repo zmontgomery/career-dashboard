@@ -7,7 +7,8 @@ export interface EventJSON {
   organizer: string;
   location: string;
   eventLink: string;
-  buttonLabel: string
+  buttonLabel: string;
+  imageId: number;
 }
 
 export class Event {
@@ -23,6 +24,7 @@ export class Event {
     this.isComplete = false;
     this.eventLink = json.eventLink;
     this.buttonLabel = json.buttonLabel;
+    this.imageId = json.imageId;
   }
 
   name: string;
@@ -35,4 +37,5 @@ export class Event {
   isComplete: boolean;
   eventLink: string;
   buttonLabel: string;
+  imageId: number;
 }
