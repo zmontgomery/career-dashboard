@@ -60,7 +60,7 @@ describe('MilestoneEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatFormFieldModule, 
+        MatFormFieldModule,
         MatButtonModule,
         MatSelectModule,
         MatInputModule,
@@ -70,8 +70,8 @@ describe('MilestoneEditComponent', () => {
         HttpClientModule,
         TaskEditModalModule,
         MatDialogModule,
-        HttpClientTestingModule, 
-        HttpClientModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
         MilestoneCreateModalModule,
       ],
       declarations: [MilestoneEditComponent, MilestoneCreateModalComponent],
@@ -111,6 +111,7 @@ describe('MilestoneEditComponent', () => {
         location: "location",
         eventLink: "testing link",
         buttonLabel: "more info",
+        imageId: 1,
       }],
       tasks: [{
         name: 'task name',
@@ -178,7 +179,8 @@ describe('MilestoneEditComponent', () => {
         organizer: "organizer",
         location: "location",
         eventLink: "sample",
-        buttonLabel: "sample"
+        buttonLabel: "sample",
+        imageId: 1,
       }],
       tasks: [{
         name: 'task name',
@@ -212,7 +214,7 @@ describe('MilestoneEditComponent', () => {
       taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     })];
-    
+
     const sampleForm = formBuilder.group({
       name: ["name", Validators.required],
       description: ["sample"],
@@ -241,6 +243,7 @@ describe('MilestoneEditComponent', () => {
         location: "location",
         eventLink: "testing link",
         buttonLabel: "more info",
+        imageId: 1,
       }],
       tasks: [{
         name: 'task name',

@@ -1,5 +1,6 @@
 package com.senior.project.backend.domain;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,8 @@ public class Event {
     private boolean isRecurring;
     private String eventLink;
     private String buttonLabel;
+    @Nullable
+    private Long imageId;
 
     // Used in Email Template
     public String formattedDate() {

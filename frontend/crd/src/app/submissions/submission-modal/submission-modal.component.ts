@@ -29,15 +29,15 @@ export class SubmissionModalComponent implements OnDestroy {
     private readonly artifactService: ArtifactService,
     private readonly authService: AuthService,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { 
-      task: Task 
+    @Inject(MAT_DIALOG_DATA) public data: {
+      task: Task
     },
-  ) { 
+  ) {
     this.task = this.data.task;
   }
 
   /**
-   * Deletes the artifact from the server if it has been uploaded without a 
+   * Deletes the artifact from the server if it has been uploaded without a
    * submission being created
    */
   ngOnDestroy(): void {

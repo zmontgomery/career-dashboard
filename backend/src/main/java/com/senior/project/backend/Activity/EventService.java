@@ -3,10 +3,14 @@ package com.senior.project.backend.Activity;
 import com.senior.project.backend.domain.Event;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
-import java.text.SimpleDateFormat; 
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,7 +29,11 @@ public class EventService {
 
     @Transactional
     public Mono<Event> updateEvent(long id, Map<String, Object> updates) {
-        Event existingEvent = eventRepository.findById(id);
+        Optional<Event> potentiallyExistingEvent = eventRepository.findById(id);
+        if (potentiallyExistingEvent.isEmpty()) {
+            return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Previous Event Not found"));
+        }
+        Event existingEvent = potentiallyExistingEvent.get();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
         try {
