@@ -55,6 +55,17 @@ public class SubmissionService {
         return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
     }
 
+
+    /**
+     * Returns all submissions for a given user
+     * @param userId
+     * @return
+     */
+    public Flux<Submission> getStudentSubmissions(UUID userId) {
+        Date date = new Date(System.currentTimeMillis() + BUFFER_TIME);
+        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUser(date, userId));
+    }
+
     /**
      * Sets the artifact id to No File
      * @param submission

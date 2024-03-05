@@ -31,4 +31,16 @@ export class SubmissionService {
     return this.http.get<SubmissionJSON>(constructBackendRequest(`${Endpoints.SUBMISSION}/${taskId}`))
       .pipe(map((s) => new Submission(s)));
   }
+
+  /**
+   * Retrieves all submissions for a given user
+   */
+  getStudentSubmissions(studentID: string): Observable<Submission[]> {
+    return this.http.get<SubmissionJSON[]>(constructBackendRequest(`${Endpoints.SUBMISSIONS}/${studentID}`))
+      .pipe(map((data: SubmissionJSON[]) => {
+        return data.map((s: SubmissionJSON) => {
+          return new Submission(s);
+        });
+      }));
+  }
 }
