@@ -22,7 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import reactor.core.publisher.Mono;
 import org.springframework.core.io.Resource;
+import reactor.core.scheduler.Schedulers;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -140,18 +143,25 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
-        // TODO validate aspect ratio
         return validateAndGetPath(filePart, IMAGE_TYPES)
-                .flatMap(destination -> {
+                .zipWith(validateImageAspectRatio(filePart, 1))
+                .flatMap( zipped -> {
+                    var destination = zipped.getT1();
+                    var image = zipped.getT2();
 
                     Artifact upload = new Artifact();
                     upload.setFileLocation(destination.toString());
                     upload.setName(filePart.filename());
                     upload.setType(ArtifactType.PROFILE_PICTURE);
 
+                    try {
+                        ImageIO.write(image, "png", destination.toFile());
+                    } catch (IOException e) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY));
+                    }
+
                     // Save the file to the specified directory
-                    return filePart.transferTo(destination)
-                            .then(SecurityUtil.getCurrentUser())
+                    return SecurityUtil.getCurrentUser()
                             .flatMap((user) -> {
                                 upload.setUserId(user.getId());
 
@@ -196,6 +206,23 @@ public class ArtifactService {
                 }));
     }
 
+    private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
+        return filePart.content().collectList().publishOn(Schedulers.boundedElastic()).flatMap((content) -> {
+            BufferedImage image = null;
+            try {
+                // get the first one because that is the entire file. I think something was wrong with the way files were done.
+                image = ImageIO.read(content.get(0).asInputStream());
+            } catch (IOException e) {
+                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
+            }
+            var aspectRatio = image.getWidth() / image.getHeight();
+            if (aspectRatio != expectedRatio) {
+                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
+            }
+            return Mono.just(image);
+        });
+    }
+
     /**
      * Deletes a file if it exists
      * @param internalName is the unique identifier for the file marked for deletion
@@ -237,8 +264,6 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(Artifact a, User user) {
         try {
-            System.out.println(a);
-            System.out.println(user);
             if (user.hasAdminPrivileges() || a.getUserId().equals(user.getId())) {
                 Path fileToDelete = Paths.get(a.getFileLocation());
                 Files.deleteIfExists(fileToDelete); // Delete file
@@ -287,8 +312,6 @@ public class ArtifactService {
                     }
                     return SecurityUtil.getCurrentUser()
                             .flatMap(user -> {
-                                System.out.println(user.getId());
-                                System.out.println(artifact.getUserId());
                                 if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
                                     return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
                                             "User does not have access to this artifact"));

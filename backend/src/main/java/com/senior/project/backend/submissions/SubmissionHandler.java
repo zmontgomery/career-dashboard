@@ -78,7 +78,6 @@ public class SubmissionHandler {
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
             .map((submissions) -> {
-                System.out.println(submissions.toString());
                 List<Submission> newList = submissions.stream()
                     .sorted((s1, s2) -> s1.getSubmissionDate().before(s2.getSubmissionDate()) ? -1 : 1)
                     .collect(Collectors.toList());
