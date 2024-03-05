@@ -5,7 +5,7 @@ import {ScreenSizeService} from "../util/screen-size.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {of} from "rxjs";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UsersSearchResponse} from "./userSearchResult";
+import {UsersSearchResponse} from "./user-search-result";
 import {User} from "../security/domain/user";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {FormsModule} from "@angular/forms";

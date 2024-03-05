@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.util.NoSuchElementException;
 
@@ -65,25 +64,37 @@ public class UserHandler {
         }
     }
 
+    /**
+     * Updates a users role
+     * @return the user with the new role
+     */
     public Mono<ServerResponse> updateRole(ServerRequest request) {
         return request.bodyToMono(User.class)
             .zipWith(SecurityUtil.getCurrentUser())
-            .flatMap(users -> {
-                Role newRole = users.getT1().getRole();
-                if (newRole == Role.Faculty) {}
-            })
+            .flatMap(users -> updateRoleCheck(users.getT1(), users.getT2()))
+            .flatMap((user) -> ServerResponse.ok().bodyValue(user));
     }
 
+    /**
+     * The error for if updating a role fails
+     */
+    private static final Mono<User> UPDATE_ROLE_ERROR = Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
+
+    /**
+     * Updates a user role. A role can only be udpated to admin as a super admin
+     * 
+     * @param edited is the user being edited
+     * @param current is the current user
+     * @return a mono containing the updated user or an error
+     */
     private Mono<User> updateRoleCheck(User edited, User current) {
         Role newRole = edited.getRole();
-        Mono<User> returnValue;
-        switch (newRole) {
-            case Admin: 
-                if (current.hasSuperAdminPrivileges()) service.
-                else Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
-                break;
-            default:
-                break;
+        if (newRole == Role.Admin) {
+            if (current.hasSuperAdminPrivileges()) return service.createOrUpdateUser(edited);
+            else return UPDATE_ROLE_ERROR;
+        } else {
+            if (current.hasAdminPrivileges()) return service.createOrUpdateUser(edited);
+            else return UPDATE_ROLE_ERROR;
         }
     }
 }

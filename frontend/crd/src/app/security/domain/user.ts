@@ -37,7 +37,7 @@ export class User {
     canEmail: boolean;
     canText: boolean;
     readonly studentDetails?: StudentDetails
-    readonly role: Role;
+    role: Role;
     constructor(json: UserJSON) {
         this.id = json.id;
         this.email = json.email;
@@ -88,6 +88,13 @@ export class User {
 
     hasSuperAdminPrivileges(): boolean {
       return this.role == Role.SuperAdmin;
+    }
+
+    get formattedRole(): string {
+      if (this.role === Role.SuperAdmin) {
+        return 'Super Admin';
+      } 
+      return this.role;
     }
 }
 

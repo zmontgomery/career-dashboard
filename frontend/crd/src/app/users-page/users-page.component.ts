@@ -2,11 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Role, User} from "../security/domain/user";
 import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UsersSearchResponseJSON} from "./userSearchResult";
+import {UsersSearchResponseJSON} from "./user-search-result";
 import {PageEvent} from "@angular/material/paginator";
 import {debounceTime, first, map, Observable, of, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
 import {AuthService} from "../security/auth.service";
+import { UserService } from '../security/user.service';
 
 @Component({
   selector: 'app-users-page',
@@ -34,7 +35,7 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   user$: Observable<User | null>
 
   constructor(
-    private http: HttpClient,
+    private readonly userService: UserService,
     private screenSizeSvc: ScreenSizeService,
     private readonly authService: AuthService
   ) {
@@ -60,17 +61,10 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   // Method to fetch data from API
   loadData(): void {
-    const apiUrl = constructBackendRequest(Endpoints.USERS_SEARCH,
-      {key:'pageOffset', value: this.currentPage},
-      {key:'pageSize', value: this.pageSize},
-      {key: 'searchTerm', value: this.searchTerm}
-      );
-    this.http.get<UsersSearchResponseJSON>(apiUrl).subscribe((searchResults: UsersSearchResponseJSON) => {
-      this.dataSource = searchResults.users.map(it => new User(
-        // change id to "random" number for now to support random profile pics
-        {...it, id: '250' + it.email.match(/\d+/g)}
-      ));
-      this.totalItems = searchResults.totalResults;
+    this.userService.searchUsers(this.currentPage, this.pageSize, this.searchTerm)
+      .subscribe((searchResults: UsersSearchResponseJSON) => {
+        this.dataSource = searchResults.users.map((u) => new User(u));
+        this.totalItems = searchResults.totalResults;
     });
   }
 
@@ -87,7 +81,13 @@ export class UsersPageComponent implements OnInit, OnDestroy {
     this.searching$.next();
   }
 
-  protected readonly Role = Role;
+  random(element: User) {
+    let n = '';
+    for (let i = 2; i < 8; i++) {
+      n += element.id.charCodeAt(i);
+    }
+    return n;
+  }
 }
 
 
