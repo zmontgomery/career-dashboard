@@ -37,7 +37,6 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { BasePageComponent } from './base-page/base-page/base-page.component';
 import {NgOptimizedImage} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EventsComponent } from './events.component';
 import { MatCardModule } from "@angular/material/card";
-import { CarouselModule } from '@coreui/angular';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./event.service";
 import { of } from "rxjs";
