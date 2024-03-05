@@ -32,13 +32,13 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
-import { FileUploadModule } from './file-upload/file-upload.module';
+import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,10 +87,12 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
+    EventImageModalModule,
   ],
   providers: [
     provideHttpClient(),
-      {provide: 'SocialAuthServiceConfig',
+    {
+      provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: true, //keeps the user signed in
         providers: [
@@ -107,7 +109,12 @@ import { FileUploadModule } from './file-upload/file-upload.module';
       }
     },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: APP_INITIALIZER, useFactory: (authService: AuthService) => () => authService.loadUser(), multi: true, deps: [AuthService]},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => () => authService.loadUser(),
+      multi: true,
+      deps: [AuthService]
+    },
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
