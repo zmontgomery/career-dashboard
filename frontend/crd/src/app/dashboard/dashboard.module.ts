@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
@@ -17,12 +17,13 @@ import { TasksModule } from "../tasks/tasks.module";
   ],
   exports: [
   ],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MilestonesModule,
-    CarouselModule,
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MilestonesModule,
+        CarouselModule,
     TasksModule,
-  ]
+        NgOptimizedImage,
+    ]
 })
 export class DashboardModule { }

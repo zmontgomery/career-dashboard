@@ -1,7 +1,5 @@
 package com.senior.project.backend.portfolio;
 
-import com.senior.project.backend.Constants;
-import com.senior.project.backend.domain.Artifact;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +18,8 @@ import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.artifact.ArtifactService;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.core.io.ByteArrayResource;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,9 +42,8 @@ public class ArtifactHandlerTest {
     @BeforeEach
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-                        .POST("/test", artifactHandler::handleFileUpload)
-                        .GET("/test/{artifactID}", artifactHandler::servePdf)
-                        .GET("/all", artifactHandler::all)
+                        .POST("/test", artifactHandler::handleSubmissionUpload)
+                        .GET("/test/{artifactID}", artifactHandler::serveFile)
                         .DELETE("/test/{id}", artifactHandler::handleFileDelete)
                         .build())
                 .build();
@@ -104,7 +99,7 @@ public class ArtifactHandlerTest {
     }
 
     @Test
-    public void testServePdf() {
+    public void testServeFile() {
         // Mock response entity
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -119,7 +114,6 @@ public class ArtifactHandlerTest {
         webTestClient.get().uri("/test/1")
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_PDF)
                 .expectBody(byte[].class)
                 .isEqualTo(pdfContent);
     }
@@ -136,18 +130,5 @@ public class ArtifactHandlerTest {
 
         assertEquals(result, "test");
     }
-
-    @Test
-    public void testAll() {
-        Flux<Artifact> eventFlux = Flux.just(Constants.artifact1, Constants.artifact2);
-        when(artifactService.all()).thenReturn(eventFlux);
-        List<Artifact> result = webTestClient.get().uri("/all").exchange().expectStatus().isOk()
-                .expectBodyList(Artifact.class).returnResult().getResponseBody();
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(Constants.artifact1.getId(), result.get(0).getId());
-        assertEquals(Constants.artifact2.getId(), result.get(1).getId());
-    }
-
     
 }

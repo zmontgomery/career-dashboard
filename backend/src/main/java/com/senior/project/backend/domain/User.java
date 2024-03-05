@@ -105,17 +105,17 @@ public class User implements UserDetails {
 	}
 
 	@JsonIgnore
-	public boolean isFaculty() {
+	private boolean isFaculty() {
 		return this.role == Role.Faculty;
 	}
 
 	@JsonIgnore
-	public boolean isAdmin() {
+	private boolean isAdmin() {
 		return this.role == Role.Admin;
 	}
 
 	@JsonIgnore
-	public boolean isSuperAdmin() {
+	private boolean isSuperAdmin() {
 		return this.role == Role.SuperAdmin;
 	}
 
