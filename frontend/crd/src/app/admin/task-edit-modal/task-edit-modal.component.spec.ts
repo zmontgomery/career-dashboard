@@ -48,7 +48,8 @@ describe('TaskEditModalComponent', () => {
     yearLevel: YearLevel.Freshman,
     milestoneID: 1,
     taskType: TaskType.ARTIFACT,
-    artifactName: 'test artifact'
+    artifactName: 'test artifact',
+    submissionInstructions: 'instructions'
   });
 
   const dialogData = {
@@ -113,7 +114,8 @@ describe('TaskEditModalComponent', () => {
         yearLevel: YearLevel.Freshman,
         milestoneID: 1,
         taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
+        artifactName: 'test artifact',
+        submissionInstructions: 'instructions'
       });
     component.createForm();
 
@@ -122,7 +124,8 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.ARTIFACT],
       artifactName: ['test artifact'],
-      event: [null]
+      event: [null],
+      instructions: [null]
     });
 
     expect(component.taskForm.get('description')!.value).toEqual(sampleForm.get('description')!.value);
@@ -139,7 +142,8 @@ describe('TaskEditModalComponent', () => {
       description: [null],
       taskType: [TaskType.ARTIFACT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: [null]
     });
 
     expect(component.taskForm.get('name')!.value).toEqual(sampleForm.get('name')!.value);
@@ -148,7 +152,7 @@ describe('TaskEditModalComponent', () => {
     expect(component.getTaskType()).toEqual(TaskType.ARTIFACT);
   });
 
-  it('should save task', () => {
+  it('should save artifact task', () => {
     component.currentTask = new Task({
       name: 'task name',
       description: "description",
@@ -157,7 +161,8 @@ describe('TaskEditModalComponent', () => {
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
       taskType: TaskType.ARTIFACT,
-      artifactName: 'test artifact'
+      artifactName: 'test artifact',
+      submissionInstructions: 'instructions'
     });
     component.createForm();
 
@@ -166,7 +171,65 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.ARTIFACT],
       artifactName: ['test artifact'],
-      event: [null]
+      event: [null],
+      instructions: ['test']
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should save event task', () => {
+    component.currentTask = new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.EVENT,
+      eventID: 1,
+      submissionInstructions: 'instructions'
+    });
+    component.createForm();
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: [TaskType.EVENT],
+      artifactName: [null],
+      event: [1],
+      instructions: ['instructions']
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should save comment task', () => {
+    component.currentTask = new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.COMMENT,
+      submissionInstructions: 'instructions'
+    });
+    component.createForm();
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: [TaskType.COMMENT],
+      artifactName: [null],
+      event: [null],
+      instructions: ['instructions']
     });
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(null));
@@ -184,7 +247,8 @@ describe('TaskEditModalComponent', () => {
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
       taskType: TaskType.ARTIFACT,
-      artifactName: 'test artifact'
+      artifactName: 'test artifact',
+      submissionInstructions: 'instructions'
     });
 
     component.taskForm = formBuilder.group({
@@ -192,7 +256,8 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.ARTIFACT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spyWindow = spyOn(window, 'alert');
@@ -210,7 +275,8 @@ describe('TaskEditModalComponent', () => {
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
       taskType: TaskType.EVENT,
-      eventID: 1
+      eventID: 1,
+      submissionInstructions: 'instructions'
     });
 
     component.taskForm = formBuilder.group({
@@ -218,13 +284,42 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.EVENT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spyWindow = spyOn(window, 'alert');
 
     component.saveTask();
     expect(spyWindow).toHaveBeenCalledWith("Please select an event");
+  });
+
+  it('should block saving without instructions', () => {
+    component.currentTask = new Task({
+      name: 'task name',
+      description: "description",
+      id: 1,
+      isRequired: true,
+      yearLevel: YearLevel.Freshman,
+      milestoneID: 1,
+      taskType: TaskType.EVENT,
+      eventID: 1,
+      submissionInstructions: 'instructions'
+    });
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: [TaskType.EVENT],
+      artifactName: [null],
+      event: [null],
+      instructions: [null]
+    });
+
+    let spyWindow = spyOn(window, 'alert');
+
+    component.saveTask();
+    expect(spyWindow).toHaveBeenCalledWith("Please add submission instructions");
   });
 
   it('should create artifact task', () => {
@@ -235,7 +330,8 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.ARTIFACT],
       artifactName: ['test artifact'],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(null));
@@ -252,7 +348,26 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.EVENT],
       artifactName: [null],
-      event: [1]
+      event: [1],
+      instructions: ['test']
+    });
+
+    let spy = spyOn(component.http, 'post').and.returnValue(of(null));
+
+    component.saveTask();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should create comment task', () => {
+    component.currentTask = undefined;
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: [TaskType.COMMENT],
+      artifactName: [null],
+      event: [null],
+      instructions: ['test']
     });
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(null));
@@ -269,7 +384,8 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.EVENT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spyWindow = spyOn(window, 'alert');
@@ -287,7 +403,8 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.ARTIFACT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spyWindow = spyOn(window, 'alert');
@@ -304,13 +421,36 @@ describe('TaskEditModalComponent', () => {
       description: ['description'],
       taskType: [TaskType.EVENT],
       artifactName: [null],
-      event: [null]
+      event: [null],
+      instructions: ['test']
     });
 
     let spyWindow = spyOn(window, 'alert');
 
     component.saveTask();
     expect(spyWindow).toHaveBeenCalledWith("Please select an event");
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should block create without instructions', () => {
+    component.currentTask = undefined
+
+    component.taskForm = formBuilder.group({
+      name: ['task name'],
+      description: ['description'],
+      taskType: [TaskType.ARTIFACT],
+      artifactName: ['something'],
+      event: [null],
+      instructions: [null]
+    });
+
+    let spyWindow = spyOn(window, 'alert');
+
+    component.saveTask();
+    expect(spyWindow).toHaveBeenCalledWith("Please add submission instructions");
   });
 
   it('should create', () => {
