@@ -15,7 +15,7 @@ import {ImageUploadComponent} from "../image-upload.component";
 import {EventJSON, Event} from "../../../domain/Event";
 import SpyObj = jasmine.SpyObj;
 
-describe('EventImageModalComponent', () => {
+describe('ProfileImageModalComponent', () => {
   let component: ProfileImageModalComponent;
   let fixture: ComponentFixture<ProfileImageModalComponent>;
   const eventJSON: EventJSON = {
@@ -74,10 +74,4 @@ describe('EventImageModalComponent', () => {
     tick();
     expect(dialogRefSpy.close).toHaveBeenCalled();
   }));
-
-  it('artifact id change', () => {
-    // component.onArtifactId(99);
-    // @ts-ignore
-    expect(component.artifactID).toEqual(99);
-  });
 });

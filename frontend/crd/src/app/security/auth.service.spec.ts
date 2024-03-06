@@ -24,6 +24,7 @@ export const userJSON: UserJSON = {
   canEmail: false,
   canText: false,
   role: Role.Admin,
+  profilePictureId: 0,
 }
 
 describe('AuthService', () => {
@@ -47,6 +48,7 @@ describe('AuthService', () => {
     canEmail: false,
     canText: false,
     role: Role.Admin,
+    profilePictureId: 0,
   }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
@@ -232,7 +234,7 @@ describe('AuthService', () => {
   describe('Login redirect', () => {
     it('should login redirect for MS', () => {
       service.loginRedirectMS();
-  
+
       expect(msalAuthService.loginRedirect).toHaveBeenCalledTimes(1);
     });
 
