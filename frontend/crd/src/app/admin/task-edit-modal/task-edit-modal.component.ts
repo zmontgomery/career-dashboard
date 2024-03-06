@@ -110,6 +110,13 @@ export class TaskEditModalComponent implements OnInit {
         updateData.instructions = this.taskForm.get('instructions')!.value;
       }
 
+      // required information
+      if (!this.taskForm.get('instructions')?.value ||
+            this.taskForm.get('instructions')?.value.length == 0) {
+        window.alert("Please add submission instructions");
+        return;
+      }
+
       // verify that task type specific fields are filled in
       if (this.taskForm.get('taskType')!.value == TaskType.ARTIFACT && (
             !this.taskForm.get('artifactName')?.value ||
@@ -150,8 +157,14 @@ export class TaskEditModalComponent implements OnInit {
     else {
       const newData: any = {};
 
+      // required information
       if (!this.taskForm.get('name')?.value) {
         window.alert("Please add a task name");
+        return;
+      }
+      if (!this.taskForm.get('instructions')?.value ||
+            this.taskForm.get('instructions')?.value.length == 0) {
+        window.alert("Please add submission instructions");
         return;
       }
 
