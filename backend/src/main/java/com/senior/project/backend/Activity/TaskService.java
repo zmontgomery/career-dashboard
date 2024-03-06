@@ -54,7 +54,7 @@ public class TaskService {
         existingTask.setSubmissionInstructions((String) updates.get("instructions"));
 
         if (updates.containsKey("description")) {
-            existingTask.description = (String) updates.get("description");
+            existingTask.setDescription((String) updates.get("description"));
         }
 
         // updates technically should always have the task type
@@ -120,7 +120,7 @@ public class TaskService {
         newTask.setSubmissionInstructions((String) data.get("instructions"));
 
         if (data.containsKey("description")) {
-            newTask.description = (String) data.get("description");
+            newTask.setDescription((String) data.get("description"));
         }
 
         TaskType taskType = TaskType.valueOf((String) data.get("taskType"));
