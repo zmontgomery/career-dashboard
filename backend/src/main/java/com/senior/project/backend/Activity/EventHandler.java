@@ -20,15 +20,28 @@ public class EventHandler {
         this.eventService = eventService;
     }
 
+    /**
+     * Retrieves all events
+     */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
         return ServerResponse.ok().body(this.eventService.all(), Event.class );
     }
 
+    /**
+     * Retrieves the selection of events displayed on the dashboard, paginated
+     * Not implemented completely yet, so this functions the same as /events
+     */
     public Mono<ServerResponse> dashboard(ServerRequest serverRequest) {
-        serverRequest.queryParam("pageNum");
+        serverRequest.queryParam("pageNum");    // not passed to dashboard() yet
         return ServerResponse.ok().body(this.eventService.dashboard(), Event.class );
     }
 
+    /**
+     * Updates an existing event
+     *
+     * @return 200 if successful
+	 * @throws JsonProcessingException when the update data is not properly formatted
+     */
     public Mono<ServerResponse> update(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {
@@ -45,6 +58,12 @@ public class EventHandler {
         });
     } 
 
+    /**
+     * Create new event
+     *
+     * @return 200 if successful
+	 * @throws JsonProcessingException when the data is not properly formatted
+     */
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {
