@@ -143,7 +143,7 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
-        return validateAndGetPath(filePart, IMAGE_TYPES)
+        var uploadMono = validateAndGetPath(filePart, IMAGE_TYPES)
                 .zipWith(validateImageAspectRatio(filePart, 1))
                 .flatMap( zipped -> {
                     var destination = zipped.getT1();
@@ -155,33 +155,38 @@ public class ArtifactService {
                     upload.setType(ArtifactType.PROFILE_PICTURE);
 
                     try {
+                        // Save the file to the specified directory
                         ImageIO.write(image, "png", destination.toFile());
                     } catch (IOException e) {
                         return Mono.error(new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY));
                     }
+                    return Mono.just(upload);
+                });
 
-                    // Save the file to the specified directory
-                    return SecurityUtil.getCurrentUser()
-                            .flatMap((user) -> {
-                                upload.setUserId(user.getId());
 
-                                if (user.getProfilePictureId() != null) {
-                                    return deleteFile(user.getProfilePictureId()).map((delete) -> user);
-                                }
-                                return Mono.just(user);
-                            })
-                            .flatMap((user) -> {
-                                artifactRepository.save(upload);
-                                var updatedArtifact = artifactRepository.findByUniqueIdentifier(upload.getFileLocation());
-                                if (updatedArtifact.isPresent()) {
-                                    var id = updatedArtifact.get().getId();
-                                    userRepository.updateProfilePictureId(user.getId(), id);
-                                    return Mono.just(id);
-                                }
-                                else {
-                                    return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact not found after saving"));
-                                }
-                            });
+        return uploadMono
+                .zipWith(SecurityUtil.getCurrentUser())
+                .flatMap((zipped) -> {
+                    var user = zipped.getT2();
+
+                    zipped.getT1().setUserId(user.getId());
+
+                    if (user.getProfilePictureId() != null) {
+                        return deleteFile(user.getProfilePictureId()).map((delete) -> user).zipWith(Mono.just(zipped.getT1()));
+                    }
+                    return Mono.just(user).zipWith(Mono.just(zipped.getT1()));
+                })
+                .flatMap((zipped) -> {
+                    artifactRepository.save(zipped.getT2());
+                    var updatedArtifact = artifactRepository.findByUniqueIdentifier(zipped.getT2().getFileLocation());
+                    if (updatedArtifact.isPresent()) {
+                        var id = updatedArtifact.get().getId();
+                        userRepository.updateProfilePictureId(zipped.getT1().getId(), id);
+                        return Mono.just(id);
+                    }
+                    else {
+                        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact not found after saving"));
+                    }
                 });
     }
 
@@ -207,20 +212,22 @@ public class ArtifactService {
     }
 
     private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
-        return filePart.content().collectList().publishOn(Schedulers.boundedElastic()).flatMap((content) -> {
-            BufferedImage image = null;
-            try {
-                // get the first one because that is the entire file. I think something was wrong with the way files were done.
-                image = ImageIO.read(content.get(0).asInputStream());
-            } catch (IOException e) {
-                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
-            }
-            var aspectRatio = image.getWidth() / image.getHeight();
-            if (aspectRatio != expectedRatio) {
-                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
-            }
-            return Mono.just(image);
-        });
+        return filePart.content()
+                .collectList()
+                .flatMap((content) -> {
+                    BufferedImage image = null;
+                    try {
+                        // get the first one because that is the entire file. I think something was wrong with the way files were done.
+                        image = ImageIO.read(content.get(0).asInputStream());
+                    } catch (IOException e) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
+                    }
+                    var aspectRatio = image.getWidth() / image.getHeight();
+                    if (aspectRatio != expectedRatio) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
+                    }
+                    return Mono.just(image);
+                });
     }
 
     /**
