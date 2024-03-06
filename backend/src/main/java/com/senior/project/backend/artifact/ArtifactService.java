@@ -6,6 +6,7 @@ import com.senior.project.backend.domain.ArtifactType;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.SecurityUtil;
+import java.util.concurrent.Callable;
 
 import com.senior.project.backend.users.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -26,6 +27,7 @@ import reactor.core.scheduler.Schedulers;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -153,14 +155,15 @@ public class ArtifactService {
                     upload.setFileLocation(destination.toString());
                     upload.setName(filePart.filename());
                     upload.setType(ArtifactType.PROFILE_PICTURE);
-
-                    try {
-                        // Save the file to the specified directory
-                        ImageIO.write(image, "png", destination.toFile());
-                    } catch (IOException e) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY));
-                    }
-                    return Mono.just(upload);
+                    return NonBlockingExecutor.execute(() -> {
+                        try {
+                            // Save the file to the specified directory
+                            ImageIO.write(image, "png", destination.toFile());
+                            return upload;
+                        } catch (IOException e) {
+                            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+                        }
+                    });
                 });
 
 
@@ -212,22 +215,24 @@ public class ArtifactService {
     }
 
     private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
-        return filePart.content()
-                .collectList()
-                .flatMap((content) -> {
-                    BufferedImage image = null;
-                    try {
-                        // get the first one because that is the entire file. I think something was wrong with the way files were done.
-                        image = ImageIO.read(content.get(0).asInputStream());
-                    } catch (IOException e) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
-                    }
-                    var aspectRatio = image.getWidth() / image.getHeight();
-                    if (aspectRatio != expectedRatio) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
-                    }
-                    return Mono.just(image);
-                });
+        return filePart.content().collectList()
+                .flatMap(dataBuffer -> NonBlockingExecutor.execute(() -> {
+                            try (InputStream inputStream = dataBuffer.get(0).asInputStream()) {
+                                return ImageIO.read(inputStream);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .flatMap(image -> {
+                            if (image == null) {
+                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
+                            }
+                            var aspectRatio = image.getWidth() / image.getHeight();
+                            if (aspectRatio != expectedRatio) {
+                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
+                            }
+                            return Mono.just(image);
+                        }));
     }
 
     /**
