@@ -14,7 +14,9 @@ export class EventService {
   ) {
   }
 
-  // Get all data items
+  /**
+   * Gets all events
+   */
   getEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(constructBackendRequest(Endpoints.EVENTS))
       .pipe(map((data: any) => {
@@ -24,6 +26,10 @@ export class EventService {
       }))
   }
 
+  /**
+   * Gets the specific page of events to show on the dashboard
+   * Currently not implemented on the backend so it acts the same as getEvents()
+   */
   getDashboardEvents(pageNum: number): Observable<Event[]> {
     const pageParam = {key: 'pageNum', value: pageNum};
     return this.http.get<Event[]>(constructBackendRequest(Endpoints.DASHBOARD_EVENTS, pageParam))
@@ -33,17 +39,4 @@ export class EventService {
         })
       }))
   }
-
-/*   getGoogleEvents(googleID: number): Observable<Event[]> {
-    return this.http.get<Event[]>('https://www.googleapis.com/calendar/v3/calendars/primary/events')
-      .pipe(map((data: any) => {
-        console.log("google calendar");
-        console.log(data);
-        return data.map((eventData: EventJSON) => {
-          return new Event(eventData)
-        })
-      }))
-  } */
-
-  //TODO: add a get dashboard events call instead
 }

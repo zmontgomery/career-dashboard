@@ -20,6 +20,12 @@ public class MilestoneHandler {
         this.milestoneService = milestoneService;
     }
 
+    /**
+     * Retrieves all milestones
+     * 
+     * @param serverRequest containing query param for whether or not to include the milestone's tasks
+     * @return the list of milestones, with or without tasks
+     */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
         var taskParam = serverRequest.queryParam("tasks");
         if (taskParam.isPresent() && taskParam.get().equals("false")) {
@@ -29,6 +35,12 @@ public class MilestoneHandler {
         return ServerResponse.ok().body(this.milestoneService.allWithTasks(), Milestone.class);
     }
 
+    /**
+     * Updates an existing milestone
+     *
+     * @return 200 if successful
+	 * @throws JsonProcessingException when the update data is not properly formatted
+     */
     public Mono<ServerResponse> update(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {
@@ -45,6 +57,12 @@ public class MilestoneHandler {
         });
     }
 
+    /**
+     * Create new milestone
+     *
+     * @return 200 if successful
+	 * @throws JsonProcessingException when the data is not properly formatted
+     */
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {

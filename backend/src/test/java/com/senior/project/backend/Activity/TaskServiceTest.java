@@ -20,6 +20,7 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +33,9 @@ public class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private EventRepository eventRepository;
 
     @Test
     public void testAll() {
@@ -89,21 +93,58 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testUpdateMinimum() {
-        String updateData = "{\"id\":1," +
-        "\"taskType\":\"artifact\"," +
-        "\"artifactName\":\"Meeting Notes!\"," +
+    public void testUpdateComment() {
+        String updateData = "{\"id\":5," +
+        "\"taskType\":\"COMMENT\"," +
+        "\"description\":\"new description\"," +
+        "\"instructions\":\"Meeting Notes!\"," +
         "\"isRequired\":\"true\"}";
 
-        Task task1 = Constants.task1;
+        // don't question it
+        Task task1 = Constants.task5;
         task1.setArtifactName("Meeting Notes!");
+        task1.setEvent(Constants.e2);
         long taskID = task1.getId().longValue();
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
             jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
-            when(taskRepository.findById(taskID)).thenReturn(Constants.task1);
+            when(taskRepository.findById(taskID)).thenReturn(task1);
+            when(taskRepository.save(Mockito.any(Task.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+            Task result = taskService.updateTask(taskID, jsonMap).block();
+            assertEquals(task1.getName(), result.getName());
+            assertEquals(task1.getTaskType(), result.getTaskType());
+            assertEquals("new description", result.getDescription());
+            assertNull(result.getArtifactName());
+            assertNull(result.getEvent());
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testUpdateArtifact() {
+        String updateData = "{\"id\":1," +
+        "\"taskType\":\"ARTIFACT\"," +
+        "\"artifactName\":\"Meeting Notes\"," +
+        "\"instructions\":\"instructions\"," +
+        "\"isRequired\":\"true\"}";
+
+        Task task1 = Constants.task1;
+        task1.setEvent(Constants.e2);
+        long taskID = task1.getId().longValue();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap;
+        try {
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            when(taskRepository.findById(taskID)).thenReturn(task1);
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
@@ -111,6 +152,143 @@ public class TaskServiceTest {
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals(task1.getArtifactName(), result.getArtifactName());
+            assertNull(result.getEvent());
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testUpdateEvent() {
+        String updateData = "{\"id\":4," +
+        "\"taskType\":\"EVENT\"," +
+        "\"event\":\"2\"," +
+        "\"instructions\":\"instructions\"," +
+        "\"isRequired\":\"true\"}";
+
+        Task task1 = Constants.task4;
+        task1.setArtifactName("whatever");
+        task1.setEvent(null);
+        long taskID = task1.getId().longValue();
+        Optional<Event> eventOption = Optional.of(Constants.e2);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap;
+        try {
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            when(taskRepository.findById(taskID)).thenReturn(task1);
+            when(eventRepository.findById(Constants.e2.getId())).thenReturn(eventOption);
+            when(taskRepository.save(Mockito.any(Task.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+            Task result = taskService.updateTask(taskID, jsonMap).block();
+            assertEquals(task1.getName(), result.getName());
+            assertEquals(task1.getTaskType(), result.getTaskType());
+            assertEquals(Constants.e2, result.getEvent());
+            assertNull(result.getArtifactName());
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCreateComment() {
+        String updateData = "{\"name\":\"Create linkedin profile\"," +
+        "\"taskType\":\"COMMENT\"," +
+        "\"yearLevel\":\"Freshman\"," +
+        "\"description\":\"new description\"," +
+        "\"instructions\":\"Meeting Notes\"," +
+        "\"isRequired\":\"true\"}";
+
+        // don't question it
+        Task task1 = Constants.task5;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap;
+        try {
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            when(taskRepository.save(Mockito.any(Task.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+            Task result = taskService.createTask(jsonMap).block();
+            assertEquals(task1.getName(), result.getName());
+            assertEquals(task1.getYearLevel(), result.getYearLevel());
+            assertEquals(task1.getTaskType(), result.getTaskType());
+            assertEquals("new description", result.getDescription());
+            assertNull(result.getArtifactName());
+            assertNull(result.getEvent());
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCreateArtifact() {
+        String updateData = "{\"name\":\"Major and Class Schedule\"," +
+        "\"taskType\":\"ARTIFACT\"," +
+        "\"yearLevel\":\"Freshman\"," +
+        "\"artifactName\":\"Meeting Notes\"," +
+        "\"instructions\":\"instructions\"," +
+        "\"isRequired\":\"true\"}";
+
+        // don't question it
+        Task task1 = Constants.task1;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap;
+        try {
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            when(taskRepository.save(Mockito.any(Task.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+            Task result = taskService.createTask(jsonMap).block();
+            assertEquals(task1.getName(), result.getName());
+            assertEquals(task1.getYearLevel(), result.getYearLevel());
+            assertEquals(task1.getTaskType(), result.getTaskType());
+            assertEquals(task1.getArtifactName(), result.getArtifactName());
+            assertNull(result.getEvent());
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCreateEvent() {
+        String updateData = "{\"name\":\"Attend Job Fair\"," +
+        "\"taskType\":\"EVENT\"," +
+        "\"yearLevel\":\"Freshman\"," +
+        "\"event\":\"2\"," +
+        "\"instructions\":\"instructions\"," +
+        "\"isRequired\":\"true\"}";
+
+        Task task1 = Constants.task4;
+        Optional<Event> eventOption = Optional.of(Constants.e2);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap;
+        try {
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            when(eventRepository.findById(Constants.e2.getId())).thenReturn(eventOption);
+            when(taskRepository.save(Mockito.any(Task.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+            Task result = taskService.createTask(jsonMap).block();
+            assertEquals(task1.getName(), result.getName());
+            assertEquals(task1.getTaskType(), result.getTaskType());
+            assertEquals(Constants.e2, result.getEvent());
+            assertNull(result.getArtifactName());
 
         } catch (JsonMappingException e) {
             e.printStackTrace();
