@@ -24,6 +24,7 @@ export const userJSON: UserJSON = {
   canEmail: false,
   canText: false,
   role: Role.Admin,
+  linkedin: 'linkedin'
 }
 
 describe('AuthService', () => {
@@ -47,6 +48,7 @@ describe('AuthService', () => {
     canEmail: false,
     canText: false,
     role: Role.Admin,
+    linkedin: 'linkedin'
   }
 
   let response = new LoginResponse({token: 'id', user: userJSON});

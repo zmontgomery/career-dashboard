@@ -24,6 +24,7 @@ describe('NavbarComponent', () => {
     canEmail: true,
     canText: true,
     role: Role.Student,
+    linkedin: "string",
   }
   let authSvcSpy: SpyObj<AuthService> = jasmine.createSpyObj('AuthService', [],
     {user$: userSubject.pipe(map(userJson => new User(userJson)))});

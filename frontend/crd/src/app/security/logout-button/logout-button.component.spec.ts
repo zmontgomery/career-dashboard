@@ -22,6 +22,7 @@ describe('LogoutButtonComponent', () => {
     canEmail: false,
     canText: false,
     role: Role.Admin,
+    linkedin: 'linkedin'
   }
 
   function setup(user: User | null) {
