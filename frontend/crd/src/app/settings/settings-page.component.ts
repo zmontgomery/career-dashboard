@@ -21,14 +21,20 @@ export class SettingsPageComponent {
     private authService: AuthService,
     private artifactService: ArtifactService,
   ) {
+    // TODO replace with userService
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (LangUtils.exists(user)) {
-        this.artifactService.getProfilePicture()
-          .subscribe((url) => {
-            this.profileURL = url;
-          });
+        this.updateProfilePicture();
       }
     });
+  }
+
+  // TODO replace with userService
+  private updateProfilePicture() {
+    this.artifactService.getProfilePicture()
+      .subscribe((url) => {
+        this.profileURL = url;
+      });
   }
 
   openProfilePicture() {
@@ -45,7 +51,9 @@ export class SettingsPageComponent {
     const modalDialog = this.matDialog.open(ProfileImageModalComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
-      // TODO update image?
+      // TODO replace with userService updateProfilePicture rather than reloading window
+      // this.updateProfilePicture();
+      location.reload();
     })
   }
 }

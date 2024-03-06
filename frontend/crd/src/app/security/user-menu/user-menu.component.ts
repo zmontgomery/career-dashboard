@@ -21,6 +21,7 @@ export class UserMenuComponent implements OnInit {
     private readonly router: Router,
     private readonly artifactService: ArtifactService,
     ) {
+    // TODO replace with userService
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
