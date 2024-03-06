@@ -15,6 +15,7 @@ export class EventsComponent implements OnInit{
   singleSlideOffset = false;
   noWrap = false;
   eventPage: number = 0;
+  defaultLogoURL = '/assets/images/Oswego_logo_horizontal_black.png';
 
   constructor(
     private eventService: EventService,
@@ -30,7 +31,7 @@ export class EventsComponent implements OnInit{
       this.events = events;
 
       this.slides = events.map((event: Event) => {
-        let imgUrl = '/assets/images/Oswego_logo_horizontal_black.png'  //placeholder
+        let imgUrl = this.defaultLogoURL;  //placeholder
         if ( event.imageId != null ) {
           imgUrl = this.artifactService.getEventImageUrl(event.imageId)
         }
