@@ -55,6 +55,14 @@ public class EmailService {
         this.emailSender = javaMailSender();
     }
 
+    /**
+     * Sends a basic email containing the events of a given week
+     * 
+     * @param user who to send the email to
+     * @param date the start date of the week
+     * @param events the events to include in the email
+	 * @throws MessagingException 
+     */
     public void sendWeeklyEventUpdates(User user, LocalDate date, List<Event> events) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
@@ -78,6 +86,14 @@ public class EmailService {
         }
     }
 
+    /**
+     * Basic function to send email
+     * The sender is from spring.mail.username
+     * 
+     * @param to email recipient
+     * @param subject subject line
+     * @param text string containing the message body
+     */
     public void sendSimpleMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(username);
@@ -87,6 +103,12 @@ public class EmailService {
         emailSender.send(message);
     }
 
+    /**
+     * Create the emailSender object after the EmailService is created
+     * The values such as host and port are from spring.mail.xxx
+     * 
+     * @return the mailSender object
+     */
     private JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);

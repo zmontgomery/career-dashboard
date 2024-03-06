@@ -46,6 +46,9 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
+  /**
+   * The student is able to upload their resume directly from the portfolio
+   */
   private updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
       this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
@@ -55,6 +58,9 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
+  /**
+   * Opens the file select modal
+   */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       this.dialog.open(SubmissionModalComponent, {
