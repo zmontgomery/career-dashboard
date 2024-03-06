@@ -44,6 +44,7 @@ public class User implements UserDetails {
 	private String preferredName;
 	private boolean canEmail;
 	private boolean canText;
+	private String linkedin;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
