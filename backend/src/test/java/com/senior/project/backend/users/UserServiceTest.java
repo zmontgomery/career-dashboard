@@ -130,4 +130,15 @@ public class UserServiceTest {
         verify(userRepository, times(2)).save(any());
         assertFalse(Constants.user2.hasSuperAdminPrivileges());
     }
+
+    @Test
+    public void testCreateOrUpdateUser() {
+        when(userRepository.saveAndFlush(any())).thenReturn(Constants.user1);
+        Mono<User> res = userService.createOrUpdateUser(Constants.user2);
+        
+        StepVerifier.create(res)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
+    }
 }
