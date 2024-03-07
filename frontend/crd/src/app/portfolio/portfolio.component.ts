@@ -47,7 +47,7 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
-  private updateArtifacts() {
+  updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
       this.artifactId = submission.artifactId;
       if (submission.artifactId !== this.NO_FILE) {

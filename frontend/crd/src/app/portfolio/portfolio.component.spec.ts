@@ -11,7 +11,7 @@ import {of} from "rxjs";
 import {Artifact} from "../../domain/Artifact";
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
 import { task } from '../util/task.service.spec';
-import { submission1 } from '../submissions/submission.service.spec';
+import { submission1, submission1JSON } from '../submissions/submission.service.spec';
 import { SubmissionService } from '../submissions/submission.service';
 import { TaskService } from '../util/task.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -19,14 +19,14 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { AuthService } from '../security/auth.service';
 import { userJSON } from '../security/auth.service.spec';
 import { User } from '../security/domain/user';
+import { Submission } from 'src/domain/Submission';
+import { DeleteResumeConfirmationDialogComponent } from './delete-resume-confirmation-dialog/delete-resume-confirmation-dialog.component';
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
   let fixture: ComponentFixture<PortfolioComponent>;
   let matDialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed'])
-  matDialogRef.afterClosed.and.returnValue(of())
   let matDialog = jasmine.createSpyObj('MatDialog', ['open']);
-  matDialog.open.and.returnValue(matDialogRef)
   let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getArtifactFile']);
   const artifact1JSON = {
     fileName: "string",
@@ -36,14 +36,17 @@ describe('PortfolioComponent', () => {
   }
   const artifact1 = new Artifact(artifact1JSON);
   const mockPdfBlob = new Blob(['fake PDF content'], { type: 'application/pdf' });
-  artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
   let submissionService = jasmine.createSpyObj('SubmissionService', ['getLatestSubmission']);
-  submissionService.getLatestSubmission.and.returnValue(of(submission1));
   let taskService = jasmine.createSpyObj('TaskService', ['findById']);
   let authService = jasmine.createSpyObj('AuthService', ['toString'], {user$:of(new User(userJSON))});
-  taskService.findById.and.returnValue(of(task));
 
   beforeEach(() => {
+    submissionService.getLatestSubmission.and.returnValue(of({...submission1JSON, artifactId: 2}));
+    taskService.findById.and.returnValue(of(task));
+    matDialog.open.and.returnValue(matDialogRef);
+    matDialogRef.afterClosed.and.returnValue(of());
+    artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
+
     TestBed.configureTestingModule({
       declarations: [
         PortfolioComponent,
@@ -86,4 +89,48 @@ describe('PortfolioComponent', () => {
     expect(component.showUploadButton).toBeFalse();
     expect(component.pdfURL).toBeTruthy();
   }));
+
+  it('update Artifacts id is 1', fakeAsync(() => {   
+    submissionService.getLatestSubmission
+      .and.returnValue(of(new Submission({...submission1JSON, artifactId: 1})));
+
+    // @ts-ignore
+    component.updateArtifacts();
+    tick(1000);
+    expect(component.showUploadButton).toBeTrue();
+    expect(component.pdfURL).toBeFalsy();
+  }));
+
+  it('should delete resume', fakeAsync(() => {
+    spyOn(component, 'updateArtifacts');
+    matDialogRef.afterClosed.and.returnValue(of(true));
+    
+    component.deleteResume();
+    tick(1000);
+    expect(matDialog.open).toHaveBeenCalledWith(DeleteResumeConfirmationDialogComponent,
+      {data: {artifactId: 2} }
+    )
+    expect(component.updateArtifacts).toHaveBeenCalled();
+  }));
+
+  it('should delete resume but not call update artifacts', fakeAsync(() => {
+    spyOn(component, 'updateArtifacts');
+    matDialogRef.afterClosed.and.returnValue(of(false));
+    
+    component.deleteResume();
+    tick(1000);
+    expect(matDialog.open).toHaveBeenCalledWith(DeleteResumeConfirmationDialogComponent,
+      {data: {artifactId: 2} }
+    )
+    expect(component.updateArtifacts).not.toHaveBeenCalled();
+  }));
+
+  it('can delete', () => {
+    component.artifactId = 0;
+    expect(component.canDelete()).toBeFalse();
+    component.artifactId = 1;
+    expect(component.canDelete()).toBeFalse();
+    component.artifactId = 2;
+    expect(component.canDelete()).toBeTrue();
+  });
 });
