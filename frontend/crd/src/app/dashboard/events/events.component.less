@@ -1,3 +1,5 @@
+@import "../../../common";
+
 mat-card-header {
   border-bottom: 1px solid gray;
   padding-bottom: 5px;
@@ -5,4 +7,32 @@ mat-card-header {
 
 mat-card-content {
   padding-top: 5px
+}
+
+.event-image {
+  display: block;
+  width: 100%;
+  background-color: darkslategrey;
+}
+
+.carousel-caption {
+  color: black;
+  position: initial;
+}
+
+:host ::ng-deep .carousel-control {
+  opacity: 1;
+  height: 60px;
+  width: 60px;
+  border-radius: 50px;
+  margin-top: 160px;
+
+  background-color: @oswego-green;
+
+
+  &.carousel-control-next {
+  }
+
+  &.carousel-control-prev {
+  }
 }

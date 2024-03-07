@@ -40,6 +40,7 @@ public class Constants {
         e1.setRecurring(true);
         e1.setEventLink("Test Link");
         e1.setButtonLabel("More Info");
+        e1.setImageId(1L);
 
         e2 = new Event();
         e2.setId(1L);

@@ -34,7 +34,8 @@ describe('TaskEditModalComponent', () => {
     organizer: "organizer",
     location: "location",
     eventLink: "sample",
-    buttonLabel: "sample"
+    buttonLabel: "sample",
+    imageId: 1,
   }))));
   let dialogMock = {
     close: () => { }
@@ -59,8 +60,8 @@ describe('TaskEditModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [TaskEditModalComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
         MatDialogModule,
         MatFormFieldModule,
         MatCheckboxModule,
@@ -96,7 +97,8 @@ describe('TaskEditModalComponent', () => {
       organizer: "organizer",
       location: "location",
       eventLink: "sample",
-      buttonLabel: "sample"
+      buttonLabel: "sample",
+      imageId: 1,
     }));
 
     expect(component.eventList).toEqual(testEvents);
@@ -118,7 +120,7 @@ describe('TaskEditModalComponent', () => {
     const sampleForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: ['test artifact'],
       event: [null]
     });
@@ -135,7 +137,7 @@ describe('TaskEditModalComponent', () => {
     const sampleForm = formBuilder.group({
       name: [null, Validators.required],
       description: [null],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: [null],
       event: [null]
     });
@@ -162,7 +164,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: ['test artifact'],
       event: [null]
     });
@@ -188,7 +190,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: [null],
       event: [null]
     });
@@ -214,7 +216,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['event'], 
+      taskType: ['event'],
       artifactName: [null],
       event: [null]
     });
@@ -231,7 +233,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: ['test artifact'],
       event: [null]
     });
@@ -248,7 +250,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['event'], 
+      taskType: ['event'],
       artifactName: [null],
       event: [1]
     });
@@ -265,7 +267,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: [null],
       description: ['description'],
-      taskType: ['event'], 
+      taskType: ['event'],
       artifactName: [null],
       event: [null]
     });
@@ -283,7 +285,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['artifact'], 
+      taskType: ['artifact'],
       artifactName: [null],
       event: [null]
     });
@@ -300,7 +302,7 @@ describe('TaskEditModalComponent', () => {
     component.taskForm = formBuilder.group({
       name: ['task name'],
       description: ['description'],
-      taskType: ['event'], 
+      taskType: ['event'],
       artifactName: [null],
       event: [null]
     });

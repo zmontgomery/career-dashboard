@@ -6,6 +6,7 @@ import com.senior.project.backend.domain.TaskType;
 import com.senior.project.backend.domain.YearLevel;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +59,8 @@ public class TaskService {
             existingTask.setArtifactName((String) updates.get("artifactName"));
         }
         if (updates.containsKey("event") && existingTask.getTaskType().equals("event")) {
-            Event assignedEvent = eventRepository.findById(Integer.parseInt((String) updates.get("event")));
-            existingTask.setEvent(assignedEvent);
+            Optional<Event> assignedEvent = eventRepository.findById(Long.valueOf(Integer.parseInt((String) updates.get("event"))));
+            assignedEvent.ifPresent(existingTask::setEvent);
         }
 
         return Mono.just(taskRepository.save(existingTask));
@@ -88,8 +89,8 @@ public class TaskService {
         }
         else if (data.get("taskType").equals("event")) {
             newTask.setTaskType(TaskType.valueOf((String) data.get("taskType")));
-            Event assignedEvent = eventRepository.findById(Integer.parseInt((String) data.get("event")));
-            newTask.setEvent(assignedEvent);
+            Optional<Event> assignedEvent = eventRepository.findById((long) Integer.parseInt((String) data.get("event")));
+            assignedEvent.ifPresent(newTask::setEvent);
             newTask.setArtifactName(null);
         }
 

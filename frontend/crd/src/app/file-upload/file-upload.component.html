@@ -2,8 +2,8 @@
   <ng-container *ngIf="file == null; else fileDetails">
     <button class="file-upload-button" mat-button (click)="fileInput.click()">
       <mat-icon>upload_file</mat-icon>
-      <input #fileInput type="file" accept="application/pdf,application/docx" (change)="onChange($event)" style="display:none;"/>
-    </button>  
+      <input #fileInput type="file" accept=".pdf, .docx" (change)="onChange($event)" style="display:none;"/>
+    </button>
   </ng-container>
   <ng-template #fileDetails>
     <div class="file-details-row file-details-row-{{status}}">
@@ -42,7 +42,7 @@
     </ng-container>
   </ng-template>
 
-</div> 
+</div>
 
 
 

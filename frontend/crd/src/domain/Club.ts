@@ -9,8 +9,8 @@ export class Club{
     constructor(json: ClubJSON){
         this.id = json.id;
         this.clubName = json.clubName;
-        this.startDate = json.startDate;
-        this.endDate = json.endDate;
+        this.startDate = new Date(json.startDate);
+        this.endDate = new Date(json.endDate);
     }
 
     id: string;

@@ -28,8 +28,8 @@ describe('EventEditModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EventEditModalComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
@@ -67,11 +67,12 @@ describe('EventEditModalComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     });
     component.createForm();
 
     const sampleForm = formBuilder.group({
-      name: ["name"],   
+      name: ["name"],
       date: [new Date(testDate)], //how it's done when building events
       description: ["description"],
       location: ["location"],
@@ -123,6 +124,7 @@ describe('EventEditModalComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     });
 
     const testData = {
@@ -164,6 +166,7 @@ describe('EventEditModalComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     });
 
     const testData = {
@@ -178,7 +181,7 @@ describe('EventEditModalComponent', () => {
     }
 
     component.eventForm = formBuilder.group({
-      name: ["name"],   
+      name: ["name"],
       date: [new Date(testDate)], //how it's done when building events
       description: ["description"],
       location: ["location"],
@@ -211,10 +214,11 @@ describe('EventEditModalComponent', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     });
 
     component.eventForm = formBuilder.group({
-      name: ["name"],   
+      name: ["name"],
       date: [new Date(testDate)], //how it's done when building events
       description: ["description"],
       location: ["location"],

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {EventService} from "./event.service";
 import {of} from "rxjs";
-import {Event} from "../../../domain/Event";
+import {Event, EventJSON} from "../../../domain/Event";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 
 describe('EventService', () => {
@@ -23,7 +23,7 @@ describe('EventService', () => {
   });
 
   it('events should return list of events', (done) => {
-    const eventJSON = {
+    const eventJSON: EventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
@@ -33,8 +33,9 @@ describe('EventService', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     }
-    
+
     const events = Array(new Event(eventJSON));
     service.getEvents().subscribe(result => {
       expect(result).toEqual(events);
@@ -46,7 +47,7 @@ describe('EventService', () => {
   });
 
   it('dashboard_events should return list of events', (done) => {
-    const eventJSON = {
+    const eventJSON: EventJSON = {
       name: "name",
       description: "description",
       date: new Date().toDateString(),
@@ -56,10 +57,11 @@ describe('EventService', () => {
       location: "location",
       eventLink: "sample link",
       buttonLabel: "test",
+      imageId: 1,
     }
-    
-    const events = Array(new Event(eventJSON)); 
-    
+
+    const events = Array(new Event(eventJSON));
+
     service.getDashboardEvents(1).subscribe(result => {
       expect(result).toEqual(events);
       done();
