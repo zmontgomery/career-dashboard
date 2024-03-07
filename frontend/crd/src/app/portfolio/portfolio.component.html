@@ -79,8 +79,8 @@
             <p>{{project.name}}</p>
             <ul>
               <li>{{project.description}}</li>
-              <li>Start Date: {{project.startDate}}</li>
-              <li>End Date: {{project.endDate}}</li>
+              <li>Start Date: {{project.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>End Date: {{project.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
             </ul>
           </div>
         </div>
@@ -96,8 +96,8 @@
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate}}</li>
-              <li>End Date: {{job.endDate}}</li>
+              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
             </ul>
             </div>
           </div>
@@ -114,8 +114,8 @@
             <ul>
               <li>{{job.location}}</li>
               <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate}}</li>
-              <li>End Date: {{job.endDate}}</li>
+              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
+              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
             </ul>
             </div>
           </div>
