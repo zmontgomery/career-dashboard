@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.submissions.SubmissionService;
 
 import reactor.core.publisher.Mono;
@@ -78,7 +79,9 @@ public class ArtifactHandler {
             .flatMap((id) -> {
                 if (id == 1) return Mono.empty();
                 return submissionService.findByArtifact(id)
-                    .flatMap(submission -> submissionService.scrubArtifact(submission))
+                    .switchIfEmpty(Mono.just(Submission.builder().id(0).build()))
+                    .doOnNext(s -> System.out.println(s))
+                    .flatMap(submission -> submission.getId() == 0 ? Mono.just(submission) : submissionService.scrubArtifact(submission))
                     .flatMap(submission -> artifactService.deleteFile(id))
                     .flatMap(response -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
             })

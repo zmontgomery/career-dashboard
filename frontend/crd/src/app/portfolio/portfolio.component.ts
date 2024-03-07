@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {FileUploadComponent} from "../file-upload/file-upload.component";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import { AuthService } from '../security/auth.service';
 import { LangUtils } from '../util/lang-utils';
 import { User } from '../security/domain/user';
-import {HttpClient} from "@angular/common/http";
 import {ArtifactService} from "../file-upload/artifact.service";
 import { TaskService } from '../util/task.service';
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';

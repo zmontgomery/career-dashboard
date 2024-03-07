@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Generated
 public class Submission {
 	@Id
