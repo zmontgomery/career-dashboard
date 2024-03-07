@@ -46,6 +46,10 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
+  /**
+   * Grabs the Student's artifacts to be displayed.
+   * Currently just grabs the resume
+   */
   private updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
       if (submission.hasFile()) {
@@ -57,6 +61,9 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
+  /**
+   * Opens the Submission Modal
+   */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       this.dialog.open(SubmissionModalComponent, {

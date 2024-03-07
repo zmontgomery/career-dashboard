@@ -36,6 +36,9 @@ export class EventEditModalComponent implements OnInit {
     this.createForm();
   }
 
+  /**
+   * Creates the FormGroup either using the provided event data or blank
+   */
   createForm() {
     if (this.currentEvent) {
       this.eventForm = this.formBuilder.group({
@@ -69,12 +72,17 @@ export class EventEditModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  /**
+   * Takes event data from the form and sends the POST request
+   * Either update event or create event, depending on whether there is a currentEvent
+   */
   saveEvent() {
     if (this.currentEvent) {
       const updateData: any = {};
 
       updateData.id = this.currentEvent.eventID as unknown as number;
 
+      // these are required arguments, also assumed to already exist on the event
       updateData.name = this.eventForm.get('name')!.value;
       updateData.date = this.eventForm.get('date')!.value;
       updateData.location = this.eventForm.get('location')!.value;
@@ -94,7 +102,7 @@ export class EventEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.EDIT_EVENT);
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong");
+          window.alert("Something went wrong saving the event");
           return;
         }
         window.alert("Event updated");
@@ -105,17 +113,17 @@ export class EventEditModalComponent implements OnInit {
       const newData: any = {};
 
       if (!this.eventForm.get('name')?.value) {
-        window.alert("Please add an event name"); // probably change to a better error message
+        window.alert("Please add an event name");
         return;
       }
       if (!this.eventForm.get('date')?.value) {
-        window.alert("Please set an event date"); // probably change to a better error message
+        window.alert("Please set an event date");
         return;
       }
 
       if (!this.eventForm.get('location')?.value ||
           !this.eventForm.get('organizer')?.value) {
-        window.alert("Please fill out all event information"); // probably change to a better error message
+        window.alert("Please fill out all event information");
         return;
       }
 
@@ -139,7 +147,7 @@ export class EventEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.CREATE_EVENT);
       this.http.post(url, newData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong");
+          window.alert("Something went wrong creating the event");
           return;
         }
         window.alert("Event created");

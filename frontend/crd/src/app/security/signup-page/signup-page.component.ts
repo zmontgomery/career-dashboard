@@ -102,7 +102,6 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     this.user.preferredName = this.preferredName === '' ? this.user.firstName : this.preferredName;
     this.user.canEmail = this.canEmail;
     this.user.canText = this.canText;
-    console.log(this.phoneNumber);
     this.authService.signup(this.user);
   }
 
