@@ -49,11 +49,14 @@ export class TaskEditModalComponent implements OnInit {
   ngOnInit() { 
     this.eventService.getEvents().subscribe(events => {
       this.eventList = events;
-      this.dataLoaded = true;
+      this.dataLoaded = true; // prevents creating the form until we have the events
       this.createForm();
     })
   }
 
+  /**
+   * Creates the FormGroup using the provided task data or left blank
+   */
   createForm() {
     if (this.currentTask) {
       this.taskForm = this.formBuilder.group({
@@ -69,18 +72,24 @@ export class TaskEditModalComponent implements OnInit {
       this.taskForm = this.formBuilder.group({
         name: [null, Validators.required],
         description: [null],
-        taskType: ['artifact'], 
+        taskType: ['artifact'], // default type 
         artifactName: [null],
         event: [null]
       });
     }
-
   }
 
+  /**
+   * Used to determine whether to display the artifact name textbox or event selection
+   */
   getTaskType(): string {
     return this.taskForm.get('taskType')?.value || 'artifact';
   }
 
+  /**
+   * Takes task data from the form and sends the POST request
+   * Either update task or create task, depending on whether there is a currentTask
+   */
   saveTask() {
     if (this.currentTask) {
       const updateData: any = {};
@@ -90,7 +99,7 @@ export class TaskEditModalComponent implements OnInit {
         updateData.description = this.taskForm.get('description')!.value;
       }
 
-      //verify data
+      // verify that task type specific fields are filled in
       if (this.taskForm.get('taskType')!.value == 'artifact' && (
             !this.taskForm.get('artifactName')?.value ||
             this.taskForm.get('artifactName')?.value.length == 0)) {
@@ -104,6 +113,7 @@ export class TaskEditModalComponent implements OnInit {
         return;
       }
 
+      // only include the task type specific fields
       if (this.taskForm.get('taskType')!.value == 'artifact') {
         updateData.taskType = this.taskForm.get('taskType')!.value;
         updateData.artifactName = this.taskForm.get('artifactName')!.value;
@@ -116,7 +126,7 @@ export class TaskEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong");
+          window.alert("Something went wrong editing task");
           return;
         }
         window.alert("Task saved");
@@ -127,7 +137,7 @@ export class TaskEditModalComponent implements OnInit {
       const newData: any = {};
 
       if (!this.taskForm.get('name')?.value) {
-        window.alert("Please add a task name"); // probably change to a better error message
+        window.alert("Please add a task name");
         return;
       }
 
@@ -138,7 +148,7 @@ export class TaskEditModalComponent implements OnInit {
         newData.description = this.taskForm.get('description')!.value;
       }
 
-      //verify data
+      // verify that task type specific fields are filled in
       if (this.taskForm.get('taskType')!.value == 'artifact' && (
             !this.taskForm.get('artifactName')?.value ||
             this.taskForm.get('artifactName')?.value.length == 0)) {
@@ -152,6 +162,7 @@ export class TaskEditModalComponent implements OnInit {
         return;
       }
 
+      // only include the task type specific fields
       if (this.taskForm.get('taskType')!.value == 'artifact') {
         newData.taskType = this.taskForm.get('taskType')!.value;
         newData.artifactName = this.taskForm.get('artifactName')!.value;
@@ -164,7 +175,7 @@ export class TaskEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.CREATE_TASK);
       this.http.post(url, newData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong");
+          window.alert("Something went wrong creating task");
           return;
         }
         window.alert("Task created");

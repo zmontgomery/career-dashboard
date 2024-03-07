@@ -30,6 +30,9 @@ export class EventMainPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the edit modal and sends it the event object
+   */
   openEventEditModal(event: Event | null) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -44,11 +47,13 @@ export class EventMainPageComponent implements OnInit {
     const modalDialog = this.matDialog.open(EventEditModalComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
-      //TODO: successful save popup?
-      this.ngOnInit();
+      this.ngOnInit();  // refresh to show new event
     })
   }
 
+  /**
+   * Opens the image edit modal and sends it the event object
+   */
   openEventImageModal(event: Event) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -71,6 +76,10 @@ export class EventMainPageComponent implements OnInit {
 
   protected readonly Endpoints = Endpoints;
 
+  /**
+   * Gets the url to use in the html
+   * References the artifact service for the file logic
+   */
   eventImageUrl(imageId: number): string {
     return  this.artifactService.getEventImageUrl(imageId)
   }
