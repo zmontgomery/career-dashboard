@@ -128,12 +128,8 @@ public class UserServiceTest {
 
         assertFalse(Constants.user1.hasSuperAdminPrivileges());
         verify(userRepository, times(2)).save(any());
-<<<<<<< HEAD
-        assertFalse(Constants.user2.isSuperAdmin());
-    }
-=======
         assertFalse(Constants.user2.hasSuperAdminPrivileges());
->>>>>>> main
+    }
 
     @Test
     public void testCreateOrUpdateUser() {
