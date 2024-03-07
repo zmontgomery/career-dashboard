@@ -24,6 +24,8 @@ import com.senior.project.backend.security.AuthService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+
 @ExtendWith(MockitoExtension.class)
 public class SubmissionHandlerTest {
 
@@ -119,5 +121,17 @@ public class SubmissionHandlerTest {
             .getResponseBody();
         
         assertEquals(result, Constants.submission2);
+    }
+
+    @Test
+    public void testLatestSubmissionWith404() {
+        when(submissionService.getSubmissions(any(), eq(1))).thenReturn(Flux.fromIterable(new ArrayList<Submission>()));
+        when(authService.currentUser()).thenReturn(Mono.just(Constants.user1));
+
+        webTestClient.get()
+            .uri("/test/1")
+            .exchange()
+            .expectStatus()
+            .isNoContent();
     }
 }

@@ -60,7 +60,7 @@ public abstract class TestUtil {
         }
     }
 
-    private static String generateToken(boolean expired, KeyPair pair, String kid) {
+    private static String generateToken(boolean expired, KeyPair pair, String kid, String name) {
         JsonWebSignature jws = new JsonWebSignature();
 
         int expTime = expired ? -10 : 60;
@@ -72,6 +72,7 @@ public abstract class TestUtil {
         claims.setClaim("iat", System.currentTimeMillis() / 1000);
         claims.setClaim("nbf", System.currentTimeMillis() / 1000);
         claims.setClaim("email", "success@winning.com");
+        if (name != null) claims.setClaim("name", name);
         claims.setAudience("client_id");
 
         jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);  
@@ -88,14 +89,18 @@ public abstract class TestUtil {
     }
 
     public static String generateValidToken(KeyPair pair) {
-        return generateToken(false, pair, "1");
+        return generateToken(false, pair, "1", "me");
+    }
+
+    public static String generateTokenWithNoName(KeyPair pair) {
+        return generateToken(false, pair, null, null);
     }
 
     public static String generateExpiredToken(KeyPair pair) {
-        return generateToken(true, pair, "1");
+        return generateToken(true, pair, "1", "me");
     }
 
     public static String generateTokenWithKID(KeyPair pair, String kid) {
-        return generateToken(false, pair, kid);
+        return generateToken(false, pair, kid, "me");
     }
 }

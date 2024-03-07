@@ -11,7 +11,7 @@ import {of} from "rxjs";
 import {Artifact} from "../../domain/Artifact";
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
 import { task } from '../util/task.service.spec';
-import { submission1 } from '../submissions/submission.service.spec';
+import { submission1, submission2 } from '../submissions/submission.service.spec';
 import { SubmissionService } from '../submissions/submission.service';
 import { TaskService } from '../util/task.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -24,11 +24,15 @@ describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
   let fixture: ComponentFixture<PortfolioComponent>;
   let matDialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed'])
-  matDialogRef.afterClosed.and.returnValue(of())
   let matDialog = jasmine.createSpyObj('MatDialog', ['open']);
-  matDialog.open.and.returnValue(matDialogRef)
   let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getArtifactFile']);
   const artifact1JSON = {
+    fileName: "string",
+    id: 2,
+    submissionDate: new Date(),
+    submission: 1,
+  }
+  const artifact2JSON = {
     fileName: "string",
     id: 1,
     submissionDate: new Date(),
@@ -36,14 +40,16 @@ describe('PortfolioComponent', () => {
   }
   const artifact1 = new Artifact(artifact1JSON);
   const mockPdfBlob = new Blob(['fake PDF content'], { type: 'application/pdf' });
-  artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
   let submissionService = jasmine.createSpyObj('SubmissionService', ['getLatestSubmission']);
-  submissionService.getLatestSubmission.and.returnValue(of(submission1));
   let taskService = jasmine.createSpyObj('TaskService', ['findById']);
   let authService = jasmine.createSpyObj('AuthService', ['toString'], {user$:of(new User(userJSON))});
-  taskService.findById.and.returnValue(of(task));
 
   beforeEach(() => {
+    matDialogRef.afterClosed.and.returnValue(of());
+    matDialog.open.and.returnValue(matDialogRef);
+    artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
+    submissionService.getLatestSubmission.and.returnValue(of(submission1));
+    taskService.findById.and.returnValue(of(task));
     TestBed.configureTestingModule({
       declarations: [
         PortfolioComponent,
@@ -81,9 +87,18 @@ describe('PortfolioComponent', () => {
     )
   }));
 
-  it('update Artifacts', fakeAsync(() => {   
+  it('update Artifacts with file', fakeAsync(() => {  
+    submissionService.getLatestSubmission.and.returnValue(of(submission2)); 
+    // @ts-ignore
+    component.updateArtifacts();
     tick(1000);
     expect(component.showUploadButton).toBeFalse();
     expect(component.pdfURL).toBeTruthy();
+  }));
+
+  it('should not update Artifacts with no file', fakeAsync(() => {  
+    tick(1000);
+    expect(component.showUploadButton).toBeTrue();
+    expect(component.pdfURL).toBeFalsy();
   }));
 });
