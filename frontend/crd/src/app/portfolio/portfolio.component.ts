@@ -47,7 +47,8 @@ export class PortfolioComponent implements OnInit{
   }
 
   /**
-   * The student is able to upload their resume directly from the portfolio
+   * Grabs the Student's artifacts to be displayed.
+   * Currently just grabs the resume
    */
   private updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
