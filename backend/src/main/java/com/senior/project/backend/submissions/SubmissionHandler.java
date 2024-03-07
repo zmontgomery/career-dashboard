@@ -90,10 +90,9 @@ public class SubmissionHandler {
 
     public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
         return authService.currentUser()
-        //return ServerResponse.ok().body(this.milestoneService.all().map(Milestone::toDTO), MilestoneDTO.class );
             .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
             .collectList()
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No submissions for student")))
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
             .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
 }

@@ -42,7 +42,7 @@ public enum Endpoints {
     // Submissions
     SUBMISSION("tasks/submission", true),
     LATEST_SUBMISSION("tasks/submission/{taskId}", true),
-    SUBMISSIONS("student/submission/{studentId}", true),
+    ALL_SUBMISSIONS("student/submission/{studentId}", true),
 
     // Artifacts
     ARTIFACT("artifact/", true),
