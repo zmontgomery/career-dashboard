@@ -1,0 +1,38 @@
+@import '../../../common.less';
+
+.delete-resume-modal-container {
+    width: 250px;
+
+    .mat-mdc-dialog-content {
+        overflow: hidden !important;
+        padding: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .delete-resume-modal-header {
+            background-color: @oswego-green;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .delete-resume-modal-body {
+            width: 80%;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .delete-resume-modal-buttons {
+            width: 75%;
+            display: flex;
+            justify-content: space-between;
+            margin: 10px;
+
+            button {
+                width: 40%;
+            }
+        }
+    }
+}
