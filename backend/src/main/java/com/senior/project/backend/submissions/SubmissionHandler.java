@@ -3,8 +3,6 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.SecurityUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -14,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
-import java.util.Arrays;
 import java.util.List;
 
 @Component

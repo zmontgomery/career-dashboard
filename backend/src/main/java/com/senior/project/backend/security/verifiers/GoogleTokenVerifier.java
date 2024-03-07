@@ -2,8 +2,6 @@ package com.senior.project.backend.security.verifiers;
 
 import java.util.Collections;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -19,8 +17,6 @@ import com.senior.project.backend.security.domain.AuthInformation;
  */
 @Component
 public class GoogleTokenVerifier implements TokenVerifier {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private NetHttpTransport transport;
     private GsonFactory factory;
