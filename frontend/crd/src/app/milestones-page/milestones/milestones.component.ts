@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from "./milestone.service";
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
@@ -30,22 +30,19 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.milestoneService.getMilestones()
-      .pipe(takeUntil(this.destroyed$),
-        switchMap((milestones: Milestone[]) => {
-          this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
-          milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
-          
-          return this.authService.user$;
-        }),
-        switchMap((user: User | null) => {
+    zip(this.authService.user$.pipe(
+        mergeMap((user) => {
           return this.submissionService.getStudentSubmissions(user!.id);
         })
+      ),
+      this.milestoneService.getMilestones()
+        .pipe(takeUntil(this.destroyed$))
+    ).subscribe(([submissions, milestones]) => {
+      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
+      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
 
-      )
-      .subscribe((submissions) => {
-        this.checkCompleted(submissions);
-        this.dataLoaded = true;
+      this.checkCompleted(submissions);
+      this.dataLoaded = true;
     });
   }
 

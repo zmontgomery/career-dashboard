@@ -22,9 +22,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long>{
         @Param("taskId") int taskId
     );
 
-    @Query("SELECT s FROM Submission s WHERE s.submissionDate < :now AND s.studentId = :userId")
+    @Query("SELECT s FROM Submission s WHERE s.studentId = :userId")
     List<Submission> findAllBeforeNowWithUser(
-        @Param("now") Date now, 
         @Param("userId") UUID userId
     );
 }
