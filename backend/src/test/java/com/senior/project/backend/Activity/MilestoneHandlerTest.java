@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Milestone;
 
 import java.util.Map;

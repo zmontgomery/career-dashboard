@@ -21,7 +21,6 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -85,11 +84,11 @@ public class TaskServiceTest {
     public void testGetByIDNull() {
         Task task1 = Constants.task1;
         int taskID = task1.getId().intValue();
-        Mono<Task> expected = Mono.empty();
+        Task expected = (Task) Mono.empty().block();
 
         when(taskRepository.findById(task1.getId().longValue())).thenReturn(null);
-        Mono<Task> result = taskService.findById(taskID);
-        assertEquals(result.block(), expected.block());
+        Task result = taskService.findById(taskID).block();
+        assertEquals(result, expected);
     }
 
     @Test

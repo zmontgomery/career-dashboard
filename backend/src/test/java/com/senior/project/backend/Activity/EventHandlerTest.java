@@ -35,7 +35,6 @@ public class EventHandlerTest {
 
     @Mock
     private EventService eventService;
-    private EventRepository eventRepository;
 
     private WebTestClient webTestClient;
 
