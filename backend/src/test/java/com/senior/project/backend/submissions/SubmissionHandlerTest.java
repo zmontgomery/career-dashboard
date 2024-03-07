@@ -53,7 +53,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testHandleSubmission() {
         when(submissionService.addSubmission(Constants.submission1)).thenReturn(Mono.just(Constants.submission1));
-        when(submissionService.getPreviousSubmissions(any(), anyInt())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
+        when(submissionService.getSubmissions(any(), anyInt())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
         when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission1));
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("Success"));
 
@@ -68,7 +68,7 @@ public class SubmissionHandlerTest {
 
         assertEquals(result, Constants.submission1);    
         verify(submissionService, times(1)).addSubmission(Constants.submission1);
-        verify(submissionService, times(1)).getPreviousSubmissions(any(), anyInt());
+        verify(submissionService, times(1)).getSubmissions(any(), anyInt());
         verify(submissionService, times(1)).scrubArtifact(any());
         verify(artifactService, times(1)).deleteFile(anyInt());
     }
@@ -76,7 +76,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testHandleSubmissionNoPrevious() {
         when(submissionService.addSubmission(Constants.submission1)).thenReturn(Mono.just(Constants.submission1));
-        when(submissionService.getPreviousSubmissions(any(), anyInt())).thenReturn(Flux.empty());
+        when(submissionService.getSubmissions(any(), anyInt())).thenReturn(Flux.empty());
 
         Submission result = webTestClient.post()
             .uri("/test")
@@ -89,7 +89,7 @@ public class SubmissionHandlerTest {
 
         assertEquals(result, Constants.submission1);    
         verify(submissionService, times(1)).addSubmission(Constants.submission1);
-        verify(submissionService, times(1)).getPreviousSubmissions(any(), anyInt());
+        verify(submissionService, times(1)).getSubmissions(any(), anyInt());
         verify(submissionService, times(0)).scrubArtifact(any());
         verify(artifactService, times(0)).deleteFile(anyInt());
     }

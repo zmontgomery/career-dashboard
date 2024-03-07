@@ -52,20 +52,7 @@ public class SubmissionServiceTest {
 
     @Test
     public void testGetPreviousSubmission() {
-        when(submissionRepository.findAllBeforeNowWithUserAndTask(any(), any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
-
-        Flux<Submission> result = submissionService.getPreviousSubmissions(Constants.user1.getId(), 1);
-
-        StepVerifier.create(result)
-            .expectNext(Constants.submission1)
-            .expectNext(Constants.submission2)
-            .expectComplete()
-            .verify();
-    }
-
-    @Test
-    public void testGetSubmissions() {
-        when(submissionRepository.findAllBeforeNowWithUserAndTask(any(), any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
+        when(submissionRepository.findAllWithUserAndTask(any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
 
         Flux<Submission> result = submissionService.getSubmissions(Constants.user1.getId(), 1);
 

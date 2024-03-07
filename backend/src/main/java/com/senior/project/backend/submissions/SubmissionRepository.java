@@ -15,9 +15,8 @@ import java.util.UUID;
  */
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, Long>{
-    @Query("SELECT s FROM Submission s WHERE s.submissionDate < :now AND s.studentId = :userId AND s.taskId = :taskId")
-    List<Submission> findAllBeforeNowWithUserAndTask(
-        @Param("now") Date now, 
+    @Query("SELECT s FROM Submission s WHERE s.studentId = :userId AND s.taskId = :taskId")
+    List<Submission> findAllWithUserAndTask(
         @Param("userId") UUID userId, 
         @Param("taskId") int taskId
     );

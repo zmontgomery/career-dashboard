@@ -34,25 +34,13 @@ public class SubmissionService {
     }
 
     /**
-     * Returns all submissions before the provided date for a given task and user
-     * @param userId
-     * @param taskId
-     * @return
-     */
-    public Flux<Submission> getPreviousSubmissions(UUID userId, int taskId) {
-        Date date = new Date(System.currentTimeMillis() - BUFFER_TIME);
-        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
-    }
-
-    /**
      * Returns all submissions for a given task
      * @param userId
      * @param taskId
      * @return
      */
     public Flux<Submission> getSubmissions(UUID userId, int taskId) {
-        Date date = new Date(System.currentTimeMillis() + BUFFER_TIME);
-        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
+        return Flux.fromIterable(submissionRepository.findAllWithUserAndTask(userId, taskId));
     }
 
     /**
