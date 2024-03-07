@@ -105,7 +105,7 @@ public class EmailService {
 
     /**
      * Create the emailSender object after the EmailService is created
-     * The values such as host and port are from spring.mail.xxx
+     * The values such as host and port are retrieved from the application.properties or environment variables
      * 
      * @return the mailSender object
      */

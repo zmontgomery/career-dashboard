@@ -38,8 +38,7 @@ public class MilestoneHandler {
     /**
      * Updates an existing milestone
      *
-     * @return 200 if successful
-	 * @throws JsonProcessingException when the update data is not properly formatted
+     * @return 200 if successful or 400 bad request when the update data is not properly formatted
      */
     public Mono<ServerResponse> update(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
@@ -60,8 +59,7 @@ public class MilestoneHandler {
     /**
      * Create new milestone
      *
-     * @return 200 if successful
-	 * @throws JsonProcessingException when the data is not properly formatted
+     * @return 200 if successful or 400 bad request when the update data is not properly formatted
      */
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
