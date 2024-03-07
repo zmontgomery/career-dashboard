@@ -16,8 +16,6 @@ export class EditRoleMenuComponent {
 
   user$: Observable<User | null>;
 
-  emitter: EventEmitter<User> = new EventEmitter();
-
   readonly STUDENT = Role.Student;
   readonly ADMIN = Role.Admin;
   readonly FACULTY = Role.Faculty;
@@ -29,6 +27,9 @@ export class EditRoleMenuComponent {
     this.user$ = authService.user$;
   }
 
+  /**
+   * Opens the confirmation dialog for editing a role
+   */
   onSelection(role: Role) {
     this.dialog.open(EditRoleConfirmationDialogComponent, {data: {
       user: this.user,
@@ -36,6 +37,11 @@ export class EditRoleMenuComponent {
     }});
   }
 
+  /**
+   * Checks if the current user can edit another user's status
+   * A SuperAdmin can edit Admins and below
+   * An Admin can edit faculty and below
+   */
   canBeChanged(): Observable<boolean> {
     return this.authService.user$.pipe(
       map((curr) => {

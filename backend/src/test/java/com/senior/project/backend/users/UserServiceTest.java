@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import com.senior.project.backend.domain.Role;
 import org.junit.jupiter.api.Test;

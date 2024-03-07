@@ -1,7 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Role, User} from "../security/domain/user";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import {UsersSearchResponseJSON} from "./user-search-result";
 import {PageEvent} from "@angular/material/paginator";
 import {debounceTime, first, map, Observable, of, Subject} from "rxjs";
