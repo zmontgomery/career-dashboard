@@ -59,7 +59,7 @@ export class PortfolioComponent implements OnInit{
   }
 
   /**
-   * Opens the file select modal
+   * Opens the Submission Modal
    */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
