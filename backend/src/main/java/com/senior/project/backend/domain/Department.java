@@ -3,7 +3,7 @@ package com.senior.project.backend.domain;
 import lombok.*;
 
 @Data
-@ToString
+// @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated

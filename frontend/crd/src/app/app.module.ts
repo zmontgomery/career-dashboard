@@ -32,6 +32,7 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
+import { SignupPageModule } from './security/signup-page/signup-page.module';
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 
 @NgModule({
@@ -87,6 +88,7 @@ import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
+    SignupPageModule,
     EventImageModalModule,
   ],
   providers: [

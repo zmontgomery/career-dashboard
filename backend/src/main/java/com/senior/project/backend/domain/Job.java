@@ -19,7 +19,7 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Data
-@ToString
+// @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Generated

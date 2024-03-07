@@ -4,7 +4,6 @@ import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -48,7 +47,7 @@ public class UserService implements ReactiveUserDetailsService {
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {
-            throw new EntityNotFoundException();
+            return Mono.empty();
         }
     }
 
@@ -76,6 +75,10 @@ public class UserService implements ReactiveUserDetailsService {
         return repository.findByFullNameContainingIgnoreCase(searchTerm, pageable);
     }
 
+    public Mono<User> createOrUpdateUser(User user) {
+        return Mono.just(repository.saveAndFlush(user));
+    }
+
     // Email for the super user
     @Value("${crd.superadmin}") private String superUser;
 
@@ -94,6 +97,7 @@ public class UserService implements ReactiveUserDetailsService {
         findByEmailAddress(superUser)
             .switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("User %s is not in database.", superUser))))
             .subscribe((user) -> {
+                System.err.println(user);
                 user.setRole(Role.SuperAdmin);
                 repository.save(user);
             });

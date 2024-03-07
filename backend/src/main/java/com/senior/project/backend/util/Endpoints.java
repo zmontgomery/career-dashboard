@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.senior.project.backend.domain.Role;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Arrays;
 
@@ -58,6 +56,7 @@ public enum Endpoints {
     // Security
     SIGNIN("auth/signin", false),
     SIGNOUT("auth/signout", false),
+    SIGNUP("auth/signup", true),
     REFRESH("auth/refresh", true),
     FAILURE("auth/fail", false),
 
@@ -149,6 +148,9 @@ public enum Endpoints {
         return routes;
     }
 
+    /**
+     * Gets all faculty routes
+     */
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
         .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)

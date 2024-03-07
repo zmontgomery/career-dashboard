@@ -6,12 +6,13 @@ import { ProfileComponent } from "./profile/profile.component";
 import { MilestonesPageComponent } from "./milestones-page/milestones-page.component";
 import { ApiDocumentationsComponent } from "./api-documentations/api-documentations.component";
 import { LoginPageComponent } from './security/login-page/login-page.component';
-import { adminRoleGuard, authGuard, facultyRoleGuard, noAuthGuard } from './security/auth-guard';
+import {adminRoleGuard, authGuard, facultyRoleGuard, noAuthGuard, signedUpGuard} from './security/auth-guard';
 import { MilestoneEditComponent } from './admin/milestone-edit/milestone-edit.component';
 import { MilestoneMainPageComponent } from './admin/milestone-main-page/milestone-main-page.component';
 import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.component';
+import {UsersPageComponent} from "./users-page/users-page.component";
+import { SignupPageComponent } from './security/signup-page/signup-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
-import { UsersPageComponent } from "./users-page/users-page.component";
 
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
@@ -40,6 +41,7 @@ const routes: Routes = [
   ...facultyRoutes,
   ...adminRoutes,
   {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
+  {path: 'signup', component: SignupPageComponent, canActivate: [signedUpGuard]},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard, adminRoleGuard]},
 ];
