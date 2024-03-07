@@ -33,7 +33,7 @@ import { EventMainPageModule } from './admin/event-main-page/event-main-page.mod
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
 import { SignupPageModule } from './security/signup-page/signup-page.module';
-import { EventImageModalModule } from './admin/event-image-modal/event-image-modal.module';
+import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 
 @NgModule({
   declarations: [
