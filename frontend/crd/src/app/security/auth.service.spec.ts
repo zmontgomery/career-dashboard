@@ -4,13 +4,14 @@ import {AuthService} from './auth.service';
 import {MsalBroadcastService, MsalService} from '@azure/msal-angular';
 import {GoogleLoginProvider, SocialAuthService} from '@abacritt/angularx-social-login';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, of, Subject, Subscription, take} from 'rxjs';
 import {LoginRequest, LoginResponse, Token, TokenType} from './domain/auth-objects';
 import {EventType} from '@azure/msal-browser';
 import {AUTH_TOKEN_STORAGE, TOKEN_ISSUED} from './security-constants';
 import {LangUtils} from '../util/lang-utils';
-import {Role, UserJSON} from './domain/user';
+import {Role, User, UserJSON} from './domain/user';
 import {ActivatedRoute, Params} from '@angular/router';
+import { Endpoints } from '../util/http-helper';
 
 export const userJSON: UserJSON = {
   id: 'id',
@@ -21,6 +22,7 @@ export const userJSON: UserJSON = {
   firstName: 'test',
   lastName: 'test',
   preferredName: 'test',
+  signedUp: true,
   canEmail: false,
   canText: false,
   role: Role.Admin,
@@ -35,21 +37,6 @@ describe('AuthService', () => {
   let googleAuthService: SocialAuthService;
   let activatedRouteSpy: ActivatedRoute;
   let locationSpy: Location;
-
-  const userJSON: UserJSON = {
-    id: 'id',
-    email: 'test@test.test',
-    phoneNumber: '111-111-1111',
-    dateCreated: 0,
-    lastLogin: 0,
-    firstName: 'test',
-    lastName: 'test',
-    preferredName: 'test',
-    canEmail: false,
-    canText: false,
-    role: Role.Admin,
-    linkedin: 'linkedin'
-  }
 
   let response = new LoginResponse({token: 'id', user: userJSON});
   let request = new LoginRequest({idToken: 'token', tokenType: TokenType.GOOGLE });
@@ -441,4 +428,26 @@ describe('AuthService', () => {
       });
     });
   });
+
+  it('should sign up', fakeAsync(() => {
+    const user = new User(userJSON);
+    (httpSpy as any).post.and.returnValue(of(userJSON));
+
+    service.signup(user);
+
+    tick(100);
+
+    service.user$.pipe(take(1)).subscribe((u) => {
+      expect(u).toEqual(user);
+    });
+
+    tick(100);
+
+    // Cleaner
+    // @ts-ignore
+    service.userSubject.next(null);
+    (httpSpy as any).post.and.returnValue(of(response));
+
+    tick(100);
+  }));
 });

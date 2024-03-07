@@ -160,9 +160,12 @@ public class Constants {
         user1.setId(UUID.randomUUID());
         user1.setEmail("test@test.com");
         user1.setRole(Role.Admin);
+        user1.setSignedUp(false);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
+        user2.setSignedUp(true);
+        user2.setRole(Role.Faculty);
 
         USERS.add(user1);
         USERS.add(user2);

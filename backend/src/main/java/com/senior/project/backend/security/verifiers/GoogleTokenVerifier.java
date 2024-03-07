@@ -2,14 +2,15 @@ package com.senior.project.backend.security.verifiers;
 
 import java.util.Collections;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.json.webtoken.JsonWebSignature;
+import com.google.api.client.util.Key;
 import com.senior.project.backend.security.domain.AuthInformation;
 
 /**
@@ -19,8 +20,6 @@ import com.senior.project.backend.security.domain.AuthInformation;
  */
 @Component
 public class GoogleTokenVerifier implements TokenVerifier {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private NetHttpTransport transport;
     private GsonFactory factory;
@@ -35,11 +34,7 @@ public class GoogleTokenVerifier implements TokenVerifier {
     }
 
     /**
-     * Verifies an ID token by verifying its structures, signature, and claims
-     * 
-     * @param token - token being verified
-     * @return - A unique id for the user
-     * @throws TokenVerificiationException - thrown when an error occurs during the verification
+     * {@inheritDoc}
      */
     @Override
     public String verifiyIDToken(String token) throws TokenVerificiationException {
@@ -50,5 +45,33 @@ public class GoogleTokenVerifier implements TokenVerifier {
         } catch (Exception e) {
             throw new TokenVerificiationException("Token was not validated");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String retrieveName(String token) throws TokenVerificiationException {
+        try {
+            JsonWebSignature jws = JsonWebSignature.parser(googleIdTokenVerifier.getJsonFactory())
+                    .setPayloadClass(PayloadWithName.class)
+                    .parse(token);
+            PayloadWithName payload = (PayloadWithName) jws.getPayload();
+            return payload.getName();
+        } catch (Exception e) {
+            throw new TokenVerificiationException("Token was not validated");
+        }
     }   
+
+    /**
+     * Payload class that has the name property
+     */
+    public static class PayloadWithName extends Payload {
+        @Key("name")
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+    }
 }

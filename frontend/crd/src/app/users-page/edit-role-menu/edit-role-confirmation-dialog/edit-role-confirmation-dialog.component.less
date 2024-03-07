@@ -1,0 +1,38 @@
+@import '../../../../common.less';
+
+.edit-role-confirmation-modal-container {
+    width: 250px;
+
+    .mat-mdc-dialog-content {
+        overflow: hidden !important;
+        padding: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .edit-role-confirmation-modal-header {
+            background-color: @oswego-green;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .edit-role-confirmation-modal-body {
+            width: 80%;
+            text-align: center;
+            margin: 20px 0;
+        }
+    
+        .edit-role-confirmation-modal-buttons {
+            width: 75%;
+            display: flex;
+            justify-content: space-between;
+            margin: 10px;
+
+            button {
+                width: 40%;
+            }
+        }
+    }
+}

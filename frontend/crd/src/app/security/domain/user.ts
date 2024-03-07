@@ -12,6 +12,7 @@ export interface UserJSON {
     readonly lastLogin: number;
     readonly firstName: string;
     readonly lastName: string;
+    readonly signedUp: boolean,
     readonly preferredName: string;
     readonly canEmail: boolean;
     readonly canText: boolean;
@@ -26,17 +27,18 @@ export interface UserJSON {
 export class User {
     readonly id: string;
     readonly email: string;
-    readonly phoneNumber: string;
+    phoneNumber: string;
     readonly dateCreated: Date;
     readonly lastLogin: Date;
     readonly firstName: string;
     readonly lastName: string;
-    readonly preferredName: string;
     readonly fullName: string;
-    readonly canEmail: boolean;
-    readonly canText: boolean;
+    preferredName: string;
+    readonly signedUp: boolean;
+    canEmail: boolean;
+    canText: boolean;
     readonly studentDetails?: StudentDetails
-    readonly role: Role;
+    role: Role;
     readonly linkedin: string;
 
     constructor(json: UserJSON) {
@@ -48,6 +50,7 @@ export class User {
         this.firstName = json.firstName;
         this.lastName = json.lastName;
         this.preferredName = json.preferredName;
+        this.signedUp = json.signedUp;
         this.canEmail = json.canEmail;
         this.canText = json.canText;
         if (LangUtils.exists(json.studentDetails)) {
@@ -65,6 +68,7 @@ export class User {
             firstName: 'No',
             lastName: 'User',
             preferredName: 'No',
+            signedUp: true,
             phoneNumber: '0000000000',
             dateCreated: 0,
             lastLogin: 0,
@@ -75,6 +79,10 @@ export class User {
         });
     }
 
+    get name() {
+        return LangUtils.exists(this.preferredName) ? `${this.preferredName} ${this.lastName}` : `${this.firstName} ${this.lastName}`;
+    }
+    
     hasFacultyPrivileges(): boolean {
       return this.role == Role.Faculty || this.hasAdminPrivileges();
     }
@@ -85,6 +93,13 @@ export class User {
 
     hasSuperAdminPrivileges(): boolean {
       return this.role == Role.SuperAdmin;
+    }
+
+    get formattedRole(): string {
+      if (this.role === Role.SuperAdmin) {
+        return 'Super Admin';
+      } 
+      return this.role;
     }
 }
 

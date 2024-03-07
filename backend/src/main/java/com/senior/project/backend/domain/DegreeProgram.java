@@ -21,7 +21,6 @@ import jakarta.persistence.ManyToOne;
 @AllArgsConstructor
 @Generated
 public class DegreeProgram {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

@@ -38,7 +38,6 @@ describe('TaskService', () => {
   });
 
   it('getTasks should return list of tasks', () => {
-
     const tasks = Array(new Task(taskJSON));
     service.getTasks().subscribe((result: any) => {
       expect(result).toEqual(tasks);

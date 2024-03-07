@@ -48,10 +48,12 @@ export class PortfolioComponent implements OnInit{
 
   private updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
-      this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
-        this.pdfURL = URL.createObjectURL(file);
-        this.showUploadButton = false;
-      });
+      if (submission.hasFile()) {
+        this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
+          this.pdfURL = URL.createObjectURL(file);
+          this.showUploadButton = false;
+        });
+      }
     });
   }
 

@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.UsersSearchResponse;
 import com.senior.project.backend.security.SecurityUtil;
@@ -38,7 +39,7 @@ public class UserHandler {
      * @return 200 with the user
      */
     public Mono<ServerResponse> currentUser(ServerRequest request) {
-        return ServerResponse.ok().body(SecurityUtil.getCurrentUser(), User.class);
+        return ServerResponse.ok().body(currentUser(), User.class);
     }
 
     /**
@@ -61,5 +62,49 @@ public class UserHandler {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "valid query params: pageOffset: number, pageSize: number, searchTerm: string"));
         }
+    }
+
+    /**
+     * Updates a users role
+     * @return the user with the new role
+     */
+    public Mono<ServerResponse> updateRole(ServerRequest request) {
+        currentUser().subscribe((u) -> System.out.println("asdf"));
+        return request.bodyToMono(User.class)
+            .zipWith(currentUser())
+            .doOnNext((users) -> System.out.println(users))
+            .flatMap(users -> updateRoleCheck(users.getT1(), users.getT2()))
+            .flatMap((user) -> ServerResponse.ok().bodyValue(user));
+    }
+
+    /**
+     * The error for if updating a role fails
+     */
+    private static final Mono<User> UPDATE_ROLE_ERROR = Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
+
+    /**
+     * Updates a user role. A role can only be udpated to admin as a super admin
+     * 
+     * @param edited is the user being edited
+     * @param current is the current user
+     * @return a mono containing the updated user or an error
+     */
+    private Mono<User> updateRoleCheck(User edited, User current) {
+        System.out.println(edited);
+        System.out.println(current);
+        Role newRole = edited.getRole();
+        if (newRole == Role.Admin) {
+            if (current.hasSuperAdminPrivileges()) return service.createOrUpdateUser(edited);
+            else return UPDATE_ROLE_ERROR;
+        } else {
+            if (current.hasAdminPrivileges()) return service.createOrUpdateUser(edited);
+            else return UPDATE_ROLE_ERROR;
+        }
+    }
+
+    /** used for tests to replace current user with a mock */
+    public Mono<User> currentUser() {
+        System.out.println("no");
+        return SecurityUtil.getCurrentUser();
     }
 }

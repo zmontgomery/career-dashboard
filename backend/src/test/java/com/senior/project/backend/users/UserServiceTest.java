@@ -2,7 +2,6 @@ package com.senior.project.backend.users;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,12 +22,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.senior.project.backend.Constants;
-import com.senior.project.backend.TestUtil;
 import com.senior.project.backend.domain.User;
 
-import jakarta.persistence.EntityNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -65,25 +61,10 @@ public class UserServiceTest {
     @Test
     public void findUserByEmailUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        TestUtil.testError(() -> userService.findByEmailAddress(Constants.user1.getEmail()), EntityNotFoundException.class);
-    }
-
-    @Test
-    public void findByEmailAddressHappy() {
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
-        
-        Mono<User> user = userService.findByEmailAddress(Constants.user1.getEmail());
-
-        StepVerifier.create(user)
-            .expectNext(Constants.user1)
+        Mono<User> result = userService.findByEmailAddress(Constants.user1.getEmail());
+        StepVerifier.create(result)
             .expectComplete()
             .verify();
-    }
-
-    @Test
-    public void findByEmailAddressUnhappy() {
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        TestUtil.testError(() -> userService.findByEmailAddress(Constants.user1.getEmail()), EntityNotFoundException.class);
     }
 
     @Test
@@ -101,7 +82,10 @@ public class UserServiceTest {
     @Test
     public void findByUsernameUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        TestUtil.testError(() -> userService.findByUsername(Constants.user1.getEmail()), EntityNotFoundException.class);
+        Mono<UserDetails> result = userService.findByUsername(Constants.user1.getEmail());
+        StepVerifier.create(result)
+            .expectComplete()
+            .verify();
     }
 
     @Test
@@ -135,16 +119,26 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setSuperUserError() {
+    public void setSuperUserError() throws InterruptedException {
         Constants.user1.setRole(Role.SuperAdmin);
         when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
         when(userRepository.findUserByEmail(any())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> userService.setSuperUser());
+        userService.setSuperUser();
 
         assertFalse(Constants.user1.hasSuperAdminPrivileges());
         verify(userRepository, times(2)).save(any());
         assertFalse(Constants.user2.hasSuperAdminPrivileges());
+    }
 
+    @Test
+    public void testCreateOrUpdateUser() {
+        when(userRepository.saveAndFlush(any())).thenReturn(Constants.user1);
+        Mono<User> res = userService.createOrUpdateUser(Constants.user2);
+        
+        StepVerifier.create(res)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
     }
 }
