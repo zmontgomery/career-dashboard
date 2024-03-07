@@ -17,6 +17,9 @@ public enum Endpoints {
     CREATE_EVENT("admin/create-event", true, Role.Admin),
     DASHBOARD_EVENTS("dashboard_events", true),
 
+    // TODO remove this
+    EMAIL("send-email", false),
+
     // Tasks
     TASKS("tasks", true),
     TASK_BY_ID("tasks/{id}", true),
@@ -43,6 +46,10 @@ public enum Endpoints {
     ARTIFACT("artifact/", true),
     ARTIFACT_ID("artifact/{id}", true),
     ARTIFACT_FILE("artifact/file/{artifactID}", true),
+    UPLOAD_IMAGE_EVENT("artifact/event/{eventID}", true, Role.Admin),
+    IMAGE_EVENT("artifact/image/{artifactID}", false),
+    USERS_PROFILE_PICTURE("artifact/profile-picture", true),
+    PROFILE_PICTURE("artifact/profile-picture/{userID}", true, Role.Faculty),
     RESUME("portfolio/resume", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),

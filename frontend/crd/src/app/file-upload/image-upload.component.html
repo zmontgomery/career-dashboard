@@ -1,0 +1,75 @@
+<div class="file-upload-container">
+  <ng-container *ngIf="rawFile == undefined; else fileDetails">
+    <button class="file-upload-button" mat-button (click)="fileInput.click()">
+      <mat-icon>upload_file</mat-icon>
+      <input #fileInput type="file" [accept]="acceptedFileTypes" (change)="onChange($event)" style="display:none;"/>
+    </button>
+    <ng-container *ngTemplateOutlet="backButton"></ng-container>
+  </ng-container>
+  <ng-template #fileDetails>
+    <ng-container [ngSwitch]="status">
+      <ng-container *ngSwitchCase="'cropping'">
+        <image-cropper
+          [imageFile]="rawFile"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="5 / 2"
+          (imageCropped)="imageCropped($event)"
+        ></image-cropper>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <img [src]="croppedImageUrl" width="480px" alt="uploaded file">
+      </ng-container>
+    </ng-container>
+    <div class="file-details-row file-details-row-{{status}}">
+      <mat-icon class="file-details-description">description</mat-icon>
+      <span class="file-details-filename">{{rawFile?.name}}</span>
+      <span class="file-details-size">{{formatBytes()}}</span>
+      <button *ngIf="status != 'success'" mat-button (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="buttons-container">
+      <ng-container *ngTemplateOutlet="backButton"></ng-container>
+      <ng-container [ngSwitch]="status">
+        <ng-container *ngSwitchCase="'success'">
+          <button class="status-button status-button-success" mat-raised-button color="primary" disabled>
+            <mat-icon>check</mat-icon>
+            Done
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchCase="'uploading'">
+          <button class="status-button status-button-uploading" mat-raised-button disabled>
+            <mat-icon>hourglass_empty</mat-icon>
+            Uploading
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchCase="'error'">
+          <button class="status-button status-button-error" mat-raised-button color="warn" disabled>
+            <mat-icon>error</mat-icon>
+            Error Occurred
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchCase="'cropping'">
+          <button class="status-button status-button-cropping" mat-raised-button (click)="doneCropping()">
+            Done Cropping
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <button class="status-button" mat-raised-button color="primary" (click)="onUpload()">
+            <mat-icon>upload</mat-icon>
+            Upload
+          </button>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #backButton>
+    <button mat-raised-button id="modal-cancel-button" color="warn" (click)="closeModal()">
+      Back
+    </button>
+  </ng-template>
+</div>
+
+
+

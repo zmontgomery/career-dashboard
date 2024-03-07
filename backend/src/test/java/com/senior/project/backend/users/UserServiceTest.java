@@ -111,9 +111,9 @@ public class UserServiceTest {
 
         userService.setSuperUser();
 
-        assertFalse(Constants.user1.isSuperAdmin());
+        assertFalse(Constants.user1.hasSuperAdminPrivileges());
         verify(userRepository, times(3)).save(any());
-        assertTrue(Constants.user2.isSuperAdmin());
+        assertTrue(Constants.user2.hasSuperAdminPrivileges());
 
         Constants.user2.setRole(Role.SuperAdmin);
     }
@@ -126,10 +126,14 @@ public class UserServiceTest {
 
         userService.setSuperUser();
 
-        assertFalse(Constants.user1.isSuperAdmin());
+        assertFalse(Constants.user1.hasSuperAdminPrivileges());
         verify(userRepository, times(2)).save(any());
+<<<<<<< HEAD
         assertFalse(Constants.user2.isSuperAdmin());
     }
+=======
+        assertFalse(Constants.user2.hasSuperAdminPrivileges());
+>>>>>>> main
 
     @Test
     public void testCreateOrUpdateUser() {
