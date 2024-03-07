@@ -32,7 +32,7 @@ public class EventHandler {
      * Not implemented completely yet, so this functions the same as /events
      */
     public Mono<ServerResponse> dashboard(ServerRequest serverRequest) {
-        serverRequest.queryParam("pageNum");    // not passed to dashboard() yet
+        serverRequest.queryParam("pageNum");    // TODO pass to dashboard() and get paged result
         return ServerResponse.ok().body(this.eventService.dashboard(), Event.class );
     }
 
