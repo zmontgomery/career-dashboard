@@ -22,6 +22,7 @@ export class TaskService {
    * 
    * If the cache has data in it, it returns the value of the cache, otherwise
    * it makes a request to the backend.
+   * @param forceRefresh forces the cache to update by sending the request again
    */
   getTasks(forceRefresh?: boolean): Observable<Task[]> {
     if (!this.hasBeenRequested || forceRefresh) {
