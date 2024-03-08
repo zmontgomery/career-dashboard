@@ -3,8 +3,6 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.SecurityUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -14,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -56,7 +53,7 @@ public class SubmissionHandler {
                 return submission;
             })
             // Get previous submissions
-            .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
+            .flatMapMany((submission) -> submissionService.getSubmissions(submission.getStudentId(), submission.getTaskId()))
             .filter((submission) -> newSubmission.getArtifactId() != submission.getArtifactId())
             .flatMap((submission) -> { // Save artifact id and remove the previous artifact from the submission
                 int artifactId = submission.getArtifactId();
@@ -77,13 +74,22 @@ public class SubmissionHandler {
         return authService.currentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
+            .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)) : Mono.just(submissions))
             .map((submissions) -> {
-                System.out.println(submissions.toString());
                 List<Submission> newList = submissions.stream()
                     .sorted((s1, s2) -> s1.getSubmissionDate().before(s2.getSubmissionDate()) ? -1 : 1)
                     .collect(Collectors.toList());
                 return newList.get(newList.size() - 1);
             })
             .flatMap((submission) -> ServerResponse.ok().bodyValue(submission));
+    }
+
+
+    public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
+        return authService.currentUser()
+            .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
+            .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
 }

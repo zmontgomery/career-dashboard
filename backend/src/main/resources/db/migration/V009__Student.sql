@@ -45,12 +45,3 @@ CREATE TABLE degree_program(
     is_minor BOOLEAN,
     FOREIGN KEY (student_details_id) REFERENCES student_details (id)
 );
-
--- CREATE TABLE club(
---     clubID INT AUTO_INCREMENT PRIMARY KEY,
---     studentID INT,
---     clubName VARCHAR(256),
---     startDate DATE,
---     endDate DATE,
---     FOREIGN KEY (studentID) REFERENCES student (studentID)
--- );

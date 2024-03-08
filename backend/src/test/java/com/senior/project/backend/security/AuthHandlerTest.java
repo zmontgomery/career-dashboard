@@ -1,6 +1,8 @@
 package com.senior.project.backend.security;
 
 import com.senior.project.backend.Constants;
+import com.senior.project.backend.domain.Role;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.domain.LoginRequest;
 import com.senior.project.backend.security.domain.LoginResponse;
 import com.senior.project.backend.security.domain.TokenType;
@@ -17,11 +19,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +37,7 @@ public class AuthHandlerTest {
     private static final String TEST_REFRESH = "/testRefresh";
     private static final String TEST_FAIL = "/testFailure";
     private static final String TEST_SIGN_OUT = "/testSignOut";
+    private static final String TEST_SIGN_UP = "/testSignUp";
     private static final String AUTHORIZATION_HEADER = "X-Authorization";
 
     private WebTestClient webTestClient;
@@ -57,6 +64,7 @@ public class AuthHandlerTest {
                 .POST(TEST_SIGN_IN, CuT::signIn)
                 .POST(TEST_REFRESH, CuT::refresh)
                 .POST(TEST_SIGN_OUT, CuT::signOut)
+                .POST(TEST_SIGN_UP, CuT::signUp)
                 .GET(TEST_FAIL, CuT::authenticationFailed)
                 .build()
         )
@@ -73,6 +81,39 @@ public class AuthHandlerTest {
         when(tokenVerifierGetter.getTokenVerifier(any())).thenReturn(verifier);
         when(authService.login(any())).thenReturn(Mono.just(response));
         when(verifier.verifiyIDToken(anyString())).thenReturn("answer");
+        when(verifier.retrieveName(anyString())).thenReturn("name");
+
+        LoginResponse response2 = webTestClient
+            .post()
+            .uri(TEST_SIGN_IN)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(LoginResponse.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertEquals(response, response2);
+    }
+
+    @Test
+    public void testSignInNoUser() throws TokenVerificiationException {
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.empty());
+
+        LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
+        LoginResponse response = LoginResponse.builder().token("token_2").build();
+
+        User user = User.builder()
+            .email("answer")
+            .firstName("first")
+            .lastName("last")
+            .signedUp(false)
+            .build();
+
+        when(tokenVerifierGetter.getTokenVerifier(any())).thenReturn(verifier);
+        when(authService.login(user)).thenReturn(Mono.just(response));
+        when(verifier.verifiyIDToken(anyString())).thenReturn("answer");
+        when(verifier.retrieveName(anyString())).thenReturn("first last");
 
         LoginResponse response2 = webTestClient
             .post()
@@ -183,5 +224,42 @@ public class AuthHandlerTest {
             .getResponseBody();
 
         assertEquals("User has signed out.", result);
+    }
+
+    @Test
+    public void testSignUp() {
+        User user = User.builder()
+            .email("answer")
+            .firstName("first")
+            .lastName("last")
+            .signedUp(false)
+            .build();
+
+        TestUserService fakeUserService = mock(TestUserService.class);        
+        when(fakeUserService.createOrUpdateUser(any())).thenCallRealMethod();
+        ReflectionTestUtils.setField(CuT, "userService", fakeUserService);
+
+        User result = webTestClient
+            .post()
+            .uri(TEST_SIGN_UP)
+            .bodyValue(user)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(User.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertTrue(result.isSignedUp());
+        assertEquals(result.getRole(), Role.Student);
+        assertNotNull(result.getLastLogin());
+        assertNotNull(result.getDateCreated());
+    }
+
+    /* used to check that user passed in was actually updated */
+    public static class TestUserService extends UserService {
+        @Override
+        public Mono<User> createOrUpdateUser(User user) {
+            return Mono.just(user);
+        }
     }
 }

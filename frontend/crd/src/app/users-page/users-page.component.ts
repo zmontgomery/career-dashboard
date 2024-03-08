@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {User} from "../security/domain/user";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UsersSearchResponseJSON} from "./userSearchResult";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Role, User} from "../security/domain/user";
+import {UsersSearchResponseJSON} from "./user-search-result";
 import {PageEvent} from "@angular/material/paginator";
-import {debounceTime, Observable, Subject} from "rxjs";
+import {debounceTime, first, map, Observable, of, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
+import {AuthService} from "../security/auth.service";
+import { UserService } from '../security/user.service';
 
 @Component({
   selector: 'app-users-page',
@@ -30,11 +30,15 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   private searching$ = new Subject<void>();
   isMobile$: Observable<boolean>;
 
+  user$: Observable<User | null>
+
   constructor(
-    private http: HttpClient,
+    private readonly userService: UserService,
     private screenSizeSvc: ScreenSizeService,
+    private readonly authService: AuthService
   ) {
     this.isMobile$ = this.screenSizeSvc.isMobile$;
+    this.user$ = this.authService.user$;
   }
 
   ngOnInit(): void {
@@ -55,17 +59,10 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   // Method to fetch data from API
   loadData(): void {
-    const apiUrl = constructBackendRequest(Endpoints.USERS_SEARCH,
-      {key:'pageOffset', value: this.currentPage},
-      {key:'pageSize', value: this.pageSize},
-      {key: 'searchTerm', value: this.searchTerm}
-      );
-    this.http.get<UsersSearchResponseJSON>(apiUrl).subscribe((searchResults: UsersSearchResponseJSON) => {
-      this.dataSource = searchResults.users.map(it => new User(
-        // change id to "random" number for now to support random profile pics
-        {...it, id: '250' + it.email.match(/\d+/g)}
-      ));
-      this.totalItems = searchResults.totalResults;
+    this.userService.searchUsers(this.currentPage, this.pageSize, this.searchTerm)
+      .subscribe((searchResults: UsersSearchResponseJSON) => {
+        this.dataSource = searchResults.users.map((u) => new User(u));
+        this.totalItems = searchResults.totalResults;
     });
   }
 
@@ -80,6 +77,14 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   // Method to handle search
   onSearch(): void {
     this.searching$.next();
+  }
+
+  random(element: User) {
+    let n = '';
+    for (let i = 2; i < 8; i++) {
+      n += element.id.charCodeAt(i);
+    }
+    return n;
   }
 }
 

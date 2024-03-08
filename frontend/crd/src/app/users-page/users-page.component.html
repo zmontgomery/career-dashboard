@@ -18,7 +18,7 @@
     <!-- Picture Column -->
     <ng-container matColumnDef="picture">
       <th mat-header-cell *matHeaderCellDef>Picture</th>
-      <td mat-cell *matCellDef="let element"><img [ngSrc]="profilePicURLBase + element.id" alt="Profile Picture" width="50" height="50"></td>
+      <td mat-cell *matCellDef="let element"><img [ngSrc]="profilePicURLBase + random(element)" alt="Profile Picture" width="50" height="50"></td>
     </ng-container>
 
     <!-- Name Column -->
@@ -36,16 +36,18 @@
     <!-- Role Column -->
     <ng-container matColumnDef="role">
       <th mat-header-cell *matHeaderCellDef>Role</th>
-      <td mat-cell *matCellDef="let element">{{element.role}}</td>
+      <td mat-cell *matCellDef="let element" class="role-cell">
+        <div class="role-container">
+          {{element.formattedRole}}
+          <app-edit-role-menu *ngIf="(user$ | async)?.hasAdminPrivileges()" [user]="element"></app-edit-role-menu>
+        </div>
+      </td>
     </ng-container>
 
     <!-- Column with Buttons -->
     <ng-container matColumnDef="buttons">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element" class="buttons-cell">
-        <button mat-raised-button color="primary" [routerLink]="'/faculty/profile/' + element.id">
-          Profile
-        </button>
         <button mat-raised-button [routerLink]="'/faculty/portfolio/' + element.id">
           Portfolio
         </button>

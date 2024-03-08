@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-oswego-logo',
@@ -16,10 +17,17 @@ export class OswegoLogoComponent {
   @Input()
   color: 'green' | 'black' | 'white' = 'green';
 
+  constructor(private readonly router: Router) {
+
+  }
+
   get imageStr() {
     return `assets/images/Oswego_logo_${this.iconPosition}_${this.color}.png`;
   }
 
+  onClick() {
+    this.router.navigate(['']);
+  }
 
   get width() { return 600 * this.sizeFactor }
   get height() { return 210 * this.sizeFactor }

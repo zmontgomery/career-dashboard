@@ -35,6 +35,7 @@ export class MilestoneCreateModalComponent implements OnInit {
   }
 
   ngOnInit() { 
+    // the following is actually called when leaving the modal
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         setTimeout(function () {
@@ -47,12 +48,19 @@ export class MilestoneCreateModalComponent implements OnInit {
     this.createForm();
   }
 
+  /**
+   * The form only includes the milestone name
+   * Year level is determined by what year tab the user created the milestone from
+   */
   createForm() {
     this.milestoneForm = this.formBuilder.group({
       name: [null, Validators.required], 
     });
   }
 
+  /**
+   * Sends the new milestone data
+   */
   newMilestone() {
     const newData: any = {};
 
@@ -68,11 +76,13 @@ export class MilestoneCreateModalComponent implements OnInit {
     this.http.post(url, newData).subscribe(data => {
       const newJSON = data as MilestoneJSON;
       const newMilestone = new Milestone(newJSON);
+      // in case the returned milestone is empty
       if(!newMilestone.name) {
-        window.alert("Something went wrong");
+        window.alert("Something went wrong creating milestone");
         this.closeModal();
       }
       
+      // automatically navigates to the edit page for this new milestone
       const encodedName = encodeURIComponent(newMilestone.milestoneID);
       this.router.navigate(['/admin/milestone-edit', encodedName]);
       this.closeModal();

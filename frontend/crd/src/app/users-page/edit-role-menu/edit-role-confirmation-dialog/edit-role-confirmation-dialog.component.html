@@ -1,0 +1,18 @@
+<div class="edit-role-confirmation-modal-container">
+    <mat-dialog-content>
+
+        <div class="edit-role-confirmation-modal-header">
+            Confirmation
+        </div>
+
+        <div class="edit-role-confirmation-modal-body">
+            Are you sure you want to make {{user.fullName}} {{formatRole()}}?
+        </div>
+
+        <div class="edit-role-confirmation-modal-buttons">
+            <button mat-raised-button color="primary" (click)="onCancel()">No</button>
+            <button mat-raised-button color="primary" (click)="onConfirm()">Yes</button>
+        </div>
+        
+    </mat-dialog-content>
+</div>

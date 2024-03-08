@@ -1,0 +1,49 @@
+<div class="signup-page">  
+    <div class="signup-modal">
+        <mat-card class="signup-card">
+            <div class="card-header">
+                Create account for <b>{{user.firstName}} {{user.lastName}}</b>
+            </div>
+            <div class="card-body">
+                <div class="signup-fields">
+                    <form [formGroup]="form">
+                        <mat-form-field class="signup-phone-number" [floatLabel]="form.value.floatLabel">
+                            <mat-label>Preferred Name (empty for none)</mat-label>
+                            <input 
+                                class="nickname-field" 
+                                matInput 
+                                formControlName="preferredName"
+                            >
+                            <mat-error *ngIf="nicknameHasError()">Name can only contain letters</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="signup-phone-number" [floatLabel]="form.value.floatLabel">
+                            <mat-label>Phone Number</mat-label>
+                            <input 
+                                class="password-field" 
+                                matInput 
+                                formControlName="phoneNumber" 
+                                [required]="true"
+                            >
+                            <mat-error *ngIf="phoneHasError()">Phone number must be complete</mat-error>
+                        </mat-form-field>
+
+                        <div class="signup-checkboxes">
+                            <mat-checkbox formControlName="canText">Allow texting notifications</mat-checkbox>
+                            <mat-checkbox formControlName="canEmail">Allow email notifications</mat-checkbox>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card-buttons">
+                <button mat-raised-button color="warn" (click)="onCancel()">
+                    <mat-icon>cancel</mat-icon>
+                    Cancel
+                </button>
+                <button mat-raised-button color="primary" (click)="onSubmit()">
+                    <mat-icon>arrow_right_alt</mat-icon>
+                    Continue
+                </button>
+            </div>
+        </mat-card>
+    </div>  
+</div>

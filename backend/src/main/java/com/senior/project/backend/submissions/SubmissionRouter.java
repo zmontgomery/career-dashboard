@@ -23,6 +23,7 @@ public class SubmissionRouter {
         ArtifactHandler artifactHandler    
     ) {
         return route(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission)
-            .andRoute(GET(Endpoints.LATEST_SUBMISSION.uri()), submissionHandler::getLatestSubmission);
+            .andRoute(GET(Endpoints.LATEST_SUBMISSION.uri()), submissionHandler::getLatestSubmission)
+            .andRoute(GET(Endpoints.ALL_SUBMISSIONS.uri()), submissionHandler::getStudentSubmissions);
     }
 }
