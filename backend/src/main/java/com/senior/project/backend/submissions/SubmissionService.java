@@ -69,7 +69,7 @@ public class SubmissionService {
     public Flux<Submission> getStudentSubmissions(UUID userId) {
         return SecurityUtil.getCurrentUser().flatMapMany(user -> {
             if (user.getId().equals(userId)) {
-                return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUser(userId));
+                return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
             }
             else {
                 return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Can't get submissions for other users"));

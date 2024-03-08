@@ -65,4 +65,15 @@ describe('SubmissionService', () => {
     expect(req.request.method).toEqual('GET');
     req.flush(submission1JSON);
   });
+
+  it('should get student submission', (done) => {
+    service.getStudentSubmissions("asdf").subscribe((s) => {
+      expect(s).toEqual([submission1]);
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.ALL_SUBMISSIONS));
+    expect(req.request.method).toEqual('GET');
+    req.flush([submission1JSON]);
+  });
 });

@@ -23,7 +23,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long>{
     );
 
     @Query("SELECT s FROM Submission s WHERE s.studentId = :userId")
-    List<Submission> findAllBeforeNowWithUser(
+    List<Submission> findAllWithUser(
         @Param("userId") UUID userId
     );
 }
