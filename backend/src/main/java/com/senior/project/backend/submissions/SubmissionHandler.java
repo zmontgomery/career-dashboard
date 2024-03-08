@@ -5,7 +5,6 @@ import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -54,7 +53,7 @@ public class SubmissionHandler {
                 return submission;
             })
             // Get previous submissions
-            .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
+            .flatMapMany((submission) -> submissionService.getSubmissions(submission.getStudentId(), submission.getTaskId()))
             .filter((submission) -> newSubmission.getArtifactId() != submission.getArtifactId())
             .flatMap((submission) -> { // Save artifact id and remove the previous artifact from the submission
                 int artifactId = submission.getArtifactId();
@@ -83,5 +82,14 @@ public class SubmissionHandler {
                 return newList.get(newList.size() - 1);
             })
             .flatMap((submission) -> ServerResponse.ok().bodyValue(submission));
+    }
+
+
+    public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
+        return authService.currentUser()
+            .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
+            .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
 }

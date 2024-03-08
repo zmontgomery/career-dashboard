@@ -5,6 +5,9 @@ import { MatCardModule } from "@angular/material/card";
 import { EventsComponent } from './events/events.component';
 import { MilestonesModule } from "../milestones-page/milestones/milestones.module";
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { TaskSubmitButtonModule } from '../task-submit-button/task-submit-button.module';
+import { TasksModule } from "../tasks/tasks.module";
+
 
 
 @NgModule({
@@ -19,6 +22,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
         MatCardModule,
         MilestonesModule,
         CarouselModule,
+    TasksModule,
         NgOptimizedImage,
     ]
 })

@@ -24,6 +24,10 @@ export class SubmissionService {
       .pipe(map((s) => new Submission(s)));
   }
 
+  delete(submissionId: number): Observable<string> {
+    return this.http.delete<string>(constructBackendRequest(`${Endpoints.SUBMISSION}/${submissionId}`));
+  }
+
   /**
    * Retrieves the latest submission for a task
    */
@@ -33,5 +37,17 @@ export class SubmissionService {
         map((s) => new Submission(s)),
         catchError(() => of(Submission.makeEmpty())),
       );
+  }
+
+  /**
+   * Retrieves all submissions for a given user
+   */
+  getStudentSubmissions(studentID: string): Observable<Submission[]> {
+    return this.http.get<SubmissionJSON[]>(constructBackendRequest(`${Endpoints.ALL_SUBMISSIONS}`))
+      .pipe(map((data: SubmissionJSON[]) => {
+        return data.map((s: SubmissionJSON) => {
+          return new Submission(s);
+        });
+      }));
   }
 }

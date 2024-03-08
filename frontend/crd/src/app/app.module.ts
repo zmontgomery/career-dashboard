@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
+import { TasksModule } from './tasks/tasks.module';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
 import { UserMenuModule } from './security/user-menu/user-menu.module';
@@ -33,6 +34,9 @@ import { MilestoneCreateModalModule } from './admin/milestone-main-page/mileston
 import { UsersPageModule } from "./users-page/users-page.module";
 import { SignupPageModule } from './security/signup-page/signup-page.module';
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
+import { TasksModalModule } from './tasks-modal/tasks-modal.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 
@@ -75,6 +79,7 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     UsersPageModule,
     MatCardModule,
     MatTabsModule,
+    TasksModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
@@ -88,6 +93,10 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
+    MilestoneCreateModalModule,
+    MatButtonModule,
+    MatDialogModule,
+    TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
     ProfileImageModalModule,
@@ -123,3 +132,4 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }
+

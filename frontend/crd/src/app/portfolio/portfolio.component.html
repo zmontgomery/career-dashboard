@@ -156,7 +156,10 @@
 
   <div class="section">
     <div class="card-header">
-      Resume
+      <span>Resume</span>
+      <button mat-icon-button *ngIf="canDelete()" (click)="deleteResume()">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
     <mat-card class="resume-card">
       <button mat-button *ngIf="showUploadButton" (click)="openDialog()">

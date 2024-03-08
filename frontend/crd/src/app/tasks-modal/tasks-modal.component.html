@@ -1,0 +1,19 @@
+<div id="modal-content-wrapper">
+  <header id="modal-header">
+    <h1 id="modal-title"> {{ modalData.task.name }}</h1>
+  </header>
+  <div id="modal-body">
+    <div id="">
+      <p style="font-size:30px"><b>Description: </b><br>
+        {{ modalData.task.description }}</p>
+    </div>
+    <app-task-submit-button [task]="modalData.task"></app-task-submit-button>
+  </div>
+  <br>
+  <footer id="modal-footer">
+    <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
+      Go back
+    </button>
+  </footer>
+</div>
+
