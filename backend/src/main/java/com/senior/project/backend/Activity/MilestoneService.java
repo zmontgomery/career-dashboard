@@ -62,13 +62,10 @@ public class MilestoneService {
 
         // gets the list of task objects from the provided list of task IDs
         for (Integer assignedTaskID : updatedTaskList) {
-            try {
-                Task assignedTask = taskRepository.findById(assignedTaskID.longValue());
+            Task assignedTask = taskRepository.findById(assignedTaskID.longValue());
+            if (assignedTask != null) {
                 taskList.add(assignedTask);
-            }
-            catch (Exception e) { // task not found
-                continue;
-            }
+            } 
         }
 
         // if a task exists on the milestone but is not included in the task list, remove it
