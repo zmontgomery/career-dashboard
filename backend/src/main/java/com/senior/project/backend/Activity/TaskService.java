@@ -1,10 +1,12 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.artifact.NonBlockingExecutor;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.TaskType;
 import com.senior.project.backend.domain.YearLevel;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -151,6 +153,8 @@ public class TaskService {
 
 
     public Flux<Task> dashboard() {
-        return null;
+        return SecurityUtil.getCurrentUser()
+                .flatMapMany((user) -> NonBlockingExecutor.executeMany(() ->
+                        taskRepository.findOverDueTasks(List.of(YearLevel.Freshman), user.getId())));
     }
 }
