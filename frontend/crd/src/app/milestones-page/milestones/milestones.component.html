@@ -21,13 +21,14 @@
 <!--            {{milestone.description}}-->
 <!--          </mat-panel-description>-->
         </mat-expansion-panel-header>
-        <mat-expansion-panel class="task-expansion-panel" *ngFor="let task of milestone.tasks">
-          <mat-expansion-panel-header>
+          <mat-expansion-panel *ngFor="let task of milestone.tasks">
+
+          <mat-expansion-panel-header #panelH (click)="panelH._toggle(); openTask(task)">
             <div class="flex-vertical-align">
               <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
-                color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
-              <p>{{task.name}}</p>
-              <app-task-submit-button [task]="task"></app-task-submit-button>
+                color="primary" (click)="$event.stopPropagation()">
+                {{task.name}}
+              </mat-checkbox>
             </div>
           </mat-expansion-panel-header>
           <div>{{task.description}}</div>

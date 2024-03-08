@@ -9,6 +9,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MilestoneService } from "./milestone.service";
+import { MatDialogModule } from '@angular/material/dialog';
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
@@ -119,7 +120,7 @@ describe('MilestonesComponent', () => {
     authService = jasmine.createSpyObj('AuthService', ['toString'], {user$: of(user)});
 
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule],
+      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule, MatDialogModule],
       providers: [
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
