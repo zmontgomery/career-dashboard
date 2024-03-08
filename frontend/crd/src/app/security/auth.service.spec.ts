@@ -26,7 +26,8 @@ export const userJSON: UserJSON = {
   canEmail: false,
   canText: false,
   role: Role.Admin,
-  linkedin: 'linkedin'
+  linkedin: 'linkedin',
+  profilePictureId: 0,
 }
 
 describe('AuthService', () => {
@@ -221,7 +222,7 @@ describe('AuthService', () => {
   describe('Login redirect', () => {
     it('should login redirect for MS', () => {
       service.loginRedirectMS();
-  
+
       expect(msalAuthService.loginRedirect).toHaveBeenCalledTimes(1);
     });
 

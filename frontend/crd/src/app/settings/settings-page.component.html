@@ -1,0 +1,9 @@
+<div class="settings-page-container">
+  <h1>Settings</h1>
+
+  <button mat-raised-button class="user-button" (click)="openProfilePicture()">
+    <img *ngIf="profileURL != null" [src]="profileURL" width="150px" height="150px" alt="User Image">
+    <mat-icon *ngIf="profileURL == null">account_circle</mat-icon>
+  </button>
+
+</div>

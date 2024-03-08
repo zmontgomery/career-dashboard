@@ -21,7 +21,7 @@ import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { TasksModule } from './tasks/tasks.module';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
-import { LogoutButtonModule } from './security/logout-button/logout-button.module';
+import { UserMenuModule } from './security/user-menu/user-menu.module';
 import { AuthService } from './security/auth.service';
 import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
 import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
@@ -37,7 +37,8 @@ import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import {SettingsPageModule} from "./settings/settings-page.module";
+import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 
 @NgModule({
   declarations: [
@@ -71,7 +72,7 @@ import { MatDialogModule } from '@angular/material/dialog';
       }
     ),
     SocialLoginModule,
-    LogoutButtonModule,
+    UserMenuModule,
     DashboardModule,
     PortfolioModule,
     MilestonesPageModule,
@@ -98,6 +99,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    ProfileImageModalModule,
+    SettingsPageModule,
   ],
   providers: [
     provideHttpClient(),

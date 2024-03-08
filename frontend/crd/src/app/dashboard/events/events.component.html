@@ -12,7 +12,8 @@
             [showIndicators]="false"
             [isAnimated]="true">
     <slide *ngFor="let slide of slides; let index=index">
-      <img class="event-image" [ngSrc]="slide.img" width="500" height="200" alt="event image">
+      <img [class.default-logo]="slide.img == defaultLogoURL" class="event-image"
+           [ngSrc]="slide.img" width="500" height="200" alt="event image">
       <div class="carousel-caption">
         <h4>{{slide.name}}</h4>
         <div>{{slide.date}}</div>

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.senior.project.backend.domain.Role;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -48,7 +49,6 @@ public enum Endpoints {
     UPLOAD_IMAGE_EVENT("artifact/event/{eventID}", true, Role.Admin),
     IMAGE_EVENT("artifact/image/{artifactID}", false),
     USERS_PROFILE_PICTURE("artifact/profile-picture", true),
-    PROFILE_PICTURE("artifact/profile-picture/{userID}", true, Role.Faculty),
     RESUME("portfolio/resume", true),
     ARTIFACT_LIST("portfolio/artifacts", true),
     SINGLE_ARTIFACT("portfolio/{artifactID}", true),
