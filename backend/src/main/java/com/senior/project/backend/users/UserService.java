@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service that interacts with the user repository
@@ -44,6 +45,15 @@ public class UserService implements ReactiveUserDetailsService {
      */
     public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
         Optional<User> user = repository.findUserByEmail(email);
+        if (user.isPresent()) {
+            return Mono.just(user.get());
+        } else {
+            return Mono.empty();
+        }
+    }
+
+    public Mono<User> findById(UUID id) {
+        Optional<User> user = repository.findById(id);
         if (user.isPresent()) {
             return Mono.just(user.get());
         } else {

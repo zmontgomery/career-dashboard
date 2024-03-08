@@ -10,6 +10,9 @@ import {ArtifactService} from "../file-upload/artifact.service";
 import { TaskService } from '../util/task.service';
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
 import { SubmissionService } from '../submissions/submission.service';
+import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Router, UrlSegment } from '@angular/router';
+import { map, mergeMap, tap, zipWith } from 'rxjs';
+import { UserService } from '../security/user.service';
 
 const RESUME_TASK_ID = 6;
 
@@ -21,6 +24,7 @@ const RESUME_TASK_ID = 6;
 export class PortfolioComponent implements OnInit{
 
   user: User = User.makeEmpty();
+  external: boolean = false;
   showUploadButton: boolean = true;
   pdfURL: any = '';
 
@@ -29,7 +33,10 @@ export class PortfolioComponent implements OnInit{
     private readonly artifactService: ArtifactService,
     private readonly submissionService: SubmissionService,
     private readonly taskService: TaskService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {
     this.updateArtifacts();
   }
@@ -39,7 +46,27 @@ export class PortfolioComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe((user) => {
+    this.route.paramMap.pipe(
+      mergeMap((map: ParamMap) => {
+        if (map.has('id')) {
+          this.external = true;
+          return this.userService.getUser(map.get('id')!);
+        } else {
+          return this.authService.user$;
+        }  
+      }),
+      zipWith(this.route.url),
+      tap(([user, url]) => {
+        let hasFaculty = false;
+        url.forEach((segment) => {
+          if (segment.path === 'faculty') {
+            hasFaculty = true;
+          }
+        });
+        if (!this.external && hasFaculty) this.router.navigate(['']);
+      }),
+      map(([user, url]) => user)
+    ).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
       }

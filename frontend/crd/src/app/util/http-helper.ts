@@ -29,6 +29,7 @@ export enum Endpoints {
 
     // faculty
     USERS_SEARCH = 'users/search',
+    USERS = 'users',
 
     // admin
     EDIT_MILESTONE = 'admin/edit-milestone',

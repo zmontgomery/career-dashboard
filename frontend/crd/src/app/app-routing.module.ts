@@ -17,14 +17,13 @@ import { EventMainPageComponent } from './admin/event-main-page/event-main-page.
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
-  {path: 'profile', component: ProfileComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
 ]
 
 const facultyRoutes: Routes = [
   {path: 'faculty/users', component: UsersPageComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/portfolio', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'faculty/portfolio/:id', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
-  {path: 'faculty/profile/:id', component: ProfileComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'faculty/milestones/:id', component: MilestonesPageComponent, canActivate: [authGuard, facultyRoleGuard]},
 ]
 

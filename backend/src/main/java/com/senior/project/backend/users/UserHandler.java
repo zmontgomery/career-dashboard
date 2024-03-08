@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 /**
  * Handler for users
@@ -62,6 +63,14 @@ public class UserHandler {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "valid query params: pageOffset: number, pageSize: number, searchTerm: string"));
         }
+    }
+
+    public Mono<ServerResponse> byId(ServerRequest request) {
+        return Mono.just(request.pathVariable("id"))
+            .map(id -> UUID.fromString(id))
+            .flatMap(id -> service.findById(id))
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User was not found.")))
+            .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }
 
     /**

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Role, User, UserJSON } from './domain/user';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { UsersSearchResponseJSON } from '../users-page/user-search-result';
 
 @Injectable({
@@ -25,5 +25,9 @@ export class UserService {
     );
 
     return this.http.get<UsersSearchResponseJSON>(apiUrl);
+  }
+
+  getUser(id: string): Observable<User | null> {
+    return this.http.get(constructBackendRequest)
   }
 }

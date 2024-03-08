@@ -22,6 +22,7 @@ public class UserRouter {
     public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
         return
             route(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser)
+                .andRoute(GET(Endpoints.USERS_BY_ID.uri()), userHandler::byId)
                 .andRoute(GET(Endpoints.SEARCH_USERS.uri()), userHandler::searchUsers)
                 .andRoute(PUT(Endpoints.UPDATE_ROLES.uri()), userHandler::updateRole);
     }
