@@ -19,7 +19,7 @@ export class TaskService {
 
   /**
    * Gets all the tasks and caches the response
-   * 
+   *
    * If the cache has data in it, it returns the value of the cache, otherwise
    * it makes a request to the backend.
    * @param forceRefresh forces the cache to update by sending the request again
@@ -50,8 +50,13 @@ export class TaskService {
 
   }
 
+  getDashBoardTasks(): Observable<Task[]> {
+    return this.http.get<TaskJSON[]>(constructBackendRequest(Endpoints.DASHBOARD_TASKS))
+      .pipe(map((data) => data.map((taskData: any) => new Task(taskData))))
+  }
+
   /**
-   * API call to get data for a specific task 
+   * API call to get data for a specific task
    */
   findById(id: number): Observable<Task> {
     return this.http.get<TaskJSON>(constructBackendRequest(`${Endpoints.TASKS}/${id}`))

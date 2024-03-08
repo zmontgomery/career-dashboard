@@ -17,7 +17,7 @@ export class TasksComponent {
   ) {}
 
   ngOnInit() {
-    this.taskService.getTasks(true).subscribe((tasks: Task[]) => {
+    this.taskService.getDashBoardTasks().subscribe((tasks: Task[]) => {
       this.tasksList = tasks;
     });
   }
