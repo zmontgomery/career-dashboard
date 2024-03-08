@@ -3,7 +3,6 @@ import { AuthService } from '../auth.service';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
-import {ArtifactService} from "../../file-upload/artifact.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {UserService} from "../user.service";
 
@@ -28,7 +27,6 @@ export class UserMenuComponent implements OnInit {
         this.user = user!;
         this.userService.getProfilePicture()
           .subscribe((url) => {
-            console.log(url);
             this.profileURL =url;
           });
       }
