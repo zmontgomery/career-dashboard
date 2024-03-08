@@ -117,17 +117,4 @@ describe('ArtifactService', () => {
   it('should get EventImageURL', () => {
     expect(service.getEventImageUrl(1)).toEqual(constructBackendRequest(`${Endpoints.IMAGE_EVENT}/1`));
   });
-
-  it('should get ProfilePicture', (done) => {
-    const mockFile = new Blob();
-
-    service.getProfilePicture().subscribe((blob) => {
-      expect(blob).toContain('blob:http://localhost');
-      done();
-    });
-
-    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE));
-    expect(request.request.method).toEqual('GET');
-    request.flush(mockFile);
-  });
 })

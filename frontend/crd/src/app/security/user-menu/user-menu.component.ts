@@ -21,16 +21,15 @@ export class UserMenuComponent implements OnInit {
     private readonly router: Router,
     private readonly userService: UserService,
     ) {
-    // TODO replace with userService
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
-        this.userService.getProfilePicture()
-          .subscribe((url) => {
-            this.profileURL =url;
-          });
       }
     });
+    this.userService.getProfilePicture()
+      .subscribe((url) => {
+        this.profileURL =url;
+      });
   }
 
 
