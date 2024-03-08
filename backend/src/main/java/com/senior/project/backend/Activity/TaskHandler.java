@@ -79,5 +79,9 @@ public class TaskHandler {
                 return ServerResponse.badRequest().bodyValue("Invalid JSON format");
             }
         });
-    } 
+    }
+
+    public Mono<ServerResponse> dashboard(ServerRequest request) {
+        return ServerResponse.ok().bodyValue(taskService.dashboard());
+    }
 }
