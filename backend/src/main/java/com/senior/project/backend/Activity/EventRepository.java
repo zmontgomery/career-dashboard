@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Repository for Events
+ */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 

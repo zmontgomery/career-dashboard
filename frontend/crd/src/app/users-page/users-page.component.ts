@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {User} from "../security/domain/user";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UsersSearchResponseJSON} from "./userSearchResult";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Role, User} from "../security/domain/user";
+import {UsersSearchResponseJSON} from "./user-search-result";
 import {PageEvent} from "@angular/material/paginator";
-import {debounceTime, firstValueFrom, Observable, Subject} from "rxjs";
+import {debounceTime, firstValueFrom, first, map, Observable, of, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
+import {AuthService} from "../security/auth.service";
+import { UserService } from '../security/user.service';
 import {ArtifactService} from "../file-upload/artifact.service";
 
 @Component({
@@ -31,12 +31,16 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   private searching$ = new Subject<void>();
   isMobile$: Observable<boolean>;
 
+  user$: Observable<User | null>
+
   constructor(
-    private http: HttpClient,
+    private readonly userService: UserService,
     private screenSizeSvc: ScreenSizeService,
+    private readonly authService: AuthService,
     private artifactSvc: ArtifactService,
   ) {
     this.isMobile$ = this.screenSizeSvc.isMobile$;
+    this.user$ = this.authService.user$;
   }
 
   ngOnInit(): void {
@@ -57,24 +61,19 @@ export class UsersPageComponent implements OnInit, OnDestroy {
 
   // Method to fetch data from API
   loadData(): void {
-    const apiUrl = constructBackendRequest(Endpoints.USERS_SEARCH,
-      {key:'pageOffset', value: this.currentPage},
-      {key:'pageSize', value: this.pageSize},
-      {key: 'searchTerm', value: this.searchTerm}
-      );
-    this.http.get<UsersSearchResponseJSON>(apiUrl).subscribe((searchResults: UsersSearchResponseJSON) => {
-      this.dataSource = searchResults.users.map(it => new User(it));
-      this.totalItems = searchResults.totalResults;
-
-      this.dataSource.forEach((user: User) => {
-        if (user.profilePictureId != null)  {
-          this.artifactSvc.getArtifactFile(user.profilePictureId)
-            .subscribe((blob) => {
-              user.profilePictureURL = URL.createObjectURL(blob);
-            })
-        }
+    this.userService.searchUsers(this.currentPage, this.pageSize, this.searchTerm)
+      .subscribe((searchResults: UsersSearchResponseJSON) => {
+        this.dataSource = searchResults.users.map((u) => new User(u));
+        this.totalItems = searchResults.totalResults;
+        this.dataSource.forEach((user: User) => {
+          if (user.profilePictureId != null) {
+            this.artifactSvc.getArtifactFile(user.profilePictureId)
+              .subscribe((blob) => {
+                user.profilePictureURL = URL.createObjectURL(blob);
+              })
+          }
+        });
       });
-    });
   }
 
   // Method to handle page change

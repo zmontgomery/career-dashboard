@@ -31,6 +31,25 @@
     }
   }
 
+  .role-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .mat-icon {
+      margin-bottom: 3px;
+      margin-top: -1px;
+    }
+
+    .role-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 50px;
+      max-width: 150px;
+      width: 100%;
+    }
+  }
 
   .profile-picture {
     border-radius: 100%;
@@ -47,4 +66,8 @@
       width: 100px;
     }
   }
+}
+
+.mat-mdc-cell {
+  height: 52px !important;
 }

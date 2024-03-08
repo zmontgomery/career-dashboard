@@ -13,6 +13,7 @@ import org.jose4j.jws.JsonWebSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.security.domain.AuthInformation;
@@ -41,11 +42,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
     }
 
     /**
-     * Verifies an ID token by verifying its structures, signature, and claims
-     * 
-     * @param token - token being verified
-     * @return - A unique id for the user
-     * @throws TokenVerificiationException - thrown when an error occurs during the verification
+     * {@inheritDoc}
      */
     @Override
     public String verifiyIDToken(String token) throws TokenVerificiationException {
@@ -54,6 +51,26 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         TokenPayload tokenPayload = validateClaims(payload);
         return tokenPayload.getEmail();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String retrieveName(String token) throws TokenVerificiationException {
+        try {
+            JsonWebSignature jws = new JsonWebSignature();
+            jws.setCompactSerialization(token);
+            setKeyForJWS(jws);
+            String payload = jws.getPayload();
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            TokenPayload tokenPayload = mapper.readValue(payload, TokenPayload.class);
+            return tokenPayload.getName();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TokenVerificiationException("Name could not be extracted");
+        }
+    }  
 
     //
     // Private
@@ -89,26 +106,7 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
             JsonWebSignature jws = new JsonWebSignature();
             jws.setAlgorithmConstraints(new AlgorithmConstraints(ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA256));
             jws.setCompactSerialization(token);
-            JsonWebKey jwk = null;
-            String kid = jws.getKeyIdHeaderValue();
-            keySet = createKeySet();
-
-            // Get key for the token
-            jwk = extractKey(kid);
-
-            if (jwk == null) {
-                // Refetch the keyset if the keys have been rolled over
-                microsoftKeyset.invalidateCache();
-                keySet = createKeySet();
-                jwk = extractKey(kid);
-
-                if (jwk == null) {
-                    throw new TokenVerificiationException("Token had no key in the key set");
-                }
-            }
-
-            // Set the key
-            jws.setKey(jwk.getKey());
+            setKeyForJWS(jws);
 
             // Verify the token
             if (jws.verifySignature()) {
@@ -200,5 +198,28 @@ public class MicrosoftEntraIDTokenVerifier implements TokenVerifier {
         e.printStackTrace(printWriter);
         logger.error(writer.toString());
         return new TokenVerificiationException(e.getMessage());
+    }
+
+    private void setKeyForJWS(JsonWebSignature jws) throws TokenVerificiationException {
+        JsonWebKey jwk = null;
+        String kid = jws.getKeyIdHeaderValue();
+        keySet = createKeySet();
+
+        // Get key for the token
+        jwk = extractKey(kid);
+
+        if (jwk == null) {
+            // Refetch the keyset if the keys have been rolled over
+            microsoftKeyset.invalidateCache();
+            keySet = createKeySet();
+            jwk = extractKey(kid);
+
+            if (jwk == null) {
+                throw new TokenVerificiationException("Token had no key in the key set");
+            }
+        }
+
+        // Set the key
+        jws.setKey(jwk.getKey());
     }
 }

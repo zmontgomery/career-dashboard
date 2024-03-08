@@ -5,8 +5,6 @@ import lombok.*;
 import java.util.Date;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -54,10 +52,13 @@ public class StudentDetails {
 	
 	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<DegreeProgram> degreePrograms;
-	// private DegreeProgram[] majors;
-	// private Club[] clubs;
 
 	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<Skill> skills;
-	// private Skill[] languages;
+
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	private List<Club> clubs;
+
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	private List<Interest> interests;
 }

@@ -41,6 +41,10 @@ export class TaskMainPageComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Opens the edit modal, sending the selected task info
+   * For creating a new task, the name is the year level and task is null
+   */
   openTaskEditModal(name: string, task: Task | null) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -56,7 +60,7 @@ export class TaskMainPageComponent implements OnDestroy {
     const modalDialog = this.matDialog.open(TaskEditModalComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
-      //TODO: successful save popup?
+      // refresh the task cache before refreshes the component
       this.taskService.getTasks(true);
       this.ngOnInit();
     })

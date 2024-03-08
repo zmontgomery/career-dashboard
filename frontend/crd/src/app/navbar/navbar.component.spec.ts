@@ -7,25 +7,13 @@ import {AuthService} from "../security/auth.service";
 import {map, Subject} from "rxjs";
 import {Role, User, UserJSON} from "../security/domain/user";
 import SpyObj = jasmine.SpyObj;
+import { userJSON } from '../security/auth.service.spec';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let userSubject: Subject<UserJSON> = new Subject<UserJSON>();
-  let user: UserJSON = {
-    id: "string",
-    email: "string",
-    phoneNumber: "string",
-    dateCreated: 1,
-    lastLogin: 1,
-    firstName: 'string',
-    lastName: 'string',
-    preferredName: 'string',
-    canEmail: true,
-    canText: true,
-    role: Role.Student,
-    profilePictureId: 0,
-  }
+  let user: UserJSON = userJSON;
   let authSvcSpy: SpyObj<AuthService> = jasmine.createSpyObj('AuthService', [],
     {user$: userSubject.pipe(map(userJson => new User(userJson)))});
 

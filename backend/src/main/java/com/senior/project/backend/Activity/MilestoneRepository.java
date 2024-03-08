@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * Repository for Milestones
+ */
 @Repository
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
     // additional query methods if needed

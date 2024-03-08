@@ -27,6 +27,8 @@ export class EventsComponent implements OnInit{
   ngOnInit() {
     //const isMobile = navigator.userAgent; //only display one event per page on mobile
     //placeholder studentID
+    // start with only the first page of events
+    // TODO fire every tie carosel gets close to the end to get next page once backend is implement for this
     this.eventService.getDashboardEvents(1).subscribe((events: Event[]) => {
       this.events = events;
 

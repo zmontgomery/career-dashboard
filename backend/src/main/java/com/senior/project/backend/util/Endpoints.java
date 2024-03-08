@@ -35,6 +35,7 @@ public enum Endpoints {
     // Users
     CURRENT_USER("current-user", true),
     USERS("users", true, Role.Faculty),
+    UPDATE_ROLES("users/roles", true, Role.Faculty),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
 
@@ -56,6 +57,7 @@ public enum Endpoints {
     // Security
     SIGNIN("auth/signin", false),
     SIGNOUT("auth/signout", false),
+    SIGNUP("auth/signup", true),
     REFRESH("auth/refresh", true),
     FAILURE("auth/fail", false),
 
@@ -147,6 +149,9 @@ public enum Endpoints {
         return routes;
     }
 
+    /**
+     * Gets all faculty routes
+     */
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
         .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)

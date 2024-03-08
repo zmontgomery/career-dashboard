@@ -8,6 +8,7 @@ import {Router} from "@angular/router";
 import {ArtifactService} from "../../file-upload/artifact.service";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
+import { userJSON } from '../auth.service.spec';
 
 describe('UserMenuComponent', () => {
   let component: UserMenuComponent;
@@ -15,21 +16,6 @@ describe('UserMenuComponent', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let artifactSvcSpy: jasmine.SpyObj<ArtifactService>;
-
-  const userJSON: UserJSON = {
-    id: 'id',
-    email: 'test@test.test',
-    phoneNumber: '111-111-1111',
-    dateCreated: 0,
-    lastLogin: 0,
-    firstName: 'test',
-    lastName: 'test',
-    preferredName: 'test',
-    canEmail: false,
-    canText: false,
-    role: Role.Admin,
-    profilePictureId: 0,
-  }
 
   function setup(user: User | null) {
     authServiceSpy = jasmine.createSpyObj('AuthService', ['signOut'], {user$: of(user)});
