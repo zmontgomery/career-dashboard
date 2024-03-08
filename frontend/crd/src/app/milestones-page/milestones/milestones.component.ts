@@ -76,8 +76,13 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       task: task
     }
     const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
+
+    modalDialog.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    })
   }
-    milestonesMap: Map<string, Array<Milestone>> = new Map()
+
+  milestonesMap: Map<string, Array<Milestone>> = new Map()
   completedTasks!: number[];
   completedMilestones: number[] = [];
   protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
