@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
         run:
-          working-directory: ./frontend/crd
+          working-directory: ./frontend
 
     strategy:
       matrix:
@@ -43,4 +43,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: coverage
-        path: frontend/crd/coverage/crd/
+        path: frontend/coverage/crd/
