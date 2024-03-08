@@ -7,6 +7,8 @@ import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.security.SecurityUtil;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,6 +58,19 @@ public class ArtifactServiceTest {
     @Mock
     private EventRepository eventRepository;
 
+    private MockedStatic<SecurityUtil> securityUtils;
+
+    @BeforeEach
+    public void reusedMocks() {
+        securityUtils = mockStatic(SecurityUtil.class);
+        securityUtils.when(SecurityUtil::getCurrentUser).thenReturn(Mono.just(Constants.user1));
+    }
+
+    @AfterEach
+    public void clearMocks() {
+        securityUtils.close();
+    }
+
     @Test
     public void testProcessFile() throws NoSuchFieldException, IllegalAccessException {
         FilePart filePart = mock(FilePart.class);
@@ -69,8 +84,6 @@ public class ArtifactServiceTest {
         when(filePart.headers()).thenReturn(headers);
 
         when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
-        MockedStatic<SecurityUtil> securityUtil = mockStatic(SecurityUtil.class);
-        securityUtil.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
 
@@ -80,11 +93,7 @@ public class ArtifactServiceTest {
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         Mono<Integer> result = artifactService.processSubmissionFile(filePart);
-        result = result.map((a) -> {
-            
-            securityUtil.close();
-            return a;
-        });
+        result = result.map((a) -> a);
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
     }
 
@@ -152,8 +161,6 @@ public class ArtifactServiceTest {
         when(filePart.headers()).thenReturn(headers);
 
         when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
-        MockedStatic<SecurityUtil> securityUtil = mockStatic(SecurityUtil.class);
-        securityUtil.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
         when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
         when(eventRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.e1));
@@ -164,11 +171,7 @@ public class ArtifactServiceTest {
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         Mono<Integer> result = artifactService.processEventImage(filePart, Constants.e1.getId());
-        result = result.map((a) -> {
-
-            securityUtil.close();
-            return a;
-        });
+        result = result.map((a) -> a);
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
     }
 
@@ -257,18 +260,15 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalName() {
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
-        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
         files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
-        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile("asdf");
 
         result = result.map((r) -> {
             paths.close();
             files.close(); 
-            securityUtils.close();   
             return r;
         });
 
@@ -281,14 +281,9 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalNameEmpty() {
         when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.empty());
-        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
-        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile("asdf");
 
-        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> {
-            securityUtils.close();
-            return result;
-        }));
+        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> result));
 
         StepVerifier.create(newResult)
             .expectComplete()
@@ -298,19 +293,16 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileId() {
         when(artifactRepository.findById(any())).thenReturn(Optional.of(Constants.artifact1));
-        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
         files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
-        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile(2);
 
         result = result.map((r) -> {
             paths.close();
             files.close(); 
-            securityUtils.close();   
-            
+
             return r;
         });
 
@@ -333,14 +325,9 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileIdEmpty() {
         when(artifactRepository.findById(any())).thenReturn(Optional.empty());
-        MockedStatic<SecurityUtil> securityUtils = mockStatic(SecurityUtil.class);
-        securityUtils.when(() -> SecurityUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile(2);
 
-        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> {
-            securityUtils.close();
-            return result;
-        }));
+        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> result));
 
         StepVerifier.create(newResult)
             .expectComplete()
