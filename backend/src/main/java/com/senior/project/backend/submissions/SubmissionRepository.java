@@ -9,6 +9,7 @@ import com.senior.project.backend.domain.Submission;
 import java.util.List;
 import java.util.Date;
 import java.util.UUID;
+import java.util.Optional;
 
 /**
  * Repository to interact with the submission table
@@ -21,4 +22,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long>{
         @Param("userId") UUID userId, 
         @Param("taskId") int taskId
     );
+
+    @Query("SELECT s FROM Submission s WHERE s.artifactId = :artifactId")
+    Optional<Submission> findSubmissionByArtifactId(@Param("artifactId") int artifactId);
 }

@@ -1,6 +1,5 @@
 package com.senior.project.backend.artifact;
 
-import com.google.common.base.Supplier;
 import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.domain.ArtifactType;
@@ -20,7 +19,6 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.core.io.Resource;
 
