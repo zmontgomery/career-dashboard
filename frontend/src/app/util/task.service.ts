@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Task, TaskJSON } from 'src/domain/Task';
-import { concatMap, finalize, map, Observable, of, ReplaySubject } from "rxjs";
-import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Task, TaskJSON} from 'src/domain/Task';
+import {map, Observable, ReplaySubject} from "rxjs";
+import {constructBackendRequest, Endpoints} from 'src/app/util/http-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -32,12 +32,10 @@ export class TaskService {
         const mappedData = data.map((taskData: any) => {
             //if the milestone is sent as a object and not just the ID, extract the ID
             if (taskData.milestone) {
-              const taskMilestone = taskData.milestone.id;
-              taskData.milestoneID = taskMilestone;
+              taskData.milestoneID = taskData.milestone.id;
             }
             if (taskData.event) {
-              const taskEvent = taskData.event.id;
-              taskData.eventID = taskEvent;
+              taskData.eventID = taskData.event.id;
             }
 
             return new Task(taskData)
@@ -52,7 +50,7 @@ export class TaskService {
 
   getDashBoardTasks(): Observable<Task[]> {
     return this.http.get<TaskJSON[]>(constructBackendRequest(Endpoints.DASHBOARD_TASKS))
-      .pipe(map((data) => data.map((taskData: any) => new Task(taskData))))
+      .pipe(map((data) => data.map((taskData: TaskJSON) => new Task(taskData))))
   }
 
   /**
