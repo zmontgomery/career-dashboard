@@ -53,7 +53,7 @@ public class SubmissionHandler {
                 return submission;
             })
             // Get previous submissions
-            .flatMapMany((submission) -> submissionService.getPreviousSubmissions(submission.getStudentId(), submission.getTaskId()))
+            .flatMapMany((submission) -> submissionService.getSubmissions(submission.getStudentId(), submission.getTaskId()))
             .filter((submission) -> newSubmission.getArtifactId() != submission.getArtifactId())
             .flatMap((submission) -> { // Save artifact id and remove the previous artifact from the submission
                 int artifactId = submission.getArtifactId();
