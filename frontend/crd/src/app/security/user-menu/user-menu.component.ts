@@ -5,6 +5,7 @@ import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
 import {ArtifactService} from "../../file-upload/artifact.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-user-menu',
@@ -19,14 +20,15 @@ export class UserMenuComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
-    private readonly artifactService: ArtifactService,
+    private readonly userService: UserService,
     ) {
     // TODO replace with userService
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
-        this.artifactService.getProfilePicture()
+        this.userService.getProfilePicture()
           .subscribe((url) => {
+            console.log(url);
             this.profileURL =url;
           });
       }

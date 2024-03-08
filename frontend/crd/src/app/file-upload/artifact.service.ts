@@ -62,15 +62,6 @@ export class ArtifactService {
       }));
   }
 
-  getProfilePicture(): Observable<string | null> {
-    return this.http.get(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE), { responseType: 'blob' })
-      .pipe(map((data: any) => {
-        if (data != null) {
-          return URL.createObjectURL(new Blob([data]));
-        } else return null;
-      }));
-  }
-
   getEventImageUrl(imageId: number): string {
     return constructBackendRequest(`${Endpoints.IMAGE_EVENT}/${imageId}`);
   }

@@ -6,6 +6,7 @@ import {AuthService} from "../security/auth.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {LangUtils} from "../util/lang-utils";
 import {ArtifactService} from "../file-upload/artifact.service";
+import {UserService} from "../security/user.service";
 
 @Component({
   selector: 'app-settings',
@@ -19,20 +20,15 @@ export class SettingsPageComponent {
   constructor(
     public matDialog: MatDialog,
     private authService: AuthService,
-    private artifactService: ArtifactService,
+    private userService: UserService,
   ) {
-    // TODO replace with userService
-    this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
-      if (LangUtils.exists(user)) {
-        this.updateProfilePicture();
-      }
-    });
+    this.updateProfilePicture();
   }
 
-  // TODO replace with userService
-  private updateProfilePicture() {
-    this.artifactService.getProfilePicture()
+  private updateProfilePicture(forceRefresh: boolean = false) {
+    this.userService.getProfilePicture(forceRefresh)
       .subscribe((url) => {
+        console.log(url);
         this.profileURL = url;
       });
   }
@@ -51,9 +47,7 @@ export class SettingsPageComponent {
     const modalDialog = this.matDialog.open(ProfileImageModalComponent, dialogConfig);
 
     modalDialog.afterClosed().subscribe(result => {
-      // TODO replace with userService updateProfilePicture rather than reloading window
-      // this.updateProfilePicture();
-      location.reload();
+      this.updateProfilePicture(true);
     })
   }
 }
