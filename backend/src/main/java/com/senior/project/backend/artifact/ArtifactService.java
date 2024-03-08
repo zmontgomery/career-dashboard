@@ -317,6 +317,8 @@ public class ArtifactService {
                         return artifactMono;
                     }
                     return SecurityUtil.getCurrentUser()
+                            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                                    "User does not have access to this artifact")))
                             .flatMap(user -> {
                                 if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
                                     return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
