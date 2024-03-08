@@ -6,7 +6,6 @@ import {Observable, map, switchMap, of, Subject, ReplaySubject} from 'rxjs';
 import { UsersSearchResponseJSON } from '../users-page/user-search-result';
 import {AuthService} from "./auth.service";
 import {LangUtils} from "../util/lang-utils";
-import {ArtifactService} from "../file-upload/artifact.service";
 
 @Injectable({
   providedIn: 'root'

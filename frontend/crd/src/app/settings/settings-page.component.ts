@@ -1,34 +1,34 @@
-import { Component } from '@angular/core';
-import {Endpoints} from "../util/http-helper";
+import {Component, OnDestroy} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ProfileImageModalComponent} from "../file-upload/profile-image-modal/profile-image-modal.component";
-import {AuthService} from "../security/auth.service";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {LangUtils} from "../util/lang-utils";
-import {ArtifactService} from "../file-upload/artifact.service";
 import {UserService} from "../security/user.service";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings-page.component.html',
   styleUrls: ['./settings-page.component.less']
 })
-export class SettingsPageComponent {
+export class SettingsPageComponent implements OnDestroy {
 
   profileURL: string | null = null;
+  private destroyed$ = new Subject<any>();
 
   constructor(
     public matDialog: MatDialog,
-    private authService: AuthService,
     private userService: UserService,
   ) {
     this.updateProfilePicture();
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.complete();
+  }
+
   private updateProfilePicture(forceRefresh: boolean = false) {
     this.userService.getProfilePicture(forceRefresh)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((url) => {
-        console.log(url);
         this.profileURL = url;
       });
   }
@@ -46,8 +46,10 @@ export class SettingsPageComponent {
 
     const modalDialog = this.matDialog.open(ProfileImageModalComponent, dialogConfig);
 
-    modalDialog.afterClosed().subscribe(result => {
-      this.updateProfilePicture(true);
+    modalDialog.afterClosed().subscribe(update => {
+      if (update) {
+        this.updateProfilePicture(true);
+      }
     })
   }
 }

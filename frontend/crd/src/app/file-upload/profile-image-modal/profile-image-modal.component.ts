@@ -3,7 +3,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Observable} from "rxjs";
 import {ArtifactService} from "../artifact.service";
 
-
+/**
+ * yup
+ */
 @Component({
   selector: 'app-image-upload-modal',
   templateUrl: './profile-image-modal.component.html',
@@ -28,7 +30,11 @@ export class ProfileImageModalComponent implements OnInit {
 
   }
 
+  /**
+   * Close the modal after a delay. sends update for profile pic if not 0 delay
+   * @param waitTime time to delay closing
+   */
   closeModal(waitTime: number) {
-    setTimeout(() => this.dialogRef.close(), waitTime);
+    setTimeout(() => this.dialogRef.close(waitTime > 0), waitTime);
   }
 }
