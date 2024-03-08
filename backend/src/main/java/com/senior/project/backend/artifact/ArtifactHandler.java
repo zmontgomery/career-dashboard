@@ -11,6 +11,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.submissions.SubmissionService;
+
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
@@ -22,9 +26,11 @@ import java.util.Objects;
 public class ArtifactHandler {
 
     private final ArtifactService artifactService;
+    private final SubmissionService submissionService;
 
-    public ArtifactHandler(ArtifactService artifactService){
+    public ArtifactHandler(ArtifactService artifactService, SubmissionService submissionService){
         this.artifactService = artifactService;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -69,9 +75,18 @@ public class ArtifactHandler {
      * Deletes the file with the given file name
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
-        return artifactService.deleteFile(Integer.parseInt(request.pathVariable("id")))
-            .flatMap((response) -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
-    }
+        return Mono.just(Integer.parseInt(request.pathVariable("id")))
+            .flatMap((id) -> {
+                if (id == 1) return Mono.empty();
+                return submissionService.findByArtifact(id)
+                    .switchIfEmpty(Mono.just(Submission.builder().id(0).build()))
+                    .doOnNext(s -> System.out.println(s))
+                    .flatMap(submission -> submission.getId() == 0 ? Mono.just(submission) : submissionService.scrubArtifact(submission))
+                    .flatMap(submission -> artifactService.deleteFile(id))
+                    .flatMap(response -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
+            })
+            .switchIfEmpty(ServerResponse.accepted().build());
+        }
 
     /**
      * Returns the file based on the given artifact id

@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Service to interact with the repository layer for submissions
@@ -85,5 +86,17 @@ public class SubmissionService {
     public Mono<Submission> scrubArtifact(Submission submission) {
         submission.setArtifactId(1);
         return addSubmission(submission);
+    }
+
+    /**
+     * @param artifactId
+     * @return the submission with the given artifact id
+     */
+    public Mono<Submission> findByArtifact(int artifactId) {
+        Optional<Submission> submission = submissionRepository.findSubmissionByArtifactId(artifactId);
+        if (submission.isPresent()) {
+            return Mono.just(submission.get());
+        }
+        return Mono.empty();
     }
 }

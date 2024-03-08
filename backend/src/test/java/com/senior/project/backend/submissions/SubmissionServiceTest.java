@@ -23,6 +23,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class SubmissionServiceTest {
     
@@ -127,5 +129,28 @@ public class SubmissionServiceTest {
             throwable.getMessage().equals("Can't get submissions for other users"));
 
         securityUtil.close();
+    }
+
+    @Test
+    public void testFindByArtifactHappy() {
+        when(submissionRepository.findSubmissionByArtifactId(anyInt())).thenReturn(Optional.of(Constants.submission1));
+
+        Mono<Submission> result = submissionService.findByArtifact(1);
+
+        StepVerifier.create(result)
+            .expectNext(Constants.submission1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void testFindByArtifactEmpty() {
+        when(submissionRepository.findSubmissionByArtifactId(anyInt())).thenReturn(Optional.empty());
+
+        Mono<Submission> result = submissionService.findByArtifact(1);
+
+        StepVerifier.create(result)
+            .expectComplete()
+            .verify();
     }
 }
