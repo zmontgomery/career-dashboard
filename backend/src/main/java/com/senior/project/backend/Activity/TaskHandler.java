@@ -82,6 +82,6 @@ public class TaskHandler {
     }
 
     public Mono<ServerResponse> dashboard(ServerRequest request) {
-        return ServerResponse.ok().bodyValue(taskService.dashboard());
+        return ServerResponse.ok().body(taskService.dashboard(), Task.class);
     }
 }

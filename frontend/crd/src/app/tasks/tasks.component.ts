@@ -3,6 +3,9 @@ import {TaskService} from "../util/task.service";
 import {Task} from "../../domain/Task";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TasksModalComponent } from '../tasks-modal/tasks-modal.component';
+import {AuthService} from "../security/auth.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {firstValueFrom, take} from "rxjs";
 
 @Component({
   selector: 'app-tasks',
@@ -13,13 +16,20 @@ export class TasksComponent {
 
   constructor(
     private taskService: TaskService,
-    public matDialog: MatDialog
-  ) {}
+    private authService: AuthService,
+    public matDialog: MatDialog,
+  ) {
+    this.authService.user$.pipe(take(1)).subscribe((user) => {
+      if (user != null && user.studentDetails != undefined) {
+        this.taskService.getDashBoardTasks().subscribe((tasks: Task[]) => {
+          this.tasksList = tasks;
+        });
+      }
+    });
+  }
 
   ngOnInit() {
-    this.taskService.getDashBoardTasks().subscribe((tasks: Task[]) => {
-      this.tasksList = tasks;
-    });
+
   }
 
   openTask(task: any) {

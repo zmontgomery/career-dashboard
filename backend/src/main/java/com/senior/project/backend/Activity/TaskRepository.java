@@ -28,5 +28,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "AND NOT EXISTS (SELECT s FROM Submission s " +
             "WHERE s.studentId = :uid " +
             "AND s.taskId = t.id)")
-    List<Task> findOverDueTasks(@Param("y") List<YearLevel> yearLevel, @Param("uid") UUID userId);
+    List<Task> findOverDueTasks(@Param("yList") List<YearLevel> yearLevel, @Param("uid") UUID userId);
 }

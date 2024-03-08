@@ -6,14 +6,14 @@ import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.TaskType;
 import com.senior.project.backend.domain.YearLevel;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import com.senior.project.backend.security.SecurityUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -153,8 +153,29 @@ public class TaskService {
 
 
     public Flux<Task> dashboard() {
+
         return SecurityUtil.getCurrentUser()
-                .flatMapMany((user) -> NonBlockingExecutor.executeMany(() ->
-                        taskRepository.findOverDueTasks(List.of(YearLevel.Freshman), user.getId())));
+                .flatMapMany((user) -> {
+                    var yearList = new ArrayList<YearLevel>();
+                    var studentDetails = user.getStudentDetails();
+                    if (studentDetails == null) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Student Details not setup for user"));
+                    }
+                    switch (studentDetails.getYearLevel()) {
+                        case Senior:
+                            yearList.add(YearLevel.Senior);
+                        case Junior:
+                            yearList.add(YearLevel.Junior);
+                        case Sophomore:
+                            yearList.add(YearLevel.Sophomore);
+                        case Freshman:
+                            yearList.add(YearLevel.Freshman);
+                        default:
+                            break;
+                    }
+                    return NonBlockingExecutor.executeMany(() ->
+                            taskRepository.findOverDueTasks(yearList, user.getId()));
+                });
     }
 }
