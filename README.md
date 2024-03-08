@@ -25,7 +25,7 @@ Partially Hydrated devs - Senior Project
 - for further email and other configuration options see backend/src/main/resources/application.properties
 - run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} CRD_SUPER_ADMIN={admin email} ./gradlew bootrun`
 - or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
-- open another terminal and navigate to the frontend directory
+- open another terminal and navigate to the frontend/crd directory
 - run `npm start`
 - open up your browser and go to http://localhost:4200/
 
@@ -35,7 +35,7 @@ Partially Hydrated devs - Senior Project
 
 # Executing tests
 ### Front-end
-- `cd frontend`
+- `cd frontend/crd`
 - `npm run test-headless`
 - coverage found in frontend/crd/coverage/crd/index.html
 - for more accurate coverage, run `npm run test-headless-coverage`
@@ -45,7 +45,7 @@ Partially Hydrated devs - Senior Project
 - coverage found in backend/build/reports/jacoco/test/html/index.html
 
 # Deploying
-- `cd frontend`
+- `cd frontend/crd`
 - `npm run build`
 - cd back to project home
 - `cd backend`
