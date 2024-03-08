@@ -122,11 +122,11 @@ describe('ArtifactService', () => {
     const mockFile = new Blob();
 
     service.getProfilePicture().subscribe((blob) => {
-      expect(blob).toEqual('test');
+      expect(blob).toContain('blob:http://localhost');
       done();
     });
 
-    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE + '/1'));
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE));
     expect(request.request.method).toEqual('GET');
     request.flush(mockFile);
   });

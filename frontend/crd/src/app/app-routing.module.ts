@@ -12,8 +12,6 @@ import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.com
 import {UsersPageComponent} from "./users-page/users-page.component";
 import { SignupPageComponent } from './security/signup-page/signup-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
-import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
-import { UsersPageComponent } from "./users-page/users-page.component";
 import {SettingsPageComponent} from "./settings/settings-page.component";
 
 const studentRoutes: Routes = [
