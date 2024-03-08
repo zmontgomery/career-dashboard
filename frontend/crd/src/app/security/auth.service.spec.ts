@@ -26,6 +26,7 @@ export const userJSON: UserJSON = {
   canEmail: false,
   canText: false,
   role: Role.Admin,
+  linkedin: 'linkedin'
 }
 
 describe('AuthService', () => {
