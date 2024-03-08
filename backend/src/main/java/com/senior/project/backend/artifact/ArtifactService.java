@@ -311,20 +311,19 @@ public class ArtifactService {
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
         Mono<Artifact> artifactMono = NonBlockingExecutor.execute(() -> this.artifactRepository.findById(Long.valueOf(artifactID))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." )));
-
+        var userMono = SecurityUtil.getCurrentUser();
         return artifactMono
-                .zipWith(SecurityUtil.getCurrentUser())
-                .flatMap((zipped) -> {
-                    var artifact = zipped.getT1();
-                    var user = zipped.getT2();
+                .flatMap((artifact) -> {
                     if (artifact.getType() == ArtifactType.EVENT_IMAGE) {
                         return artifactMono;
                     }
-                    if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
-                        return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
-                                "User does not have access to this artifact"));
-                    }
-                    return artifactMono;
+                    return userMono.flatMap((user) -> {
+                        if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
+                            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                                    "User does not have access to this artifact"));
+                        }
+                        return artifactMono;
+                    });
                 })
                 .flatMap((artifact) -> {
                     Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
