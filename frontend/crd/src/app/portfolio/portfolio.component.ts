@@ -47,10 +47,16 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
+  /**
+   * Grabs the Student's artifacts to be displayed.
+   * Currently just grabs the resume
+   */
   updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
-      this.artifactId = submission.artifactId;
-      if (submission.artifactId !== this.NO_FILE) {
+      console.log(submission.hasFile());
+      if (submission.hasFile()) {
+        console.log('hello');
+        this.artifactId = submission.artifactId;
         this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
           this.pdfURL = URL.createObjectURL(file);
           this.showUploadButton = false;
@@ -58,10 +64,14 @@ export class PortfolioComponent implements OnInit{
       } else {
         this.pdfURL = '';
         this.showUploadButton = true;
+        this.artifactId = this.NO_FILE;
       }
     });
   }
 
+  /**
+   * Opens the Submission Modal
+   */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       this.dialog.open(SubmissionModalComponent, {

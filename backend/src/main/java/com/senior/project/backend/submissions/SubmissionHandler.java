@@ -5,6 +5,7 @@ import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -74,8 +75,8 @@ public class SubmissionHandler {
         return authService.currentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
+            .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)) : Mono.just(submissions))
             .map((submissions) -> {
-                System.out.println(submissions.toString());
                 List<Submission> newList = submissions.stream()
                     .sorted((s1, s2) -> s1.getSubmissionDate().before(s2.getSubmissionDate()) ? -1 : 1)
                     .collect(Collectors.toList());

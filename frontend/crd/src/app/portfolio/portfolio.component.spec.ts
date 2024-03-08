@@ -11,7 +11,7 @@ import {of} from "rxjs";
 import {Artifact} from "../../domain/Artifact";
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
 import { task } from '../util/task.service.spec';
-import { submission1, submission1JSON } from '../submissions/submission.service.spec';
+import { submission1, submission1JSON, submission2 } from '../submissions/submission.service.spec';
 import { SubmissionService } from '../submissions/submission.service';
 import { TaskService } from '../util/task.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -30,6 +30,12 @@ describe('PortfolioComponent', () => {
   let artifactSvc = jasmine.createSpyObj('ArtifactService', ['getArtifactFile']);
   const artifact1JSON = {
     fileName: "string",
+    id: 2,
+    submissionDate: new Date(),
+    submission: 1,
+  }
+  const artifact2JSON = {
+    fileName: "string",
     id: 1,
     submissionDate: new Date(),
     submission: 1,
@@ -46,7 +52,7 @@ describe('PortfolioComponent', () => {
     matDialog.open.and.returnValue(matDialogRef);
     matDialogRef.afterClosed.and.returnValue(of());
     artifactSvc.getArtifactFile.and.returnValue(of(mockPdfBlob));
-
+    taskService.findById.and.returnValue(of(task));
     TestBed.configureTestingModule({
       declarations: [
         PortfolioComponent,
@@ -84,7 +90,10 @@ describe('PortfolioComponent', () => {
     )
   }));
 
-  it('update Artifacts', fakeAsync(() => {   
+  it('update Artifacts with file', fakeAsync(() => {  
+    submissionService.getLatestSubmission.and.returnValue(of(submission2)); 
+    // @ts-ignore
+    component.updateArtifacts();
     tick(1000);
     expect(component.showUploadButton).toBeFalse();
     expect(component.pdfURL).toBeTruthy();
@@ -102,9 +111,11 @@ describe('PortfolioComponent', () => {
   }));
 
   it('should delete resume', fakeAsync(() => {
+    component.artifactId = 2;
     spyOn(component, 'updateArtifacts');
     matDialogRef.afterClosed.and.returnValue(of(true));
     
+
     component.deleteResume();
     tick(1000);
     expect(matDialog.open).toHaveBeenCalledWith(DeleteResumeConfirmationDialogComponent,
@@ -114,13 +125,14 @@ describe('PortfolioComponent', () => {
   }));
 
   it('should delete resume but not call update artifacts', fakeAsync(() => {
+    component.artifactId = 1;
     spyOn(component, 'updateArtifacts');
     matDialogRef.afterClosed.and.returnValue(of(false));
     
     component.deleteResume();
     tick(1000);
     expect(matDialog.open).toHaveBeenCalledWith(DeleteResumeConfirmationDialogComponent,
-      {data: {artifactId: 2} }
+      {data: {artifactId: 1} }
     )
     expect(component.updateArtifacts).not.toHaveBeenCalled();
   }));

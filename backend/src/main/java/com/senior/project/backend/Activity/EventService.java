@@ -20,13 +20,32 @@ public class EventService {
     private final EventRepository eventRepository;
 
     public EventService(EventRepository eventRepository) { this.eventRepository = eventRepository;}
+
+    /**
+     * Gets all events
+     */
     public Flux<Event> all() {
         return Flux.fromIterable(eventRepository.findAll());
     }
+
+    /**
+     * Gets the specific events for the dashboard
+     * TODO implement this
+     * A pageNum param will most likely be included in the future
+     */
     public Flux<Event> dashboard() {
         return Flux.fromIterable(eventRepository.findAll()); //same as /events for now
     }
 
+    /**
+     * Updates an event using the provided map of updates
+     * It assumes all updates will include id, name, location, and organizer since those are required
+     * 
+     * @param id event id
+     * @param updates updated event data in the form of fieldName, fieldValue
+     * @return the updated event or 404 if event not found
+     * @throws Exception if date formatted doesn't work 
+     */
     @Transactional
     public Mono<Event> updateEvent(long id, Map<String, Object> updates) {
         Optional<Event> potentiallyExistingEvent = eventRepository.findById(id);
@@ -60,6 +79,15 @@ public class EventService {
         return Mono.just(eventRepository.save(existingEvent));
     }
 
+    /**
+     * Creates an event using the provided map of data
+     * It assumes the data will include id, name, location, and organizer since those are required
+     * 
+     * @param id event id
+     * @param data event data in the form of fieldName, fieldValue
+     * @return the new event
+     * @throws Exception if date formatted doesn't work 
+     */
     @Transactional
     public Mono<Event> createEvent(Map<String, Object> data) {
         Event newEvent = new Event();

@@ -1,11 +1,10 @@
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import { UsersPageComponent } from './users-page.component';
 import {ScreenSizeService} from "../util/screen-size.service";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {of} from "rxjs";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
-import {UsersSearchResponse} from "./userSearchResult";
+import {UsersSearchResponse} from "./user-search-result";
 import {User} from "../security/domain/user";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {FormsModule} from "@angular/forms";
@@ -15,13 +14,19 @@ import {MatInputModule} from "@angular/material/input";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {NgOptimizedImage} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import { UserService } from '../security/user.service';
+import { AuthService } from '../security/auth.service';
+import { userJSON } from '../security/auth.service.spec';
+import { MockComponent } from 'ng-mocks';
+import { EditRoleMenuComponent } from './edit-role-menu/edit-role-menu.component';
 
 describe('UsersPageComponent', () => {
   let component: UsersPageComponent;
   let fixture: ComponentFixture<UsersPageComponent>;
-  let httpMock: HttpTestingController;
   let screenSizeSvcSpy: ScreenSizeService = jasmine.createSpyObj('ScreenSizeService', [],
     {isMobile$: of(false)});
+  let userService: jasmine.SpyObj<UserService> = jasmine.createSpyObj('UserService', ['searchUsers']);
+  let authService: jasmine.SpyObj<AuthService> = jasmine.createSpyObj('AuthService', [], {user$: of(new User(userJSON))});
 
   const users: Array<User> = new Array<User>(10).fill(User.makeEmpty())
   const results: UsersSearchResponse = {
@@ -30,6 +35,10 @@ describe('UsersPageComponent', () => {
   }
 
   beforeEach(() => {
+    userService.searchUsers.and.returnValue(of({
+        totalResults: 2,
+        users: [userJSON, userJSON],
+    }));
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
@@ -42,12 +51,13 @@ describe('UsersPageComponent', () => {
         MatInputModule,
         MatTableModule,
       ],
-      declarations: [UsersPageComponent],
+      declarations: [UsersPageComponent, MockComponent(EditRoleMenuComponent)],
       providers: [
-        {provide: ScreenSizeService, userValue: screenSizeSvcSpy}
+        {provide: ScreenSizeService, useValue: screenSizeSvcSpy},
+        {provide: UserService, useValue: userService},
+        {provide: AuthService, useValue: authService},
       ],
     });
-    httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(UsersPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -57,28 +67,19 @@ describe('UsersPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  function assertSearchRequest(pageOffset: number, pageSize: number, searchTerm: string,
-                               resultsProvided: UsersSearchResponse = results,
-                               expectedDataSource: Array<User> = users
-                               ) {
-    const url = constructBackendRequest(Endpoints.USERS_SEARCH,
-      {key:'pageOffset', value:pageOffset},
-      {key:'pageSize', value:pageSize},
-      {key:'searchTerm', value:searchTerm})
-    tick(1000)
-    const request = httpMock.expectOne(url);
-    expect(request.request.method).toEqual('GET');
-    request.flush(resultsProvided);
-    flush();
-    expect(component.dataSource.length).toEqual(expectedDataSource.length);
-    // should be able to do this once ids are not changed randomly
-    // expect(component.dataSource).toEqual(expectedDataSource);
-  }
+  it('should complete on destroy', () => {
+    // @ts-ignore
+    spyOn(component.searching$, 'complete');
 
+    component.ngOnDestroy();
+
+    // @ts-ignore
+    expect(component.searching$.complete).toHaveBeenCalled();
+  });
 
   beforeEach(fakeAsync(() => {
     // default search on component load
-    assertSearchRequest(0, 10, '')
+    tick(1000);
   }));
 
   it('should load data when page changes', fakeAsync(() => {
@@ -86,16 +87,19 @@ describe('UsersPageComponent', () => {
 
     component.onPageChange(pageEvent); // Trigger page change event
 
-    assertSearchRequest(1, 10, '');
+    tick(1000);
+
+    expect(component.dataSource.length).toEqual(2);
   }));
 
   it('should load data when search term changes', fakeAsync(() => {
-    // spyOn(yourEntityService, 'searchEntities').and.returnValue(Promise.resolve([])); // Mock the service method
     const searchTerm = 'test'; // Example search term
 
     component.searchTerm = searchTerm; // Set search term
     component.onSearch(); // Trigger search event
 
-    assertSearchRequest(0, 10, searchTerm);
+    tick(1000);
+
+    expect(component.dataSource.length).toEqual(2);
   }));
 });
