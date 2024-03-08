@@ -134,6 +134,7 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
+        var userMono = SecurityUtil.getCurrentUser();
         var uploadAndUserMono = validateAndGetPath(filePart, IMAGE_TYPES)
                 .zipWith(validateImageAspectRatio(filePart, 1))
                 .flatMap( zipped -> {
@@ -153,7 +154,7 @@ public class ArtifactService {
                             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
                         }
                     });
-                }).zipWith(SecurityUtil.getCurrentUser());
+                }).zipWith(userMono);
 
         uploadAndUserMono = uploadAndUserMono
                 .flatMap((zipped) -> {

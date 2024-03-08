@@ -93,7 +93,6 @@ public class ArtifactServiceTest {
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         Mono<Integer> result = artifactService.processSubmissionFile(filePart);
-        result = result.map((a) -> a);
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
     }
 
@@ -171,9 +170,38 @@ public class ArtifactServiceTest {
         uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
 
         Mono<Integer> result = artifactService.processEventImage(filePart, Constants.e1.getId());
-        result = result.map((a) -> a);
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
     }
+
+//    Idk how to do this
+//
+//    @Test
+//    public void testProcessProfileImage() throws NoSuchFieldException, IllegalAccessException {
+//        when(artifactRepository.save(any())).thenReturn(Artifact.builder().id(1).build());
+//
+//        FilePart filePart = mock(FilePart.class);
+//
+//        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+//        DataBuffer dataBuffer = dataBufferFactory.wrap("file content".getBytes());
+//        when(filePart.content()).thenReturn(Flux.just(dataBuffer));
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_PNG);
+//        when(filePart.headers()).thenReturn(headers);
+//
+//        when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
+//        when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
+//        when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
+//        when(eventRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.e1));
+//
+//        // Use reflection to set the value of uploadDirectory
+//        Field uploadDirectoryField = ArtifactService.class.getDeclaredField("uploadDirectory");
+//        uploadDirectoryField.setAccessible(true); // Make the private field accessible
+//        uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
+//
+//        Mono<Integer> result = artifactService.processProfileImage(filePart);
+//        StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
+//    }
 
     @Test
     public void testGetFileFailPathCheck() {
