@@ -28,6 +28,7 @@ export class UserService {
   }
 
   getUser(id: string): Observable<User | null> {
-    return this.http.get(constructBackendRequest)
+    return this.http.get<UserJSON>(`${constructBackendRequest(Endpoints.USERS)}/${id}`)
+      .pipe(map((u) => new User(u)));
   }
 }
