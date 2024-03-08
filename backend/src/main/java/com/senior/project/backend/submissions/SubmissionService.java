@@ -2,7 +2,12 @@ package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.domain.Submission;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.senior.project.backend.security.SecurityUtil;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -54,6 +59,23 @@ public class SubmissionService {
     public Flux<Submission> getSubmissions(UUID userId, int taskId) {
         Date date = new Date(System.currentTimeMillis() + BUFFER_TIME);
         return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
+    }
+
+
+    /**
+     * Returns all submissions for the current user
+     * @param userId
+     * @return the submissions or unauthorized error if the request is for a different user
+     */
+    public Flux<Submission> getStudentSubmissions(UUID userId) {
+        return SecurityUtil.getCurrentUser().flatMapMany(user -> {
+            if (user.getId().equals(userId)) {
+                return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
+            }
+            else {
+                return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Can't get submissions for other users"));
+            }
+        });
     }
 
     /**

@@ -38,4 +38,16 @@ export class SubmissionService {
         catchError(() => of(Submission.makeEmpty())),
       );
   }
+
+  /**
+   * Retrieves all submissions for a given user
+   */
+  getStudentSubmissions(studentID: string): Observable<Submission[]> {
+    return this.http.get<SubmissionJSON[]>(constructBackendRequest(`${Endpoints.ALL_SUBMISSIONS}`))
+      .pipe(map((data: SubmissionJSON[]) => {
+        return data.map((s: SubmissionJSON) => {
+          return new Submission(s);
+        });
+      }));
+  }
 }

@@ -23,6 +23,11 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long>{
         @Param("taskId") int taskId
     );
 
+    @Query("SELECT s FROM Submission s WHERE s.studentId = :userId")
+    List<Submission> findAllWithUser(
+        @Param("userId") UUID userId
+    );
+
     @Query("SELECT s FROM Submission s WHERE s.artifactId = :artifactId")
     Optional<Submission> findSubmissionByArtifactId(@Param("artifactId") int artifactId);
 }

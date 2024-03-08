@@ -16,6 +16,7 @@ export enum Endpoints {
     UPDATE_ROLES = 'users/roles',
     CURRENT_USER = 'current-user',
     SUBMISSION = 'tasks/submission',
+    ALL_SUBMISSIONS = 'student/submission',
 
     // Artifacts
     ARTIFACT = 'artifact/',

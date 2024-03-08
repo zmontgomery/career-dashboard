@@ -25,6 +25,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class SubmissionHandlerTest {
@@ -48,6 +49,7 @@ public class SubmissionHandlerTest {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .POST("/test", submissionHandler::handleSubmission)
                         .GET("/test/{taskId}", submissionHandler::getLatestSubmission)
+                        .GET("/student", submissionHandler::getStudentSubmissions)
                         .build())
                 .build();
     }
@@ -133,5 +135,21 @@ public class SubmissionHandlerTest {
             .exchange()
             .expectStatus()
             .isNoContent();
+    }
+
+    @Test
+    public void testGetStudentSubmissions() {  
+        when(authService.currentUser()).thenReturn(Mono.just(Constants.user1));
+        when(submissionService.getStudentSubmissions(Constants.user1.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
+
+        List<Submission> result = webTestClient.get()
+            .uri("/student")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBodyList(Submission.class)
+            .returnResult()
+            .getResponseBody();
+            
+        assertEquals(result, Constants.SUBMISSIONS);
     }
 }
