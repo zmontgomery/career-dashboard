@@ -14,6 +14,10 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+
+/**
+ * Endpoints for milestone/task/events
+ */
 @Configuration
 public class ActivityRouter extends AbstractRouter {
     @Bean

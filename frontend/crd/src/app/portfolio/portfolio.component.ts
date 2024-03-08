@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {FileUploadComponent} from "../file-upload/file-upload.component";
-import {constructBackendRequest, Endpoints} from "../util/http-helper";
 import { AuthService } from '../security/auth.service';
 import { LangUtils } from '../util/lang-utils';
 import { User } from '../security/domain/user';
-import {HttpClient} from "@angular/common/http";
 import {ArtifactService} from "../file-upload/artifact.service";
 import { TaskService } from '../util/task.service';
 import { SubmissionModalComponent } from '../submissions/submission-modal/submission-modal.component';
@@ -13,6 +10,7 @@ import { SubmissionService } from '../submissions/submission.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Router, UrlSegment } from '@angular/router';
 import { map, mergeMap, tap, zipWith } from 'rxjs';
 import { UserService } from '../security/user.service';
+import { DeleteResumeConfirmationDialogComponent } from './delete-resume-confirmation-dialog/delete-resume-confirmation-dialog.component';
 
 const RESUME_TASK_ID = 6;
 
@@ -23,8 +21,11 @@ const RESUME_TASK_ID = 6;
 })
 export class PortfolioComponent implements OnInit{
 
+  NO_FILE = 1;
+
   user: User = User.makeEmpty();
   external: boolean = false;
+  artifactId: number = 0;
   showUploadButton: boolean = true;
   pdfURL: any = '';
 
@@ -73,17 +74,31 @@ export class PortfolioComponent implements OnInit{
     });
   }
 
-  private updateArtifacts() {
+  /**
+   * Grabs the Student's artifacts to be displayed.
+   * Currently just grabs the resume
+   */
+  updateArtifacts() {
     this.submissionService.getLatestSubmission(RESUME_TASK_ID).subscribe((submission) => {
+      console.log(submission.hasFile());
       if (submission.hasFile()) {
+        console.log('hello');
+        this.artifactId = submission.artifactId;
         this.artifactService.getArtifactFile(submission.artifactId).subscribe((file) => {
           this.pdfURL = URL.createObjectURL(file);
           this.showUploadButton = false;
         });
+      } else {
+        this.pdfURL = '';
+        this.showUploadButton = true;
+        this.artifactId = this.NO_FILE;
       }
     });
   }
 
+  /**
+   * Opens the Submission Modal
+   */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       this.dialog.open(SubmissionModalComponent, {
@@ -94,5 +109,19 @@ export class PortfolioComponent implements OnInit{
         // this could definitely be optimized, but for now we can do this
         .afterClosed().subscribe(this.updateArtifacts.bind(this))
     });
+  }
+
+  deleteResume() {
+    const confirmationDialog = this.dialog.open(DeleteResumeConfirmationDialogComponent, {
+      data: {artifactId: this.artifactId}
+    });
+
+    confirmationDialog.afterClosed().subscribe((deleted: boolean) => {
+      if (deleted) this.updateArtifacts()
+    });
+  }
+
+  canDelete(): boolean {
+    return this.artifactId !== 0 && this.artifactId !== this.NO_FILE;
   }
 }

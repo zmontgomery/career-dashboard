@@ -28,6 +28,8 @@ public class Constants {
     public static Task task1;
     public static Task task2;
     public static Task task3;
+    public static Task task4;
+    public static Task task5;
 
     static {
         e1 = new Event();
@@ -43,7 +45,7 @@ public class Constants {
         e1.setImageId(1L);
 
         e2 = new Event();
-        e2.setId(1L);
+        e2.setId(2L);
         e2.setName("Attend Job Fair Fall Semester");
         e2.setDescription("Event 1 description");
         e2.setDate(new Date());
@@ -54,7 +56,7 @@ public class Constants {
         e2.setButtonLabel("More Info");
 
         e3 = new Event();
-        e3.setId(1L);
+        e3.setId(3L);
         e3.setName("Attend Job Fair Spring Semester");
         e3.setDescription("Event 1 description");
         e3.setDate(new Date());
@@ -99,6 +101,28 @@ public class Constants {
                 "Registration PIN",
                 "instructions",
                 m1,
+                null);
+
+        task4 = new Task(4L,
+                "Attend Job Fair",
+                "task 4 description",
+                true,
+                YearLevel.Freshman,
+                TaskType.EVENT,
+                null,
+                "instructions",
+                null,
+                e2);
+
+        task5 = new Task(5L,
+                "Create linkedin profile",
+                "task 5 description",
+                true,
+                YearLevel.Freshman,
+                TaskType.COMMENT,
+                null,
+                "instructions",
+                null,
                 null);
 
         //TODO: eventually add and test some event tasks

@@ -6,7 +6,7 @@ import { Submission } from 'src/domain/Submission';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 
 export const submission1JSON = {
-  id: 1,
+  id: 2,
   artifactId: 1,
   taskId: 1,
   studentId: 'asdf',
@@ -64,5 +64,16 @@ describe('SubmissionService', () => {
     const req = httpMock.expectOne(constructBackendRequest(Endpoints.SUBMISSION) + '/1');
     expect(req.request.method).toEqual('GET');
     req.flush(submission1JSON);
+  });
+
+  it('should delete', (done) => {
+    service.delete(1).subscribe((s) => {
+      expect(s).toEqual('success');
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.SUBMISSION) + '/1');
+    expect(req.request.method).toEqual('DELETE');
+    req.flush('success')
   });
 });

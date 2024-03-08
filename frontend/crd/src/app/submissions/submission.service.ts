@@ -24,6 +24,10 @@ export class SubmissionService {
       .pipe(map((s) => new Submission(s)));
   }
 
+  delete(submissionId: number): Observable<string> {
+    return this.http.delete<string>(constructBackendRequest(`${Endpoints.SUBMISSION}/${submissionId}`));
+  }
+
   /**
    * Retrieves the latest submission for a task
    */

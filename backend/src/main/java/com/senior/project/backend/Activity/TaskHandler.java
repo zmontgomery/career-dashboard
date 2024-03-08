@@ -21,10 +21,18 @@ public class TaskHandler {
         this.taskService = taskService;
     }
 
+    /**
+     * Retrieves all tasks
+     */
     public Mono<ServerResponse> all(ServerRequest serverRequest) {
         return ServerResponse.ok().body(this.taskService.all(), Task.class );
     }
 
+    /**
+     * Updates an existing task
+     *
+     * @return 200 if successful or 400 bad request when the update data is not properly formatted
+     */
     public Mono<ServerResponse> update(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {
@@ -41,6 +49,12 @@ public class TaskHandler {
         });
     } 
 
+    /**
+     * Retrieve task object using an ID
+     * Used when assigning tasks to milestones
+     *
+     * @return task object
+     */
     public Mono<ServerResponse> getById(ServerRequest serverRequest) {
         return Mono.just(serverRequest.pathVariable("id"))
             .map(id -> Integer.parseInt(id))
@@ -48,6 +62,11 @@ public class TaskHandler {
             .flatMap(task -> ServerResponse.ok().bodyValue(task));
     }
     
+    /**
+     * Create new task
+     *
+     * @return 200 if successful or 400 bad request when the update data is not properly formatted
+     */
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(String.class)
         .flatMap(json -> {

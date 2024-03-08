@@ -1,30 +1,26 @@
-export interface SkillJSON{
+export interface InterestJSON{
     id: string;
     name: string;
-    language: boolean;
     studentDetailsID: string;
 }
 
-export class Skill{
+export class Interest{
 
-    constructor(json: SkillJSON){
+    constructor(json: InterestJSON){
         this.id = json.id;
         this.name = json.name;
-        this.isLanguage = json.language;
         this.studentDetailsID = json.studentDetailsID;
     }
 
     id: string;
     name: string;
-    isLanguage: boolean;
     studentDetailsID: string;
 
     static makeEmpty(){
-        return new Skill({
+        return new Interest({
             id: '',
             name: '',
-            language: false,
             studentDetailsID: ''
-        })
+        });
     }
 }

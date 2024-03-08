@@ -52,10 +52,13 @@ public class StudentDetails {
 	
 	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<DegreeProgram> degreePrograms;
-	// private DegreeProgram[] majors;
-	// private Club[] clubs;
 
 	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
 	private List<Skill> skills;
-	// private Skill[] languages;
+
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	private List<Club> clubs;
+
+	@OneToMany(mappedBy = "studentDetails", fetch = FetchType.EAGER)
+	private List<Interest> interests;
 }
