@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.senior.project.backend.domain.Submission;
 
 import java.util.List;
-import java.util.Date;
 import java.util.UUID;
 import java.util.Optional;
 
