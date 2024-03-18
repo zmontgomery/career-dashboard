@@ -149,6 +149,7 @@ public class ArtifactHandlerTest {
         when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.empty());
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+        
         String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()

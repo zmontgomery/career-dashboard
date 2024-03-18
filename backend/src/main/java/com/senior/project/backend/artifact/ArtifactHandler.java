@@ -20,6 +20,7 @@ import com.senior.project.backend.submissions.SubmissionService;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Handler for interacting with artifacts
@@ -87,17 +88,12 @@ public class ArtifactHandler {
             .flatMap((zip) -> {
                 final User user = zip.getT1();
                 int id = zip.getT2();
-                if (id == 1) return Mono.empty();
+                if (id <= 1) return Mono.empty();
                 return submissionService.findByArtifact(id)
-                    .switchIfEmpty(Mono.just(Submission.builder().id(0).build()))
+                    .switchIfEmpty(Mono.just(Submission.builder().id(0).studentId(UUID.randomUUID()).build()))
                     .flatMap(submission -> submission.getId() == 0 ? Mono.just(submission) : submissionService.scrubArtifact(submission))
                     .doOnNext(submission -> {
-                        if (
-                            Objects.isNull(submission.getStudentId()) 
-                            && !user.getId().equals(submission.getStudentId()) 
-                            && !user.hasAdminPrivileges()
-                        ) {
-                            System.out.println(submission);
+                        if ( Objects.isNull(submission.getStudentId()) || (!user.getId().equals(submission.getStudentId()) && !user.hasAdminPrivileges())) {
                             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                         } 
                     })

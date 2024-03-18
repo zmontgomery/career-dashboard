@@ -3,7 +3,6 @@ package com.senior.project.backend.users;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -41,9 +40,8 @@ public class UserService implements ReactiveUserDetailsService {
      * Retrieves a user from the database using their email address
      * @param email - the email address belonging to the user
      * @return the user
-     * @throws EntityNotFoundException if the user with the provided email does not exist
      */
-    public Mono<User> findByEmailAddress(String email) throws EntityNotFoundException {
+    public Mono<User> findByEmailAddress(String email) {
         Optional<User> user = repository.findUserByEmail(email);
         if (user.isPresent()) {
             return Mono.just(user.get());
@@ -52,6 +50,11 @@ public class UserService implements ReactiveUserDetailsService {
         }
     }
 
+    /**
+     * Retrieves a user from the database using their ID
+     * @param id 
+     * @return the user
+     */
     public Mono<User> findById(UUID id) {
         Optional<User> user = repository.findById(id);
         if (user.isPresent()) {
