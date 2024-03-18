@@ -14,8 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.AuthService;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
 import com.senior.project.backend.submissions.SubmissionService;
 
 import reactor.core.publisher.Mono;
@@ -30,16 +29,16 @@ public class ArtifactHandler {
 
     private final ArtifactService artifactService;
     private final SubmissionService submissionService;
-    private final AuthService authService;
+    private final CurrentUserUtil currentUserUtil;
 
     public ArtifactHandler(
         ArtifactService artifactService, 
         SubmissionService submissionService,
-        AuthService authService
+        CurrentUserUtil currentUserUtil
     ){
         this.artifactService = artifactService;
         this.submissionService = submissionService;
-        this.authService = authService;
+        this.currentUserUtil = currentUserUtil;
     }
 
     /**
@@ -84,7 +83,7 @@ public class ArtifactHandler {
      * Deletes the file with the given file name
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
-        return authService.currentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
+        return currentUserUtil.getCurrentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
             .flatMap((zip) -> {
                 final User user = zip.getT1();
                 int id = zip.getT2();

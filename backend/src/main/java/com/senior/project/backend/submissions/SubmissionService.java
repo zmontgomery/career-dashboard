@@ -1,14 +1,18 @@
 package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -16,10 +20,12 @@ import java.util.Optional;
  */
 @Service
 public class SubmissionService {
-    private static final int BUFFER_TIME = 500; // Half a second
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private CurrentUserUtil currentUserUtil;
 
     /**
      * Adds a submission to the repository
@@ -35,25 +41,30 @@ public class SubmissionService {
     }
 
     /**
-     * Returns all submissions before the provided date for a given task and user
-     * @param userId
-     * @param taskId
-     * @return
-     */
-    public Flux<Submission> getPreviousSubmissions(UUID userId, int taskId) {
-        Date date = new Date(System.currentTimeMillis() - BUFFER_TIME);
-        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
-    }
-
-    /**
      * Returns all submissions for a given task
      * @param userId
      * @param taskId
      * @return
      */
     public Flux<Submission> getSubmissions(UUID userId, int taskId) {
-        Date date = new Date(System.currentTimeMillis() + BUFFER_TIME);
-        return Flux.fromIterable(submissionRepository.findAllBeforeNowWithUserAndTask(date, userId, taskId));
+        return Flux.fromIterable(submissionRepository.findAllWithUserAndTask(userId, taskId));
+    }
+
+
+    /**
+     * Returns all submissions for the current user
+     * @param userId
+     * @return the submissions or unauthorized error if the request is for a different user
+     */
+    public Flux<Submission> getStudentSubmissions(UUID userId) {
+        return currentUserUtil.getCurrentUser().flatMapMany(user -> {
+            if (user.getId().equals(userId)) {
+                return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
+            }
+            else {
+                return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Can't get submissions for other users"));
+            }
+        });
     }
 
     /**

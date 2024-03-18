@@ -10,9 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.security.CurrentUserUtil;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,6 +30,9 @@ public class SubmissionServiceTest {
 
     @Mock
     private SubmissionRepository submissionRepository;
+
+    @Mock
+    private CurrentUserUtil currentUserUtil;
 
     @Test
     public void testAddSubmission() {
@@ -54,20 +59,7 @@ public class SubmissionServiceTest {
 
     @Test
     public void testGetPreviousSubmission() {
-        when(submissionRepository.findAllBeforeNowWithUserAndTask(any(), any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
-
-        Flux<Submission> result = submissionService.getPreviousSubmissions(Constants.user1.getId(), 1);
-
-        StepVerifier.create(result)
-            .expectNext(Constants.submission1)
-            .expectNext(Constants.submission2)
-            .expectComplete()
-            .verify();
-    }
-
-    @Test
-    public void testGetSubmissions() {
-        when(submissionRepository.findAllBeforeNowWithUserAndTask(any(), any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
+        when(submissionRepository.findAllWithUserAndTask(any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
 
         Flux<Submission> result = submissionService.getSubmissions(Constants.user1.getId(), 1);
 
@@ -93,6 +85,31 @@ public class SubmissionServiceTest {
             .expectNext(Constants.submission1)
             .expectComplete()
             .verify();
+    }
+
+    @Test
+    public void testGetStudentSubmissions() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        
+        when(submissionRepository.findAllWithUser(Constants.user1.getId())).thenReturn(Constants.SUBMISSIONS);
+
+        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.user1.getId());
+
+        StepVerifier.create(result)
+            .expectNext(Constants.submission1)
+            .expectNext(Constants.submission2)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void testGetWrongStudentSubmissions() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        
+        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.user1.getId());
+
+        StepVerifier.create(result).expectErrorMatches(throwable -> throwable instanceof ResponseStatusException &&
+            throwable.getMessage().equals("Can't get submissions for other users"));
     }
 
     @Test

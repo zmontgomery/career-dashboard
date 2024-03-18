@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EventsComponent } from './events.component';
 import { MatCardModule } from "@angular/material/card";
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./event.service";
 import { of } from "rxjs";
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { MockModule } from 'ng-mocks';
 import {ArtifactService} from "../../file-upload/artifact.service";
 const createSpyObj= jasmine.createSpyObj;
