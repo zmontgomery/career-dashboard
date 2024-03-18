@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.domain.User;
+import com.senior.project.backend.security.AuthService;
 import com.senior.project.backend.security.SecurityUtil;
 import com.senior.project.backend.submissions.SubmissionService;
 
@@ -29,10 +30,16 @@ public class ArtifactHandler {
 
     private final ArtifactService artifactService;
     private final SubmissionService submissionService;
+    private final AuthService authService;
 
-    public ArtifactHandler(ArtifactService artifactService, SubmissionService submissionService){
+    public ArtifactHandler(
+        ArtifactService artifactService, 
+        SubmissionService submissionService,
+        AuthService authService
+    ){
         this.artifactService = artifactService;
         this.submissionService = submissionService;
+        this.authService = authService;
     }
 
     /**
@@ -77,17 +84,21 @@ public class ArtifactHandler {
      * Deletes the file with the given file name
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
-        return SecurityUtil.getCurrentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
+        return authService.currentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
             .flatMap((zip) -> {
-                final User user= zip.getT1();
+                final User user = zip.getT1();
                 int id = zip.getT2();
                 if (id == 1) return Mono.empty();
                 return submissionService.findByArtifact(id)
                     .switchIfEmpty(Mono.just(Submission.builder().id(0).build()))
-                    .doOnNext(s -> System.out.println(s))
                     .flatMap(submission -> submission.getId() == 0 ? Mono.just(submission) : submissionService.scrubArtifact(submission))
                     .doOnNext(submission -> {
-                        if (!user.getId().equals(submission.getStudentId()) && !user.hasAdminPrivileges()) {
+                        if (
+                            Objects.isNull(submission.getStudentId()) 
+                            && !user.getId().equals(submission.getStudentId()) 
+                            && !user.hasAdminPrivileges()
+                        ) {
+                            System.out.println(submission);
                             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                         } 
                     })
