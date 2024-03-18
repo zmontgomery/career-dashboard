@@ -21,7 +21,6 @@ export class PortfolioComponent implements OnInit {
   external: boolean = false;
 
   constructor(
-    public dialog: MatDialog,
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly route: ActivatedRoute,
@@ -31,6 +30,7 @@ export class PortfolioComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.pipe(
       mergeMap((map: ParamMap) => {
+        console.log(map);
         if (map.has('id')) {
           this.external = true;
           return this.userService.getUser(map.get('id')!);
