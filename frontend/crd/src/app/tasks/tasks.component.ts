@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {TaskService} from "../util/task.service";
 import {Task} from "../../domain/Task";
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { TasksModalComponent } from '../tasks-modal/tasks-modal.component';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {TasksModalComponent} from '../tasks-modal/tasks-modal.component';
 import {AuthService} from "../security/auth.service";
 import {take} from "rxjs";
+import {YearLevel} from "../../domain/Milestone";
 
 @Component({
   selector: 'app-tasks',
@@ -12,6 +13,8 @@ import {take} from "rxjs";
   styleUrls: ['./tasks.component.less']
 })
 export class TasksComponent {
+
+  userYearLevel: YearLevel = YearLevel.Freshman;
 
   constructor(
     private taskService: TaskService,
@@ -26,6 +29,7 @@ export class TasksComponent {
         console.error("User does not have student details yet");
       }
       else {
+        this.userYearLevel = user.studentDetails.yearLevel;
         this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
           this.tasksList = tasks;
         });
