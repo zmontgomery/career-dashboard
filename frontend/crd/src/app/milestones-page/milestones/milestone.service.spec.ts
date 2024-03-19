@@ -101,4 +101,67 @@ describe('MilestoneService', () => {
     expect(request.request.method).toEqual('GET');
     request.flush(null);
   });
+
+  it('getMilestones should not return empty milestones without getAll', (done) => {
+    const milestoneJSON: MilestoneJSON = {
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 1,
+      description: "sample",
+      events: [{
+        name: "name",
+        description: "description",
+        date: new Date().toDateString(),
+        id: 1,
+        recurring: true,
+        organizer: "organizer",
+        location: "location",
+        eventLink: "sample link",
+        buttonLabel: "test",
+        imageId: 1,
+      }],
+      tasks: [],
+    }
+
+    service.getMilestones().subscribe((result: any) => {
+      expect(result).toEqual([]);
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
+    expect(request.request.method).toEqual('GET');
+    request.flush(Array(milestoneJSON));
+  });
+
+  it('getMilestones should return empty milestones with getAll', (done) => {
+    const milestoneJSON: MilestoneJSON = {
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 1,
+      description: "sample",
+      events: [{
+        name: "name",
+        description: "description",
+        date: new Date().toDateString(),
+        id: 1,
+        recurring: true,
+        organizer: "organizer",
+        location: "location",
+        eventLink: "sample link",
+        buttonLabel: "test",
+        imageId: 1,
+      }],
+      tasks: [],
+    }
+
+    const milestones = Array(new Milestone(milestoneJSON));
+    service.getMilestones(undefined, true).subscribe((result: any) => {
+      expect(result).toEqual(milestones);
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.MILESTONES));
+    expect(request.request.method).toEqual('GET');
+    request.flush(Array(milestoneJSON));
+  });
 })
