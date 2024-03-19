@@ -37,6 +37,7 @@ import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NotFoundComponent } from './not-found/not-found.component';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 
@@ -45,6 +46,7 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     AppComponent,
     ApiDocumentationsComponent,
     NavbarComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
