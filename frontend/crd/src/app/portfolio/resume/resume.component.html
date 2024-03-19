@@ -1,0 +1,35 @@
+<div class="resume-container">
+    <div class="card-header">
+        <span>Resume</span>
+        <button mat-icon-button *ngIf="canDelete()" (click)="deleteResume()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+    <mat-card class="resume-card">
+        <ng-container *ngIf="resumeLoaded$ | async; else loading">
+            <ng-container *ngIf="pdfURL !== ''; else noResume">
+                <pdf-viewer
+                    [src]="pdfURL"
+                    [render-text]="true"
+                    [original-size]="false"
+                style="width: 400px; height: 500px"
+                ></pdf-viewer>
+            </ng-container>
+            <ng-template #noResume>
+                <button mat-button *ngIf="showUploadButton && !external" (click)="openDialog()">
+                    <mat-icon>upload_file</mat-icon>
+                </button>
+                <button mat-button disabled *ngIf="showUploadButton && external">
+                    <mat-icon>description</mat-icon>
+                    <span>No Resume</span>
+                </button>
+            </ng-template>
+        </ng-container>
+        <ng-template #loading>
+            <div class="spinner-container">
+                <mat-spinner></mat-spinner>
+            </div>  
+        </ng-template>
+    </mat-card>
+</div>
+

@@ -155,23 +155,6 @@
   </div>
 
   <div class="section">
-    <div class="card-header">
-      <span>Resume</span>
-      <button mat-icon-button *ngIf="canDelete()" (click)="deleteResume()">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    <mat-card class="resume-card">
-      <button mat-button *ngIf="showUploadButton" (click)="openDialog()">
-        <mat-icon>upload_file</mat-icon>
-      </button>
-      <pdf-viewer
-        *ngIf="!showUploadButton"
-        [src]="pdfURL"
-        [render-text]="true"
-        [original-size]="false"
-        style="width: 400px; height: 500px"
-      ></pdf-viewer>
-    </mat-card>
+    <app-resume [user]="user" [external]="external"></app-resume>
   </div>
 </div>
