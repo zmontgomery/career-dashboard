@@ -4,8 +4,7 @@ import {Task} from "../../domain/Task";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TasksModalComponent } from '../tasks-modal/tasks-modal.component';
 import {AuthService} from "../security/auth.service";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {firstValueFrom, take} from "rxjs";
+import {take} from "rxjs";
 
 @Component({
   selector: 'app-tasks',
@@ -20,7 +19,13 @@ export class TasksComponent {
     public matDialog: MatDialog,
   ) {
     this.authService.user$.pipe(take(1)).subscribe((user) => {
-      if (user != null && user.studentDetails != undefined) {
+      if (user == null) {
+        console.error("User does not exist");
+      }
+      else if (user.studentDetails == undefined) {
+        console.error("User does not have student details yet");
+      }
+      else {
         this.taskService.getDashBoardTasks().subscribe((tasks: Task[]) => {
           this.tasksList = tasks;
         });
@@ -43,7 +48,7 @@ export class TasksComponent {
       task: task
     }
     // https://material.angular.io/components/dialog/overview
-    const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
+    this.matDialog.open(TasksModalComponent, dialogConfig);
   }
 
   tasksList: Array<Task> = []
