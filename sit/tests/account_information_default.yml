@@ -1,0 +1,15 @@
+student:
+  email:
+  password:
+
+faculty:
+  email:
+  password:
+
+admin:
+  email:
+  password:
+
+database:
+  user:
+  password:
