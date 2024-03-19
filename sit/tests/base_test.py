@@ -187,6 +187,14 @@ class BaseTest(unittest.TestCase):
       self.fail(f"Timeout on finding element with id {id}")
 
   """
+  Sleeps for a given amount of time
+
+  AVOID THIS, ONLY USE IF NO OTHER OPTION
+  """
+  def sleep(self, duration):
+    time.sleep(duration)
+
+  """
   Loads the corresponding username and password from the "account_information.yml"
   file. By default this file does not exist and needs to be created per repository
   """
@@ -224,6 +232,8 @@ class BaseTest(unittest.TestCase):
       ) 
       self.tearDown()
       self.skipTest('File not found')
+
+  # TODO add ability to connect and edit database
     
 
 if __name__ == "__main__":
