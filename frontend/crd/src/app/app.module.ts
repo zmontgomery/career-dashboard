@@ -34,6 +34,7 @@ import { MilestoneCreateModalModule } from './admin/milestone-main-page/mileston
 import { UsersPageModule } from "./users-page/users-page.module";
 import { SignupPageModule } from './security/signup-page/signup-page.module';
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -105,6 +106,8 @@ import {MatIconModule} from "@angular/material/icon";
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    NgOptimizedImage,
+    MatIconModule,
     ProfileImageModalModule,
     SettingsPageModule,
     NgOptimizedImage,
