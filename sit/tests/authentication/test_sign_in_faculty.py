@@ -1,5 +1,8 @@
 import base_test
 
+"""
+Test for signing in as a faculty
+"""
 class TestSignInFaculty(base_test.BaseTest):
   def test_sign_in_successful_faculty(self):
     curr = self.driver.current_url
