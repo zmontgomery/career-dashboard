@@ -5,7 +5,6 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Event } from "../../../domain/Event";
 import { EventService } from "./event.service";
 import { of } from "rxjs";
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { MockModule } from 'ng-mocks';
 import {ArtifactService} from "../../file-upload/artifact.service";
 const createSpyObj= jasmine.createSpyObj;

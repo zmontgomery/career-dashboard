@@ -6,24 +6,56 @@
 }
 
 .matList {
-    border: 1px solid black;
-    background-color: @oswego-green;
+    border: 1px solid gray;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
     width: 100vh;
+    border-radius: 20px;
 }
 .matListTitle {
-    color:white;
+    font-weight: bold;
 }
 .matListItem {
     background-color: white;
-    border: 1px solid black;
+    border: none;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 95%;
+    margin: 1vh;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.matListItem:not(.taskBar):hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+
+.taskBar {
+  background-color: #F0F6F3;
+  padding-left: 1em;
+  padding-top: 1em;
+  padding-right: 1em;
+  font-weight: bold;
+  box-shadow: none;
+}
+
+.taskText {
+  display: flex;
+  justify-content: space-between;
+  margin: 1vh;
+}
+
+.taskTitle {
+  text-align: left;
+  justify-content: center;
+}
+
+.taskDate {
+  text-align: right;
+  justify-content: center;
 }
 
 #logout-button {
