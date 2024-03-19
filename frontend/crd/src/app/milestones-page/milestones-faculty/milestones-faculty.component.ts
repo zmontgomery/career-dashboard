@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
-import { MilestoneService } from "./milestone.service";
+import { MilestoneService } from '../milestones/milestone.service';
 import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
 import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { TasksModalComponent } from "../../tasks-modal/tasks-modal.component";
@@ -11,18 +11,22 @@ import { Submission } from 'src/domain/Submission';
 import { MilestonesPageComponent } from '../milestones-page.component';
 
 @Component({
-  selector: 'app-milestones',
-  templateUrl: './milestones.component.html',
-  styleUrls: ['./milestones.component.less']
+  selector: 'app-faculty-milestones',
+  templateUrl: './milestones-faculty.component.html',
+  styleUrls: ['./milestones-faculty.component.less']
 })
-export class MilestonesComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
+export class MilestonesFacultyComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
+
+  studentID!: string;
 
   ngOnInit() {
-    zip(this.authService.user$.pipe(
-        mergeMap((user) => {
-          return this.submissionService.getStudentSubmissions(user!.id);
-        })
-      ),
+    this.route.params.subscribe(params => {
+      // actually the milestone id
+      this.studentID = decodeURIComponent(params['id']);
+    });
+
+    zip(
+      this.submissionService.getStudentSubmissionsFaculty(this.studentID),
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, milestones]) => {

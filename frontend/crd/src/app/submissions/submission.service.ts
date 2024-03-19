@@ -50,4 +50,17 @@ export class SubmissionService {
         });
       }));
   }
+
+  /**
+   * Faculty specific endpoint that retrieves all submissions for a given user
+   */
+  getStudentSubmissionsFaculty(studentID: string): Observable<Submission[]> {
+    return this.http.get<SubmissionJSON[]>(constructBackendRequest(`${Endpoints.FACULTY_SUBMISSIONS}/${studentID}`))
+      .pipe(map((data: SubmissionJSON[]) => {
+        console.log("we received student submissions?");
+        return data.map((s: SubmissionJSON) => {
+          return new Submission(s);
+        });
+      }));
+  }
 }

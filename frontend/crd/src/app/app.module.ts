@@ -38,6 +38,7 @@ import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { MilestonesFacultyModule } from './milestones-page/milestones-faculty/milestones-faculty.module';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    MilestonesFacultyModule
   ],
   providers: [
     provideHttpClient(),

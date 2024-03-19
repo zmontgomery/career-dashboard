@@ -25,6 +25,6 @@ public class SubmissionRouter {
         return route(POST(Endpoints.SUBMISSION.uri()), submissionHandler::handleSubmission)
             .andRoute(GET(Endpoints.LATEST_SUBMISSION.uri()), submissionHandler::getLatestSubmission)
             .andRoute(GET(Endpoints.ALL_SUBMISSIONS.uri()), submissionHandler::getStudentSubmissions)
-            .andRoute(GET(Endpoints.FACULTY_SUBMISSIONS.uri()), submissionHandler::getFacultyStudentSubmissions);
+            .andRoute(GET(Endpoints.FACULTY_SUBMISSIONS.uri()), submissionHandler::getStudentSubmissionsFaculty);
     }
 }

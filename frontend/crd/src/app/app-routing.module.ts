@@ -13,17 +13,19 @@ import {UsersPageComponent} from "./users-page/users-page.component";
 import { SignupPageComponent } from './security/signup-page/signup-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
 import {NotFoundComponent} from "./not-found/not-found.component";
+import { MilestonesComponent } from './milestones-page/milestones/milestones.component';
+import { MilestonesFacultyComponent } from './milestones-page/milestones-faculty/milestones-faculty.component';
 
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
-  {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
+  {path: 'milestones', component: MilestonesComponent, canActivate: [authGuard]},
 ]
 
 const facultyRoutes: Routes = [
   {path: 'faculty/users', component: UsersPageComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'faculty/portfolio/:id', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
-  {path: 'faculty/milestones/:id', component: MilestonesPageComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/milestones/:id', component: MilestonesFacultyComponent, canActivate: [authGuard, facultyRoleGuard]},
 ]
 
 const adminRoutes: Routes = [

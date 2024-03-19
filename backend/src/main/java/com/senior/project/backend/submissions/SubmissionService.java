@@ -71,7 +71,7 @@ public class SubmissionService {
      * @param userId
      * @return the submissions
      */
-    public Flux<Submission> getFacultyStudentSubmissions(UUID userId) {
+    public Flux<Submission> getStudentSubmissionsFaculty(UUID userId) {
         return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
     }
 

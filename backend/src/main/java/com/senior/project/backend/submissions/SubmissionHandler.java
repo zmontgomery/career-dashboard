@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class SubmissionHandler {
@@ -93,9 +94,9 @@ public class SubmissionHandler {
             .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
 
-    public Mono<ServerResponse> getFacultyStudentSubmissions(ServerRequest serverRequest) {
-        return authService.currentUser()
-            .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
+    public Mono<ServerResponse> getStudentSubmissionsFaculty(ServerRequest serverRequest) {
+        String studentID = serverRequest.pathVariable("studentID");
+        return submissionService.getStudentSubmissionsFaculty(UUID.fromString(studentID))
             .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
             .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
