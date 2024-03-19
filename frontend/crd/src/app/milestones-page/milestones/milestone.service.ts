@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Milestone, MilestoneJSON } from "../../../domain/Milestone";
-import { catchError, concatMap, finalize, flatMap, map, mergeMap, Observable, of, ReplaySubject, tap, throwError } from "rxjs";
+import { map, mergeMap, Observable, ReplaySubject } from "rxjs";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { LangUtils } from 'src/app/util/lang-utils';
 
@@ -23,10 +23,11 @@ export class MilestoneService {
   /**
    * Gets all the milestones and caches the response
    * 
+   * Only retrieves milestones that have tasks, unless getAll is specified
    * If the cache has data in it, it returns the value of the cache, otherwise
    * it makes a request to the backend. If an error ocurrs it refreshes the cache
    */
-  getMilestones(forceRefresh?: boolean): Observable<Milestone[]> {
+  getMilestones(forceRefresh?: boolean, getAll?: boolean): Observable<Milestone[]> {
     if (!this.hasBeenRequested || forceRefresh) {
       this.hasBeenRequested = true;
 
@@ -36,6 +37,9 @@ export class MilestoneService {
             if (LangUtils.exists(data)) {
               return data.map((m: MilestoneJSON) => {
                 return new Milestone(m)
+              })
+              .filter((m: Milestone) => {
+                return getAll || m.tasks.length > 0
               });
             } else {
               this.hasBeenRequested = false;

@@ -53,7 +53,7 @@ export class MilestoneEditComponent {
       this.milestoneParam = +decodeURIComponent(params['name']);
     });
 
-    this.milestoneService.getMilestones()
+    this.milestoneService.getMilestones(undefined, true)
       .pipe(takeUntil(this.destroyed$),
         mergeMap((milestones: Milestone[]) => {
           milestones.forEach((milestone) => {
