@@ -39,12 +39,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
+import { NotFoundComponent } from './not-found/not-found.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ApiDocumentationsComponent,
     NavbarComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
