@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { Submission } from 'src/domain/Submission';
 import { MilestonesPageComponent } from '../milestones-page.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-milestones',
@@ -16,6 +17,15 @@ import { MilestonesPageComponent } from '../milestones-page.component';
   styleUrls: ['./milestones.component.less']
 })
 export class MilestonesComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
+
+  constructor(
+    milestoneService: MilestoneService,
+    matDialog: MatDialog,
+    submissionService: SubmissionService,
+    protected authService: AuthService,
+  ) {
+    super(milestoneService, matDialog, submissionService);
+  }
 
   ngOnInit() {
     zip(this.authService.user$.pipe(

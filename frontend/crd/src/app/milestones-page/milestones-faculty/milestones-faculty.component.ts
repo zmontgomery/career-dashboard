@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { Submission } from 'src/domain/Submission';
 import { MilestonesPageComponent } from '../milestones-page.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-faculty-milestones',
@@ -18,6 +19,15 @@ import { MilestonesPageComponent } from '../milestones-page.component';
 export class MilestonesFacultyComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
 
   studentID!: string;
+
+  constructor(
+    milestoneService: MilestoneService,
+    matDialog: MatDialog,
+    submissionService: SubmissionService,
+    protected route: ActivatedRoute,
+  ) {
+    super(milestoneService, matDialog, submissionService);
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {

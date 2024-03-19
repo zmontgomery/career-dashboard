@@ -108,8 +108,6 @@ describe('MilestonesPageComponent', () => {
       providers: [
         {provide: MilestoneService, useValue: []},
         {provide: SubmissionService, useValue: []},
-        {provide: AuthService, useValue: []},
-        {provide: ActivatedRoute, useValue: []},
       ],
     });
     fixture = TestBed.createComponent(MilestonesPageComponent);

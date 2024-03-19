@@ -29,11 +29,9 @@ export class MilestonesPageComponent {
   }
 
   constructor(
-    protected route: ActivatedRoute,
     protected milestoneService: MilestoneService,
     public matDialog: MatDialog,
     protected submissionService: SubmissionService,
-    protected authService: AuthService,
   ) {
   }
 

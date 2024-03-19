@@ -130,7 +130,6 @@ describe('MilestonesFacultyComponent', () => {
       providers: [
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
-        {provide: AuthService, useValue: authService},
         {provide: ActivatedRoute, useValue: activatedRouteMock},
       ],
       declarations: [MilestonesFacultyComponent]

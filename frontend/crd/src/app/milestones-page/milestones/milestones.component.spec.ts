@@ -126,7 +126,6 @@ describe('MilestonesComponent', () => {
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: AuthService, useValue: authService},
-        {provide: ActivatedRoute, useValue: []},
       ],
       declarations: [MilestonesComponent]
     });
