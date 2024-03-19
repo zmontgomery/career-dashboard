@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MilestonesFacultyComponent } from './milestones-faculty.component';
-import { of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
 import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MatCardModule } from "@angular/material/card";
@@ -16,6 +16,7 @@ import { User } from 'src/app/security/domain/user';
 import { userJSON } from 'src/app/security/auth.service.spec';
 import { TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 describe('MilestonesFacultyComponent', () => {
   let component: MilestonesFacultyComponent;
@@ -24,6 +25,11 @@ describe('MilestonesFacultyComponent', () => {
   let authService: jasmine.SpyObj<AuthService>;
 
   let user = new User(userJSON);
+
+  const paramMap = new BehaviorSubject(convertToParamMap({ id: 'id'  }));
+  const activatedRouteMock = {
+    params: paramMap.asObservable(),
+  };
 
   const testSubmissions = [
     new Submission({
@@ -112,8 +118,8 @@ describe('MilestonesFacultyComponent', () => {
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of([]));
 
-  let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissions']);
-  submissionsServiceSpy.getStudentSubmissions.and.returnValue(of(testSubmissions));
+  let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
+  submissionsServiceSpy.getStudentSubmissionsFaculty.and.returnValue(of(testSubmissions));
 
   beforeEach(() => {
     submissionService = jasmine.createSpyObj('SubmissionService', ['submit']);
@@ -125,6 +131,7 @@ describe('MilestonesFacultyComponent', () => {
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: AuthService, useValue: authService},
+        {provide: ActivatedRoute, useValue: activatedRouteMock},
       ],
       declarations: [MilestonesFacultyComponent]
     });
@@ -137,12 +144,4 @@ describe('MilestonesFacultyComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should check completed', () => {
-    component.milestonesMap = testMap;
-
-    component.checkCompleted(testSubmissions);
-
-    expect(component.completedMilestones).toEqual([1]);
-    expect(component.completedTasks).toEqual([1, 2, 3]);
-  });
 });

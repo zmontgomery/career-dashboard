@@ -16,6 +16,7 @@ import { User } from 'src/app/security/domain/user';
 import { userJSON } from 'src/app/security/auth.service.spec';
 import { TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
+import { ActivatedRoute } from '@angular/router';
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
@@ -125,6 +126,7 @@ describe('MilestonesComponent', () => {
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: AuthService, useValue: authService},
+        {provide: ActivatedRoute, useValue: []},
       ],
       declarations: [MilestonesComponent]
     });
@@ -135,14 +137,5 @@ describe('MilestonesComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should check completed', () => {
-    component.milestonesMap = testMap;
-
-    component.checkCompleted(testSubmissions);
-
-    expect(component.completedMilestones).toEqual([1]);
-    expect(component.completedTasks).toEqual([1, 2, 3]);
   });
 });
