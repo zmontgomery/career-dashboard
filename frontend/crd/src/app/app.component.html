@@ -1,6 +1,18 @@
 <div class="app-container">
   <div class="header-container">
-    <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
+    <div class="logo">
+      <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
+    </div>
+    <div class="title-container">
+      <p>Career Readiness Dashboard</p>
+    </div>
+
+    <div class="header-AI-button" *ngIf="needsNavBar()">
+      <img class="header-AI-img" src="../assets/images/Filler.jpg" width="40%" height="40%" alt="Oswego Logo">
+      <p>AI Business Advisor. Ask all your<br>
+      advisement and career questions</p>
+    </div>
+
     <ng-container *ngIf="needsNavBar()">
       <app-user-menu class="logout-button"></app-user-menu>
     </ng-container>
@@ -10,5 +22,178 @@
       <app-navbar class="navbar"></app-navbar>
     </ng-container>
     <router-outlet></router-outlet>
+  </div>
+  <div class="footer-container">
+    <div class="">
+    <footer class="text-center text-lg-start border-bottom">
+      <!-- Section: Social media -->
+      <section
+        class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
+      >
+        <!-- Left -->
+<!--        <div class="me-5 d-none d-lg-block">-->
+<!--          <span>Get connected with us on social networks:</span>-->
+<!--        </div>-->
+        <!-- Left -->
+
+        <!-- Right -->
+        <div>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="" class="me-4 text-reset">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <!-- Right -->
+      </section>
+      <!-- Section: Social media -->
+
+      <!-- Section: Links  -->
+      <section class="">
+        <div class="container text-center text-md-start mt-5">
+          <!-- Grid row -->
+          <div class="row mt-3">
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <!-- Content -->
+              <h6 class="text-uppercase fw-bold mb-4">
+<!--                <i class="fas fa-gem me-3"></i>Company name-->
+<!--                <img class="footer-Oswego-img" [ngSrc]="imageStr" priority="true" alt="Oswego Logo">-->
+                <img src="../assets/images/Filler.jpg" width="40%" height="40%" alt="Oswego Logo">
+              </h6>
+              <p>
+                7060 State Route 104<br>
+                Oswego,NY 13126-3599<br>
+                315.312.2500
+              </p>
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                Campus
+              </h6>
+              <p>
+                <a href="#!" class="text-reset">Contact US</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Commitment to Safety</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Library</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                Resources
+              </h6>
+              <p>
+                <a href="#!" class="text-reset">A-Z Index</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Accessibility</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Careers at Oswego</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Consumer Information:<br>
+                Student Right to Know</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">People Search</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                More
+              </h6>
+              <p>
+                <a href="#!" class="text-reset">Report an Accessibility Issue</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">About this Site</a>
+              </p>
+              <p>
+                <a href="#!" class="text-reset">Privacy Policy</a>
+              </p>
+            </div>
+<!--            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">-->
+<!--              &lt;!&ndash; Links &ndash;&gt;-->
+<!--              <h6 class="text-uppercase fw-bold mb-4">-->
+<!--                Contact-->
+<!--              </h6>-->
+<!--              <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>-->
+<!--              <p>-->
+<!--                <i class="fas fa-envelope me-3"></i>-->
+<!--                info@example.com-->
+<!--              </p>-->
+<!--              <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>-->
+<!--              <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>-->
+<!--            </div>-->
+            <!-- Grid column -->
+          </div>
+          <!-- Grid row -->
+        </div>
+      </section>
+      <!-- Section: Links  -->
+
+      <!-- Copyright -->
+      <!-- Copyright -->
+    </footer>
+<!--    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">-->
+<!--      © 2021 Copyright:-->
+<!--      <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>-->
+<!--    </div>-->
+      <div class="footer-extras">
+        <mat-icon>home</mat-icon>
+        <mat-icon>facebook</mat-icon>
+        <mat-icon>facebook</mat-icon>
+        <mat-icon>facebook</mat-icon>
+      <div class="footer-copyright">
+        @ State University of New York at Oswego
+      </div>
+      </div>
+    </div>
+
+<!--    <table>-->
+<!--      <tr>-->
+<!--        <th>-->
+<!--          <img class="footer-Oswego-img" [ngSrc]="imageStr" priority="true" alt="Oswego Logo">-->
+<!--        </th>-->
+<!--        <th>-->
+<!--          Campus-->
+<!--        </th>-->
+<!--        <th>-->
+<!--          Resources-->
+<!--        </th>-->
+<!--        <th>-->
+<!--          More-->
+<!--        </th>-->
+<!--      </tr>-->
+<!--    </table>-->
   </div>
 </div>

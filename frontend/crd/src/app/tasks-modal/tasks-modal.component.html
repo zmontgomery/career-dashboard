@@ -4,8 +4,10 @@
   </header>
   <div id="modal-body">
     <div id="">
+      <p>{{modalData.task.yearLevel}}</p>
       <p style="font-size:30px"><b>Description: </b><br>
         {{ modalData.task.description }}</p>
+      <p>Task Product ID: {{ modalData.task.taskID}}</p>
     </div>
     <app-task-submit-button [task]="modalData.task"></app-task-submit-button>
   </div>

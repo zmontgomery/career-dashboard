@@ -40,6 +40,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
+import { BasePageComponent } from './base-page/base-page/base-page.component';
+import {NgOptimizedImage} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -47,6 +50,7 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     AppComponent,
     ApiDocumentationsComponent,
     NavbarComponent,
+    BasePageComponent,
     NotFoundComponent,
   ],
   imports: [
@@ -75,14 +79,16 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
       }
     ),
     SocialLoginModule,
-    UserMenuModule,
+    LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
+    ProfileModule,
     MilestonesPageModule,
     UsersPageModule,
     MatCardModule,
     MatTabsModule,
     TasksModule,
+    TasksModalModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
@@ -97,6 +103,7 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     EventMainPageModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
+    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
     TasksModalModule,
@@ -104,6 +111,8 @@ import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile
     EventImageModalModule,
     ProfileImageModalModule,
     SettingsPageModule,
+    NgOptimizedImage,
+    MatIconModule,
   ],
   providers: [
     provideHttpClient(),
