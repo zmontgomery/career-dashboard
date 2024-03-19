@@ -2,7 +2,8 @@ package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
-import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class SubmissionHandler {
     ArtifactService artifactService;
 
     @Autowired
-    AuthService authService;
+    CurrentUserUtil currentUserUtil;
 
     /**
      * Handles processing of a submission
@@ -71,7 +72,7 @@ public class SubmissionHandler {
      * @return
      */
     public Mono<ServerResponse> getLatestSubmission(ServerRequest serverRequest) {
-        return authService.currentUser()
+        return currentUserUtil.getCurrentUser()
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
             .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)) : Mono.just(submissions))
@@ -86,7 +87,7 @@ public class SubmissionHandler {
 
 
     public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
-        return authService.currentUser()
+        return currentUserUtil.getCurrentUser()
             .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
             .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))

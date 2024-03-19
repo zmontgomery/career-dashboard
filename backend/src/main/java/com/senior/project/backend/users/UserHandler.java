@@ -3,7 +3,8 @@ package com.senior.project.backend.users;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.UsersSearchResponse;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,9 @@ import java.util.NoSuchElementException;
 public class UserHandler {
     @Autowired
     private UserService service;
+
+    @Autowired
+    private CurrentUserUtil currentUserUtil;
 
     /**
      * Gets all users from the user service
@@ -105,6 +109,6 @@ public class UserHandler {
     /** used for tests to replace current user with a mock */
     public Mono<User> currentUser() {
         System.out.println("no");
-        return SecurityUtil.getCurrentUser();
+        return currentUserUtil.getCurrentUser();
     }
 }

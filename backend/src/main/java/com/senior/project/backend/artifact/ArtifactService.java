@@ -5,7 +5,7 @@ import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.domain.ArtifactType;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
 
 import jakarta.annotation.PostConstruct;
 
@@ -41,14 +41,16 @@ public class ArtifactService {
 
     private final ArtifactRepository artifactRepository;
     private final EventRepository eventRepository;
+    private final CurrentUserUtil currentUserUtil;
 
     // Make sure to add any filetypes to the getFileExtension method
     private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);
     private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
-    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository, CurrentUserUtil currentUserUtil) {
         this.artifactRepository = artifactRepository;
         this.eventRepository = eventRepository;
+        this.currentUserUtil = currentUserUtil;
         if (this._uploadDirectory == null) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
@@ -95,7 +97,7 @@ public class ArtifactService {
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
-                            .then(SecurityUtil.getCurrentUser())
+                            .then(currentUserUtil.getCurrentUser())
                             .map((user) -> {
                                 upload.setUserId(user.getId());
                                 return upload;
@@ -162,7 +164,7 @@ public class ArtifactService {
      * @return a message indicating the success
      */
     public Mono<String> deleteFile(String internalName) {
-        return SecurityUtil.getCurrentUser()
+        return currentUserUtil.getCurrentUser()
                 .flatMap((user) -> {
                     Optional<Artifact> a = artifactRepository.findByUniqueIdentifier(internalName);
                     if (a.isPresent()) {
@@ -179,7 +181,7 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(int id) {
         if (id == NO_FILE_ID) return Mono.just("Success");
-        return SecurityUtil.getCurrentUser()
+        return currentUserUtil.getCurrentUser()
                 .flatMap((user) -> {
                     Optional<Artifact> a = artifactRepository.findById((long) id);
                     if (a.isPresent()) {
@@ -245,7 +247,7 @@ public class ArtifactService {
                     if (artifact.getType() == ArtifactType.EVENT_IMAGE) {
                         return Mono.empty();
                     }
-                    return SecurityUtil.getCurrentUser()
+                    return currentUserUtil.getCurrentUser()
                             .flatMap(user -> {
                                 System.out.println(user.getId());
                                 System.out.println(artifact.getUserId());
