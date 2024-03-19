@@ -1,7 +1,7 @@
 export interface SkillJSON{
     id: string;
     name: string;
-    isLanguage: boolean;
+    language: boolean;
     studentDetailsID: string;
 }
 
@@ -10,7 +10,7 @@ export class Skill{
     constructor(json: SkillJSON){
         this.id = json.id;
         this.name = json.name;
-        this.isLanguage = json.isLanguage;
+        this.isLanguage = json.language;
         this.studentDetailsID = json.studentDetailsID;
     }
 
@@ -23,7 +23,7 @@ export class Skill{
         return new Skill({
             id: '',
             name: '',
-            isLanguage: false,
+            language: false,
             studentDetailsID: ''
         })
     }

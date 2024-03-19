@@ -8,6 +8,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {FileUploadModule} from "../file-upload/file-upload.module";
 import {MatDialogModule} from "@angular/material/dialog";
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { DeleteResumeConfirmationDialogModule } from './delete-resume-confirmation-dialog/delete-resume-confirmation-dialog.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
       FileUploadModule,
       MatDialogModule,
       PdfViewerModule,
+      DeleteResumeConfirmationDialogModule
     ]
 })
 export class PortfolioModule { }

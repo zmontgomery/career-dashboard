@@ -17,8 +17,14 @@ export class TaskService {
   ) {
   }
 
+  /**
+   * Gets all the tasks and caches the response
+   * 
+   * If the cache has data in it, it returns the value of the cache, otherwise
+   * it makes a request to the backend.
+   * @param forceRefresh forces the cache to update by sending the request again
+   */
   getTasks(forceRefresh?: boolean): Observable<Task[]> {
-    // return last value (i.e. cache) from ReplaySubject or add data to it
     if (!this.hasBeenRequested || forceRefresh) {
       this.hasBeenRequested = true;
 
@@ -44,6 +50,9 @@ export class TaskService {
 
   }
 
+  /**
+   * API call to get data for a specific task 
+   */
   findById(id: number): Observable<Task> {
     return this.http.get<TaskJSON>(constructBackendRequest(`${Endpoints.TASKS}/${id}`))
       .pipe(map((taskJSON) => new Task(taskJSON)));

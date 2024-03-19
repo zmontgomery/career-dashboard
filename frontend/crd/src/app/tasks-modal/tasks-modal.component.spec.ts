@@ -1,44 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TasksModalComponent } from './tasks-modal.component';
-import { MatDialog, MatDialogModule, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { Form, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Task } from '../../domain/Task';
+import { Task, TaskType } from '../../domain/Task';
 import { YearLevel } from 'src/domain/Milestone';
+import { of } from "rxjs";
+import createSpyObj = jasmine.createSpyObj;
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { TaskSubmitButtonModule } from '../task-submit-button/task-submit-button.module';
+import { taskJSON } from '../util/task.service.spec';
+import { TaskService } from '../util/task.service';
 
 describe('TasksModalComponent', () => {
   let component: TasksModalComponent;
   let fixture: ComponentFixture<TasksModalComponent>;
-  let testTask: Task;
+  let taskServiceSpy = createSpyObj('TaskService', ['getTasks']);
+  let dialogMock = {
+    close: () => { }
+    };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [TasksModalComponent],
-      teardown: {destroyAfterEach: false}
-    });
-    fixture = TestBed.createComponent(TasksModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('test1', () => {
-    testTask = new Task({
+  const testTask = new Task({
       name: 'task name',
       description: "description",
       id: 1,
       isRequired: true,
-      submission: 'submission',
       yearLevel: YearLevel.Freshman,
       milestoneID: 1,
-      taskType: 'artifact',
+      taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
     });
+
+  const dialogData = {
+    task: testTask
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MatDialogModule, TaskSubmitButtonModule],
+      declarations: [TasksModalComponent],
+      providers: [
+        { provide: TaskService, useValue: taskServiceSpy },
+        { provide: MatDialogRef, useValue: dialogMock },
+        { provide: MAT_DIALOG_DATA, useValue: dialogData },
+      ],
+      teardown: { destroyAfterEach: false }
+    }).compileComponents();
+    fixture = TestBed.createComponent(TasksModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {

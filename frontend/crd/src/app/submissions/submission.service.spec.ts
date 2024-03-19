@@ -6,7 +6,7 @@ import { Submission } from 'src/domain/Submission';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 
 export const submission1JSON = {
-  id: 1,
+  id: 2,
   artifactId: 1,
   taskId: 1,
   studentId: 'asdf',
@@ -14,7 +14,17 @@ export const submission1JSON = {
   comment: 'asdf'
 }
 
+export const submission2JSON = {
+  id: 1,
+  artifactId: 2,
+  taskId: 1,
+  studentId: 'asdf',
+  submissionDate: new Date(Date.now()),
+  comment: 'asdf'
+}
+
 export const submission1 = new Submission(submission1JSON);
+export const submission2 = new Submission(submission2JSON);
 
 describe('SubmissionService', () => {
   let service: SubmissionService;
@@ -54,5 +64,27 @@ describe('SubmissionService', () => {
     const req = httpMock.expectOne(constructBackendRequest(Endpoints.SUBMISSION) + '/1');
     expect(req.request.method).toEqual('GET');
     req.flush(submission1JSON);
+  });
+
+  it('should get student submission', (done) => {
+    service.getStudentSubmissions("asdf").subscribe((s) => {
+      expect(s).toEqual([submission1]);
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.ALL_SUBMISSIONS));
+    expect(req.request.method).toEqual('GET');
+    req.flush([submission1JSON]);
+  });
+
+  it('should delete', (done) => {
+    service.delete(1).subscribe((s) => {
+      expect(s).toEqual('success');
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.SUBMISSION) + '/1');
+    expect(req.request.method).toEqual('DELETE');
+    req.flush('success')
   });
 });

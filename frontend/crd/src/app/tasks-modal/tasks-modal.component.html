@@ -1,42 +1,16 @@
-<!--<div id="modal-content-wrapper">-->
-<!--  <header id="modal-header">-->
-<!--    <h1 id="modal-title">{{ modalData.title }}</h1>-->
-<!--  </header>-->
-<!--  <section id="modal-body">-->
-<!--    <p>{{ modalData.description }}</p>-->
-<!--  </section>-->
-<!--  <footer id="modal-footer">-->
-<!--    <button mat-raised-button id="modal-action-button" (click)="actionFunction()">-->
-<!--      {{ modalData.actionButtonText }}-->
-<!--    </button>-->
-<!--    <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">-->
-<!--      Go back-->
-<!--    </button>-->
-<!--  </footer>-->
-<!--</div>-->
-
 <div id="modal-content-wrapper">
   <header id="modal-header">
     <h1 id="modal-title"> {{ modalData.task.name }}</h1>
   </header>
-<!--  <section id="modal-body">-->
-<!--    <p>{{ modalData.name}}</p>-->
-<!--    <p style="font-size:30px"><b>Description: </b><br>-->
-<!--    {{ modalData.description }}</p>-->
-<!--    <p>Task Product ID: {{ modalData.productId}}</p>-->
-<!--  </section>-->
   <div id="modal-body">
     <div id="">
-      <p>{{modalData.task.yearLevel}}</p>
       <p style="font-size:30px"><b>Description: </b><br>
         {{ modalData.task.description }}</p>
-      <p>Task Product ID: {{ modalData.task.taskID}}</p>
     </div>
+    <app-task-submit-button [task]="modalData.task"></app-task-submit-button>
   </div>
+  <br>
   <footer id="modal-footer">
-    <button mat-raised-button id="modal-action-button" (click)="actionFunction()">
-      {{ modalData.actionButtonText }}
-    </button>
     <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
       Go back
     </button>

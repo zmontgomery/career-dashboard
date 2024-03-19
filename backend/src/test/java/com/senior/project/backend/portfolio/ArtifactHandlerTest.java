@@ -14,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
+import com.senior.project.backend.Constants;
 import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.artifact.ArtifactService;
+import com.senior.project.backend.submissions.SubmissionService;
 
 import java.io.IOException;
 
@@ -23,8 +25,8 @@ import org.springframework.core.io.ByteArrayResource;
 import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +40,9 @@ public class ArtifactHandlerTest {
 
     @Mock
     private ArtifactService artifactService;
+
+    @Mock
+    private SubmissionService submissionService;
 
     @BeforeEach
     public void setup() {
@@ -120,8 +125,10 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDelete() {
-        when(artifactService.deleteFile(1)).thenReturn(Mono.just("test"));
-        String result = webTestClient.delete().uri("/test/1")
+        when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission2));
+        when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
+        when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+        String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()
             .expectBody(String.class)
@@ -130,5 +137,26 @@ public class ArtifactHandlerTest {
 
         assertEquals(result, "test");
     }
-    
+
+    @Test
+    public void handleFileDeleteNoSubmission() {
+        when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.empty());
+        when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+        String result = webTestClient.delete().uri("/test/2")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertEquals(result, "test");
+    }
+
+    @Test
+    public void handleFileDeleteNoSubmissionNoFile() {
+        webTestClient.delete().uri("/test/1")
+            .exchange()
+            .expectStatus()
+            .isAccepted();
+    }
 }

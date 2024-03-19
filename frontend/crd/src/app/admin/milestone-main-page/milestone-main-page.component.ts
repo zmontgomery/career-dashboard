@@ -40,11 +40,18 @@ export class MilestoneMainPageComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Navigates to the milestone edit page
+   * The name is actually the milestoneID
+   */
   editMilestone(name: string) {
     const encodedName = encodeURIComponent(name);
     this.router.navigate(['/admin/milestone-edit', encodedName]);
   }
 
+  /**
+   * Creates the new milestone modal and sends it the year level
+   */
   openMilestoneCreateModal(yearLevel: YearLevel) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body

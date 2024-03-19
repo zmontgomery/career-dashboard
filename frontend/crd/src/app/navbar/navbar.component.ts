@@ -15,8 +15,7 @@ export class NavbarComponent {
   ) {
     authService.user$.pipe(takeUntilDestroyed()).subscribe((user: User | null) => {
       if (user?.hasAdminPrivileges()) {
-        // Admin specific links in future?
-        this.navLinks = this.adminLinks;
+        this.navLinks = this.adminLinks;  // includes all faculty links
       }
       else if (user?.hasFacultyPrivileges()) {
         this.navLinks = this.facultyLinks;
@@ -33,7 +32,6 @@ export class NavbarComponent {
   studentLinks = [
     { path: "/dashboard", label: "Dashboard"},
     { path: "/portfolio", label: "Portfolio"},
-    { path: "/profile", label: "Profile"},
     { path: "/milestones", label: "Milestones"}
   ];
 

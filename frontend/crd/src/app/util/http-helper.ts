@@ -5,6 +5,7 @@ export enum Endpoints {
     SIGN_IN = 'auth/signin',
     REFRESH = 'auth/refresh',
     SIGN_OUT = 'auth/signout',
+    SIGN_UP = 'auth/signup',
 
     // student
     MILESTONES = 'milestones',
@@ -12,8 +13,10 @@ export enum Endpoints {
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',
     USERS = 'users',
+    UPDATE_ROLES = 'users/roles',
     CURRENT_USER = 'current-user',
     SUBMISSION = 'tasks/submission',
+    ALL_SUBMISSIONS = 'student/submission',
 
     // Artifacts
     ARTIFACT = 'artifact/',

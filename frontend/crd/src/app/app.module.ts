@@ -15,7 +15,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ProfileModule } from "./profile/profile.module";
 import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
@@ -33,10 +32,14 @@ import { TaskEditModalModule } from './admin/task-edit-modal/task-edit-modal.mod
 import { EventMainPageModule } from './admin/event-main-page/event-main-page.module';
 import { MilestoneCreateModalModule } from './admin/milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { UsersPageModule } from "./users-page/users-page.module";
+import { SignupPageModule } from './security/signup-page/signup-page.module';
+import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NotFoundComponent } from './not-found/not-found.component';
+
 import {NgOptimizedImage} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 
@@ -45,6 +48,7 @@ import {MatIconModule} from "@angular/material/icon";
     AppComponent,
     ApiDocumentationsComponent,
     NavbarComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,11 +79,11 @@ import {MatIconModule} from "@angular/material/icon";
     LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
-    ProfileModule,
     MilestonesPageModule,
     UsersPageModule,
     MatCardModule,
     MatTabsModule,
+    TasksModule,
     TasksModalModule,
     RouterModule,
     BrowserAnimationsModule,
@@ -95,9 +99,11 @@ import {MatIconModule} from "@angular/material/icon";
     EventMainPageModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
-    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
+    TasksModalModule,
+    SignupPageModule,
+    EventImageModalModule,
     NgOptimizedImage,
     MatIconModule,
   ],
@@ -131,3 +137,4 @@ import {MatIconModule} from "@angular/material/icon";
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }
+
