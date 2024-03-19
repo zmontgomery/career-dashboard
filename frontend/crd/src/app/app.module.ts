@@ -41,6 +41,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 
+
 @NgModule({
   declarations: [
     AppComponent,
