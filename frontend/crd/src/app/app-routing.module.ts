@@ -12,6 +12,7 @@ import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.com
 import {UsersPageComponent} from "./users-page/users-page.component";
 import { SignupPageComponent } from './security/signup-page/signup-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
+import {NotFoundComponent} from "./not-found/not-found.component";
 
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
@@ -41,6 +42,10 @@ const routes: Routes = [
   {path: 'signup', component: SignupPageComponent, canActivate: [signedUpGuard]},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'swagger', component: ApiDocumentationsComponent, canActivate: [authGuard, adminRoleGuard]},
+
+
+  // This must be at button to catch all not defined
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
