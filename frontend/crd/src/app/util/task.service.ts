@@ -48,8 +48,8 @@ export class TaskService {
 
   }
 
-  getDashBoardTasks(): Observable<Task[]> {
-    return this.http.get<TaskJSON[]>(constructBackendRequest(Endpoints.DASHBOARD_TASKS))
+  getDashBoardTasks(limit: number): Observable<Task[]> {
+    return this.http.get<TaskJSON[]>(constructBackendRequest(Endpoints.DASHBOARD_TASKS, {key:"limit", value:limit}))
       .pipe(map((data) => data.map((taskData: TaskJSON) => new Task(taskData))))
   }
 

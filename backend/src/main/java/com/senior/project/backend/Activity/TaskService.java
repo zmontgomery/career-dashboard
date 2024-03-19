@@ -152,30 +152,27 @@ public class TaskService {
     }
 
 
-    public Flux<Task> dashboard() {
-
+    public Flux<Task> dashboard(int limit) {
         return SecurityUtil.getCurrentUser()
                 .flatMapMany((user) -> {
-                    var yearList = new ArrayList<YearLevel>();
                     var studentDetails = user.getStudentDetails();
                     if (studentDetails == null) {
                         return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
                                 "Student Details not setup for user"));
                     }
-                    switch (studentDetails.getYearLevel()) {
-                        case Senior:
-                            yearList.add(YearLevel.Senior);
-                        case Junior:
-                            yearList.add(YearLevel.Junior);
-                        case Sophomore:
-                            yearList.add(YearLevel.Sophomore);
-                        case Freshman:
-                            yearList.add(YearLevel.Freshman);
-                        default:
-                            break;
-                    }
-                    return NonBlockingExecutor.executeMany(() ->
-                            taskRepository.findOverDueTasks(yearList, user.getId()));
+                    return NonBlockingExecutor.executeMany(() -> {
+                        int overdueLimit = limit / 2;
+                        int upcomingLimit = limit - overdueLimit;
+                        var previousYears = studentDetails.getYearLevel().previousYears();
+                        var upcomingYears = studentDetails.getYearLevel().currentAndUpcomingYears();
+                        var overdueTasks = taskRepository.findTasksToDisplayOnDashboard(previousYears, user.getId(), overdueLimit);
+                        if (overdueTasks.size() != overdueLimit) {
+                            upcomingLimit = limit - overdueTasks.size();
+                        }
+                        var upcomingTasks = taskRepository.findTasksToDisplayOnDashboard(upcomingYears, user.getId(), upcomingLimit);
+                        overdueTasks.addAll(upcomingTasks);
+                        return overdueTasks;
+                    });
                 });
     }
 }

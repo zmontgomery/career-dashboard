@@ -26,7 +26,7 @@ export class TasksComponent {
         console.error("User does not have student details yet");
       }
       else {
-        this.taskService.getDashBoardTasks().subscribe((tasks: Task[]) => {
+        this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
           this.tasksList = tasks;
         });
       }
