@@ -20,6 +20,8 @@ import { UserService } from 'src/app/security/user.service';
 export class MilestonesFacultyComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
 
   studentID!: string;
+  studentYear!: YearLevel;
+  completedMap: Map<string, Array<Milestone>> = new Map()
 
   constructor(
     milestoneService: MilestoneService,
@@ -43,6 +45,9 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, student, milestones]) => {
+      if (student.studentDetails?.yearLevel) {
+        this.studentYear = student.studentDetails?.yearLevel;
+      }
       this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
       milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
 

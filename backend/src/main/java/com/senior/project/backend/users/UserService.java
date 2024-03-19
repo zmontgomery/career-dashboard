@@ -1,6 +1,5 @@
 package com.senior.project.backend.users;
 
-import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
