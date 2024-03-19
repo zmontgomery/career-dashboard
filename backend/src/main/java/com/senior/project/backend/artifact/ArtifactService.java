@@ -11,6 +11,9 @@ import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -207,8 +210,9 @@ public class ArtifactService {
 
     private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
         return filePart.content().collectList()
-                .flatMap(dataBuffer -> NonBlockingExecutor.execute(() -> {
-                            try (InputStream inputStream = dataBuffer.get(0).asInputStream()) {
+                .flatMap(dataBufferList -> NonBlockingExecutor.execute(() -> {
+                            var dataBuffer = concatenateDataBuffers(dataBufferList);
+                            try (InputStream inputStream = dataBuffer.asInputStream()) {
                                 return ImageIO.read(inputStream);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
@@ -224,6 +228,17 @@ public class ArtifactService {
                             }
                             return Mono.just(image);
                         }));
+    }
+
+    public static DataBuffer concatenateDataBuffers(List<DataBuffer> dataBuffers) {
+        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+        DataBuffer resultBuffer = dataBufferFactory.allocateBuffer(1);
+
+        for (DataBuffer buffer : dataBuffers) {
+            resultBuffer.write(buffer);
+        }
+
+        return resultBuffer;
     }
 
     /**
