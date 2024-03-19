@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
 import java.util.NoSuchElementException;
 
 /**
@@ -40,6 +41,22 @@ public class UserHandler {
      */
     public Mono<ServerResponse> currentUser(ServerRequest request) {
         return ServerResponse.ok().body(currentUser(), User.class);
+    }
+
+    /**
+     * Gets a specific student's info
+     * @param request - request
+     * @return 200 with the user or 400 if missing query param
+     */
+    public Mono<ServerResponse> studentInfo(ServerRequest request) {
+        try {
+            String studentID = request.queryParam("studentID").orElseThrow();
+            return ServerResponse.ok().body(service.findByID(UUID.fromString(studentID)), User.class);
+        }
+        catch (NoSuchElementException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "missing query param: studentID"));
+        }
     }
 
     /**

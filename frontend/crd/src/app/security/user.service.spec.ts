@@ -37,6 +37,18 @@ describe('UserService', () => {
     request.flush(userJSON);
   });
 
+  it('should get student', (done) => {
+    const user = new User(userJSON);
+    service.getStudent("id").subscribe((result: User) => {
+      expect(result).toEqual(user);
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.STUDENT_INFO, {key: 'studentID', value: "id"}));
+    expect(request.request.method).toEqual('GET');
+    request.flush(userJSON);
+  });
+
   it('should search', (done) => {
     const users = [new User(userJSON), new User(userJSON)];
     service.searchUsers(10, 11, '').subscribe((results: UsersSearchResponseJSON) => {

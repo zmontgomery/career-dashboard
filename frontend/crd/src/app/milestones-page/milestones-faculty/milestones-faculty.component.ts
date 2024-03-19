@@ -10,6 +10,7 @@ import { User } from 'src/app/security/domain/user';
 import { Submission } from 'src/domain/Submission';
 import { MilestonesPageComponent } from '../milestones-page.component';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from 'src/app/security/user.service';
 
 @Component({
   selector: 'app-faculty-milestones',
@@ -25,6 +26,7 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
     matDialog: MatDialog,
     submissionService: SubmissionService,
     protected route: ActivatedRoute,
+    protected userService: UserService
   ) {
     super(milestoneService, matDialog, submissionService);
   }
@@ -37,9 +39,10 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
 
     zip(
       this.submissionService.getStudentSubmissionsFaculty(this.studentID),
+      this.userService.getStudent(this.studentID),
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
-    ).subscribe(([submissions, milestones]) => {
+    ).subscribe(([submissions, student, milestones]) => {
       this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
       milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
 

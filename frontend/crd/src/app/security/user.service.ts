@@ -17,6 +17,11 @@ export class UserService {
       .pipe(map((u) => new User(u)));
   }
 
+  getStudent(studentID: string): Observable<User> {
+    return this.http.get<UserJSON>(constructBackendRequest(Endpoints.STUDENT_INFO, {key: 'studentID', value: studentID}))
+      .pipe(map((u) => new User(u)));
+  }
+
   searchUsers(offset: number, size: number, term: string): Observable<UsersSearchResponseJSON> {
     const apiUrl = constructBackendRequest(Endpoints.USERS_SEARCH,
         {key:'pageOffset', value: offset},

@@ -11,18 +11,20 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MilestoneService } from '../milestones/milestone.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SubmissionService } from 'src/app/submissions/submission.service';
-import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { userJSON } from 'src/app/security/auth.service.spec';
 import { TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { UserService } from 'src/app/security/user.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('MilestonesFacultyComponent', () => {
   let component: MilestonesFacultyComponent;
   let fixture: ComponentFixture<MilestonesFacultyComponent>;
   let submissionService: jasmine.SpyObj<SubmissionService>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let httpMock: HttpTestingController;
 
   let user = new User(userJSON);
 
@@ -121,21 +123,33 @@ describe('MilestonesFacultyComponent', () => {
   let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
   submissionsServiceSpy.getStudentSubmissionsFaculty.and.returnValue(of(testSubmissions));
 
+  let userServiceSpy = createSpyObj('UserService', ['getStudent']);
+  userServiceSpy.getStudent.and.returnValue(of(user));
+
   beforeEach(() => {
     submissionService = jasmine.createSpyObj('SubmissionService', ['submit']);
-    authService = jasmine.createSpyObj('AuthService', ['toString'], {user$: of(user)});
 
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule, MatDialogModule],
+      imports: [
+        MatCardModule, 
+        MatExpansionModule, 
+        MatCheckboxModule, 
+        NoopAnimationsModule, 
+        MatDialogModule,
+        HttpClientTestingModule,
+        HttpClientModule
+      ],
       providers: [
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: ActivatedRoute, useValue: activatedRouteMock},
+        {provide: UserService, userValue: userServiceSpy}
       ],
       declarations: [MilestonesFacultyComponent]
     });
     fixture = TestBed.createComponent(MilestonesFacultyComponent);
     component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 

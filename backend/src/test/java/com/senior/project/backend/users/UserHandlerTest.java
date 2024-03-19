@@ -7,6 +7,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.NoSuchElementException;
 
 import com.senior.project.backend.domain.UsersSearchResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,7 @@ public class UserHandlerTest {
             .GET("/search", userHandler::searchUsers)
             .GET("/curr", userHandler::currentUser)
             .POST("/update", userHandler::updateRole)
+            .GET("/student", userHandler::studentInfo)
             .build())
         .build();
     }
@@ -64,6 +67,35 @@ public class UserHandlerTest {
         assertNotNull(res);
         assertEquals(Constants.USERS.get(0), res.get(0));
         assertEquals(Constants.USERS.get(1), res.get(1));
+    }
+
+    @Test
+    public void testStudentInfo() {
+        UUID userID = Constants.user1.getId();
+        when(userService.findByID(userID)).thenReturn(Mono.just(Constants.user1));
+
+        String uri = "/student?studentID=" + userID;
+
+        User res = webTestClient.get()
+            .uri(uri)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(User.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertNotNull(res);
+        assertEquals(Constants.user1, res);
+    }
+
+    @Test
+    public void testStudentInfoNoParam() {
+        webTestClient.get()
+            .uri("/student")
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
     }
 
     @Test
