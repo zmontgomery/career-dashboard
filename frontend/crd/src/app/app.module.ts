@@ -40,7 +40,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
-import { BasePageComponent } from './base-page/base-page/base-page.component';
 import {NgOptimizedImage} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 
@@ -50,7 +49,6 @@ import {MatIconModule} from "@angular/material/icon";
     AppComponent,
     ApiDocumentationsComponent,
     NavbarComponent,
-    BasePageComponent,
     NotFoundComponent,
   ],
   imports: [
@@ -79,10 +77,8 @@ import {MatIconModule} from "@angular/material/icon";
       }
     ),
     SocialLoginModule,
-    LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
-    ProfileModule,
     MilestonesPageModule,
     UsersPageModule,
     MatCardModule,
@@ -113,6 +109,7 @@ import {MatIconModule} from "@angular/material/icon";
     SettingsPageModule,
     NgOptimizedImage,
     MatIconModule,
+    UserMenuModule,
   ],
   providers: [
     provideHttpClient(),
