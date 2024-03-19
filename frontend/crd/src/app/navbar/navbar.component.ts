@@ -32,7 +32,6 @@ export class NavbarComponent {
   studentLinks = [
     { path: "/dashboard", label: "Dashboard"},
     { path: "/portfolio", label: "Portfolio"},
-    { path: "/profile", label: "Profile"},
     { path: "/milestones", label: "Milestones"}
   ];
 
