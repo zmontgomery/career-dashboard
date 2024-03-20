@@ -6,6 +6,7 @@ import {TasksModalComponent} from '../tasks-modal/tasks-modal.component';
 import {AuthService} from "../security/auth.service";
 import {take} from "rxjs";
 import {YearLevel} from "../../domain/Milestone";
+import {User} from "../security/domain/user";
 
 @Component({
   selector: 'app-tasks',
@@ -15,6 +16,7 @@ import {YearLevel} from "../../domain/Milestone";
 export class TasksComponent {
 
   userYearLevel: YearLevel = YearLevel.Freshman;
+  tasksList: Array<Task> = [];
 
   constructor(
     private taskService: TaskService,
@@ -30,10 +32,14 @@ export class TasksComponent {
       }
       else {
         this.userYearLevel = user.studentDetails.yearLevel;
-        this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
-          this.tasksList = tasks;
-        });
+        this.updateTasks();
       }
+    });
+  }
+
+  private updateTasks() {
+    this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
+      this.tasksList = tasks;
     });
   }
 
@@ -52,8 +58,20 @@ export class TasksComponent {
       task: task
     }
     // https://material.angular.io/components/dialog/overview
-    this.matDialog.open(TasksModalComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(TasksModalComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.updateTasks();
+    })
   }
 
-  tasksList: Array<Task> = []
+  /**
+   * Check if task is overdue
+   * @param task task to be checked
+   * @return true if overdue
+   */
+  isTaskOverdue(task: Task): boolean {
+    return  YearLevel.compare(task.yearLevel, this.userYearLevel) < 0;
+  }
+
 }
