@@ -9,6 +9,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
+import mysql.connector
 
 """
 Role enum for a user
@@ -29,6 +31,15 @@ Default timeout
 """
 TIMEOUT = 5
 
+NO_ACCOUNT_INFO_MESSAGE = """\naccount_information.yml file was not found. 
+            This is by design, as the email and passwords 
+            for the corresponding accounts are not included
+            in the git repository. copy the account_information_default.yml
+            into an account_information.yml file and fill 
+            out the fields with the email and password information
+            in order to resolve this error\n"""
+
+
 """
 Base test that Integration tests should extend
 
@@ -45,6 +56,13 @@ class BaseTest(unittest.TestCase):
   Creates the driver, signs in, and navigates to the page
   """
   def setUp(self):
+    # Determine if headless
+    # chrome_options = Options()
+    # chrome_options.add_argument('--headless')
+
+    # Connect to database
+    self.connect_to_database()
+
     # Start selenium
     self.driver = webdriver.Chrome()
     self.driver.get(self.BASE_URL)
@@ -54,7 +72,8 @@ class BaseTest(unittest.TestCase):
 
     # Sign in
     if (self.authenticated()):
-      self.sign_in()
+      email, password = self._getRoleDetails()
+      self.sign_in(email, password)
 
     # Navigate to page
     self.driver.get(f'{self.BASE_URL}/{self.path()}')
@@ -65,17 +84,25 @@ class BaseTest(unittest.TestCase):
   Closes the web driver and clears existing authentication
   """
   def tearDown(self):
-    # Clean up authentication
-    self.driver.execute_script("window.localStorage.removeItem('authToken')")
-    self.driver.execute_script("window.localStorage.removeItem('tokenIssue')")
+    # Clear database
+    if self.cursor != None:
+      self.cursor.close()
+
+    if self.db != None:
+      self.db.close()
 
     # Close the driver
-    self.driver.close()
+    if self.driver != None:
+      # Clean up authentication
+      self.driver.execute_script("window.localStorage.removeItem('authToken')")
+      self.driver.execute_script("window.localStorage.removeItem('tokenIssue')")
+
+      self.driver.close()
 
   """
   Signs in the test using the google sign in functionality
   """
-  def sign_in(self):
+  def sign_in(self, email, password):
     email, password = self._getRoleDetails()
     button = self.findElementByClassName('login-google-button')
     button.click()
@@ -126,7 +153,30 @@ class BaseTest(unittest.TestCase):
     try:
       return WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, 'logout-button')))
     except TimeoutException:
-      self.fail(f"Waiting for logout button failed")
+      try:
+        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, 'signup-modal')))
+      except TimeoutException:
+        self.fail("Expected elements of logout button or sign up container")
+
+  def connect_to_database(self):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    try:
+      with open(f'{dir_path}/account_information.yml', 'r') as file:
+        details = yaml.safe_load(file)
+        user = details['database']['user']
+        password = details['database']['password']
+        self.db = mysql.connector.connect(
+          host = 'localhost',
+          user = user,
+          password = password,
+          database = 'crd'
+        )
+        self.cursor = self.db.cursor()
+    except FileNotFoundError:
+      print(NO_ACCOUNT_INFO_MESSAGE) 
+      self.tearDown()
+      self.skipTest('File not found')
+
     
   """
   Overwritable function for determining if the test should be authenticated
@@ -137,7 +187,7 @@ class BaseTest(unittest.TestCase):
     return True
   
   """
-  Overwritable function for determining if the test should be authenticated
+  Overwritable function for determining for the role of the user during the test
 
   Default is ADMIN
   """
@@ -218,18 +268,17 @@ class BaseTest(unittest.TestCase):
         elif role == Role.ADMIN:
           email = details['admin']['email']
           password = details['admin']['password']
+        elif role == Role.SUPER_ADMIN:
+          email = details['admin']['email']
+          password = details['admin']['password']
+          sql = "UPDATE users AS u SET u.role = 'SuperAdmin' WHERE u.email = %s"
+          self.cursor.execute(sql, email)
+          print(self.cursor.rowcount())
 
         # Return
         return email, password
     except FileNotFoundError:
-      print("""\naccount_information.yml file was not found. 
-            This is by design, as the email and passwords 
-            for the corresponding accounts are not included
-            in the git repository. copy the account_information_default.yml
-            into an account_information.yml file and fill 
-            out the fields with the email and password information
-            in order to resolve this error\n"""
-      ) 
+      print(NO_ACCOUNT_INFO_MESSAGE) 
       self.tearDown()
       self.skipTest('File not found')
 
