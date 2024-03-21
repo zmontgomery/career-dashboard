@@ -7,15 +7,22 @@ import { User } from './domain/user';
 import { HttpClientModule } from '@angular/common/http';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
 import { UsersSearchResponseJSON } from '../users-page/user-search-result';
+import {AuthService} from "./auth.service";
+import {of} from "rxjs";
 
 describe('UserService', () => {
   let service: UserService;
   let httpMock: HttpTestingController
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  authServiceSpy = jasmine.createSpyObj('AuthService', ['signOut'], {user$: of(new User(userJSON))});
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, HttpClientModule],
-      providers: [UserService]
+      providers: [
+        UserService,
+        {provide: AuthService, useValue: authServiceSpy}
+      ]
     });
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -58,7 +65,7 @@ describe('UserService', () => {
       done();
     });
 
-    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_SEARCH, 
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_SEARCH,
       {key:'pageOffset', value: 10},
       {key:'pageSize', value: 11},
       {key: 'searchTerm', value: ''}
@@ -81,4 +88,17 @@ describe('UserService', () => {
     expect(req.request.method).toEqual('GET');
     req.flush(userJSON);
   })
+
+  it('should get ProfilePicture', (done) => {
+    const mockFile = new Blob();
+
+    service.getProfilePicture().subscribe((blob) => {
+      expect(blob).toContain('blob:http://localhost');
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE));
+    expect(request.request.method).toEqual('GET');
+    request.flush(mockFile);
+  });
 });

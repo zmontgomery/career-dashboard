@@ -60,7 +60,8 @@ describe('MilestonesFacultyComponent', () => {
     canText: true,
     studentDetails: testStudentDetails,
     role: Role.Student,
-    linkedin: "linkedin"
+    linkedin: "linkedin",
+    profilePictureId: 0
   });
 
   const testSubmissions = [

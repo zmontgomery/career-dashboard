@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +54,7 @@ public class ArtifactHandlerTest {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .POST("/test", artifactHandler::handleSubmissionUpload)
                         .GET("/test/{artifactID}", artifactHandler::serveFile)
+                        .GET("/userProfileImage", artifactHandler::serveUserProfileImage)
                         .DELETE("/test/{id}", artifactHandler::handleFileDelete)
                         .build())
                 .build();
@@ -126,6 +128,34 @@ public class ArtifactHandlerTest {
                 .expectBody(byte[].class)
                 .isEqualTo(pdfContent);
     }
+
+//    Can't seem to mock the Security util here so Not sure how to test
+//
+//    @Test
+//    public void testServeUserProfileIMage() {
+//        // Mock response entity
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_PNG);
+//        byte[] imageContent = "Your PDF Content".getBytes();
+//        ByteArrayResource resource = new ByteArrayResource(imageContent);
+//        ResponseEntity<Resource> responseEntity = new ResponseEntity<>(resource, headers, HttpStatus.OK);
+//
+//        // Mock artifactService
+//        when(artifactService.getFile(anyString(), any())).thenReturn(Mono.just(responseEntity));
+//
+//        // Mock securityUtil
+//        var securityUtil = mockStatic(SecurityUtil.class);
+//        securityUtil.when(SecurityUtil::getCurrentUser).thenReturn(Mono.just(Constants.user1));
+//
+//        // Perform the request
+//        webTestClient.get().uri("/userProfileImage")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(byte[].class)
+//                .isEqualTo(imageContent);
+//
+//        securityUtil.close();
+//    }
 
     @Test
     public void handleFileDelete() {

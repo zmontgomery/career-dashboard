@@ -70,7 +70,12 @@ public class ArtifactHandler {
     }
 
     public Mono<ServerResponse> handleProfileImageUpload(ServerRequest request) {
-        return Mono.error(new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED));
+        return getFilePart(request)
+                .flatMap(artifactService::processProfileImage)
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response)
+                );
     }
 
     private static Mono<FilePart> getFilePart(ServerRequest request) {
@@ -117,5 +122,19 @@ public class ArtifactHandler {
         return file.flatMap(responseEntity ->
                 ServerResponse.ok()
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
+    }
+
+    public Mono<ServerResponse> serveUserProfileImage(ServerRequest request) {
+        return currentUserUtil.getCurrentUser()
+                .flatMap((user) -> {
+                    if (user.getProfilePictureId() != null) {
+                        var file = artifactService.getFile(user.getProfilePictureId().toString(), new HttpHeaders());
+                        return file.flatMap(resourceResponseEntity -> ServerResponse.ok()
+                                .body(BodyInserters.fromValue(Objects.requireNonNull(resourceResponseEntity.getBody()))));
+                    }
+                    else {
+                        return ServerResponse.status(HttpStatus.NO_CONTENT).body(BodyInserters.empty());
+                    }
+                });
     }
 }

@@ -132,7 +132,8 @@
             "styles": [
               "src/styles.less"
             ],
-            "scripts": []
+            "scripts": [],
+            "codeCoverageExclude": ["src/testing/*/"]
           }
         }
       }

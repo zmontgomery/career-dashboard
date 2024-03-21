@@ -22,6 +22,7 @@ public class ArtifactRouter {
         return route(POST(Endpoints.ARTIFACT.uri()), artifactHandler::handleSubmissionUpload)
             .andRoute(POST(Endpoints.UPLOAD_IMAGE_EVENT.uri()), artifactHandler::handleEventImageUpload)
             .andRoute(POST(Endpoints.USERS_PROFILE_PICTURE.uri()), artifactHandler::handleProfileImageUpload)
+            .andRoute(GET(Endpoints.USERS_PROFILE_PICTURE.uri()), artifactHandler::serveUserProfileImage)
             .andRoute(DELETE(Endpoints.ARTIFACT_ID.uri()), artifactHandler::handleFileDelete)
             .andRoute(GET(Endpoints.ARTIFACT_FILE.uri()), artifactHandler::serveFile)
             .andRoute(GET(Endpoints.IMAGE_EVENT.uri()), artifactHandler::serveFile);

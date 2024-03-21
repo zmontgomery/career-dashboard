@@ -19,6 +19,7 @@ export interface UserJSON {
     readonly studentDetails?: StudentDetailsJSON;
     readonly role: Role;
     readonly linkedin: string;
+    readonly profilePictureId: number;
 }
 
 /**
@@ -40,6 +41,8 @@ export class User {
     readonly studentDetails?: StudentDetails
     role: Role;
     readonly linkedin: string;
+    readonly profilePictureId: number;
+    profilePictureURL: string | null = null;
 
     constructor(json: UserJSON) {
         this.id = json.id;
@@ -59,6 +62,7 @@ export class User {
         this.role = json.role;
         this.fullName = this.firstName + " " + this.lastName;
         this.linkedin = json.linkedin;
+        this.profilePictureId = json.profilePictureId;
     }
 
     static makeEmpty() {
@@ -75,14 +79,15 @@ export class User {
             canEmail: false,
             canText: false,
             role: Role.Student,
-            linkedin: ''
+            linkedin: '',
+            profilePictureId: 0,
         });
     }
 
     get name() {
         return LangUtils.exists(this.preferredName) ? `${this.preferredName} ${this.lastName}` : `${this.firstName} ${this.lastName}`;
     }
-    
+
     hasFacultyPrivileges(): boolean {
       return this.role == Role.Faculty || this.hasAdminPrivileges();
     }
@@ -98,7 +103,7 @@ export class User {
     get formattedRole(): string {
       if (this.role === Role.SuperAdmin) {
         return 'Super Admin';
-      } 
+      }
       return this.role;
     }
 }
