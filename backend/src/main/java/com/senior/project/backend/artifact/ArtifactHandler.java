@@ -1,6 +1,5 @@
 package com.senior.project.backend.artifact;
 
-import com.senior.project.backend.security.SecurityUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -126,7 +125,7 @@ public class ArtifactHandler {
     }
 
     public Mono<ServerResponse> serveUserProfileImage(ServerRequest request) {
-        return SecurityUtil.getCurrentUser()
+        return currentUserUtil.getCurrentUser()
                 .flatMap((user) -> {
                     if (user.getProfilePictureId() != null) {
                         var file = artifactService.getFile(user.getProfilePictureId().toString(), new HttpHeaders());

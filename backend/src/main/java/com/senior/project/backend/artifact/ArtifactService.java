@@ -139,7 +139,7 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
-        var userMono = SecurityUtil.getCurrentUser();
+        var userMono = currentUserUtil.getCurrentUser();
         var uploadAndUserMono = validateAndGetPath(filePart, IMAGE_TYPES)
                 .zipWith(validateImageAspectRatio(filePart, 1))
                 .flatMap( zipped -> {
