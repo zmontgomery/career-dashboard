@@ -1,13 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Milestone, YearLevel, CompletionStatus } from "../../../domain/Milestone";
 import { MilestoneService } from '../milestones/milestone.service';
-import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
-import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import { TasksModalComponent } from "../../tasks-modal/tasks-modal.component";
+import { takeUntil, zip } from 'rxjs';
+import { MatDialog} from "@angular/material/dialog";
 import { SubmissionService } from 'src/app/submissions/submission.service';
-import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
-import { Submission } from 'src/domain/Submission';
 import { MilestonesPageComponent } from '../milestones-page.component';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/security/user.service';
@@ -24,7 +21,12 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
   studentYear!: YearLevel;
 
   // display order
-  completionStatuses = [CompletionStatus.InProgress, CompletionStatus.Incomplete, CompletionStatus.Complete];
+  completionStatuses = [
+    CompletionStatus.InProgress, 
+    CompletionStatus.Incomplete, 
+    CompletionStatus.Complete,
+    CompletionStatus.Upcoming
+  ];
   completedMap: Map<CompletionStatus, Array<Milestone>> = new Map();
 
   constructor(
@@ -80,15 +82,26 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
         }
     }
 
+    const incompleteMilestones: Milestone[] = [];
+    const upcomingMilestones: Milestone[] = [];
+
     // if the milestone isn't already in either list
-    const incompleteMilestones = milestones.filter(milestone => 
+    milestones.filter(milestone => 
       !this.completedMilestones.includes(milestone.milestoneID) &&
       !inprogressMilestones.includes(milestone)
-    );
+    ).forEach((milestone) => {
+      if (YearLevel.compare(milestone.yearLevel, this.studentYear) > 0) {
+        upcomingMilestones.push(milestone);
+      }
+      else {
+        incompleteMilestones.push(milestone);
+      }
+    });
     
     this.completedMap.set(CompletionStatus.InProgress, inprogressMilestones);
     this.completedMap.set(CompletionStatus.Incomplete, incompleteMilestones);
     this.completedMap.set(CompletionStatus.Complete, completedMilestonesList);
+    this.completedMap.set(CompletionStatus.Upcoming, upcomingMilestones);
   }
 
   openTask(task: any) {

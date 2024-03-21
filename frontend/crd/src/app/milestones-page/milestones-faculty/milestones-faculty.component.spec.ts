@@ -18,12 +18,17 @@ import { UserService } from 'src/app/security/user.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { StudentDetailsJSON } from 'src/domain/StudentDetails';
+import { AuthService } from 'src/app/security/auth.service';
+import { userJSON } from 'src/app/security/auth.service.spec';
 
 describe('MilestonesFacultyComponent', () => {
   let component: MilestonesFacultyComponent;
   let fixture: ComponentFixture<MilestonesFacultyComponent>;
   let submissionService: jasmine.SpyObj<SubmissionService>;
   let httpMock: HttpTestingController;
+
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  authServiceSpy = jasmine.createSpyObj('AuthService', ['signOut'], {user$: of(new User(userJSON))});
 
   const paramMap = new BehaviorSubject(convertToParamMap({ id: '1'  }));
   const activatedRouteMock = {
@@ -121,7 +126,7 @@ describe('MilestonesFacultyComponent', () => {
 
   const incompleteMilestone = new Milestone({
     name: "name",
-    yearLevel: YearLevel.Freshman,
+    yearLevel: YearLevel.Sophomore,
     id: 3,
     description: "sample",
     events: [],
@@ -130,7 +135,7 @@ describe('MilestonesFacultyComponent', () => {
       description: "description",
       id: 4,
       isRequired: true,
-      yearLevel: YearLevel.Freshman,
+      yearLevel: YearLevel.Sophomore,
       milestoneID: 3,
       taskType: TaskType.ARTIFACT,
       artifactName: 'test artifact'
@@ -165,12 +170,20 @@ describe('MilestonesFacultyComponent', () => {
     }],
   });
 
-  const testMilestones = [completeMilstone, inProgressMilestone, incompleteMilestone]
+  const testMilestones = [completeMilstone, inProgressMilestone, incompleteMilestone];
 
-  const testMap = new Map();
-  testMap.set(CompletionStatus.InProgress, [inProgressMilestone]);
-  testMap.set(CompletionStatus.Incomplete, [incompleteMilestone]);
-  testMap.set(CompletionStatus.Complete, [completeMilstone]);
+  // Freshman
+  const testFMap = new Map();
+  testFMap.set(CompletionStatus.InProgress, [inProgressMilestone]);
+  testFMap.set(CompletionStatus.Incomplete, []);
+  testFMap.set(CompletionStatus.Complete, [completeMilstone]);
+  testFMap.set(CompletionStatus.Upcoming, [incompleteMilestone]);
+
+  const testSMap = new Map();
+  testSMap.set(CompletionStatus.InProgress, [inProgressMilestone]);
+  testSMap.set(CompletionStatus.Incomplete, [incompleteMilestone]);
+  testSMap.set(CompletionStatus.Complete, [completeMilstone]);
+  testSMap.set(CompletionStatus.Upcoming, []);
   
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
@@ -196,7 +209,8 @@ describe('MilestonesFacultyComponent', () => {
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: ActivatedRoute, useValue: activatedRouteMock},
-        {provide: UserService, userValue: userServiceSpy}
+        {provide: UserService, userValue: userServiceSpy},
+        {provide: AuthService, useValue: authServiceSpy}
       ],
       declarations: [MilestonesFacultyComponent]
     }).compileComponents();
@@ -217,13 +231,24 @@ describe('MilestonesFacultyComponent', () => {
   //   expect(component.studentYear).toEqual(YearLevel.Freshman);
   // });
 
-  it('should sort milestones', () => {
+  it('should sort milestones (no upcoming)', () => {
+    component.studentYear = YearLevel.Sophomore
     component.makeMilestoneMap(testMilestones);
     component.checkCompleted(testSubmissions);
 
     component.sortMilestones(testMilestones);
     
-    expect(component.completedMap).toEqual(testMap);
+    expect(component.completedMap).toEqual(testSMap);
+  });
+
+  it('should sort milestones (with upcoming)', () => {
+    component.studentYear = YearLevel.Freshman
+    component.makeMilestoneMap(testMilestones);
+    component.checkCompleted(testSubmissions);
+
+    component.sortMilestones(testMilestones);
+    
+    expect(component.completedMap).toEqual(testFMap);
   });
 
 });

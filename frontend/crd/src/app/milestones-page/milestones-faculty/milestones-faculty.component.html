@@ -20,14 +20,11 @@
               color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
             {{milestone.name}}
           </mat-panel-title>
-<!--  Use if we want to display a description -->
-<!--          <mat-panel-description>-->
-<!--            {{milestone.description}}-->
-<!--          </mat-panel-description>-->
-        </mat-expansion-panel-header>
-          <mat-expansion-panel *ngFor="let task of milestone.tasks">
 
-          <mat-expansion-panel-header #panelH (click)="panelH._toggle(); openTask(task)">
+        </mat-expansion-panel-header>
+          <mat-expansion-panel [disabled]="!completedTasks.includes(task.taskID)"  *ngFor="let task of milestone.tasks">
+
+          <mat-expansion-panel-header (click)="openTask(task)">
             <div class="flex-vertical-align">
               <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
                 color="primary" (click)="$event.stopPropagation()">
@@ -35,7 +32,7 @@
               </mat-checkbox>
             </div>
           </mat-expansion-panel-header>
-          <div>{{task.description}}</div>
+          <div>Change this to show submission comment</div>
         </mat-expansion-panel>
       </mat-expansion-panel>
     </ng-container>
