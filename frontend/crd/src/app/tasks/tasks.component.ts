@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {TaskService} from "../util/task.service";
 import {Task} from "../../domain/Task";
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { TasksModalComponent } from '../tasks-modal/tasks-modal.component';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {TasksModalComponent} from '../tasks-modal/tasks-modal.component';
+import {AuthService} from "../security/auth.service";
+import {take} from "rxjs";
+import {YearLevel} from "../../domain/Milestone";
+import {User} from "../security/domain/user";
 
 @Component({
   selector: 'app-tasks',
@@ -11,15 +15,36 @@ import { TasksModalComponent } from '../tasks-modal/tasks-modal.component';
 })
 export class TasksComponent {
 
+  userYearLevel: YearLevel = YearLevel.Freshman;
+  tasksList: Array<Task> = [];
+
   constructor(
     private taskService: TaskService,
-    public matDialog: MatDialog
-  ) {}
+    private authService: AuthService,
+    public matDialog: MatDialog,
+  ) {
+    this.authService.user$.pipe(take(1)).subscribe((user) => {
+      if (user == null) {
+        console.error("User does not exist");
+      }
+      else if (user.studentDetails == undefined) {
+        console.error("User does not have student details yet");
+      }
+      else {
+        this.userYearLevel = user.studentDetails.yearLevel;
+        this.updateTasks();
+      }
+    });
+  }
 
-  ngOnInit() {
-    this.taskService.getTasks(true).subscribe((tasks: Task[]) => {
+  private updateTasks() {
+    this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
       this.tasksList = tasks;
     });
+  }
+
+  ngOnInit() {
+
   }
 
   openTask(task: any) {
@@ -33,8 +58,20 @@ export class TasksComponent {
       task: task
     }
     // https://material.angular.io/components/dialog/overview
-    const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(TasksModalComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.updateTasks();
+    })
   }
 
-  tasksList: Array<Task> = []
+  /**
+   * Check if task is overdue
+   * @param task task to be checked
+   * @return true if overdue
+   */
+  isTaskOverdue(task: Task): boolean {
+    return  YearLevel.compare(task.yearLevel, this.userYearLevel) < 0;
+  }
+
 }

@@ -2,7 +2,6 @@ package com.senior.project.backend.Activity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Task;
@@ -42,7 +41,7 @@ public class TaskHandlerTest {
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .GET("/api/tasks", taskHandler::all)
-                        //.GET("/api/dashboard_tasks", taskHandler::dashboard)
+                        .GET("/api/dashboard_tasks", taskHandler::dashboard)
                         .POST("/edit", taskHandler::update)
                         .POST("/create", taskHandler::create)
                         .GET("/test/{id}", taskHandler::getById)
@@ -67,7 +66,7 @@ public class TaskHandlerTest {
         assertEquals(task2.getId(), result.get(1).getId());
     }
 
-    /* @Test
+    @Test
     public void testDashboard() {
         //currently this is the same test as /tasks
         Task task1 = new Task();
@@ -77,16 +76,17 @@ public class TaskHandlerTest {
         Task task3 = new Task();
         task3.setId(3L);
         Flux<Task> taskFlux = Flux.just(task1, task2, task3);
-        when(taskService.dashboard()).thenReturn(taskFlux);
+        var limit = 3;
+        when(taskService.dashboard(limit)).thenReturn(taskFlux);
         List<Task> result = webTestClient.method(HttpMethod.GET)
-                .uri("/api/dashboard_tasks?pageNum=1").exchange().expectStatus().isOk()
+                .uri("/api/dashboard_tasks?limit="+limit).exchange().expectStatus().isOk()
                 .expectBodyList(Task.class).returnResult().getResponseBody();
         assertNotNull(result);
         assertEquals(3, result.size());
         assertEquals(task1.getId(), result.get(0).getId());
         assertEquals(task2.getId(), result.get(1).getId());
         assertEquals(task3.getId(), result.get(2).getId());
-    } */
+    }
 
     @Test
     public void testUpdate() {
@@ -107,7 +107,7 @@ public class TaskHandlerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskService.updateTask(task1.getId(), jsonMap)).thenReturn(taskFlux);
             
             Task result = webTestClient.method(HttpMethod.POST)
@@ -122,8 +122,6 @@ public class TaskHandlerTest {
             assertEquals(task1.getId(), result.getId());
             assertEquals(task1.getDescription(), result.getDescription());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -146,7 +144,7 @@ public class TaskHandlerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskService.createTask(jsonMap)).thenReturn(taskFlux);
             
             Task result = webTestClient.method(HttpMethod.POST)
@@ -160,8 +158,6 @@ public class TaskHandlerTest {
             assertNotNull(result);
             assertEquals(Constants.task1.getDescription(), result.getDescription());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

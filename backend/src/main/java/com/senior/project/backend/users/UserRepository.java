@@ -5,9 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.senior.project.backend.domain.Role;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,5 +30,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findUsersByCanTextIsTrue();
 
     @Query("SELECT e FROM User e WHERE CONCAT(e.firstName, ' ', e.lastName) LIKE :name% OR e.lastName LIKE :name%")
-    Page<User> findByFullNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<User> findByFullNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.profilePictureId = :pictureId WHERE u.id = :userId")
+    void updateProfilePictureId(@Param("userId") UUID userId, @Param("pictureId") Integer pictureId);
 }

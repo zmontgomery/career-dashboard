@@ -21,7 +21,7 @@ import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { TasksModule } from './tasks/tasks.module';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
-import { LogoutButtonModule } from './security/logout-button/logout-button.module';
+import { UserMenuModule } from './security/user-menu/user-menu.module';
 import { AuthService } from './security/auth.service';
 import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
 import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
@@ -34,10 +34,15 @@ import { MilestoneCreateModalModule } from './admin/milestone-main-page/mileston
 import { UsersPageModule } from "./users-page/users-page.module";
 import { SignupPageModule } from './security/signup-page/signup-page.module';
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
+import {SettingsPageModule} from "./settings/settings-page.module";
+import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
+import {NgOptimizedImage} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -73,7 +78,6 @@ import { NotFoundComponent } from './not-found/not-found.component';
       }
     ),
     SocialLoginModule,
-    LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
     MilestonesPageModule,
@@ -81,6 +85,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     MatCardModule,
     MatTabsModule,
     TasksModule,
+    TasksModalModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
@@ -95,11 +100,19 @@ import { NotFoundComponent } from './not-found/not-found.component';
     EventMainPageModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
+    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    NgOptimizedImage,
+    MatIconModule,
+    ProfileImageModalModule,
+    SettingsPageModule,
+    NgOptimizedImage,
+    MatIconModule,
+    UserMenuModule,
   ],
   providers: [
     provideHttpClient(),

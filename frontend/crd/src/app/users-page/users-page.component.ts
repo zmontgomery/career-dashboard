@@ -2,10 +2,11 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Role, User} from "../security/domain/user";
 import {UsersSearchResponseJSON} from "./user-search-result";
 import {PageEvent} from "@angular/material/paginator";
-import {debounceTime, first, map, Observable, of, Subject} from "rxjs";
+import {debounceTime, firstValueFrom, first, map, Observable, of, Subject} from "rxjs";
 import {ScreenSizeService} from "../util/screen-size.service";
 import {AuthService} from "../security/auth.service";
 import { UserService } from '../security/user.service';
+import {ArtifactService} from "../file-upload/artifact.service";
 
 @Component({
   selector: 'app-users-page',
@@ -35,7 +36,8 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly userService: UserService,
     private screenSizeSvc: ScreenSizeService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private artifactSvc: ArtifactService,
   ) {
     this.isMobile$ = this.screenSizeSvc.isMobile$;
     this.user$ = this.authService.user$;
@@ -63,7 +65,15 @@ export class UsersPageComponent implements OnInit, OnDestroy {
       .subscribe((searchResults: UsersSearchResponseJSON) => {
         this.dataSource = searchResults.users.map((u) => new User(u));
         this.totalItems = searchResults.totalResults;
-    });
+        this.dataSource.forEach((user: User) => {
+          if (user.profilePictureId != null) {
+            this.artifactSvc.getArtifactFile(user.profilePictureId)
+              .subscribe((blob) => {
+                user.profilePictureURL = URL.createObjectURL(blob);
+              })
+          }
+        });
+      });
   }
 
   // Method to handle page change
@@ -77,14 +87,6 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   // Method to handle search
   onSearch(): void {
     this.searching$.next();
-  }
-
-  random(element: User) {
-    let n = '';
-    for (let i = 2; i < 8; i++) {
-      n += element.id.charCodeAt(i);
-    }
-    return n;
   }
 }
 

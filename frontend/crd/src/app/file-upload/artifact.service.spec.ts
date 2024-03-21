@@ -68,6 +68,39 @@ describe('ArtifactService', () => {
     request.flush(1);
   });
 
+  it('should upload EventImage', (done) => {
+    const id = 1;
+    const mockFile = new File([''], 'example.png');
+    const formData = new FormData();
+    formData.append('file', mockFile, mockFile.name);
+
+    service.uploadEventImage(formData, id).subscribe((s) => {
+      expect(s).toEqual(1);
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(`${Endpoints.UPLOAD_IMAGE_EVENT}/${id}`));
+    expect(request.request.body).toEqual(formData);
+    expect(request.request.method).toEqual('POST');
+    request.flush(1);
+  });
+
+  it('should upload artifact', (done) => {
+    const mockFile = new File([''], 'example.png');
+    const formData = new FormData();
+    formData.append('file', mockFile, mockFile.name);
+
+    service.uploadProfilePicture(formData).subscribe((s) => {
+      expect(s).toEqual(1);
+      done();
+    });
+
+    const request = httpMock.expectOne(constructBackendRequest(Endpoints.USERS_PROFILE_PICTURE));
+    expect(request.request.body).toEqual(formData);
+    expect(request.request.method).toEqual('POST');
+    request.flush(1);
+  });
+
   it('should get file', (done) => {
     const mockFile = new Blob();
 
@@ -81,5 +114,7 @@ describe('ArtifactService', () => {
     request.flush(mockFile);
   });
 
-
+  it('should get EventImageURL', () => {
+    expect(service.getEventImageUrl(1)).toEqual(constructBackendRequest(`${Endpoints.IMAGE_EVENT}/1`));
+  });
 })

@@ -1,15 +1,18 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.artifact.NonBlockingExecutor;
 import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.TaskType;
 import com.senior.project.backend.domain.YearLevel;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import com.senior.project.backend.security.CurrentUserUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,10 +21,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final EventRepository eventRepository;
+    private final CurrentUserUtil currentUserUtil;
 
-    public TaskService(TaskRepository taskRepository, EventRepository eventRepository) { 
+    public TaskService(TaskRepository taskRepository, EventRepository eventRepository, CurrentUserUtil currentUserUtil) {
         this.taskRepository = taskRepository;
         this.eventRepository = eventRepository;
+        this.currentUserUtil = currentUserUtil;
     }
 
     /**
@@ -30,14 +35,6 @@ public class TaskService {
     public Flux<Task> all() {
         return Flux.fromIterable(taskRepository.findAll());
     }
-
-    /**
-     * TODO Gets the specific tasks to display on the dashboard (unimplemented)
-     * A mix of incomplete and overdue tasks (probably set with a query param)
-     */
-    /* public Flux<Task> dashboard() {
-        return Flux.fromIterable(taskRepository.findAll()); //same as /tasks for now
-    } */
 
     /**
      * Updates a task using the provided map of updates
@@ -86,11 +83,11 @@ public class TaskService {
         }
         // does not throw an event not found exception but still handles null events
         if (updates.containsKey("event") && existingTask.getTaskType().equals(TaskType.EVENT)) {
-            Optional<Event> assignedEvent = eventRepository.findById(Long.valueOf(Integer.parseInt((String) updates.get("event"))));
+            Optional<Event> assignedEvent = eventRepository.findById((long) Integer.parseInt((String) updates.get("event")));
             assignedEvent.ifPresent(existingTask::setEvent);
         }
 
-        return Mono.just(taskRepository.save(existingTask));
+        return NonBlockingExecutor.execute(() -> taskRepository.save(existingTask));
     }
 
     /**
@@ -99,7 +96,7 @@ public class TaskService {
      * @return task object
      */
     public Mono<Task> findById(int id) {
-        Task task = taskRepository.findById((long) id);
+        Task task = taskRepository.findById(id);
         return task == null ? Mono.empty() : Mono.just(task);
     }
     
@@ -144,8 +141,35 @@ public class TaskService {
             newTask.setEvent(null);
         }
 
-        return Mono.just(taskRepository.save(newTask));
+        return NonBlockingExecutor.execute(() -> taskRepository.save(newTask));
     }
 
-    
+    /**
+     * Retrieves list of tasks for the dashboard
+     * @param limit limit of tasks to return. limit for overdue tasks is half the limit
+     * @return A Flux of upcoming tasks
+     */
+    public Flux<Task> dashboard(int limit) {
+        return currentUserUtil.getCurrentUser()
+                .flatMapMany((user) -> {
+                    var studentDetails = user.getStudentDetails();
+                    if (studentDetails == null) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Student Details not setup for user"));
+                    }
+                    return NonBlockingExecutor.executeMany(() -> {
+                        int overdueLimit = limit / 2;
+                        int upcomingLimit = limit - overdueLimit;
+                        var previousYears = studentDetails.getYearLevel().previousYears();
+                        var upcomingYears = studentDetails.getYearLevel().currentAndUpcomingYears();
+                        var overdueTasks = taskRepository.findTasksToDisplayOnDashboard(previousYears, user.getId(), overdueLimit);
+                        if (overdueTasks.size() != overdueLimit) {
+                            upcomingLimit = limit - overdueTasks.size();
+                        }
+                        var upcomingTasks = taskRepository.findTasksToDisplayOnDashboard(upcomingYears, user.getId(), upcomingLimit);
+                        overdueTasks.addAll(upcomingTasks);
+                        return overdueTasks;
+                    });
+                });
+    }
 }

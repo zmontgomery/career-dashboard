@@ -1,3 +1,5 @@
+@import "../common";
+
 mat-card-header {
   border-bottom: 5px solid black;
 }
@@ -10,6 +12,16 @@ mat-card-header {
   app-oswego-logo {
     display: inline-block;
     height: 100px;
+    padding: 1vh;
+  }
+
+  .title-container{
+    color: @oswego-green;
+    padding: 5vh;
+    height: fit-content;
+    width: fit-content;
+    font-weight: bold;
+    font-size: 24px;
   }
 
   .header-container {
@@ -17,7 +29,49 @@ mat-card-header {
     width: 100%;
 
     .logout-button {
+      //margin-left: auto;
+    }
+    .header-AI-button{
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      //margin: 0 25px 0 25px;
+      float: right;
       margin-left: auto;
+      padding:0 15px 0 15px;
+
+      .header-AI-img{
+        padding-right: 15px;
+      }
+    }
+  }
+
+  .footer-container {
+    color: white;
+    background-color: #171B26;
+    display: flex;
+    height: fit-content;
+    width: 100%;
+    padding: 5vh;
+  }
+
+  .footer-Oswego-img {
+    height: 50px;
+    width: 50px;
+  }
+
+  .footer-extras{
+    width: 100%;
+    padding: 1em;
+    display:flex;
+
+    .mat-icon {
+      margin: 0 5px 0 5px;
+    }
+
+    .footer-copyright {
+      margin-left:auto;
     }
   }
 }
