@@ -8,8 +8,5 @@ do
   esac
 done
 
-echo $HEADLESS
-echo $TEST_NAME
-
 cd tests
 python3 base_test.py

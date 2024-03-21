@@ -2,7 +2,6 @@ import unittest
 import yaml
 import os
 import time
-import sys
 from enum import Enum
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
