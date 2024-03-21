@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User, UserJSON } from './domain/user';
 import { Endpoints, constructBackendRequest } from '../util/http-helper';
-import {Observable, map, ReplaySubject} from 'rxjs';
+import {Observable, map, ReplaySubject, of} from 'rxjs';
 import { UsersSearchResponseJSON } from '../users-page/user-search-result';
 import {AuthService} from "./auth.service";
 import {LangUtils} from "../util/lang-utils";
@@ -40,6 +40,11 @@ export class UserService {
     );
 
     return this.http.get<UsersSearchResponseJSON>(apiUrl);
+  }
+
+  getUser(id: string): Observable<User | null> {
+    return this.http.get<UserJSON>(`${constructBackendRequest(Endpoints.USERS)}/${id}`)
+      .pipe(map((u) => new User(u)));
   }
 
   /**

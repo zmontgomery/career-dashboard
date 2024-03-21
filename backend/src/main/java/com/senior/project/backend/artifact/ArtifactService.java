@@ -4,7 +4,7 @@ import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.domain.ArtifactType;
 import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
 
 import com.senior.project.backend.users.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -47,15 +47,17 @@ public class ArtifactService {
 
     private final ArtifactRepository artifactRepository;
     private final EventRepository eventRepository;
+    private final CurrentUserUtil currentUserUtil;
     private final UserRepository userRepository;
 
     // Make sure to add any filetypes to the getFileExtension method
     private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);
     private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
-    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository, UserRepository userRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository, CurrentUserUtil currentUserUtil, UserRepository userRepository) {
         this.artifactRepository = artifactRepository;
         this.eventRepository = eventRepository;
+        this.currentUserUtil = currentUserUtil;
         this.userRepository = userRepository;
         if (this._uploadDirectory == null) {
             // Get the absolute path of the project directory
@@ -95,7 +97,7 @@ public class ArtifactService {
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
-                            .then(SecurityUtil.getCurrentUser())
+                            .then(currentUserUtil.getCurrentUser())
                             .map((user) -> {
                                 upload.setUserId(user.getId());
                                 return upload;
@@ -137,7 +139,7 @@ public class ArtifactService {
 
 
     public Mono<Integer> processProfileImage(FilePart filePart) {
-        var userMono = SecurityUtil.getCurrentUser();
+        var userMono = currentUserUtil.getCurrentUser();
         var uploadAndUserMono = validateAndGetPath(filePart, IMAGE_TYPES)
                 .zipWith(validateImageAspectRatio(filePart, 1))
                 .flatMap( zipped -> {
@@ -247,7 +249,7 @@ public class ArtifactService {
      * @return a message indicating the success
      */
     public Mono<String> deleteFile(String internalName) {
-        return SecurityUtil.getCurrentUser()
+        return currentUserUtil.getCurrentUser()
                 .zipWith(NonBlockingExecutor.execute(() -> artifactRepository.findByUniqueIdentifier(internalName)))
                 .flatMap((zipped) -> {
                     Optional<Artifact> a = zipped.getT2();
@@ -265,7 +267,7 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(int id) {
         if (id == NO_FILE_ID) return Mono.just("Success");
-        return SecurityUtil.getCurrentUser()
+        return currentUserUtil.getCurrentUser()
                 .zipWith(NonBlockingExecutor.execute(() -> artifactRepository.findById((long) id)))
                 .flatMap((zipped) -> {
                     Optional<Artifact> a = zipped.getT2();
@@ -327,7 +329,7 @@ public class ArtifactService {
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
         Mono<Artifact> artifactMono = NonBlockingExecutor.execute(() -> this.artifactRepository.findById(Long.valueOf(artifactID))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." )));
-        var userMono = SecurityUtil.getCurrentUser();
+        var userMono = currentUserUtil.getCurrentUser();
         return artifactMono
                 .flatMap((artifact) -> {
                     if (artifact.getType() == ArtifactType.EVENT_IMAGE) {

@@ -5,7 +5,7 @@ import com.senior.project.backend.artifact.ArtifactRepository;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Artifact;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,18 +58,8 @@ public class ArtifactServiceTest {
     @Mock
     private EventRepository eventRepository;
 
-    private MockedStatic<SecurityUtil> securityUtils;
-
-    @BeforeEach
-    public void reusedMocks() {
-        securityUtils = mockStatic(SecurityUtil.class);
-        securityUtils.when(SecurityUtil::getCurrentUser).thenReturn(Mono.just(Constants.user1));
-    }
-
-    @AfterEach
-    public void clearMocks() {
-        securityUtils.close();
-    }
+    @Mock
+    private CurrentUserUtil currentUserUtil;
 
     @Test
     public void testProcessFile() throws NoSuchFieldException, IllegalAccessException {
@@ -82,7 +72,7 @@ public class ArtifactServiceTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         when(filePart.headers()).thenReturn(headers);
-
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
         when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
@@ -173,39 +163,10 @@ public class ArtifactServiceTest {
         StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
     }
 
-//    Idk how to do this
-//
-//    @Test
-//    public void testProcessProfileImage() throws NoSuchFieldException, IllegalAccessException {
-//        when(artifactRepository.save(any())).thenReturn(Artifact.builder().id(1).build());
-//
-//        FilePart filePart = mock(FilePart.class);
-//
-//        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
-//        DataBuffer dataBuffer = dataBufferFactory.wrap("file content".getBytes());
-//        when(filePart.content()).thenReturn(Flux.just(dataBuffer));
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.IMAGE_PNG);
-//        when(filePart.headers()).thenReturn(headers);
-//
-//        when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
-//        when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
-//        when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
-//        when(eventRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.e1));
-//
-//        // Use reflection to set the value of uploadDirectory
-//        Field uploadDirectoryField = ArtifactService.class.getDeclaredField("uploadDirectory");
-//        uploadDirectoryField.setAccessible(true); // Make the private field accessible
-//        uploadDirectoryField.set(artifactService, "/mocked/upload/directory");
-//
-//        Mono<Integer> result = artifactService.processProfileImage(filePart);
-//        StepVerifier.create(result).expectNext(Constants.artifact1.getId()).expectComplete().verify();
-//    }
-
     @Test
     public void testGetFileFailPathCheck() {
         when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact2));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         Path artifactPath = Paths.get(Constants.artifact2.getFileLocation());
@@ -223,7 +184,7 @@ public class ArtifactServiceTest {
     @Test
     public void testGetFile() {
         when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
-
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         Path artifact1path = Paths.get(Constants.artifact1.getFileLocation());
@@ -288,6 +249,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalName() {
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
@@ -296,7 +258,7 @@ public class ArtifactServiceTest {
 
         result = result.map((r) -> {
             paths.close();
-            files.close(); 
+            files.close();
             return r;
         });
 
@@ -309,11 +271,10 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalNameEmpty() {
         when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.empty());
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile("asdf");
 
-        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> result));
-
-        StepVerifier.create(newResult)
+        StepVerifier.create(result)
             .expectComplete()
             .verify();
     }
@@ -321,6 +282,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileId() {
         when(artifactRepository.findById(any())).thenReturn(Optional.of(Constants.artifact1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
@@ -353,11 +315,10 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileIdEmpty() {
         when(artifactRepository.findById(any())).thenReturn(Optional.empty());
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         Mono<String> result = artifactService.deleteFile(2);
 
-        Mono<String> newResult = result.switchIfEmpty(Mono.just("").flatMap((s) -> result));
-
-        StepVerifier.create(newResult)
+        StepVerifier.create(result)
             .expectComplete()
             .verify();
     }

@@ -1,6 +1,5 @@
 package com.senior.project.backend.portfolio;
 
-import com.senior.project.backend.security.SecurityUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.artifact.ArtifactService;
+import com.senior.project.backend.security.CurrentUserUtil;
 import com.senior.project.backend.submissions.SubmissionService;
 
 import java.io.IOException;
@@ -45,6 +45,9 @@ public class ArtifactHandlerTest {
 
     @Mock
     private SubmissionService submissionService;
+
+    @Mock
+    private CurrentUserUtil currentUserUtil;
 
     @BeforeEach
     public void setup() {
@@ -156,9 +159,11 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDelete() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission2));
         when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+
         String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()
@@ -171,8 +176,10 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmission() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.empty());
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+        
         String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()
@@ -185,9 +192,21 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmissionNoFile() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         webTestClient.delete().uri("/test/1")
             .exchange()
             .expectStatus()
             .isAccepted();
+    }
+
+    @Test
+    public void handleFileDeleteForbidden() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user2));
+        when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
+        when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission1));
+
+        webTestClient.delete().uri("/test/2")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 }
