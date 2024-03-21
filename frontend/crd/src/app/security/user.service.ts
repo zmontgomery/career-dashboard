@@ -25,11 +25,6 @@ export class UserService {
       .pipe(map((u) => new User(u)));
   }
 
-  getStudent(studentID: string): Observable<User> {
-    return this.http.get<UserJSON>(constructBackendRequest(Endpoints.STUDENT_INFO, {key: 'studentID', value: studentID}))
-      .pipe(map((u) => new User(u)));
-  }
-
   /**
    * Search for users. Gets a paged result of the users which includes a list of users and the total number of users
    * available with the given search term

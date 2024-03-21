@@ -18,7 +18,6 @@ export enum Endpoints {
     CURRENT_USER = 'current-user',
     SUBMISSION = 'tasks/submission',
     ALL_SUBMISSIONS = 'student/submission',
-    STUDENT_INFO = 'student-info',
 
     // Artifacts
     ARTIFACT = 'artifact/',

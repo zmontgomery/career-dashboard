@@ -47,12 +47,12 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
 
     zip(
       this.submissionService.getStudentSubmissionsFaculty(this.studentID),
-      this.userService.getStudent(this.studentID),
+      this.userService.getUser(this.studentID),
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, student, milestones]) => {
-      this.currentStudent = student;
-      if (student.studentDetails?.yearLevel) {
+      if (student && student.studentDetails?.yearLevel) {
+        this.currentStudent = student;
         this.studentYear = student.studentDetails?.yearLevel;
       }
       

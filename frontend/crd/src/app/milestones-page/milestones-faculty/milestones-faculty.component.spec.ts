@@ -187,13 +187,13 @@ describe('MilestonesFacultyComponent', () => {
   
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
-  let userServiceSpy = createSpyObj('UserService', ['getStudent']);
+  let userServiceSpy = createSpyObj('UserService', ['getUser']);
 
   beforeEach(() => {
     submissionService = jasmine.createSpyObj('SubmissionService', ['submit']);
     milestoneServiceSpy.getMilestones.and.returnValue(of([]));
     submissionsServiceSpy.getStudentSubmissionsFaculty.and.returnValue(of(testSubmissions));
-    userServiceSpy.getStudent.and.returnValue(of(user));
+    userServiceSpy.getUser.and.returnValue(of(user));
 
     TestBed.configureTestingModule({
       imports: [
