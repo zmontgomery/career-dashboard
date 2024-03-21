@@ -9,13 +9,15 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MilestoneService } from "./milestone.service";
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { userJSON } from 'src/app/security/auth.service.spec';
-import { TaskType } from 'src/domain/Task';
+import { Task, TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
+import { TasksModalComponent } from 'src/app/tasks-modal/tasks-modal.component';
+import { TasksModalModule } from 'src/app/tasks-modal/tasks-modal.module';
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
@@ -23,7 +25,18 @@ describe('MilestonesComponent', () => {
   let submissionService: jasmine.SpyObj<SubmissionService>;
   let authService: jasmine.SpyObj<AuthService>;
 
-  let user = new User(userJSON);
+  const user = new User(userJSON);
+
+  const testTask = new Task({
+    name: 'task name',
+    description: "description",
+    id: 1,
+    isRequired: true,
+    yearLevel: YearLevel.Freshman,
+    milestoneID: 1,
+    taskType: TaskType.ARTIFACT,
+    artifactName: 'test artifact'
+  });
 
   const testSubmissions = [
     new Submission({
@@ -51,63 +64,6 @@ describe('MilestonesComponent', () => {
       taskId: 3,
     })
   ];
-
-  const testMap = new Map().set(YearLevel.Freshman, [
-    new Milestone({
-      name: "name",
-      yearLevel: YearLevel.Freshman,
-      id: 1,
-      description: "sample",
-      events: [],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      },
-      {
-        name: 'task name',
-        description: "description",
-        id: 2,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
-    }),
-    new Milestone({
-      name: "name",
-      yearLevel: YearLevel.Freshman,
-      id: 2,
-      description: "sample",
-      events: [],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 3,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 2,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      },
-      {
-        name: 'task name',
-        description: "description",
-        id: 4,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 2,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
-    })
-  ]);
   
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of([]));
@@ -120,7 +76,14 @@ describe('MilestonesComponent', () => {
     authService = jasmine.createSpyObj('AuthService', ['toString'], {user$: of(user)});
 
     TestBed.configureTestingModule({
-      imports: [MatCardModule, MatExpansionModule, MatCheckboxModule, NoopAnimationsModule, MatDialogModule],
+      imports: [
+        MatCardModule, 
+        MatExpansionModule, 
+        MatCheckboxModule, 
+        NoopAnimationsModule, 
+        MatDialogModule,
+        TasksModalModule
+      ],
       providers: [
         {provide: MilestoneService, useValue: milestoneServiceSpy},
         {provide: SubmissionService, useValue: submissionsServiceSpy},
@@ -137,12 +100,19 @@ describe('MilestonesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should check completed', () => {
-    component.milestonesMap = testMap;
+  it('should open the TaskEditModal in a MatDialog', () => {
+    spyOn(component.matDialog,'open').and.callThrough();
+    component.openTask(testTask);
 
-    component.checkCompleted(testSubmissions);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "80%";
+    dialogConfig.width = "60%";
+    dialogConfig.data = {
+      task: testTask
+    }
 
-    expect(component.completedMilestones).toEqual([1]);
-    expect(component.completedTasks).toEqual([1, 2, 3]);
+    expect(component.matDialog.open).toHaveBeenCalledWith(TasksModalComponent, dialogConfig);
   });
 });

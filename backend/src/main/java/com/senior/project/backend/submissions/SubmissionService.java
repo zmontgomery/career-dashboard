@@ -68,6 +68,15 @@ public class SubmissionService {
     }
 
     /**
+     * Returns all submissions for the requested student
+     * @param userId
+     * @return the submissions
+     */
+    public Flux<Submission> getStudentSubmissionsFaculty(UUID userId) {
+        return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
+    }
+
+    /**
      * Sets the artifact id to No File
      * @param submission
      * @return
