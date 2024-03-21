@@ -38,7 +38,7 @@ import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
-import {NgOptimizedImage} from "@angular/common";
+import { NgOptimizedImage } from "@angular/common";
 import { FooterModule } from './footer/footer.module';
 import { ProfileImageModalModule } from './file-upload/profile-image-modal/profile-image-modal.module';
 import { SettingsPageModule } from './settings/settings-page.module';import { MilestonesFacultyModule } from './milestones-page/milestones-faculty/milestones-faculty.module';
