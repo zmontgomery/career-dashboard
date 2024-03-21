@@ -26,7 +26,8 @@ public enum Endpoints {
     CREATE_TASK("admin/create-task", true, Role.Admin),
 
     // Milestones
-    MILSTONES("milestones", true),
+    MILESTONES("milestones", true),
+    MILESTONES_COMPLETE("milestones/complete", true),
     EDIT_MILESTONE("admin/edit-milestone", true, Role.Admin),
     CREATE_MILESTONE("admin/create-milestone", true, Role.Admin),
 

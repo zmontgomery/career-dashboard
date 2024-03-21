@@ -1,5 +1,6 @@
 package com.senior.project.backend.users;
 
+import com.senior.project.backend.artifact.NonBlockingExecutor;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
@@ -56,12 +57,8 @@ public class UserService implements ReactiveUserDetailsService {
      * @return the user
      */
     public Mono<User> findById(UUID id) {
-        Optional<User> user = repository.findById(id);
-        if (user.isPresent()) {
-            return Mono.just(user.get());
-        } else {
-            return Mono.empty();
-        }
+        return NonBlockingExecutor.execute(()->repository.findById(id))
+                .flatMap((user) -> user.<Mono<? extends User>>map(Mono::just).orElseGet(Mono::empty));
     }
 
     /**

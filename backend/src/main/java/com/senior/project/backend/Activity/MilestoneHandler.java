@@ -6,9 +6,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -73,5 +77,24 @@ public class MilestoneHandler {
                 return ServerResponse.badRequest().bodyValue("Invalid JSON format");
             }
         });
+    }
+
+    /**
+     * Get Completed Milestones by the user.
+     * @param serverRequest HttpRequest from frontend. Requires query param with userId
+     * @return ServerResponse containing the Completed Milestones
+     */
+    public Mono<ServerResponse> completed(ServerRequest serverRequest) {
+        var userParam = serverRequest.queryParam("userId");
+        try {
+            if (userParam.isPresent()) {
+                var userid = UUID.fromString(userParam.get());
+                return ServerResponse.ok().body(this.milestoneService.completedMilestones(userid).map(Milestone::toDTO), MilestoneDTO.class);
+            }
+        } catch (IllegalArgumentException e) {
+            return ServerResponse.badRequest().bodyValue("Invalid UserId");
+        }
+
+        return ServerResponse.badRequest().bodyValue("No userId param provided");
     }
 }
