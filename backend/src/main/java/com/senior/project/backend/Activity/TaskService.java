@@ -151,7 +151,11 @@ public class TaskService {
         return Mono.just(taskRepository.save(newTask));
     }
 
-
+    /**
+     * Retrieves list of tasks for the dashboard
+     * @param limit limit of tasks to return. limit for overdue tasks is half the limit
+     * @return A Flux of upcoming tasks
+     */
     public Flux<Task> dashboard(int limit) {
         return SecurityUtil.getCurrentUser()
                 .flatMapMany((user) -> {

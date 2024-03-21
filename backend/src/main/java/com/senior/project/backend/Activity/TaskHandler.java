@@ -82,6 +82,11 @@ public class TaskHandler {
         });
     }
 
+    /**
+     * Retrieves list of tasks for the upcoming task widget on the frontend
+     * @param request Http request from the frontend. Must include query param for limit of tasks to return
+     * @return ServerResponse containing a list of upcoming tasks
+     */
     public Mono<ServerResponse> dashboard(ServerRequest request) {
         try {
             int limit = Integer.parseInt(request.queryParam("limit").orElseThrow());

@@ -48,6 +48,10 @@ export class TaskService {
 
   }
 
+  /**
+   * Sends request to backend to retrieve list of tasks the user has not completed.
+   * @param limit Limit to the number of tasks returned. overdue limit is equal to half the limit
+   */
   getDashBoardTasks(limit: number): Observable<Task[]> {
     return this.http.get<TaskJSON[]>(constructBackendRequest(Endpoints.DASHBOARD_TASKS, {key:"limit", value:limit}))
       .pipe(map((data) => data.map((taskData: TaskJSON) => new Task(taskData))))
