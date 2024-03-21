@@ -9,6 +9,7 @@ export enum Endpoints {
 
     // student
     MILESTONES = 'milestones',
+    MILESTONES_COMPLETE = 'milestones/complete',
     EVENTS = 'events',
     DASHBOARD_EVENTS = 'dashboard_events',
     TASKS = 'tasks',

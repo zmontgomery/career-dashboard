@@ -21,11 +21,11 @@ export class MilestoneService {
   ) { }
 
   /**
-   * Gets all the milestones and caches the response
-   * 
+   * Gets all the milestones and caches the response for future calls
+   *
    * Only retrieves milestones that have tasks, unless getAll is specified
-   * If the cache has data in it, it returns the value of the cache, otherwise
-   * it makes a request to the backend. If an error ocurrs it refreshes the cache
+   * @param forceRefresh force new request ignoring the cached milestones
+   * @param getAll include milestones with no tasks
    */
   getMilestones(forceRefresh?: boolean, getAll?: boolean): Observable<Milestone[]> {
     if (!this.hasBeenRequested || forceRefresh) {
@@ -56,4 +56,23 @@ export class MilestoneService {
     return this.milestoneCache.asObservable();
   }
 
+  getCompletedMilestones(userId: string): Observable<Milestone[]> {
+    return this.http.get<MilestoneJSON[]>(constructBackendRequest(Endpoints.MILESTONES_COMPLETE, {key: "userId", value: userId}))
+      .pipe(
+        map((data: MilestoneJSON[]) => {
+          if (LangUtils.exists(data)) {
+            return data.map((m: MilestoneJSON) => {
+              return new Milestone(m)
+            });
+          } else {
+            this.hasBeenRequested = false;
+            return [];
+          }
+        }),
+        mergeMap((data: Milestone[]) => {
+          this.milestoneCache.next(data);
+          return this.milestoneCache.asObservable();
+        })
+      );
+  }
 }

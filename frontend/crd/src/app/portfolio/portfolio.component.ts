@@ -9,6 +9,7 @@ import { SubmissionService } from '../submissions/submission.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, mergeMap, tap, zipWith } from 'rxjs';
 import { UserService } from '../security/user.service';
+import {MilestoneService} from "../milestones-page/milestones/milestone.service";
 
 @Component({
   selector: 'app-portfolio',
@@ -19,24 +20,25 @@ export class PortfolioComponent implements OnInit {
 
   user: User = User.makeEmpty();
   external: boolean = false;
+  completedMilestones: string[] = []
 
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly milestoneService: MilestoneService,
   ) { }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
       mergeMap((map: ParamMap) => {
-        console.log(map);
         if (map.has('id')) {
           this.external = true;
           return this.userService.getUser(map.get('id')!);
         } else {
           return this.authService.user$;
-        }  
+        }
       }),
       zipWith(this.route.url),
       tap(([_, url]) => {
@@ -52,6 +54,13 @@ export class PortfolioComponent implements OnInit {
     ).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
+        this.milestoneService.getCompletedMilestones(user!.id).subscribe((milestones) => {
+          milestones.forEach(milestone => {
+            if (milestone) {
+              console.log(milestone.name);
+            }
+          })
+        })
       }
     });
   }
