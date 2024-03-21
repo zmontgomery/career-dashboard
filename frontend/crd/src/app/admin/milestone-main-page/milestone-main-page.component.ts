@@ -32,7 +32,7 @@ export class MilestoneMainPageComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.milestoneService.getMilestones(true)
+    this.milestoneService.getMilestones(true, true)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((milestones: Milestone[]) => {
         this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));

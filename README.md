@@ -23,7 +23,7 @@ Partially Hydrated devs - Senior Project
 - the environment variable EMAIL_USERNAME
 - The super admin has the ability to edit the admin status of users, and is set as a build parameter at run time
 - for further email and other configuration options see backend/src/main/resources/application.properties
-- run `CRD_DB_PASSWORD={your_password} EMAIL_PASSWORD={app password} CRD_SUPER_ADMIN={admin email} ./gradlew bootrun`
+- run `export CRD_DB_PASSWORD={your_password}; export EMAIL_PASSWORD={app password}; export CRD_SUPER_ADMIN={admin email}; ./gradlew bootrun`
 - or you can run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
 - open another terminal and navigate to the frontend/crd directory
 - run `npm start`

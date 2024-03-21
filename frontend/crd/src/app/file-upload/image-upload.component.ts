@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {catchError, Observable, of} from 'rxjs';
 import { LangUtils } from '../util/lang-utils';
-import { ArtifactService } from './artifact.service';
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
@@ -24,13 +23,13 @@ export class ImageUploadComponent implements OnInit {
 
   @Output() artifactIdEmitter: EventEmitter<number> = new EventEmitter();
   @Output() closeEmitter: EventEmitter<number> = new EventEmitter();
-  @Input() uploadType: UploadType = UploadType.EventImage;
-  @Input() uploadID: number | null = null;
+  @Input() uploadStrategy: null | ((formData: FormData) => Observable<number>)  = null;
+  @Input() aspectRatio: number = 1;
+  @Input() roundCropper: boolean = false;
 
   protected acceptedFileTypes: string = ".png, .jpeg";
 
   constructor(
-    private readonly artifactService: ArtifactService,
     private sanitizer: DomSanitizer,
   ) { }
 
@@ -76,48 +75,33 @@ export class ImageUploadComponent implements OnInit {
 
       formData.append('file', this.croppedFile, this.rawFile.name);
 
-      let upload$: Observable<number>;
-      switch (this.uploadType) {
-        case UploadType.EventImage:
-          if (this.uploadID == null) {
-            console.error('No ID for event');
+      if (this.uploadStrategy != null) {
+        let upload$: Observable<number>;
+        upload$ = this.uploadStrategy(formData);
+
+        this.status = 'uploading';
+
+        upload$.pipe(
+          // FIXME this does not seem to work so added check for null below
+          catchError(error => {
             this.status = 'error';
-            return
+            console.log(error);
+            return of(0);
+          })
+        ).subscribe((artifactId) => {
+          if (artifactId == null) {
+            this.status = 'error';
+            console.log('fail');
           } else {
-            console.log('uploading event image');
-            upload$ = this.artifactService.uploadEventImage(formData, this.uploadID);
+            this.artifactIdEmitter.next(artifactId);
+            this.status = 'success';
+            this.closeModal(1000);
           }
-          break;
-        case UploadType.ProfileImage:
-          upload$ = this.artifactService.uploadProfilePicture(formData)
-          break;
+        });
+      } else {
+        this.status = 'error';
+        console.error("Upload strategy not set");
       }
-
-      this.status = 'uploading';
-      //
-      // upload$.subscribe(
-      //   next: (v) => console.log('next'),
-      //   error: (e) => console.error('error'),
-      //   complete: () => console.info('complete')
-      // )
-
-      upload$.pipe(
-        // FIXME this does not seem to work so added check for null below
-        catchError(error => {
-          this.status = 'error';
-          console.log(error);
-          return of(0);
-        })
-      ).subscribe((artifactId) => {
-        if (artifactId == null) {
-          this.status = 'error';
-          console.log('fail');
-        } else {
-          this.artifactIdEmitter.next(artifactId);
-          this.status = 'success';
-          this.closeModal(1000);
-        }
-      });
     }
   }
 

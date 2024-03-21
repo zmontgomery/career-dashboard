@@ -2,7 +2,9 @@ package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
-import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.CurrentUserUtil;
+import com.senior.project.backend.users.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -13,11 +15,13 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class SubmissionHandler {
 
     private static final String TASK_ID = "taskId";
+    private static final String USER = "user";
 
     @Autowired
     SubmissionService submissionService;
@@ -26,7 +30,10 @@ public class SubmissionHandler {
     ArtifactService artifactService;
 
     @Autowired
-    AuthService authService;
+    CurrentUserUtil currentUserUtil;
+
+    @Autowired
+    UserService userService;
 
     /**
      * Handles processing of a submission
@@ -71,7 +78,18 @@ public class SubmissionHandler {
      * @return
      */
     public Mono<ServerResponse> getLatestSubmission(ServerRequest serverRequest) {
-        return authService.currentUser()
+        return currentUserUtil.getCurrentUser()
+            .flatMap((user) -> {
+                if(serverRequest.queryParam(USER).isPresent()) {
+                    if (user.hasFacultyPrivileges()) {
+                        UUID id = UUID.fromString(serverRequest.queryParam(USER).get());
+                        return userService.findById(id);
+                    } else {
+                        return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN));
+                    }
+                }
+                return Mono.just(user);
+            })
             .flatMapMany((user) -> submissionService.getSubmissions(user.getId(), Integer.parseInt(serverRequest.pathVariable(TASK_ID))))
             .collectList()
             .flatMap((submissions) -> submissions.size() == 0 ? Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)) : Mono.just(submissions))
@@ -86,7 +104,7 @@ public class SubmissionHandler {
 
 
     public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
-        return authService.currentUser()
+        return currentUserUtil.getCurrentUser()
             .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
             .collectList()
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))

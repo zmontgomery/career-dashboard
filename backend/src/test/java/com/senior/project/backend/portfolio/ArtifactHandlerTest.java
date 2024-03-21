@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.artifact.ArtifactHandler;
 import com.senior.project.backend.artifact.ArtifactService;
+import com.senior.project.backend.security.CurrentUserUtil;
 import com.senior.project.backend.submissions.SubmissionService;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,11 +46,15 @@ public class ArtifactHandlerTest {
     @Mock
     private SubmissionService submissionService;
 
+    @Mock
+    private CurrentUserUtil currentUserUtil;
+
     @BeforeEach
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .POST("/test", artifactHandler::handleSubmissionUpload)
                         .GET("/test/{artifactID}", artifactHandler::serveFile)
+                        .GET("/userProfileImage", artifactHandler::serveUserProfileImage)
                         .DELETE("/test/{id}", artifactHandler::handleFileDelete)
                         .build())
                 .build();
@@ -123,11 +129,41 @@ public class ArtifactHandlerTest {
                 .isEqualTo(pdfContent);
     }
 
+//    Can't seem to mock the Security util here so Not sure how to test
+//
+//    @Test
+//    public void testServeUserProfileIMage() {
+//        // Mock response entity
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_PNG);
+//        byte[] imageContent = "Your PDF Content".getBytes();
+//        ByteArrayResource resource = new ByteArrayResource(imageContent);
+//        ResponseEntity<Resource> responseEntity = new ResponseEntity<>(resource, headers, HttpStatus.OK);
+//
+//        // Mock artifactService
+//        when(artifactService.getFile(anyString(), any())).thenReturn(Mono.just(responseEntity));
+//
+//        // Mock securityUtil
+//        var securityUtil = mockStatic(SecurityUtil.class);
+//        securityUtil.when(SecurityUtil::getCurrentUser).thenReturn(Mono.just(Constants.user1));
+//
+//        // Perform the request
+//        webTestClient.get().uri("/userProfileImage")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(byte[].class)
+//                .isEqualTo(imageContent);
+//
+//        securityUtil.close();
+//    }
+
     @Test
     public void handleFileDelete() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission2));
         when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+
         String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()
@@ -140,8 +176,10 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmission() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.empty());
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
+        
         String result = webTestClient.delete().uri("/test/2")
             .exchange()
             .expectStatus().isOk()
@@ -154,9 +192,21 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmissionNoFile() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         webTestClient.delete().uri("/test/1")
             .exchange()
             .expectStatus()
             .isAccepted();
+    }
+
+    @Test
+    public void handleFileDeleteForbidden() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user2));
+        when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
+        when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission1));
+
+        webTestClient.delete().uri("/test/2")
+            .exchange()
+            .expectStatus().isForbidden();
     }
 }

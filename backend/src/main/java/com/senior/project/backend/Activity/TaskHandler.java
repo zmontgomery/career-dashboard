@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.domain.Task;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -79,5 +80,19 @@ public class TaskHandler {
                 return ServerResponse.badRequest().bodyValue("Invalid JSON format");
             }
         });
-    } 
+    }
+
+    /**
+     * Retrieves list of tasks for the upcoming task widget on the frontend
+     * @param request Http request from the frontend. Must include query param for limit of tasks to return
+     * @return ServerResponse containing a list of upcoming tasks
+     */
+    public Mono<ServerResponse> dashboard(ServerRequest request) {
+        try {
+            int limit = Integer.parseInt(request.queryParam("limit").orElseThrow());
+            return ServerResponse.ok().body(taskService.dashboard(limit), Task.class);
+        } catch (NoSuchElementException | NumberFormatException e) {
+            return ServerResponse.badRequest().bodyValue("Invalid Query Param for \"limit\"");
+        }
+    }
 }

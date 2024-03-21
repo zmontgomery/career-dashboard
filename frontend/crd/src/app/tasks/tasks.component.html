@@ -1,4 +1,3 @@
-<!-- TODO add overdue task html change -->
 <div class="body">
   <mat-list class="matList">
   <h3 mat-subheader class="matListTitle">Tasks</h3>
@@ -6,7 +5,7 @@
       <p class="taskTitle"> Task </p>
       <p class="taskDate"> Year Level </p>
     </div>
-    <button mat-list-item class="matListItem" *ngFor="let task of tasksList" (click)="openTask(task)">
+    <button mat-list-item class="matListItem" [class.overdue]="isTaskOverdue(task)" *ngFor="let task of tasksList" (click)="openTask(task)">
       <div class="taskText">
         <p class="taskTitle">{{task.name}}</p>
         <p class="taskDate">{{task.yearLevel}}</p>

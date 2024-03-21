@@ -21,7 +21,7 @@ import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { TasksModule } from './tasks/tasks.module';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoginPageModule } from './security/login-page/login-page.module';
-import { LogoutButtonModule } from './security/logout-button/logout-button.module';
+import { UserMenuModule } from './security/user-menu/user-menu.module';
 import { AuthService } from './security/auth.service';
 import { MilestoneMainPageModule } from './admin/milestone-main-page/milestones-main-page.module';
 import { MilestoneEditModule } from './admin/milestone-edit/milestone-edit.module';
@@ -76,7 +76,6 @@ import { FooterModule } from './footer/footer.module';
       }
     ),
     SocialLoginModule,
-    LogoutButtonModule,
     DashboardModule,
     PortfolioModule,
     MilestonesPageModule,
@@ -99,6 +98,7 @@ import { FooterModule } from './footer/footer.module';
     EventMainPageModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
+    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
     TasksModalModule,
@@ -107,6 +107,11 @@ import { FooterModule } from './footer/footer.module';
     NgOptimizedImage,
     MatIconModule,
     FooterModule,
+    ProfileImageModalModule,
+    SettingsPageModule,
+    NgOptimizedImage,
+    MatIconModule,
+    UserMenuModule,
   ],
   providers: [
     provideHttpClient(),

@@ -12,16 +12,19 @@ import { TaskMainPageComponent } from './admin/task-main-page/task-main-page.com
 import {UsersPageComponent} from "./users-page/users-page.component";
 import { SignupPageComponent } from './security/signup-page/signup-page.component';
 import { EventMainPageComponent } from './admin/event-main-page/event-main-page.component';
+import {SettingsPageComponent} from "./settings/settings-page.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
 
 const studentRoutes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
   {path: 'portfolio', component: PortfolioComponent, canActivate: [authGuard]},
   {path: 'milestones', component: MilestonesPageComponent, canActivate: [authGuard]},
+  {path: 'settings', component: SettingsPageComponent, canActivate: [authGuard]},
 ]
 
 const facultyRoutes: Routes = [
   {path: 'faculty/users', component: UsersPageComponent, canActivate: [authGuard, facultyRoleGuard]},
+  {path: 'faculty/portfolio', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'faculty/portfolio/:id', component: PortfolioComponent, canActivate: [authGuard, facultyRoleGuard]},
   {path: 'faculty/milestones/:id', component: MilestonesPageComponent, canActivate: [authGuard, facultyRoleGuard]},
 ]

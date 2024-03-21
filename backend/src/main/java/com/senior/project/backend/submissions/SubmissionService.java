@@ -1,19 +1,18 @@
 package com.senior.project.backend.submissions;
 
 import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.senior.project.backend.security.SecurityUtil;
 
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -21,10 +20,12 @@ import java.util.Optional;
  */
 @Service
 public class SubmissionService {
-    private static final int BUFFER_TIME = 500; // Half a second
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private CurrentUserUtil currentUserUtil;
 
     /**
      * Adds a submission to the repository
@@ -56,7 +57,7 @@ public class SubmissionService {
      * @return the submissions or unauthorized error if the request is for a different user
      */
     public Flux<Submission> getStudentSubmissions(UUID userId) {
-        return SecurityUtil.getCurrentUser().flatMapMany(user -> {
+        return currentUserUtil.getCurrentUser().flatMapMany(user -> {
             if (user.getId().equals(userId)) {
                 return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
             }

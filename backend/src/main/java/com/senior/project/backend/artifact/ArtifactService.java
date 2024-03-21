@@ -3,14 +3,17 @@ package com.senior.project.backend.artifact;
 import com.senior.project.backend.Activity.EventRepository;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.domain.ArtifactType;
-import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.User;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
 
+import com.senior.project.backend.users.UserRepository;
 import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +25,9 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import org.springframework.core.io.Resource;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -41,14 +47,18 @@ public class ArtifactService {
 
     private final ArtifactRepository artifactRepository;
     private final EventRepository eventRepository;
+    private final CurrentUserUtil currentUserUtil;
+    private final UserRepository userRepository;
 
     // Make sure to add any filetypes to the getFileExtension method
     private final List<MediaType> TASK_ARTIFACT_TYPES = List.of(MediaType.APPLICATION_PDF);
     private final List<MediaType> IMAGE_TYPES = List.of(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG);
 
-    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, EventRepository eventRepository, CurrentUserUtil currentUserUtil, UserRepository userRepository) {
         this.artifactRepository = artifactRepository;
         this.eventRepository = eventRepository;
+        this.currentUserUtil = currentUserUtil;
+        this.userRepository = userRepository;
         if (this._uploadDirectory == null) {
             // Get the absolute path of the project directory
             Path projectDirectory = new FileSystemResource("").getFile().getAbsoluteFile().getParentFile().toPath();
@@ -64,22 +74,14 @@ public class ArtifactService {
      * Finds an artifact by its id
      */
     public Mono<Artifact> findById(int id) {
-        Optional<Artifact> artifact =  artifactRepository.findById((long) id);
-        if (artifact.isPresent()) {
-            return Mono.just(artifact.get());
-        }
-        return Mono.empty();
+        return NonBlockingExecutor.execute(() -> artifactRepository.findById((long) id).orElse(null));
     }
 
     /**
      * Finds an artifact by its unique UUID generated filename from the database
      */
     public Mono<Artifact> findByUniqueFilename(String filename) {
-        Optional<Artifact> artifact =  artifactRepository.findByUniqueIdentifier(filename);
-        if (artifact.isPresent()) {
-            return Mono.just(artifact.get());
-        }
-        return Mono.empty();
+        return NonBlockingExecutor.execute(() -> artifactRepository.findByUniqueIdentifier(filename).orElse(null));
     }
 
     /**
@@ -95,12 +97,12 @@ public class ArtifactService {
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
-                            .then(SecurityUtil.getCurrentUser())
+                            .then(currentUserUtil.getCurrentUser())
                             .map((user) -> {
                                 upload.setUserId(user.getId());
                                 return upload;
                             })
-                            .flatMap((artifact) -> Mono.just(artifactRepository.save(artifact)))
+                            .flatMap((artifact) -> NonBlockingExecutor.execute(() -> artifactRepository.save(artifact)))
                             .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
                             .map(Artifact::getId);
                 });
@@ -117,22 +119,74 @@ public class ArtifactService {
 
                     // Save the file to the specified directory
                     return filePart.transferTo(destination)
-                            .then(Mono.defer(() -> {
-                                Optional<Event> event = eventRepository.findById(eventID);
+                            .then(NonBlockingExecutor.execute(() -> eventRepository.findById(eventID)))
+                            .flatMap((event) -> {
                                 if (event.isPresent() && event.get().getImageId() != null) {
                                     // TODO change event id to use long
                                     return deleteFile(Math.toIntExact(event.get().getImageId()));
                                 }
                                 return Mono.empty();
-                            }))
-                            .then(Mono.defer(() -> Mono.just(artifactRepository.save(upload))))
+                            })
+                            .then(NonBlockingExecutor.execute(() -> artifactRepository.save(upload)))
                             .flatMap((artifact) -> findByUniqueFilename(artifact.getFileLocation()))
                             .map(Artifact::getId)
-                            .map((id) -> {
+                            .flatMap((id) -> NonBlockingExecutor.execute( () -> {
                                 eventRepository.updateImageIdById((long)id, eventID);
                                 return id;
-                            });
+                            }));
                 });
+    }
+
+
+    public Mono<Integer> processProfileImage(FilePart filePart) {
+        var userMono = currentUserUtil.getCurrentUser();
+        var uploadAndUserMono = validateAndGetPath(filePart, IMAGE_TYPES)
+                .zipWith(validateImageAspectRatio(filePart, 1))
+                .flatMap( zipped -> {
+                    var destination = zipped.getT1();
+                    var image = zipped.getT2();
+
+                    Artifact upload = new Artifact();
+                    upload.setFileLocation(destination.toString());
+                    upload.setName(filePart.filename());
+                    upload.setType(ArtifactType.PROFILE_PICTURE);
+                    return NonBlockingExecutor.execute(() -> {
+                        try {
+                            // Save the file to the specified directory
+                            ImageIO.write(image, "png", destination.toFile());
+                            return upload;
+                        } catch (IOException e) {
+                            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+                        }
+                    });
+                }).zipWith(userMono);
+
+        uploadAndUserMono = uploadAndUserMono
+                .flatMap((zipped) -> {
+                    var user = zipped.getT2();
+
+                    zipped.getT1().setUserId(user.getId());
+
+                    if (user.getProfilePictureId() != null) {
+                        return Mono.just(zipped.getT1()).zipWith(deleteFile(user.getProfilePictureId()).map((delete) -> user));
+                    }
+                    return Mono.just(zipped.getT1()).zipWith(Mono.just(user));
+                });
+
+        return uploadAndUserMono
+                .flatMap((zipped) -> NonBlockingExecutor.execute(() -> {
+                    artifactRepository.save(zipped.getT1());
+                    var updatedArtifact = artifactRepository.findByUniqueIdentifier(zipped.getT1().getFileLocation());
+
+                    if (updatedArtifact.isPresent()) {
+                        var id = updatedArtifact.get().getId();
+                        userRepository.updateProfilePictureId(zipped.getT2().getId(), id);
+                        return id;
+                    }
+                    else {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact not found after saving");
+                    }
+                }));
     }
 
     private Mono<Path> validateAndGetPath(FilePart filePart, List<MediaType> acceptableTypes) {
@@ -156,17 +210,51 @@ public class ArtifactService {
                 }));
     }
 
+    private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
+        return filePart.content().collectList()
+                .flatMap(dataBufferList -> NonBlockingExecutor.execute(() -> {
+                            var dataBuffer = concatenateDataBuffers(dataBufferList);
+                            try (InputStream inputStream = dataBuffer.asInputStream()) {
+                                return ImageIO.read(inputStream);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .flatMap(image -> {
+                            if (image == null) {
+                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to parse PNG file"));
+                            }
+                            var aspectRatio = image.getWidth() / image.getHeight();
+                            if (aspectRatio != expectedRatio) {
+                                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid aspect Ratio: " + aspectRatio));
+                            }
+                            return Mono.just(image);
+                        }));
+    }
+
+    public static DataBuffer concatenateDataBuffers(List<DataBuffer> dataBuffers) {
+        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+        DataBuffer resultBuffer = dataBufferFactory.allocateBuffer(1);
+
+        for (DataBuffer buffer : dataBuffers) {
+            resultBuffer.write(buffer);
+        }
+
+        return resultBuffer;
+    }
+
     /**
      * Deletes a file if it exists
      * @param internalName is the unique identifier for the file marked for deletion
      * @return a message indicating the success
      */
     public Mono<String> deleteFile(String internalName) {
-        return SecurityUtil.getCurrentUser()
-                .flatMap((user) -> {
-                    Optional<Artifact> a = artifactRepository.findByUniqueIdentifier(internalName);
+        return currentUserUtil.getCurrentUser()
+                .zipWith(NonBlockingExecutor.execute(() -> artifactRepository.findByUniqueIdentifier(internalName)))
+                .flatMap((zipped) -> {
+                    Optional<Artifact> a = zipped.getT2();
                     if (a.isPresent()) {
-                        return deleteFile(a.get(), user);
+                        return deleteFile(a.get(), zipped.getT1());
                     }
                     return Mono.empty();
                 });
@@ -179,11 +267,12 @@ public class ArtifactService {
      */
     public Mono<String> deleteFile(int id) {
         if (id == NO_FILE_ID) return Mono.just("Success");
-        return SecurityUtil.getCurrentUser()
-                .flatMap((user) -> {
-                    Optional<Artifact> a = artifactRepository.findById((long) id);
+        return currentUserUtil.getCurrentUser()
+                .zipWith(NonBlockingExecutor.execute(() -> artifactRepository.findById((long) id)))
+                .flatMap((zipped) -> {
+                    Optional<Artifact> a = zipped.getT2();
                     if (a.isPresent()) {
-                        return deleteFile(a.get(), user);
+                        return deleteFile(a.get(), zipped.getT1());
                     }
                     return Mono.empty();
                 });
@@ -196,20 +285,20 @@ public class ArtifactService {
      * @return the deleted file
      */
     public Mono<String> deleteFile(Artifact a, User user) {
-        try {
-            System.out.println(a);
-            System.out.println(user);
-            if (user.hasAdminPrivileges() || a.getUserId().equals(user.getId())) {
-                Path fileToDelete = Paths.get(a.getFileLocation());
-                Files.deleteIfExists(fileToDelete); // Delete file
-                artifactRepository.delete(a); // Delete artifact entity
-                return Mono.just("File deleted successfully");
-            } else {
-                return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user"));
+        return NonBlockingExecutor.execute(() -> {
+            try {
+                if (user.hasAdminPrivileges() || Objects.equals(a.getUserId(), user.getId())) {
+                    Path fileToDelete = Paths.get(a.getFileLocation());
+                    Files.deleteIfExists(fileToDelete); // Delete file
+                    artifactRepository.delete(a); // Delete artifact entity
+                    return "File deleted successfully";
+                } else {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "File does not belong to user");
+                }
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found");
             }
-        } catch (IOException e) {
-            return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "File was not found"));
-        }
+        });
     }
 
     /**
@@ -232,31 +321,29 @@ public class ArtifactService {
     }
 
     /**
-     * Retreives a file based on its id
+     * Retrieves a file based on its id
      * @param artifactID
      * @param headers
      * @return
      */
     public Mono<ResponseEntity<Resource>> getFile(String artifactID, HttpHeaders headers) {
-        Artifact artifact = this.artifactRepository.findById(Long.valueOf(artifactID))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." ));
-
-        return Mono.defer(() -> {
+        Mono<Artifact> artifactMono = NonBlockingExecutor.execute(() -> this.artifactRepository.findById(Long.valueOf(artifactID))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artifact with id " + artifactID + " not found." )));
+        var userMono = currentUserUtil.getCurrentUser();
+        return artifactMono
+                .flatMap((artifact) -> {
                     if (artifact.getType() == ArtifactType.EVENT_IMAGE) {
-                        return Mono.empty();
+                        return artifactMono;
                     }
-                    return SecurityUtil.getCurrentUser()
-                            .flatMap(user -> {
-                                System.out.println(user.getId());
-                                System.out.println(artifact.getUserId());
-                                if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
-                                    return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
-                                            "User does not have access to this artifact"));
-                                }
-                                return Mono.empty();
-                            });
+                    return userMono.flatMap((user) -> {
+                        if (!user.hasFacultyPrivileges() && !user.getId().equals(artifact.getUserId())){
+                            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                                    "User does not have access to this artifact"));
+                        }
+                        return artifactMono;
+                    });
                 })
-                .then(Mono.defer(() -> {
+                .flatMap((artifact) -> {
                     Path normalizedDirectoryPath = Paths.get(uploadDirectory).toAbsolutePath().normalize();
                     Path normalizedFilePath = Paths.get(artifact.getFileLocation()).toAbsolutePath().normalize();
 
@@ -264,10 +351,9 @@ public class ArtifactService {
                         // should be impossible since we generate a hash for the file location but
                         return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "File location is forbidden"));
                     }
-                    var p = normalizedFilePath;
                     try {
                         // Create a FileSystemResource for the PDF file
-                        Resource pdfResource = new FileSystemResource(p.toFile());
+                        Resource pdfResource = new FileSystemResource(normalizedFilePath.toFile());
 
                         // Return ResponseEntity with headers and PDF resource
                         return Mono.just(ResponseEntity.ok()
@@ -277,7 +363,7 @@ public class ArtifactService {
                         // Handle file not found or other errors
                         return Mono.just(ResponseEntity.notFound().build());
                     }
-                }));
+                });
     }
 
     private static final int NO_FILE_ID = 1;
