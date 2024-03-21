@@ -5,8 +5,8 @@ import com.senior.project.backend.domain.Event;
 import com.senior.project.backend.domain.Task;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senior.project.backend.security.CurrentUserUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +21,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -35,6 +36,9 @@ public class TaskServiceTest {
 
     @Mock
     private EventRepository eventRepository;
+
+    @Mock
+    private CurrentUserUtil currentUserUtil;
 
     @Test
     public void testAll() {
@@ -51,7 +55,7 @@ public class TaskServiceTest {
         StepVerifier.create(result).expectNext(task1).expectNext(task2).expectComplete().verify();
     }
 
-/*     @Test
+    @Test
     public void testDashboard() {
         Task task1 = new Task();
         task1.setId(1L);
@@ -63,11 +67,14 @@ public class TaskServiceTest {
         tasks.add(task1);
         tasks.add(task2);
         tasks.add(task3);
-
-        when(taskRepository.findAll()).thenReturn(tasks);
-        Flux<Task> result = taskService.dashboard();
-        StepVerifier.create(result).expectNext(task1).expectNext(task2).expectNext(task3).expectComplete().verify();
-    } */
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(taskRepository.findTasksToDisplayOnDashboard(any(), any(), any())).thenReturn(tasks);
+        Flux<Task> result = taskService.dashboard(6);
+        StepVerifier.create(result)
+                .expectNext(task1).expectNext(task2).expectNext(task3)
+                .expectNext(task1).expectNext(task2).expectNext(task3)
+                .expectComplete().verify();
+    }
 
     @Test
     public void testGetByID() {
@@ -76,6 +83,7 @@ public class TaskServiceTest {
 
         when(taskRepository.findById(task1.getId().longValue())).thenReturn(task1);
         Task result = taskService.findById(taskID).block();
+        assert result != null;
         assertEquals(result.getId(), task1.getId());
         assertEquals(result.getName(), task1.getName());
     }
@@ -103,25 +111,24 @@ public class TaskServiceTest {
         Task task1 = Constants.task5;
         task1.setArtifactName("Meeting Notes!");
         task1.setEvent(Constants.e2);
-        long taskID = task1.getId().longValue();
+        long taskID = task1.getId();
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskRepository.findById(taskID)).thenReturn(task1);
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.updateTask(taskID, jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals("new description", result.getDescription());
             assertNull(result.getArtifactName());
             assertNull(result.getEvent());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -137,24 +144,23 @@ public class TaskServiceTest {
 
         Task task1 = Constants.task1;
         task1.setEvent(Constants.e2);
-        long taskID = task1.getId().longValue();
+        long taskID = task1.getId();
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskRepository.findById(taskID)).thenReturn(task1);
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.updateTask(taskID, jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals(task1.getArtifactName(), result.getArtifactName());
             assertNull(result.getEvent());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -171,26 +177,25 @@ public class TaskServiceTest {
         Task task1 = Constants.task4;
         task1.setArtifactName("whatever");
         task1.setEvent(null);
-        long taskID = task1.getId().longValue();
+        long taskID = task1.getId();
         Optional<Event> eventOption = Optional.of(Constants.e2);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskRepository.findById(taskID)).thenReturn(task1);
             when(eventRepository.findById(Constants.e2.getId())).thenReturn(eventOption);
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.updateTask(taskID, jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals(Constants.e2, result.getEvent());
             assertNull(result.getArtifactName());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -211,11 +216,12 @@ public class TaskServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.createTask(jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getYearLevel(), result.getYearLevel());
             assertEquals(task1.getTaskType(), result.getTaskType());
@@ -223,8 +229,6 @@ public class TaskServiceTest {
             assertNull(result.getArtifactName());
             assertNull(result.getEvent());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -245,19 +249,18 @@ public class TaskServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.createTask(jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getYearLevel(), result.getYearLevel());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals(task1.getArtifactName(), result.getArtifactName());
             assertNull(result.getEvent());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -278,19 +281,18 @@ public class TaskServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(eventRepository.findById(Constants.e2.getId())).thenReturn(eventOption);
             when(taskRepository.save(Mockito.any(Task.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
             Task result = taskService.createTask(jsonMap).block();
+            assert result != null;
             assertEquals(task1.getName(), result.getName());
             assertEquals(task1.getTaskType(), result.getTaskType());
             assertEquals(Constants.e2, result.getEvent());
             assertNull(result.getArtifactName());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

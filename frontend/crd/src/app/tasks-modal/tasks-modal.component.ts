@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+
 @Component({
   selector: 'tasks-modal',
   templateUrl: './tasks-modal.component.html',
