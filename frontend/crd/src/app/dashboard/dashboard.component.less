@@ -1,9 +1,10 @@
 .page-container {
   display: flex;
-  align-items: flex-start; /* Align calendar stub to the top */
+  align-items: flex-start;
   flex-direction: column;
+  margin: 0 5vh 5vh 5vh;
 
-  .calendar-stub {
+  .carousel-container {
     flex: 2;
     background-color: #f0f0f0;
     padding: 20px;
@@ -13,8 +14,13 @@
   .info-cards {
     flex: 1;
     display: flex;
-    flex-direction: column; /* Display cards in a single column */
-    padding: 20px;
+    flex-direction: column;
     width: 100%;
+  }
+
+  h1 {
+    padding: 6vh 0 6vh 0;
+    font-size: 40px;
+    font-weight: bold;
   }
 }

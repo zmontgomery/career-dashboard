@@ -15,6 +15,23 @@ export enum YearLevel {
   Junior = "Junior", Senior = "Senior"
 }
 
+export namespace YearLevel {
+
+  /**
+   * Compares difference between yearLevels.
+   * @param y1 first yearLevel
+   * @param y2 second yearLevel
+   * @return positive if year 1 is greater, 0 if same, negative otherwise
+   */
+  export function compare(y1: YearLevel, y2: YearLevel): number {
+    const enumValues = Object.values(YearLevel);
+    const indexA = enumValues.indexOf(y1);
+    const indexB = enumValues.indexOf(y2);
+
+    return indexA - indexB;
+  }
+}
+
 export class Milestone {
   constructor(json: MilestoneJSON) {
     this.name = json.name;
