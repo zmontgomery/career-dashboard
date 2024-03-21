@@ -5,7 +5,7 @@ import { takeUntil, zip } from 'rxjs';
 import { MatDialog} from "@angular/material/dialog";
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { User } from 'src/app/security/domain/user';
-import { MilestonesPageComponent } from '../milestones-page.component';
+import { MilestonesPage } from '../milestones-page';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/security/user.service';
 
@@ -14,7 +14,7 @@ import { UserService } from 'src/app/security/user.service';
   templateUrl: './milestones-faculty.component.html',
   styleUrls: ['./milestones-faculty.component.less']
 })
-export class MilestonesFacultyComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
+export class MilestonesFacultyComponent extends MilestonesPage implements OnInit, OnDestroy {
 
   studentID!: string;
   currentStudent!: User;
@@ -47,12 +47,12 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
 
     zip(
       this.submissionService.getStudentSubmissionsFaculty(this.studentID),
-      this.userService.getStudent(this.studentID),
+      this.userService.getUser(this.studentID),
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, student, milestones]) => {
-      this.currentStudent = student;
-      if (student.studentDetails?.yearLevel) {
+      if (student && student.studentDetails?.yearLevel) {
+        this.currentStudent = student;
         this.studentYear = student.studentDetails?.yearLevel;
       }
       

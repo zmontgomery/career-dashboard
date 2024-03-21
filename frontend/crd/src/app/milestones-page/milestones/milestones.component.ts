@@ -8,15 +8,15 @@ import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { Submission } from 'src/domain/Submission';
-import { MilestonesPageComponent } from '../milestones-page.component';
 import { ActivatedRoute } from '@angular/router';
+import { MilestonesPage } from '../milestones-page';
 
 @Component({
   selector: 'app-milestones',
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.less']
 })
-export class MilestonesComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
+export class MilestonesComponent extends MilestonesPage implements OnInit, OnDestroy {
 
   constructor(
     milestoneService: MilestoneService,

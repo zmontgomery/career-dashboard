@@ -9,11 +9,9 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-milestones-page',
-  templateUrl: './milestones-page.component.html',
-  styleUrls: ['./milestones-page.component.less']
+  template: ''
 })
-export class MilestonesPageComponent {
+export abstract class MilestonesPage {
 
   milestonesMap: Map<string, Array<Milestone>> = new Map()
   completedTasks!: number[];
