@@ -38,7 +38,7 @@ public enum Endpoints {
     UPDATE_ROLES("users/roles", true, Role.Faculty),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
-    STUDENT_INFO("student-info", true),
+    STUDENT_INFO("student-info", true, Role.Faculty),
 
     // Submissions
     SUBMISSION("tasks/submission", true),
