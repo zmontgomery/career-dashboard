@@ -44,7 +44,7 @@ describe('MilestonesPageComponent', () => {
     })
   ];
 
-  const testMap = new Map().set(YearLevel.Freshman, [
+  const testFreshmanMilestones = [
     new Milestone({
       name: "name",
       yearLevel: YearLevel.Freshman,
@@ -99,7 +99,43 @@ describe('MilestonesPageComponent', () => {
         artifactName: 'test artifact'
       }],
     })
-  ]);
+  ];
+
+  const testSophomoreMilestones = [
+    new Milestone({
+      name: "name",
+      yearLevel: YearLevel.Sophomore,
+      id: 3,
+      description: "sample",
+      events: [],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        id: 5,
+        isRequired: true,
+        yearLevel: YearLevel.Sophomore,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      },
+      {
+        name: 'task name',
+        description: "description",
+        id: 6,
+        isRequired: true,
+        yearLevel: YearLevel.Sophomore,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      }],
+    }),
+  ];
+
+  const testMilestones = testFreshmanMilestones.concat(testSophomoreMilestones);
+
+  const testMap = new Map();
+  testMap.set(YearLevel.Freshman, testFreshmanMilestones);
+  testMap.set(YearLevel.Sophomore, testSophomoreMilestones);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -117,6 +153,14 @@ describe('MilestonesPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should create milestone map', () => {
+    component.makeMilestoneMap(testMilestones);
+    
+    expect(component.milestonesMap.size).toEqual(4);
+    expect(component.milestonesMap.get(YearLevel.Freshman)).toEqual(testFreshmanMilestones);
+    expect(component.milestonesMap.get(YearLevel.Sophomore)).toEqual(testSophomoreMilestones);
   });
 
   it('should check completed', () => {

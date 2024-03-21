@@ -35,6 +35,11 @@ export class MilestonesPageComponent {
   ) {
   }
 
+  makeMilestoneMap(milestones: Milestone[]) {
+    this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
+    milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
+  }
+
   checkCompleted(submissions: Submission[]) {
     this.completedTasks = submissions.map(submission => submission.taskId);
 

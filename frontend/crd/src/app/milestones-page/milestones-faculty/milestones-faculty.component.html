@@ -1,17 +1,18 @@
 <!-- this is from milestones-page -->
-<h1>Milestones</h1>
-
 <div *ngIf="dataLoaded">
-<div class="year-container" *ngFor="let yearLevel of yearLevels">
+
+<h1>Milestone Progress of {{currentStudent.firstName}} {{currentStudent.lastName}}</h1>
+
+<div class="year-container" *ngFor="let completionStatus of completionStatuses">
   <mat-card class="year-card">
     <mat-card-header>
-      <div class="year-name">{{yearLevel}}</div>
+      <div class="year-name">{{completionStatus}}</div>
     </mat-card-header>
   </mat-card>
 
 
   <mat-accordion multi>
-    <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
+    <ng-container *ngFor="let milestone of completedMap.get(completionStatus)">
       <mat-expansion-panel [expanded]="!completedMilestones.includes(milestone.milestoneID)">
         <mat-expansion-panel-header>
           <mat-panel-title>

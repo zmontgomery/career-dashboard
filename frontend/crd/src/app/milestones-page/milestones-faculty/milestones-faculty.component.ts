@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Milestone, YearLevel } from "../../../domain/Milestone";
+import { Milestone, YearLevel, CompletionStatus } from "../../../domain/Milestone";
 import { MilestoneService } from '../milestones/milestone.service';
 import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
 import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -20,8 +20,12 @@ import { UserService } from 'src/app/security/user.service';
 export class MilestonesFacultyComponent extends MilestonesPageComponent implements OnInit, OnDestroy {
 
   studentID!: string;
+  currentStudent!: User;
   studentYear!: YearLevel;
-  completedMap: Map<string, Array<Milestone>> = new Map()
+
+  // display order
+  completionStatuses = [CompletionStatus.InProgress, CompletionStatus.Incomplete, CompletionStatus.Complete];
+  completedMap: Map<CompletionStatus, Array<Milestone>> = new Map();
 
   constructor(
     milestoneService: MilestoneService,
@@ -45,15 +49,46 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, student, milestones]) => {
+      this.currentStudent = student;
       if (student.studentDetails?.yearLevel) {
         this.studentYear = student.studentDetails?.yearLevel;
       }
-      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
-      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
-
+      
+      this.makeMilestoneMap(milestones);
       this.checkCompleted(submissions);
+      this.sortMilestones(milestones);
       this.dataLoaded = true;
     });
+  }
+
+  sortMilestones(milestones: Milestone[]) {
+    const inprogressMilestones: Milestone[] = [];
+
+    // get the milestone object for the completed milestones
+    const completedMilestonesList = milestones.filter(milestone => 
+      this.completedMilestones.includes(milestone.milestoneID)
+    );
+
+    for (let i = 0; i < milestones.length; i++) {
+      const milestone = milestones[i];
+      const completedMTasks = milestone.tasks.filter(task => this.completedTasks.includes(task.taskID));
+
+      // if the milestone has any completed tasks but hasn't been marked as fully completed
+      if (completedMTasks.length > 0 && 
+        !this.completedMilestones.includes(milestone.milestoneID)) {
+          inprogressMilestones.push(milestone);
+        }
+    }
+
+    // if the milestone isn't already in either list
+    const incompleteMilestones = milestones.filter(milestone => 
+      !this.completedMilestones.includes(milestone.milestoneID) &&
+      !inprogressMilestones.includes(milestone)
+    );
+    
+    this.completedMap.set(CompletionStatus.InProgress, inprogressMilestones);
+    this.completedMap.set(CompletionStatus.Incomplete, incompleteMilestones);
+    this.completedMap.set(CompletionStatus.Complete, completedMilestonesList);
   }
 
   openTask(task: any) {

@@ -36,9 +36,7 @@ export class MilestonesComponent extends MilestonesPageComponent implements OnIn
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, milestones]) => {
-      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
-      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
-
+      this.makeMilestoneMap(milestones);
       this.checkCompleted(submissions);
       this.dataLoaded = true;
     });

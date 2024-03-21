@@ -15,6 +15,12 @@ export enum YearLevel {
   Junior = "Junior", Senior = "Senior"
 }
 
+export enum CompletionStatus {
+  Complete = "Complete",
+  InProgress = "In Progress",
+  Incomplete = "Incomplete"
+}
+
 export class Milestone {
   constructor(json: MilestoneJSON) {
     this.name = json.name;
