@@ -184,6 +184,100 @@ describe('MilestonesFacultyComponent', () => {
   testSMap.set(CompletionStatus.Incomplete, [incompleteMilestone]);
   testSMap.set(CompletionStatus.Complete, [completeMilstone]);
   testSMap.set(CompletionStatus.Upcoming, []);
+
+  // from milestones-page
+  const testFreshmanMilestones = [
+    new Milestone({
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 1,
+      description: "sample",
+      events: [],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        id: 1,
+        isRequired: true,
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      },
+      {
+        name: 'task name',
+        description: "description",
+        id: 2,
+        isRequired: true,
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      }],
+    }),
+    new Milestone({
+      name: "name",
+      yearLevel: YearLevel.Freshman,
+      id: 2,
+      description: "sample",
+      events: [],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        id: 3,
+        isRequired: true,
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 2,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      },
+      {
+        name: 'task name',
+        description: "description",
+        id: 4,
+        isRequired: true,
+        yearLevel: YearLevel.Freshman,
+        milestoneID: 2,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      }],
+    })
+  ];
+
+  const testSophomoreMilestones = [
+    new Milestone({
+      name: "name",
+      yearLevel: YearLevel.Sophomore,
+      id: 3,
+      description: "sample",
+      events: [],
+      tasks: [{
+        name: 'task name',
+        description: "description",
+        id: 5,
+        isRequired: true,
+        yearLevel: YearLevel.Sophomore,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      },
+      {
+        name: 'task name',
+        description: "description",
+        id: 6,
+        isRequired: true,
+        yearLevel: YearLevel.Sophomore,
+        milestoneID: 1,
+        taskType: TaskType.ARTIFACT,
+        artifactName: 'test artifact'
+      }],
+    }),
+  ];
+
+  const testMilestones2 = testFreshmanMilestones.concat(testSophomoreMilestones);
+
+  const testMap = new Map();
+  testMap.set(YearLevel.Freshman, testFreshmanMilestones);
+  testMap.set(YearLevel.Sophomore, testSophomoreMilestones);
   
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
@@ -249,6 +343,24 @@ describe('MilestonesFacultyComponent', () => {
     component.sortMilestones(testMilestones);
     
     expect(component.completedMap).toEqual(testFMap);
+  });
+
+  // tests from milestones-page
+  it('should create milestone map', () => {
+    component.makeMilestoneMap(testMilestones2);
+    
+    expect(component.milestonesMap.size).toEqual(4);
+    expect(component.milestonesMap.get(YearLevel.Freshman)).toEqual(testFreshmanMilestones);
+    expect(component.milestonesMap.get(YearLevel.Sophomore)).toEqual(testSophomoreMilestones);
+  });
+
+  it('should check completed', () => {
+    component.milestonesMap = testMap;
+
+    component.checkCompleted(testSubmissions);
+
+    expect(component.completedMilestones).toEqual([1]);
+    expect(component.completedTasks).toEqual([1, 2, 3]);
   });
 
 });

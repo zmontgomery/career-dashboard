@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioComponent } from "./portfolio/portfolio.component";
-import { MilestonesPageComponent } from "./milestones-page/milestones-page.component";
 import { ApiDocumentationsComponent } from "./api-documentations/api-documentations.component";
 import { LoginPageComponent } from './security/login-page/login-page.component';
 import {adminRoleGuard, authGuard, facultyRoleGuard, noAuthGuard, signedUpGuard} from './security/auth-guard';
