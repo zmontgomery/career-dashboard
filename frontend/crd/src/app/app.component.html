@@ -1,5 +1,5 @@
 <div class="app-container">
-  <div class="header-container">
+  <div class="header-container" *ngIf="needsNavBar()">
     <div class="logo">
       <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
     </div>
@@ -23,7 +23,7 @@
     </ng-container>
     <router-outlet></router-outlet>
   </div>
-  <div class="footer-container">
+  <div class="footer-container" *ngIf="needsNavBar()">
     <div class="">
     <footer class="text-center text-lg-start border-bottom">
       <!-- Section: Social media -->

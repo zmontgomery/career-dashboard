@@ -4,6 +4,7 @@ import { LoginPageComponent } from './login-page.component';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { OswegoLogoModule } from 'src/app/oswego-logo/oswego-logo.module';
 
 
 
@@ -15,7 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
     GoogleSigninButtonModule,
     CommonModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    OswegoLogoModule
   ],
   exports: [LoginPageComponent]
 })
