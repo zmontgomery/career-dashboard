@@ -5,7 +5,6 @@ import time
 from enum import Enum
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -249,7 +248,7 @@ class BaseTest(unittest.TestCase):
   # Helper Methods
   # =================================================== 
 
-  def find_element_by_class_name(self, className) -> WebElement:
+  def find_element_by_class_name(self, className):
     """
     Finds an element by its class name
 
@@ -260,7 +259,7 @@ class BaseTest(unittest.TestCase):
     except TimeoutException:
       self.fail(f"Timeout on finding element with class name {className}")
 
-  def find_element_by_id(self, id) -> WebElement:
+  def find_element_by_id(self, id):
     """
     Finds an element by its id
 
@@ -271,7 +270,7 @@ class BaseTest(unittest.TestCase):
     except TimeoutException:
       self.fail(f"Timeout on finding element with id {id}")
 
-  def wait_for_element_to_be_clickable(self, element) -> WebElement:
+  def wait_for_element_to_be_clickable(self, element):
     """
     Finds an element and waits for it to be clickable
 
