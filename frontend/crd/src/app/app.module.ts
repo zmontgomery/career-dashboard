@@ -15,7 +15,6 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MilestonesPageModule } from "./milestones-page/milestones-page.module";
 import { OswegoLogoModule } from "./oswego-logo/oswego-logo.module";
 import { AuthInterceptor } from './security/interceptors/auth-interceptor';
 import { TasksModule } from './tasks/tasks.module';
@@ -43,6 +42,7 @@ import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
 import {NgOptimizedImage} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
+import { MilestonesFacultyModule } from './milestones-page/milestones-faculty/milestones-faculty.module';
 
 
 @NgModule({
@@ -80,7 +80,6 @@ import {MatIconModule} from "@angular/material/icon";
     SocialLoginModule,
     DashboardModule,
     PortfolioModule,
-    MilestonesPageModule,
     UsersPageModule,
     MatCardModule,
     MatTabsModule,
@@ -106,6 +105,7 @@ import {MatIconModule} from "@angular/material/icon";
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    MilestonesFacultyModule,
     NgOptimizedImage,
     MatIconModule,
     ProfileImageModalModule,

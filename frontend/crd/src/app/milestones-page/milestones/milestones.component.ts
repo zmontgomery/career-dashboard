@@ -4,33 +4,27 @@ import { MilestoneService } from "./milestone.service";
 import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
 import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { TasksModalComponent } from "../../tasks-modal/tasks-modal.component";
-
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { Submission } from 'src/domain/Submission';
+import { ActivatedRoute } from '@angular/router';
+import { MilestonesPage } from '../milestones-page';
 
 @Component({
   selector: 'app-milestones',
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.less']
 })
-export class MilestonesComponent implements OnInit, OnDestroy {
-
-  private destroyed$ = new Subject<any>();
-  dataLoaded = false;
+export class MilestonesComponent extends MilestonesPage implements OnInit, OnDestroy {
 
   constructor(
-    private milestoneService: MilestoneService,
-    public matDialog: MatDialog,
-    private submissionService: SubmissionService,
-    private authService: AuthService,
+    milestoneService: MilestoneService,
+    matDialog: MatDialog,
+    submissionService: SubmissionService,
+    protected authService: AuthService,
   ) {
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next("");
-    this.destroyed$.complete();
+    super(milestoneService, matDialog, submissionService);
   }
 
   ngOnInit() {
@@ -42,27 +36,10 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       this.milestoneService.getMilestones()
         .pipe(takeUntil(this.destroyed$))
     ).subscribe(([submissions, milestones]) => {
-      this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
-      milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
-
+      this.makeMilestoneMap(milestones);
       this.checkCompleted(submissions);
       this.dataLoaded = true;
     });
-  }
-
-  checkCompleted(submissions: Submission[]) {
-    this.completedTasks = submissions.map(submission => submission.taskId);
-
-    this.milestonesMap.forEach((yearMilestones) => {
-      yearMilestones.flatMap((milestone) => {
-        const milestoneTasks = milestone.tasks.map(task => task.taskID);
-
-        const completed = milestoneTasks.every(taskID => this.completedTasks.includes(taskID));
-        if (completed) {
-          this.completedMilestones.push(milestone.milestoneID);
-        }
-      })
-    })
   }
 
   openTask(task: any) {
@@ -81,9 +58,4 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       this.ngOnInit();
     })
   }
-
-  milestonesMap: Map<string, Array<Milestone>> = new Map()
-  completedTasks!: number[];
-  completedMilestones: number[] = [];
-  protected readonly yearLevels = [YearLevel.Freshman, YearLevel.Sophomore, YearLevel.Junior, YearLevel.Senior];
 }

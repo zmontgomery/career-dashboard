@@ -41,6 +41,7 @@ public enum Endpoints {
     SUBMISSION("tasks/submission", true),
     LATEST_SUBMISSION("tasks/submission/{taskId}", true),
     ALL_SUBMISSIONS("student/submission", true),
+    FACULTY_SUBMISSIONS("faculty/milestones/{studentID}", true, Role.Faculty),
 
     // Artifacts
     ARTIFACT("artifact/", true),
