@@ -11,7 +11,24 @@ import {AUTH_TOKEN_STORAGE, TOKEN_ISSUED} from './security-constants';
 import {LangUtils} from '../util/lang-utils';
 import {Role, User, UserJSON} from './domain/user';
 import {ActivatedRoute, Params} from '@angular/router';
-import { Endpoints } from '../util/http-helper';
+import {StudentDetailsJSON} from "../../domain/StudentDetails";
+import {YearLevel} from "../../domain/Milestone";
+
+export const studentDetails: StudentDetailsJSON = {
+  id: 'string',
+  universityId: 'string',
+  gpa: 1,
+  description: 'string',
+  graduationYear: new Date(),
+  startDate: new Date(),
+  yearLevel: YearLevel.Freshman,
+  projects: [],
+  skills: [],
+  jobs: [],
+  degreePrograms: [],
+  clubs: [],
+  interests: [],
+}
 
 export const userJSON: UserJSON = {
   id: 'id',
@@ -28,6 +45,7 @@ export const userJSON: UserJSON = {
   role: Role.Admin,
   linkedin: 'linkedin',
   profilePictureId: 0,
+  studentDetails: studentDetails,
 }
 
 describe('AuthService', () => {

@@ -34,12 +34,15 @@ import { MilestoneCreateModalModule } from './admin/milestone-main-page/mileston
 import { UsersPageModule } from "./users-page/users-page.module";
 import { SignupPageModule } from './security/signup-page/signup-page.module';
 import {EventImageModalModule} from "./admin/event-image-modal/event-image-modal.module";
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NotFoundComponent } from './not-found/not-found.component';
 import {SettingsPageModule} from "./settings/settings-page.module";
 import {ProfileImageModalModule} from "./file-upload/profile-image-modal/profile-image-modal.module";
-import { NotFoundComponent } from './not-found/not-found.component';
+import {NgOptimizedImage} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -75,7 +78,6 @@ import { NotFoundComponent } from './not-found/not-found.component';
       }
     ),
     SocialLoginModule,
-    UserMenuModule,
     DashboardModule,
     PortfolioModule,
     MilestonesPageModule,
@@ -83,6 +85,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     MatCardModule,
     MatTabsModule,
     TasksModule,
+    TasksModalModule,
     RouterModule,
     BrowserAnimationsModule,
     OswegoLogoModule,
@@ -97,13 +100,19 @@ import { NotFoundComponent } from './not-found/not-found.component';
     EventMainPageModule,
     MilestoneCreateModalModule,
     MilestoneCreateModalModule,
+    TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
     TasksModalModule,
     SignupPageModule,
     EventImageModalModule,
+    NgOptimizedImage,
+    MatIconModule,
     ProfileImageModalModule,
     SettingsPageModule,
+    NgOptimizedImage,
+    MatIconModule,
+    UserMenuModule,
   ],
   providers: [
     provideHttpClient(),

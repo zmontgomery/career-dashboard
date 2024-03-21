@@ -186,6 +186,9 @@ public class Constants {
         user1.setRole(Role.Admin);
         user1.setSignedUp(false);
         user1.setProfilePictureId(1);
+        var user1Details = new StudentDetails();
+        user1Details.setYearLevel(YearLevel.Freshman);
+        user1.setStudentDetails(user1Details);
         user2 = new User();
         user2.setId(UUID.randomUUID());
         user2.setEmail("test2@test.com");
