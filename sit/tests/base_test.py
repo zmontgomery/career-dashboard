@@ -5,6 +5,7 @@ import time
 from enum import Enum
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -51,7 +52,11 @@ class BaseTest(unittest.TestCase):
 
   BASE_URL = "http://localhost:4200"
 
-  def setUp(self):
+  # ===================================================
+  # Test Setup
+  # ===================================================  
+
+  def setUp(self) -> None:
     """
     Creates the driver, signs in, and navigates to the page
     """
@@ -70,18 +75,18 @@ class BaseTest(unittest.TestCase):
     self.driver.get(self.BASE_URL)
 
     # Wait until app is loaded
-    self.findElementByClassName(APP_CONTAINER)
+    self.find_element_by_class_name(APP_CONTAINER)
 
     # Sign in
     if (self.authenticated()):
-      email, password = self._getRoleDetails()
+      email, password = self._get_role_details()
       self.sign_in(email, password)
 
     # Navigate to page
     self.driver.get(f'{self.BASE_URL}/{self.path()}')
-    self.findElementByClassName('logo-container')
+    self.find_element_by_class_name('logo-container')
 
-  def tearDown(self):
+  def tearDown(self) -> None:
     """
     Closes the web driver and clears existing authentication
     """
@@ -100,48 +105,52 @@ class BaseTest(unittest.TestCase):
 
       self.driver.close()
 
-  def sign_in(self, email, password):
+  def sign_in(self, email, password) -> None:
     """
     Signs in the test using the google sign in functionality
     """
-    email, password = self._getRoleDetails()
-    button = self.findElementByClassName('login-google-button')
-    button.click()
+    # Get authentication details
+    email, password = self._get_role_details()
+    button = self.find_element_by_class_name('login-google-button')
+    self.wait_for_element_to_be_clickable(button)
     
+    # Check if popup is open
     window_size = 1
     while window_size < 2:
       window_size = len(self.driver.window_handles)
+      button.click()
 
+    # Switch to popup
     original_handle = self.driver.current_window_handle
     self.driver.switch_to.window(self.driver.window_handles[1])
     
     # Enter Username
-    username = self.findElementById('identifierId')
-    self.waitForElementToBeClickable(username)
+    username = self.find_element_by_id('identifierId')
+    self.wait_for_element_to_be_clickable(username)
     ActionChains(self.driver)\
       .click(username)\
       .send_keys(email)\
       .perform()
     
     # Go Next
-    nextButton = self.findElementById('identifierNext')
-    self.waitForElementToBeClickable(nextButton)
+    nextButton = self.find_element_by_id('identifierNext')
+    self.wait_for_element_to_be_clickable(nextButton)
     ActionChains(self.driver)\
       .scroll_to_element(nextButton)\
       .click(nextButton)\
       .perform()
     
     # Enter Password
-    passwordElem = self.findElementById('password')
-    self.waitForElementToBeClickable(passwordElem)
+    passwordElem = self.find_element_by_id('password')
+    self.wait_for_element_to_be_clickable(passwordElem)
     ActionChains(self.driver)\
       .click(passwordElem)\
       .send_keys(password)\
       .perform()
     
     # Submit
-    nextButton = self.findElementById('passwordNext')
-    self.waitForElementToBeClickable(nextButton)
+    nextButton = self.find_element_by_id('passwordNext')
+    self.wait_for_element_to_be_clickable(nextButton)
     ActionChains(self.driver)\
       .scroll_to_element(nextButton)\
       .click(nextButton)\
@@ -152,31 +161,53 @@ class BaseTest(unittest.TestCase):
 
     # Wait for the logout button to exist and be clickable
     try:
-      return WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, 'logout-button')))
+      return WebDriverWait(self.driver, TIMEOUT).until(EC.element_to_be_clickable((By.CLASS_NAME, 'logout-button')))
     except TimeoutException:
       try:
-        WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, 'signup-modal')))
+        WebDriverWait(self.driver, TIMEOUT).until(EC.element_to_be_clickable((By.CLASS_NAME, 'signup-modal')))
       except TimeoutException:
         self.fail("Expected elements of logout button or sign up container")
 
-  def connect_to_database(self):
+  def connect_to_database(self) -> None:
+    """
+    Opens up the connection to the database
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    # Open the file
     try:
       with open(f'{dir_path}/account_information.yml', 'r') as file:
+        # Load information
         details = yaml.safe_load(file)
         user = details['database']['user']
         password = details['database']['password']
+
+        # Connect to database
         self.db = mysql.connector.connect(
           host = 'localhost',
           user = user,
           password = password,
           database = 'crd'
         )
+
+        # Create cursor
         self.cursor = self.db.cursor()
     except FileNotFoundError:
       print(NO_ACCOUNT_INFO_MESSAGE) 
       self.tearDown()
       self.skipTest('File not found')
+
+  def execute_pre_test_sql_statements(self) -> None:
+    commands = self.pre_test_sql_statements()
+    post_commands = self.post_test_sql_statements()
+
+
+    for command in commands:
+      self.cursor.execute(command)
+
+  # ===================================================
+  # Test Attributes
+  # ===================================================
 
   def authenticated(self) -> bool:
     """
@@ -202,7 +233,23 @@ class BaseTest(unittest.TestCase):
     """
     return ''
   
-  def findElementByClassName(self, className):
+  def pre_test_sql_statements(self) -> list:
+    """
+    Overwritable function for the list of sql statements to execute
+    """
+    return []
+  
+  def post_test_sql_statements(self) -> list:
+    """
+    Overwritable function for the list of sql statements to execute
+    """
+    return []
+  
+  # ===================================================
+  # Helper Methods
+  # =================================================== 
+
+  def find_element_by_class_name(self, className) -> WebElement:
     """
     Finds an element by its class name
 
@@ -213,7 +260,7 @@ class BaseTest(unittest.TestCase):
     except TimeoutException:
       self.fail(f"Timeout on finding element with class name {className}")
 
-  def findElementById(self, id):
+  def find_element_by_id(self, id) -> WebElement:
     """
     Finds an element by its id
 
@@ -224,7 +271,7 @@ class BaseTest(unittest.TestCase):
     except TimeoutException:
       self.fail(f"Timeout on finding element with id {id}")
 
-  def waitForElementToBeClickable(self, element):
+  def wait_for_element_to_be_clickable(self, element) -> WebElement:
     """
     Finds an element and waits for it to be clickable
 
@@ -235,7 +282,7 @@ class BaseTest(unittest.TestCase):
     except TimeoutException:
       self.fail(f"Timeout on finding element with id {id}")
 
-  def sleep(self, duration):
+  def sleep(self, duration) -> None:
     """
     Sleeps for a given amount of time
 
@@ -243,7 +290,11 @@ class BaseTest(unittest.TestCase):
     """
     time.sleep(duration)
 
-  def _getRoleDetails(self):
+  # ===================================================
+  # Private
+  # ===================================================
+
+  def _get_role_details(self) -> tuple:
     """
     Loads the corresponding username and password from the "account_information.yml"
     file. By default this file does not exist and needs to be created per repository
