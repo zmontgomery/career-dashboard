@@ -57,7 +57,6 @@ export class SubmissionService {
   getStudentSubmissionsFaculty(studentID: string): Observable<Submission[]> {
     return this.http.get<SubmissionJSON[]>(constructBackendRequest(`${Endpoints.FACULTY_SUBMISSIONS}/${studentID}`))
       .pipe(map((data: SubmissionJSON[]) => {
-        console.log("we received student submissions?");
         return data.map((s: SubmissionJSON) => {
           return new Submission(s);
         });

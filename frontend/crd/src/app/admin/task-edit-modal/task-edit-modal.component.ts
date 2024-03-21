@@ -62,8 +62,6 @@ export class TaskEditModalComponent implements OnInit {
    * Creates the FormGroup using the provided task data or left blank
    */
   createForm() {
-    console.log("creating task form");
-    console.log(this.currentTask);
     if (this.currentTask) {
       this.taskForm = this.formBuilder.group({
         name: [this.taskName],   //this field is hidden if the task already exists
