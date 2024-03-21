@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import com.senior.project.backend.domain.Role;
 import org.junit.jupiter.api.Test;
@@ -156,6 +157,27 @@ public class UserServiceTest {
         
         StepVerifier.create(res)
             .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void testFindByIdHappy() {
+        when(userRepository.findById(any())).thenReturn(Optional.of(Constants.user1));
+        Mono<User> res = userService.findById(UUID.randomUUID());
+
+        StepVerifier.create(res)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void testFindByIdNotFound() {
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+        Mono<User> res = userService.findById(UUID.randomUUID());
+
+        StepVerifier.create(res)
             .expectComplete()
             .verify();
     }

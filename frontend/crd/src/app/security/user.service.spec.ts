@@ -69,4 +69,16 @@ describe('UserService', () => {
       users: [userJSON, userJSON]
     });
   });
+
+  it('should get a user', (done) => {
+    const user = new User(userJSON);
+    service.getUser('id').subscribe((res: User | null) => {
+      expect(res).toEqual(user);
+      done();
+    });
+
+    const req = httpMock.expectOne(constructBackendRequest(Endpoints.USERS) + '/id');
+    expect(req.request.method).toEqual('GET');
+    req.flush(userJSON);
+  })
 });

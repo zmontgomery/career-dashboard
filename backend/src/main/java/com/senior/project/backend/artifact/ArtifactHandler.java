@@ -13,11 +13,14 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.senior.project.backend.domain.Submission;
+import com.senior.project.backend.domain.User;
+import com.senior.project.backend.security.CurrentUserUtil;
 import com.senior.project.backend.submissions.SubmissionService;
 
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Handler for interacting with artifacts
@@ -27,10 +30,16 @@ public class ArtifactHandler {
 
     private final ArtifactService artifactService;
     private final SubmissionService submissionService;
+    private final CurrentUserUtil currentUserUtil;
 
-    public ArtifactHandler(ArtifactService artifactService, SubmissionService submissionService){
+    public ArtifactHandler(
+        ArtifactService artifactService, 
+        SubmissionService submissionService,
+        CurrentUserUtil currentUserUtil
+    ){
         this.artifactService = artifactService;
         this.submissionService = submissionService;
+        this.currentUserUtil = currentUserUtil;
     }
 
     /**
@@ -75,13 +84,19 @@ public class ArtifactHandler {
      * Deletes the file with the given file name
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
-        return Mono.just(Integer.parseInt(request.pathVariable("id")))
-            .flatMap((id) -> {
-                if (id == 1) return Mono.empty();
+        return currentUserUtil.getCurrentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
+            .flatMap((zip) -> {
+                final User user = zip.getT1();
+                int id = zip.getT2();
+                if (id <= 1) return Mono.empty();
                 return submissionService.findByArtifact(id)
-                    .switchIfEmpty(Mono.just(Submission.builder().id(0).build()))
-                    .doOnNext(s -> System.out.println(s))
+                    .switchIfEmpty(Mono.just(Submission.builder().id(0).studentId(UUID.randomUUID()).build()))
                     .flatMap(submission -> submission.getId() == 0 ? Mono.just(submission) : submissionService.scrubArtifact(submission))
+                    .doOnNext(submission -> {
+                        if ( Objects.isNull(submission.getStudentId()) || (!user.getId().equals(submission.getStudentId()) && !user.hasAdminPrivileges())) {
+                            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                        } 
+                    })
                     .flatMap(submission -> artifactService.deleteFile(id))
                     .flatMap(response -> ServerResponse.ok().contentType(MediaType.TEXT_PLAIN).bodyValue(response));
             })

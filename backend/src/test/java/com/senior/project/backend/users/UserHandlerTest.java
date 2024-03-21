@@ -3,13 +3,14 @@ package com.senior.project.backend.users;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.UUID;
 
 import com.senior.project.backend.domain.UsersSearchResponse;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,9 @@ public class UserHandlerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private CurrentUserUtil currentUserUtil;
+
     private WebTestClient webTestClient;
 
     @BeforeEach
@@ -47,6 +51,7 @@ public class UserHandlerTest {
             .GET("/curr", userHandler::currentUser)
             .POST("/update", userHandler::updateRole)
             .GET("/student", userHandler::studentInfo)
+            .GET("id/{id}", userHandler::byId)
             .build())
         .build();
     }
@@ -135,13 +140,7 @@ public class UserHandlerTest {
 
     @Test
     public void testCurrentUser() {
-        UserHandler spy = spy(userHandler);
-        when(spy.currentUser()).thenReturn(Mono.just(Constants.user1));
-
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-            .GET("/curr", (req) -> spy.currentUser(req))
-            .build())
-        .build();
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
 
         User user = webTestClient.get()
             .uri("/curr")
@@ -158,13 +157,7 @@ public class UserHandlerTest {
     @Test
     public void testUpdateRoleHappy() {
         when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.user2));
-        UserHandler spy = spy(userHandler);
-        when(spy.currentUser()).thenReturn(Mono.just(Constants.user1));
-
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-            .POST("/update", spy::updateRole)
-            .build())
-        .build();
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
 
         User user = webTestClient.post()
             .uri("/update")
@@ -184,13 +177,7 @@ public class UserHandlerTest {
         User superUser = User.builder().role(Role.SuperAdmin).build();
         User test = User.builder().role(Role.Admin).build();
         when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.user2));
-        UserHandler spy = spy(userHandler);
-        when(spy.currentUser()).thenReturn(Mono.just(superUser));
-
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-            .POST("/update", spy::updateRole)
-            .build())
-        .build();
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(superUser));
 
         User user = webTestClient.post()
             .uri("/update")
@@ -209,13 +196,7 @@ public class UserHandlerTest {
     public void testUpdateRoleInvalidPerms() {
         User user = User.builder().role(Role.Admin).build();
         User test = User.builder().role(Role.Admin).build();
-        UserHandler spy = spy(userHandler);
-        when(spy.currentUser()).thenReturn(Mono.just(user));
-
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-            .POST("/update", spy::updateRole)
-            .build())
-        .build();
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
 
         webTestClient.post()
             .uri("/update")
@@ -229,13 +210,7 @@ public class UserHandlerTest {
     public void testUpdateRoleInvalidPerms2() {
         User user = User.builder().role(Role.Faculty).build();
         User test = User.builder().role(Role.Student).build();
-        UserHandler spy = spy(userHandler);
-        when(spy.currentUser()).thenReturn(Mono.just(user));
-
-        webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
-            .POST("/update", spy::updateRole)
-            .build())
-        .build();
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(user));
 
         webTestClient.post()
             .uri("/update")
@@ -243,5 +218,31 @@ public class UserHandlerTest {
             .exchange()
             .expectStatus()
             .isForbidden();
+    }
+
+    @Test
+    public void testGetUserById() {
+        when(userService.findById(any())).thenReturn(Mono.just(Constants.user1));
+
+        User res = webTestClient.get()
+            .uri("/id/" + UUID.randomUUID().toString())
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(User.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertEquals(res, Constants.user1);
+    }
+
+    @Test
+    public void testGetUserByIdNotFound() {
+        when(userService.findById(any())).thenReturn(Mono.empty());
+
+        webTestClient.get()
+            .uri("/id/" + UUID.randomUUID().toString())
+            .exchange()
+            .expectStatus()
+            .isNotFound();
     }
 }

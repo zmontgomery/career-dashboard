@@ -20,7 +20,8 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.artifact.ArtifactService;
 import com.senior.project.backend.domain.Submission;
-import com.senior.project.backend.security.AuthService;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,7 +41,7 @@ public class SubmissionHandlerTest {
     private ArtifactService artifactService;
 
     @Mock
-    private AuthService authService;
+    private CurrentUserUtil currentUserUtil;
 
     private WebTestClient webTestClient;
 
@@ -113,7 +114,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testGetLatestSubmission() {        
         when(submissionService.getSubmissions(any(), eq(1))).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
-        when(authService.currentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
 
         Submission result = webTestClient.get()
             .uri("/test/1")
@@ -129,7 +130,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testLatestSubmissionWith404() {
         when(submissionService.getSubmissions(any(), eq(1))).thenReturn(Flux.fromIterable(new ArrayList<Submission>()));
-        when(authService.currentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
 
         webTestClient.get()
             .uri("/test/1")
@@ -140,7 +141,7 @@ public class SubmissionHandlerTest {
 
     @Test
     public void testGetStudentSubmissions() {  
-        when(authService.currentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
         when(submissionService.getStudentSubmissions(Constants.user1.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
 
         List<Submission> result = webTestClient.get()

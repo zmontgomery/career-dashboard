@@ -2,6 +2,7 @@ package com.senior.project.backend.security;
 
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import com.senior.project.backend.domain.User;
 
@@ -12,13 +13,14 @@ import reactor.core.publisher.Mono;
  * 
  * @author Jimmy Logan - jrl9984@rit.edu
  */
-public abstract class SecurityUtil {
+@Component
+public class CurrentUserUtil {
 
     /**
      * Retrieves the current user from the security context
      * @return a mono containing the current user
      */
-    public static Mono<User> getCurrentUser() {
+    public Mono<User> getCurrentUser() {
         return ReactiveSecurityContextHolder.getContext()
             .map(context -> (User) context.getAuthentication().getPrincipal())
             .onErrorMap(er -> new UsernameNotFoundException("No user found in context."));
