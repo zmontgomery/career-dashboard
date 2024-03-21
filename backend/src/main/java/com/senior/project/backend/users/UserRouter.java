@@ -23,6 +23,7 @@ public class UserRouter {
         return
             route(GET(Endpoints.CURRENT_USER.uri()), userHandler::currentUser)
                 .andRoute(GET(Endpoints.SEARCH_USERS.uri()), userHandler::searchUsers)
-                .andRoute(PUT(Endpoints.UPDATE_ROLES.uri()), userHandler::updateRole);
+                .andRoute(PUT(Endpoints.UPDATE_ROLES.uri()), userHandler::updateRole)
+                .andRoute(GET(Endpoints.USERS_BY_ID.uri()), userHandler::byId);
     }
 }

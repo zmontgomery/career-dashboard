@@ -3,7 +3,8 @@ package com.senior.project.backend.users;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.UsersSearchResponse;
-import com.senior.project.backend.security.SecurityUtil;
+import com.senior.project.backend.security.CurrentUserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 /**
  * Handler for users
@@ -23,6 +25,9 @@ import java.util.NoSuchElementException;
 public class UserHandler {
     @Autowired
     private UserService service;
+
+    @Autowired
+    private CurrentUserUtil currentUserUtil;
 
     /**
      * Gets all users from the user service
@@ -39,7 +44,7 @@ public class UserHandler {
      * @return 200 with the user
      */
     public Mono<ServerResponse> currentUser(ServerRequest request) {
-        return ServerResponse.ok().body(currentUser(), User.class);
+        return ServerResponse.ok().body(currentUserUtil.getCurrentUser(), User.class);
     }
 
     /**
@@ -65,14 +70,27 @@ public class UserHandler {
     }
 
     /**
+     * Gets a user by their id
+     * @param request - ServerRequest
+     * @return 200 with user
+     *         404 when user is not found
+     */
+    public Mono<ServerResponse> byId(ServerRequest request) {
+        return Mono.just(request.pathVariable("id"))
+            .map(id -> UUID.fromString(id))
+            .flatMap(id -> service.findById(id))
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User was not found.")))
+            .flatMap(user -> ServerResponse.ok().bodyValue(user));
+    }
+
+    /**
      * Updates a users role
      * @return the user with the new role
      */
     public Mono<ServerResponse> updateRole(ServerRequest request) {
-        currentUser().subscribe((u) -> System.out.println("asdf"));
+        currentUserUtil.getCurrentUser().subscribe((u) -> System.out.println("asdf"));
         return request.bodyToMono(User.class)
-            .zipWith(currentUser())
-            .doOnNext((users) -> System.out.println(users))
+            .zipWith(currentUserUtil.getCurrentUser())
             .flatMap(users -> updateRoleCheck(users.getT1(), users.getT2()))
             .flatMap((user) -> ServerResponse.ok().bodyValue(user));
     }
@@ -100,11 +118,5 @@ public class UserHandler {
             if (current.hasAdminPrivileges()) return service.createOrUpdateUser(edited);
             else return UPDATE_ROLE_ERROR;
         }
-    }
-
-    /** used for tests to replace current user with a mock */
-    public Mono<User> currentUser() {
-        System.out.println("no");
-        return SecurityUtil.getCurrentUser();
     }
 }
