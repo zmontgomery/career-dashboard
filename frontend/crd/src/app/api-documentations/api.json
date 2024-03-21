@@ -14,7 +14,7 @@
   "basePath": "/api",
   "schemes": ["http"],
   "paths": {
-    "/dashboard_events": {
+    "/dashboard-events": {
       "get": {
         "summary": "Returns the selection of events to display on the dashboard carousel",
         "description": "Optional extended description in Markdown.",
@@ -81,7 +81,7 @@
         }
       }
     },
-    "/dashboard_tasks": {
+    "/dashboard-tasks": {
       "get": {
         "summary": "Returns the selection of tasks to display on the dashboard",
         "description": "Optional extended description in Markdown.",
