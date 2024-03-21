@@ -226,12 +226,14 @@ public class Constants {
         submission1.setTaskId(1);
         submission1.setComment("comment");
         submission1.setSubmissionDate(Date.from(Instant.now()));
+        submission1.setStudentId(UUID.randomUUID());
         submission2 = new Submission();
         submission2.setId(2);
         submission2.setArtifactId(3);
         submission2.setTaskId(2);
         submission2.setComment("comment 2");
         submission2.setSubmissionDate(Date.from(Instant.now().plusMillis(100000)));
+        submission2.setStudentId(UUID.randomUUID());
         SUBMISSIONS.add(submission1);
         SUBMISSIONS.add(submission2);
     }
