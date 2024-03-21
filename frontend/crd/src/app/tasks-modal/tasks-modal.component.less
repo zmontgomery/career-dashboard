@@ -8,39 +8,64 @@
   background-color: white;
 }
 
+.mdc-dialog::after{
+  border-radius: 25px;
+}
+
+.box{
+  width: 100%;
+  background-color: #F0F6F3;
+  border-top:solid gray 1px ;
+  border-bottom: solid gray 1px;
+  padding: 15px 0 15px 0;
+  margin: 10px 0 10px 0;
+}
+
 #modal-title {
   font-size: 22px;
+  font-weight: bold;
+}
+
+.header{
+  font-size: 30px;
+  font-weight: bold;
 }
 
 #modal-header {
-  justify-self: left;
+  text-align: center;
+  align-items: center;
+  justify-self: center;
   height: fit-content;
   width: 100%;
-  background-color: @oswego-green;
-  color: white;
+  color: @oswego-green;
+  padding: 25px;
 }
 
 #modal-body {
   height: fit-content;
-  width: 100%;
   justify-self: left;
   align-content: flex-start;
+  width: 100%;
+}
+
+.text{
+  padding: 0 0 0 10px;
 }
 
 #modal-footer {
-  height:fit-content;
   width: 100%;
-  justify-self: right;
+  height:fit-content;
   align-self: center;
-}
-
-#modal-action-button {
-  margin-right: 30px;
-  background-color:#3b3b3b;
-  color: white;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  background-color: #F0F6F3;
+  border-top: solid gray 1px;
+  padding: 10px
 }
 
 #modal-cancel-button {
   background-color: #4e4e4e;
   color: white;
+  margin: 0 20px  0 0;
 }

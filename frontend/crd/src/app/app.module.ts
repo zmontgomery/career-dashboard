@@ -39,9 +39,9 @@ import { TasksModalModule } from './tasks-modal/tasks-modal.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
-
 import {NgOptimizedImage} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
+import { FooterModule } from './footer/footer.module';
 
 @NgModule({
   declarations: [
@@ -106,6 +106,7 @@ import {MatIconModule} from "@angular/material/icon";
     EventImageModalModule,
     NgOptimizedImage,
     MatIconModule,
+    FooterModule,
   ],
   providers: [
     provideHttpClient(),

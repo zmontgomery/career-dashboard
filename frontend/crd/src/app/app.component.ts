@@ -17,9 +17,4 @@ export class AppComponent {
       return !location.href.includes(uri);
     });
   }
-
-  get imageStr() {
-    // return `assets/images/Oswego_logo_horizontal_green.png`;
-    return `assets/images/Filler.jpg`;
-  }
 }
