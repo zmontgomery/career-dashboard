@@ -69,6 +69,9 @@ class BaseTest(unittest.TestCase):
     # Connect to database
     self.connect_to_database()
 
+    # Startup scripts
+    self.execute_pre_test_sql_statements()
+
     # Start selenium
     self.driver = webdriver.Chrome(options = chrome_options)
     self.driver.get(self.BASE_URL)
@@ -197,12 +200,17 @@ class BaseTest(unittest.TestCase):
       self.skipTest('File not found')
 
   def execute_pre_test_sql_statements(self) -> None:
+    """
+    Executes all pre test scripts
+    """
     commands = self.pre_test_sql_statements()
     post_commands = self.post_test_sql_statements()
-
+    if len(commands) != len(post_commands):
+      self.fail("Setup commands do not have matching cleanup command")
 
     for command in commands:
       self.cursor.execute(command)
+    self.cursor.rowcount()
 
   # ===================================================
   # Test Attributes
