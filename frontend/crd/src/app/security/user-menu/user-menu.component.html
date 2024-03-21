@@ -1,0 +1,18 @@
+<div class="user-container">
+  <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
+  <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" >
+    <img class="profile-picture" *ngIf="profileURL != null" [src]="profileURL" width="50" height="50" alt="User Image">
+    <mat-icon class="profile-picture-placeholder" *ngIf="profileURL == null">account_circle</mat-icon>
+  </button>
+</div>
+
+<mat-menu class="user-menu" xPosition="before" #userMenu>
+  <button mat-menu-item class="logout-button" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+  <button mat-menu-item class="settings-button" (click)="openSettings()">
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+  </button>
+</mat-menu>

@@ -7,6 +7,8 @@ import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.security.CurrentUserUtil;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -256,7 +258,7 @@ public class ArtifactServiceTest {
 
         result = result.map((r) -> {
             paths.close();
-            files.close(); 
+            files.close();
             return r;
         });
 
@@ -290,6 +292,7 @@ public class ArtifactServiceTest {
         result = result.map((r) -> {
             paths.close();
             files.close(); 
+
             return r;
         });
 

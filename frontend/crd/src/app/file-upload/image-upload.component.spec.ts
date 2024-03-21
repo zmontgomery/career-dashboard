@@ -8,7 +8,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {Renderer2} from "@angular/core";
 import {ArtifactService} from "./artifact.service";
 import createSpyObj = jasmine.createSpyObj;
-import {Subject} from "rxjs";
+import {of, Subject} from "rxjs";
 import SpyObj = jasmine.SpyObj;
 
 describe('ImageUploadComponent', () => {
@@ -18,10 +18,7 @@ describe('ImageUploadComponent', () => {
   let renderer: Renderer2;
   const testURL: string = "test-url";
   const file = new File([], 'name');
-  let artifactServiceSpy: SpyObj<ArtifactService>;
-  artifactServiceSpy = createSpyObj('ArtifactService', ['uploadEventImage']);
-  let uploadSubject = new Subject<number>();
-  artifactServiceSpy.uploadEventImage.and.returnValue(uploadSubject.asObservable());
+  let uploadSubject: Subject<number>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -34,13 +31,14 @@ describe('ImageUploadComponent', () => {
       declarations: [ImageUploadComponent],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: { url: testURL} },
-        {provide: ArtifactService, useValue: artifactServiceSpy },
       ]
     });
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(ImageUploadComponent);
     component = fixture.componentInstance;
     renderer = fixture.componentRef.injector.get(Renderer2);
+    uploadSubject = new Subject<number>();
+    component.uploadStrategy = () => uploadSubject.asObservable();
     fixture.detectChanges();
   });
 
@@ -82,13 +80,14 @@ describe('ImageUploadComponent', () => {
     component.rawFile = file;
     component.croppedFile = file;
     component.onUpload();
+    // @ts-ignore
+    uploadSubject.next(null);
     expect(component.status).toEqual('error');
   });
 
   it('upload uploading', () => {
     component.rawFile = file;
     component.croppedFile = file;
-    component.uploadID = 1;
     component.onUpload();
     expect(component.status).toEqual('uploading');
   });
@@ -96,7 +95,6 @@ describe('ImageUploadComponent', () => {
   it('upload success', () => {
     component.rawFile = file;
     component.croppedFile = file;
-    component.uploadID = 1;
     component.onUpload();
     uploadSubject.next(1);
     expect(component.status).toEqual('success');
