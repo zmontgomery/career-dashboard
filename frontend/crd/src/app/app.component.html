@@ -14,9 +14,10 @@
         advisement and career questions</p>
       </div>
 
-    <ng-container *ngIf="needsNavBar()">
-      <app-user-menu class="logout-button"></app-user-menu>
-    </ng-container>
+      <ng-container *ngIf="needsNavBar()">
+        <app-user-menu class="logout-button"></app-user-menu>
+      </ng-container>
+    </div>
   </div>
   <div class="body-container">
     <ng-container *ngIf="needsNavBar()">

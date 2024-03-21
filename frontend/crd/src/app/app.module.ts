@@ -40,8 +40,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotFoundComponent } from './not-found/not-found.component';
 import {NgOptimizedImage} from "@angular/common";
-import {MatIconModule} from "@angular/material/icon";
 import { FooterModule } from './footer/footer.module';
+import { ProfileImageModalModule } from './file-upload/profile-image-modal/profile-image-modal.module';
+import { SettingsPageModule } from './settings/settings-page.module';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,6 @@ import { FooterModule } from './footer/footer.module';
     TaskEditModalModule,
     EventMainPageModule,
     MilestoneCreateModalModule,
-    MilestoneCreateModalModule,
     TaskEditModalModule,
     MatButtonModule,
     MatDialogModule,
@@ -105,13 +105,12 @@ import { FooterModule } from './footer/footer.module';
     SignupPageModule,
     EventImageModalModule,
     NgOptimizedImage,
-    MatIconModule,
     FooterModule,
     ProfileImageModalModule,
     SettingsPageModule,
     NgOptimizedImage,
-    MatIconModule,
     UserMenuModule,
+    FileUploadModule,
   ],
   providers: [
     provideHttpClient(),
