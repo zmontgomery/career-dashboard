@@ -2,6 +2,7 @@ import unittest
 import yaml
 import os
 import time
+import sys
 from enum import Enum
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -57,14 +58,17 @@ class BaseTest(unittest.TestCase):
   """
   def setUp(self):
     # Determine if headless
-    # chrome_options = Options()
-    # chrome_options.add_argument('--headless')
+    headless = os.environ["HEADLESS"] == "true"
+    chrome_options = Options()
+
+    if headless:
+      chrome_options.add_argument("--headless")
 
     # Connect to database
     self.connect_to_database()
 
     # Start selenium
-    self.driver = webdriver.Chrome()
+    self.driver = webdriver.Chrome(options = chrome_options)
     self.driver.get(self.BASE_URL)
 
     # Wait until app is loaded
@@ -271,8 +275,8 @@ class BaseTest(unittest.TestCase):
         elif role == Role.SUPER_ADMIN:
           email = details['admin']['email']
           password = details['admin']['password']
-          sql = "UPDATE users AS u SET u.role = 'SuperAdmin' WHERE u.email = %s"
-          self.cursor.execute(sql, email)
+          sql = "UPDATE user AS u SET u.role = 'SuperAdmin' WHERE u.email = %s"
+          self.cursor.execute(sql, tuple(email))
           print(self.cursor.rowcount())
 
         # Return
@@ -284,6 +288,12 @@ class BaseTest(unittest.TestCase):
 
   # TODO add ability to connect and edit database
     
-
 if __name__ == "__main__":
-  unittest.main()
+  try:
+    test_name = f'{os.environ["TEST_NAME"]}.py'
+  except Exception:
+    test_name = "test*.py"
+
+  suite = unittest.TestLoader().discover(os.path.dirname(os.path.realpath(__file__)), test_name)
+  runner = unittest.TextTestRunner()
+  runner.run(suite)
