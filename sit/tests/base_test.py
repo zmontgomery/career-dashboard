@@ -12,10 +12,10 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 import mysql.connector
 
-"""
-Role enum for a user
-"""
 class Role(Enum):
+  """
+  Role enum for a user
+  """
   STUDENT = 1
   FACULTY = 2
   ADMIN = 3
@@ -39,23 +39,22 @@ NO_ACCOUNT_INFO_MESSAGE = """\naccount_information.yml file was not found.
             out the fields with the email and password information
             in order to resolve this error\n"""
 
-
-"""
-Base test that Integration tests should extend
-
-Contains a setup function that loads the web driver, authenticates the user
-if the test requires it, and navigates to the specified page
-
-Contains a set of utility functions for interacting with elements on the page
-"""
 class BaseTest(unittest.TestCase):
+  """
+  Base test that Integration tests should extend
+
+  Contains a setup function that loads the web driver, authenticates the user
+  if the test requires it, and navigates to the specified page
+
+  Contains a set of utility functions for interacting with elements on the page
+  """
 
   BASE_URL = "http://localhost:4200"
 
-  """
-  Creates the driver, signs in, and navigates to the page
-  """
   def setUp(self):
+    """
+    Creates the driver, signs in, and navigates to the page
+    """
     # Determine if headless
     headless = os.environ["HEADLESS"] == "true"
     chrome_options = Options()
@@ -82,11 +81,10 @@ class BaseTest(unittest.TestCase):
     self.driver.get(f'{self.BASE_URL}/{self.path()}')
     self.findElementByClassName('logo-container')
 
-
-  """
-  Closes the web driver and clears existing authentication
-  """
   def tearDown(self):
+    """
+    Closes the web driver and clears existing authentication
+    """
     # Clear database
     if self.cursor != None:
       self.cursor.close()
@@ -102,10 +100,10 @@ class BaseTest(unittest.TestCase):
 
       self.driver.close()
 
-  """
-  Signs in the test using the google sign in functionality
-  """
   def sign_in(self, email, password):
+    """
+    Signs in the test using the google sign in functionality
+    """
     email, password = self._getRoleDetails()
     button = self.findElementByClassName('login-google-button')
     button.click()
@@ -180,78 +178,76 @@ class BaseTest(unittest.TestCase):
       self.tearDown()
       self.skipTest('File not found')
 
-    
-  """
-  Overwritable function for determining if the test should be authenticated
-
-  Default is true
-  """
   def authenticated(self) -> bool:
+    """
+    Overwritable function for determining if the test should be authenticated
+
+    Default is true
+    """
     return True
   
-  """
-  Overwritable function for determining for the role of the user during the test
-
-  Default is ADMIN
-  """
   def role(self) -> Role:
+    """
+    Overwritable function for determining for the role of the user during the test
+
+    Default is ADMIN
+    """
     return Role.ADMIN
 
-  """
-  Overwritable function for determining the page the test takes place on
-
-  Default is '' 
-  """
-  # Overwrite in test method to 
   def path(self) -> str:
+    """
+    Overwritable function for determining the page the test takes place on
+
+    Default is '' 
+    """
     return ''
   
-  """
-  Finds an element by its class name
-
-  Times out after TIMEOUT seconds
-  """
   def findElementByClassName(self, className):
+    """
+    Finds an element by its class name
+
+    Times out after TIMEOUT seconds
+    """
     try:
       return WebDriverWait(self.driver, TIMEOUT).until(EC.presence_of_element_located((By.CLASS_NAME, className)))
     except TimeoutException:
       self.fail(f"Timeout on finding element with class name {className}")
 
-  """
-  Finds an element by its id
-
-  Times out after TIMEOUT seconds
-  """
   def findElementById(self, id):
+    """
+    Finds an element by its id
+
+    Times out after TIMEOUT seconds
+    """
     try:
       return WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.ID, id)))
     except TimeoutException:
       self.fail(f"Timeout on finding element with id {id}")
 
-  """
-  Finds an element and waits for it to be clickable
-
-  Times out after TIMEOUT seconds
-  """
   def waitForElementToBeClickable(self, element):
+    """
+    Finds an element and waits for it to be clickable
+
+    Times out after TIMEOUT seconds
+    """
     try:
       return WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(element))
     except TimeoutException:
       self.fail(f"Timeout on finding element with id {id}")
 
-  """
-  Sleeps for a given amount of time
-
-  AVOID THIS, ONLY USE IF NO OTHER OPTION
-  """
   def sleep(self, duration):
+    """
+    Sleeps for a given amount of time
+
+    AVOID THIS, ONLY USE IF NO OTHER OPTION
+    """
     time.sleep(duration)
 
-  """
-  Loads the corresponding username and password from the "account_information.yml"
-  file. By default this file does not exist and needs to be created per repository
-  """
   def _getRoleDetails(self):
+    """
+    Loads the corresponding username and password from the "account_information.yml"
+    file. By default this file does not exist and needs to be created per repository
+    """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     try:
       # Open account information file
@@ -275,8 +271,8 @@ class BaseTest(unittest.TestCase):
           email = details['admin']['email']
           password = details['admin']['password']
           sql = "UPDATE user AS u SET u.role = 'SuperAdmin' WHERE u.email = %s"
-          self.cursor.execute(sql, tuple(email))
-          print(self.cursor.rowcount())
+          self.cursor.execute(sql, (email,))
+          
 
         # Return
         return email, password
