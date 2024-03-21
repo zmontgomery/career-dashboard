@@ -92,19 +92,6 @@ export class MilestonesFacultyComponent extends MilestonesPageComponent implemen
   }
 
   openTask(task: any) {
-    const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
-    dialogConfig.disableClose = true;
-    dialogConfig.id = "modal-component";
-    dialogConfig.height = "80%";
-    dialogConfig.width = "60%";
-    dialogConfig.data = {
-      task: task
-    }
-    const modalDialog = this.matDialog.open(TasksModalComponent, dialogConfig);
-
-    modalDialog.afterClosed().subscribe(result => {
-      this.ngOnInit();
-    })
+    console.log("replace with view submission");
   }
 }
