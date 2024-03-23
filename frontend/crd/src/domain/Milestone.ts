@@ -32,6 +32,13 @@ export namespace YearLevel {
   }
 }
 
+export enum CompletionStatus {
+  Complete = "Complete",
+  InProgress = "In Progress",
+  Incomplete = "Incomplete",
+  Upcoming = "Upcoming"
+}
+
 export class Milestone {
   constructor(json: MilestoneJSON) {
     this.name = json.name;

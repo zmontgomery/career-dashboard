@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -73,6 +76,20 @@ public class UserService implements ReactiveUserDetailsService {
     public Mono<UserDetails> findByUsername(String username) {
         return findByEmailAddress(username)
             .map((u) -> u);
+    }
+
+    /**
+     * Loads a user from their email address
+     * @param username the email of the user
+     * @return the user object
+     */
+    public Mono<User> findByID(UUID userID) {
+        Optional<User> potentialUser = repository.findById(userID);
+        if (potentialUser.isEmpty()) {
+            return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        }
+
+        return Mono.just(potentialUser.get());
     }
 
     /**

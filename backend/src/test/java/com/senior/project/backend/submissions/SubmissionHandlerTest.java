@@ -51,6 +51,7 @@ public class SubmissionHandlerTest {
                         .POST("/test", submissionHandler::handleSubmission)
                         .GET("/test/{taskId}", submissionHandler::getLatestSubmission)
                         .GET("/student", submissionHandler::getStudentSubmissions)
+                        .GET("/faculty/{studentID}", submissionHandler::getStudentSubmissionsFaculty)
                         .build())
                 .build();
     }
@@ -145,6 +146,23 @@ public class SubmissionHandlerTest {
 
         List<Submission> result = webTestClient.get()
             .uri("/student")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBodyList(Submission.class)
+            .returnResult()
+            .getResponseBody();
+            
+        assertEquals(result, Constants.SUBMISSIONS);
+    }
+
+    @Test
+    public void testGetStudentSubmissionsFaculty() {  
+        when(submissionService.getStudentSubmissionsFaculty(Constants.user1.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
+
+        String studentID = Constants.user1.getId().toString();
+
+        List<Submission> result = webTestClient.get()
+            .uri("/faculty/" + studentID)
             .exchange()
             .expectStatus().isOk()
             .expectBodyList(Submission.class)

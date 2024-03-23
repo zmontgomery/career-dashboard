@@ -110,4 +110,12 @@ public class SubmissionHandler {
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
             .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
+
+    public Mono<ServerResponse> getStudentSubmissionsFaculty(ServerRequest serverRequest) {
+        String studentID = serverRequest.pathVariable("studentID");
+        return submissionService.getStudentSubmissionsFaculty(UUID.fromString(studentID))
+            .collectList()
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No submissions for student")))
+            .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
+    }
 }
