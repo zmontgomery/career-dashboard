@@ -131,7 +131,7 @@ public class UserServiceTest {
         userService.setSuperUser();
 
         assertFalse(Constants.user1.hasSuperAdminPrivileges());
-        verify(userRepository, times(3)).save(any());
+        verify(userRepository, times(2)).save(any());
         assertTrue(Constants.user2.hasSuperAdminPrivileges());
 
         Constants.user2.setRole(Role.SuperAdmin);

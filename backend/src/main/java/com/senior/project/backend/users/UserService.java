@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -51,7 +52,7 @@ public class UserService implements ReactiveUserDetailsService {
 
     /**
      * Retrieves a user from the database using their ID
-     * @param id 
+     * @param id id of the user
      * @return the user
      */
     public Mono<User> findById(UUID id) {
