@@ -65,13 +65,8 @@ export class MilestoneService {
               return new Milestone(m)
             });
           } else {
-            this.hasBeenRequested = false;
             return [];
           }
-        }),
-        mergeMap((data: Milestone[]) => {
-          this.milestoneCache.next(data);
-          return this.milestoneCache.asObservable();
         })
       );
   }

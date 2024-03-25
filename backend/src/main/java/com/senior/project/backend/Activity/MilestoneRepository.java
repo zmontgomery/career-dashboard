@@ -21,9 +21,9 @@ public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
     Milestone findById(long id);
 
 
-    // FIXME ignore milestones with no tasks
     @Query("SELECT DISTINCT m FROM Milestone m " +
             "JOIN FETCH m.tasks t " +
-            "WHERE EXISTS (SELECT 1 FROM Submission s WHERE s.taskId = t.id AND s.studentId = :uid)")
+            "WHERE EXISTS (SELECT 1 FROM Submission s WHERE s.taskId = t.id AND s.studentId = :uid) "+
+            "AND SIZE(m.tasks) > 0")
     List<Milestone> findComplete(@Param("uid") UUID userId);
 }
