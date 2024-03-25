@@ -1,6 +1,6 @@
 package com.senior.project.backend.users;
 
-import com.senior.project.backend.artifact.NonBlockingExecutor;
+import com.senior.project.backend.util.NonBlockingExecutor;
 import com.senior.project.backend.domain.Role;
 import com.senior.project.backend.domain.User;
 import jakarta.annotation.PostConstruct;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -34,7 +33,7 @@ public class UserService implements ReactiveUserDetailsService {
      * @return all the users
      */
     public Flux<User> allUsers() {
-        return Flux.fromIterable(repository.findAll());
+        return NonBlockingExecutor.executeMany(()->repository.findAll());
     }
 
     /**
@@ -43,12 +42,8 @@ public class UserService implements ReactiveUserDetailsService {
      * @return the user
      */
     public Mono<User> findByEmailAddress(String email) {
-        Optional<User> user = repository.findUserByEmail(email);
-        if (user.isPresent()) {
-            return Mono.just(user.get());
-        } else {
-            return Mono.empty();
-        }
+        return NonBlockingExecutor.execute(()-> repository.findUserByEmail(email))
+                .flatMap(user -> user.<Mono<? extends User>>map(Mono::just).orElseGet(Mono::empty));
     }
 
     /**
@@ -86,7 +81,7 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     public Mono<User> createOrUpdateUser(User user) {
-        return Mono.just(repository.saveAndFlush(user));
+        return NonBlockingExecutor.execute(()-> repository.saveAndFlush(user));
     }
 
     // Email for the super user

@@ -1,6 +1,6 @@
 package com.senior.project.backend.Activity;
 
-import com.senior.project.backend.artifact.NonBlockingExecutor;
+import com.senior.project.backend.util.NonBlockingExecutor;
 import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.User;

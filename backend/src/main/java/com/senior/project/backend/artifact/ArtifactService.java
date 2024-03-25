@@ -7,6 +7,7 @@ import com.senior.project.backend.domain.User;
 import com.senior.project.backend.security.CurrentUserUtil;
 
 import com.senior.project.backend.users.UserRepository;
+import com.senior.project.backend.util.NonBlockingExecutor;
 import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
