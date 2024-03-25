@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MilestonesComponent } from './milestones.component';
 import { of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
-import { Milestone, YearLevel } from "../../../domain/Milestone";
+import {Milestone, MilestoneJSON, YearLevel} from "../../../domain/Milestone";
 import { MatCardModule } from "@angular/material/card";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -16,6 +16,45 @@ import { User } from 'src/app/security/domain/user';
 import { userJSON } from 'src/app/security/auth.service.spec';
 import { TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
+
+export const taskJSON = {
+  name: 'task name',
+  description: "description",
+  id: 1,
+  isRequired: true,
+  yearLevel: YearLevel.Freshman,
+  milestoneID: 1,
+  taskType: TaskType.ARTIFACT,
+  artifactName: 'test artifact'
+}
+
+export const milestone1JSON: MilestoneJSON = {
+  name: "name",
+  yearLevel: YearLevel.Freshman,
+  id: 1,
+  description: "sample",
+  events: [],
+  tasks: [taskJSON,
+  {
+    ...taskJSON,
+    id: 2,
+  }],
+}
+
+export const milestone2JSON = {
+  ...milestone1JSON,
+  id: 2,
+  tasks: [{
+    ...taskJSON,
+    id: 3,
+    milestoneID: 2,
+  },
+  {
+    ...taskJSON,
+    id: 4,
+    milestoneID: 2,
+  }],
+}
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
@@ -53,62 +92,10 @@ describe('MilestonesComponent', () => {
   ];
 
   const testMap = new Map().set(YearLevel.Freshman, [
-    new Milestone({
-      name: "name",
-      yearLevel: YearLevel.Freshman,
-      id: 1,
-      description: "sample",
-      events: [],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 1,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      },
-      {
-        name: 'task name',
-        description: "description",
-        id: 2,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 1,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
-    }),
-    new Milestone({
-      name: "name",
-      yearLevel: YearLevel.Freshman,
-      id: 2,
-      description: "sample",
-      events: [],
-      tasks: [{
-        name: 'task name',
-        description: "description",
-        id: 3,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 2,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      },
-      {
-        name: 'task name',
-        description: "description",
-        id: 4,
-        isRequired: true,
-        yearLevel: YearLevel.Freshman,
-        milestoneID: 2,
-        taskType: TaskType.ARTIFACT,
-        artifactName: 'test artifact'
-      }],
-    })
+    new Milestone(milestone1JSON),
+    new Milestone(milestone2JSON)
   ]);
-  
+
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of([]));
 
