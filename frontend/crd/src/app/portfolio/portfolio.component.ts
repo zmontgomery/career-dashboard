@@ -55,11 +55,7 @@ export class PortfolioComponent implements OnInit {
       if (LangUtils.exists(user)) {
         this.user = user!;
         this.milestoneService.getCompletedMilestones(user!.id).subscribe((milestones) => {
-          milestones.forEach(milestone => {
-            if (milestone) {
-              console.log(milestone.name);
-            }
-          })
+          this.completedMilestones = milestones.map((it) => it.name)
         })
       }
     });

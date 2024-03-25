@@ -147,9 +147,9 @@
         <div class="card-body-section-header">
           Milestones
         </div>
-        <div class="card-body-section-body">
-          
-        </div>
+        <ul class="card-body-section-body" *ngFor="let milestone of completedMilestones">
+          <li>{{milestone}}</li>
+        </ul>
       </div>
     </div>
   </div>
