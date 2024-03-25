@@ -117,12 +117,12 @@ public class UserService implements ReactiveUserDetailsService {
                 repository.save(u);
             });
 
-        findByEmailAddress(superUser)
-            .switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("User %s is not in database.", superUser))))
-            .subscribe((user) -> {
-                System.err.println(user);
-                user.setRole(Role.SuperAdmin);
-                repository.save(user);
-            });
+        var user = findByEmailAddress(superUser).block();
+
+        if (user == null) throw new UsernameNotFoundException(String.format("User %s is not in database.", superUser));
+
+        System.err.println(user);
+        user.setRole(Role.SuperAdmin);
+        repository.save(user);
     }
 }
