@@ -82,11 +82,11 @@ public class MilestoneService {
         }
 
         // if a task exists on the milestone but is not included in the task list, remove it
-        List<Task> removals = new ArrayList<Task>(existingMilestone.getTasks());
+        List<Task> removals = new ArrayList<>(existingMilestone.getTasks());
         removals.removeAll(taskList);
 
         // if a task in the task list is not on the milestone, add it
-        List<Task> additions = new ArrayList<Task>(taskList);
+        List<Task> additions = new ArrayList<>(taskList);
         additions.removeAll(existingMilestone.getTasks());
         
         for (Task removedTask : removals) {
