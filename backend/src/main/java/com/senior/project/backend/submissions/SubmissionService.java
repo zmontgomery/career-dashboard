@@ -33,11 +33,8 @@ public class SubmissionService {
      * @return
      */
     public Mono<Submission> addSubmission(Submission submission) {
-        try {
-            return NonBlockingExecutor.execute(()->submissionRepository.saveAndFlush(submission));
-        } catch (Exception e) {
-            return Mono.empty();
-        }
+        return NonBlockingExecutor.execute(()->submissionRepository.saveAndFlush(submission))
+                .onErrorResume(throwable -> Mono.empty());
     }
 
     /**

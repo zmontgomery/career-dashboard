@@ -2,7 +2,6 @@ package com.senior.project.backend.Activity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Milestone;
@@ -92,7 +91,7 @@ public class MilestoneHandlerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(milestoneService.updateMilestone(milestone1.getId(), jsonMap)).thenReturn(milestoneFlux);
             
             Milestone result = webTestClient.method(HttpMethod.POST)
@@ -107,8 +106,6 @@ public class MilestoneHandlerTest {
             assertEquals(milestone1.getId(), result.getId());
             assertEquals(milestone1.getDescription(), result.getDescription());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -131,7 +128,7 @@ public class MilestoneHandlerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;
         try {
-            jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
+            jsonMap = objectMapper.readValue(updateData, new TypeReference<>() {});
             when(milestoneService.createMilestone(jsonMap)).thenReturn(milestoneFlux);
             
             Milestone result = webTestClient.method(HttpMethod.POST)
@@ -145,8 +142,6 @@ public class MilestoneHandlerTest {
             assertNotNull(result);
             assertEquals(Constants.m1.getDescription(), result.getDescription());
 
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
