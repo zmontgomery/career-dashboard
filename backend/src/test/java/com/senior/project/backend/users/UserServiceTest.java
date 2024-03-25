@@ -69,6 +69,24 @@ public class UserServiceTest {
     }
 
     @Test
+    public void findByIdHappy() {
+        when(userRepository.findById(Constants.user1.getId())).thenReturn(Optional.of(Constants.user1));
+        Mono<User> result = userService.findByID(Constants.user1.getId());
+        StepVerifier.create(result)
+            .expectNext(Constants.user1)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
+    public void findByIdUnhappy() {
+        when(userRepository.findById(Constants.user1.getId())).thenReturn(Optional.empty());
+        Mono<User> result = userService.findByID(Constants.user1.getId());
+        StepVerifier.create(result)
+            .expectError();
+    }
+
+    @Test
     public void findByUsernameHappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
         

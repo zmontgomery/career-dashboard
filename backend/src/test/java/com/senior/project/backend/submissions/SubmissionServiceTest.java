@@ -113,6 +113,19 @@ public class SubmissionServiceTest {
     }
 
     @Test
+    public void testGetStudentSubmissionsFaculty() {        
+        when(submissionRepository.findAllWithUser(Constants.user1.getId())).thenReturn(Constants.SUBMISSIONS);
+
+        Flux<Submission> result = submissionService.getStudentSubmissionsFaculty(Constants.user1.getId());
+
+        StepVerifier.create(result)
+            .expectNext(Constants.submission1)
+            .expectNext(Constants.submission2)
+            .expectComplete()
+            .verify();
+    }
+
+    @Test
     public void testFindByArtifactHappy() {
         when(submissionRepository.findSubmissionByArtifactId(anyInt())).thenReturn(Optional.of(Constants.submission1));
 

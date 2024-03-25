@@ -1,17 +1,18 @@
 <!-- this is from milestones-page -->
-<h1>Milestones</h1>
-
 <div *ngIf="dataLoaded">
-<div class="year-container" *ngFor="let yearLevel of yearLevels">
+
+<h1>Milestone Progress of {{currentStudent.firstName}} {{currentStudent.lastName}}</h1>
+
+<div class="year-container" *ngFor="let completionStatus of completionStatuses">
   <mat-card class="year-card">
     <mat-card-header>
-      <div class="year-name">{{yearLevel}}</div>
+      <div class="year-name">{{completionStatus}}</div>
     </mat-card-header>
   </mat-card>
 
 
   <mat-accordion multi>
-    <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
+    <ng-container *ngFor="let milestone of completedMap.get(completionStatus)">
       <mat-expansion-panel [expanded]="!completedMilestones.includes(milestone.milestoneID)">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -19,14 +20,11 @@
               color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
             {{milestone.name}}
           </mat-panel-title>
-<!--  Use if we want to display a description -->
-<!--          <mat-panel-description>-->
-<!--            {{milestone.description}}-->
-<!--          </mat-panel-description>-->
-        </mat-expansion-panel-header>
-          <mat-expansion-panel *ngFor="let task of milestone.tasks">
 
-          <mat-expansion-panel-header #panelH (click)="panelH._toggle(); openTask(task)">
+        </mat-expansion-panel-header>
+          <mat-expansion-panel [disabled]="!completedTasks.includes(task.taskID)"  *ngFor="let task of milestone.tasks">
+
+          <mat-expansion-panel-header (click)="openTask(task)">
             <div class="flex-vertical-align">
               <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
                 color="primary" (click)="$event.stopPropagation()">
@@ -34,7 +32,7 @@
               </mat-checkbox>
             </div>
           </mat-expansion-panel-header>
-          <div>{{task.description}}</div>
+          <div>Change this to show submission comment</div>
         </mat-expansion-panel>
       </mat-expansion-panel>
     </ng-container>
