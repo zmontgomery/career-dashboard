@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { Milestone, YearLevel } from 'src/domain/Milestone';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('MilestoneCreateModalComponent', () => {
@@ -34,6 +35,7 @@ describe('MilestoneCreateModalComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         MatRadioModule,
+        MatSnackBarModule,
         NoopAnimationsModule
       ],
       providers: [

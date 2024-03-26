@@ -13,6 +13,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { Event } from "../../../domain/Event";
 import { of } from 'rxjs';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('EventEditModalComponent', () => {
@@ -35,6 +36,7 @@ describe('EventEditModalComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         NoopAnimationsModule,
+        MatSnackBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
         MatCheckboxModule

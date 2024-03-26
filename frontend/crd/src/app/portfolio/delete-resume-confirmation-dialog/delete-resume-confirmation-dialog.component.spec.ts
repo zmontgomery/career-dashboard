@@ -6,6 +6,7 @@ import { ArtifactService } from 'src/app/file-upload/artifact.service';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('DeleteResumeConfirmationDialogComponent', () => {
   let component: DeleteResumeConfirmationDialogComponent;
@@ -28,6 +29,7 @@ describe('DeleteResumeConfirmationDialogComponent', () => {
       imports: [
         CommonModule,
         MatDialogModule,
+        MatSnackBarModule,
         MatButtonModule
       ],
       providers: [

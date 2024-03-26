@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { Submission } from 'src/domain/Submission';
 import { submission1 } from '../submission.service.spec';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('SubmissionModalComponent', () => {
   let component: SubmissionModalComponent;
@@ -57,6 +58,7 @@ describe('SubmissionModalComponent', () => {
         MatButtonModule,
         MatIconModule,
         MatInputModule,
+        MatSnackBarModule,
         FileUploadModule,
         MatDialogModule,
         FormsModule,

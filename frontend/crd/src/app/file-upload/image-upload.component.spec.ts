@@ -10,6 +10,7 @@ import {ArtifactService} from "./artifact.service";
 import createSpyObj = jasmine.createSpyObj;
 import {of, Subject} from "rxjs";
 import SpyObj = jasmine.SpyObj;
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('ImageUploadComponent', () => {
   let component: ImageUploadComponent;
@@ -25,6 +26,7 @@ describe('ImageUploadComponent', () => {
       imports: [
         NoopAnimationsModule,
         HttpClientTestingModule,
+        MatSnackBarModule,
         MatDialogModule,
         MatIconModule,
       ],

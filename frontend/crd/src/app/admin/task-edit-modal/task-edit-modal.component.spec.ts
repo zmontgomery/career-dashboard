@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import createSpyObj = jasmine.createSpyObj;
 import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from 'src/domain/Event';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('TaskEditModalComponent', () => {
@@ -66,6 +67,7 @@ describe('TaskEditModalComponent', () => {
         MatDialogModule,
         MatFormFieldModule,
         MatCheckboxModule,
+        MatSnackBarModule,
         MatInputModule,
         ReactiveFormsModule,
         MatRadioModule,
