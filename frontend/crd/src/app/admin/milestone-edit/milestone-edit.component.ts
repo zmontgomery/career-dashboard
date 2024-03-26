@@ -189,19 +189,18 @@ export class MilestoneEditComponent {
         console.log("milestone updated");
         console.log(milestone);
         this.openSnackBar("Milestone Updated!");
+        this.back();
       }
       else {
         this.openSnackBar("Something Went Wrong!");
       }
-        // always returns even if there is an issue
-        this.back();
-      });
+    });
   }
 
   openSnackBar(
     message: string,
-    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
     verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
     durationInSeconds: number = 3,
   ) {
     this._snackBar.open(message, 'close', {
