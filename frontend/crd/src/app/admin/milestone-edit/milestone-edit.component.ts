@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Milestone, YearLevel } from "../../../domain/Milestone";
-import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
+import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 import { Subject, catchError, concatMap, forkJoin, mergeMap, of, takeUntil, throwError } from 'rxjs';
 import { FormControl, FormGroup, FormArray, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { TaskService } from 'src/app/util/task.service';
@@ -12,6 +12,7 @@ import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TaskEditModalComponent } from '../task-edit-modal/task-edit-modal.component';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-milestone-edit',
@@ -45,6 +46,7 @@ export class MilestoneEditComponent {
     public formBuilder: FormBuilder,
     public matDialog: MatDialog,
     public http: HttpClient,
+    private _snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -94,7 +96,7 @@ export class MilestoneEditComponent {
     // this technically won't be used since the milestone create functionality was moved
     else {
       this.milestoneForm = this.formBuilder.group({
-        name: [null, Validators.required],   
+        name: [null, Validators.required],
         description: [null],
         tasks: this.listTasks()
       });
@@ -154,7 +156,7 @@ export class MilestoneEditComponent {
    * Otherwise angular doesn't recognize this as a FormControl
    */
   getFormControlTask(control: AbstractControl): FormControl {
-    return control as FormControl;  
+    return control as FormControl;
   }
 
   /**
@@ -186,14 +188,27 @@ export class MilestoneEditComponent {
       if (milestone) {
         console.log("milestone updated");
         console.log(milestone);
-        window.alert("Milestone updated");
+        this.openSnackBar("Milestone Updated!");
       }
       else {
-        window.alert("Something went wrong");
+        this.openSnackBar("Something Went Wrong!");
       }
         // always returns even if there is an issue
         this.back();
       });
+  }
+
+  openSnackBar(
+    message: string,
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    durationInSeconds: number = 3,
+  ) {
+    this._snackBar.open(message, 'close', {
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+      duration: durationInSeconds * 1000,
+    });
   }
 
   /**
