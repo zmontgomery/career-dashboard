@@ -1,7 +1,7 @@
 <mat-tab-group animationDuration="0ms">
     <div class="year-container" *ngFor="let yearLevel of yearLevels">
         <mat-tab label="{{yearLevel}}">
-            <mat-grid-list cols="3">
+            <mat-grid-list cols="3" rowHeight="6:5">
                 <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
                     <mat-grid-tile>
                         <mat-card class="milestone-card">

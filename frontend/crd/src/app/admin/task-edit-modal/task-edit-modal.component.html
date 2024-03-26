@@ -1,16 +1,18 @@
 <div id="modal-content-wrapper">
-  <form *ngIf="dataLoaded" [formGroup]="taskForm" class="mat-dialog-content" (ngSubmit)="saveTask()">
+  <form *ngIf="dataLoaded" [formGroup]="taskForm" class="form-content" (ngSubmit)="saveTask()">
+    <header id="modal-header">
       <h5>This task is for {{tYearLevel}} </h5>
       <div *ngIf="taskName == ''">
-          <h4>Create New Task</h4>
-          <mat-form-field *ngIf="taskName == ''">
-              <mat-label>Task Name</mat-label>
-              <input matInput formControlName="name">
-          </mat-form-field>
+        <h4>Create New Task</h4>
       </div>
       <div *ngIf="taskName != ''">
         <h4>Editing {{taskName}}</h4>
       </div>
+    </header>
+    <mat-form-field *ngIf="taskName == ''">
+      <mat-label>Task Name</mat-label>
+      <input matInput formControlName="name">
+  </mat-form-field>
       <mat-form-field>
         <mat-label>Task Description</mat-label>
         <textarea matInput formControlName="description"></textarea>
@@ -43,11 +45,11 @@
           <mat-label>Submission Instructions</mat-label>
           <input matInput formControlName="instructions">
       </mat-form-field>
-      <button mat-button type="submit" [disabled]="!taskForm.status">Submit</button>
-  </form>
-  <footer id="modal-footer">
-      <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
+    <footer id="modal-footer">
+      <button mat-raised-button class="modal-cancel-button" type="button" (click)="closeModal()">
           Back
       </button>
-  </footer>
+      <button mat-raised-button class="modal-submit-button" type="submit" [disabled]="!taskForm.status">Submit</button>
+    </footer>
+  </form>
 </div>

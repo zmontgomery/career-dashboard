@@ -8,11 +8,11 @@
             <mat-label>Milestone Name: </mat-label>
             <input matInput formControlName="name">
         </div>
-    </form>
     <footer class="modal-footer">
-        <button mat-raised-button class="modal-cancel-button" (click)="closeModal()">
+        <button mat-raised-button class="modal-cancel-button" type="button" (click)="closeModal()">
             Back
         </button>
         <button mat-raised-button class="modal-submit-button" type="submit" [disabled]="!milestoneForm.status">Submit</button>
     </footer>
+    </form>
 </div>

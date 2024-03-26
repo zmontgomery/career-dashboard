@@ -6,12 +6,6 @@
     </div>
     <h5>This milestone is for grade level {{mYearLevel}} </h5>
   </div>
-  <div class="milestone-name">
-  <mat-form-field *ngIf="milestoneName == ''">
-    <mat-label>Milestone Name</mat-label>
-    <input matInput formControlName="name">
-  </mat-form-field>
-  </div>
   <div class="milestone-description">
   <mat-form-field>
     <mat-label>Milestone Description</mat-label>
@@ -32,7 +26,7 @@
   </div>
   <button mat-raised-button class="form-create-task-button" type='button' (click)="openTaskEditModal(mYearLevel, null)">Create New {{mYearLevel}} Task</button><br />
   <div class="form-footer">
-    <button mat-raised-button class="form-back-button" (click)="back()">BACK</button>
+    <button mat-raised-button class="form-back-button" type="button" (click)="back()">BACK</button>
     <button mat-raised-button class="form-submit-button" type="submit" [disabled]="!milestoneForm.status">Submit</button>
   </div>
 </form>
