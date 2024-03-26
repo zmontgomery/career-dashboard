@@ -114,6 +114,10 @@ You can also do this for frontend/backend test.
 - `cd backend`
 - `./gradlew test`
 - coverage found in backend/build/reports/jacoco/test/html/index.html
+### Integration
+- `cd sit`
+- `./runner.sh`
+- tests will take 
 
 # Deploying
 #### Work in Progress. This just showcases how to build angular app and run backend as jar that also serves angular app

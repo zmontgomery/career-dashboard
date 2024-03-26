@@ -8,5 +8,9 @@ do
   esac
 done
 
+echo ===== INSTALLING DEPENDENCIES =====
+pip3 install -r requirements.txt
+
+echo ===== RUNNING TESTS =====
 cd tests
 python3 base_test.py
