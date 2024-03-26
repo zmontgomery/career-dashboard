@@ -32,6 +32,7 @@ export class EditRoleConfirmationDialogComponent {
     this.user.role = this.role;
     this.userService.updateRole(this.user).subscribe(() => {
       this.onCancel();
+      // TODO error check?
       this._snackBar.open("Role Edit Successful!", 'close', {
         horizontalPosition: 'center',
         verticalPosition: 'bottom',

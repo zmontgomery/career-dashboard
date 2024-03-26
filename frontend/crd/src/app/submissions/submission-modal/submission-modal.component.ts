@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/security/auth.service';
 import { Task } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
 import { ArtifactService } from 'src/app/file-upload/artifact.service';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 /**
  * Component for the submission modal that allows a user to submit
@@ -28,6 +29,7 @@ export class SubmissionModalComponent implements OnDestroy {
     private readonly submissionService: SubmissionService,
     private readonly artifactService: ArtifactService,
     private readonly authService: AuthService,
+    private _snackBar: MatSnackBar,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       task: Task
@@ -65,6 +67,12 @@ export class SubmissionModalComponent implements OnDestroy {
       this.submissionService.submit(submission).subscribe(() => {
         this.modalState = 'submitting';
         setTimeout(() => this.submissionModalRef.close(), this.closeTime);
+        // TODO error check?
+        this._snackBar.open("Submission Successful!", 'close', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          duration: 3000,
+        });
       });
     });
   }
