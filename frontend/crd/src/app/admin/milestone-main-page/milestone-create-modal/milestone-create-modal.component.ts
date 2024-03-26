@@ -6,7 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 import { NavigationEnd, Router } from '@angular/router';
-import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
+import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
 
 
 @Component({
@@ -34,7 +34,7 @@ export class MilestoneCreateModalComponent implements OnInit {
       this.yearLevel = this.modalData.yearLevel;
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     // the following is actually called when leaving the modal
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -54,7 +54,7 @@ export class MilestoneCreateModalComponent implements OnInit {
    */
   createForm() {
     this.milestoneForm = this.formBuilder.group({
-      name: [null, Validators.required], 
+      name: [null, Validators.required],
     });
   }
 
@@ -81,7 +81,7 @@ export class MilestoneCreateModalComponent implements OnInit {
         window.alert("Something went wrong creating milestone");
         this.closeModal();
       }
-      
+
       // automatically navigates to the edit page for this new milestone
       const encodedName = encodeURIComponent(newMilestone.milestoneID);
       this.router.navigate(['/admin/milestone-edit', encodedName]);
@@ -91,6 +91,8 @@ export class MilestoneCreateModalComponent implements OnInit {
 
   closeModal() {
     this.dialogRef.close();
+    // FIXME fragile fix to not loading current milestone
+    setTimeout(() => location.reload());
   }
 
 }
