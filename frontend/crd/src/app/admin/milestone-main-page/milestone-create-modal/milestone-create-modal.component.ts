@@ -7,6 +7,7 @@ import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 import { NavigationEnd, Router } from '@angular/router';
 import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -26,6 +27,7 @@ export class MilestoneCreateModalComponent implements OnInit {
     public dialogRef: MatDialogRef<MilestoneCreateModalComponent>,
     public formBuilder: FormBuilder,
     public http: HttpClient,
+    private _snackBar: MatSnackBar,
     public router: Router,
     public milestoneService: MilestoneService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
@@ -65,7 +67,7 @@ export class MilestoneCreateModalComponent implements OnInit {
     const newData: any = {};
 
     if (!this.milestoneForm.get('name')?.value) {
-      window.alert("Please add a milestone name");
+      this.openSnackBar("Please add a milestone name");
       return;
     }
 
@@ -78,7 +80,7 @@ export class MilestoneCreateModalComponent implements OnInit {
       const newMilestone = new Milestone(newJSON);
       // in case the returned milestone is empty
       if(!newMilestone.name) {
-        window.alert("Something went wrong creating milestone");
+        this.openSnackBar("Something went wrong creating milestone");
         this.closeModal();
       }
 
@@ -91,8 +93,19 @@ export class MilestoneCreateModalComponent implements OnInit {
 
   closeModal() {
     this.dialogRef.close();
-    // FIXME fragile fix to not loading current milestone
-    setTimeout(() => location.reload());
+  }
+
+  openSnackBar(
+    message: string,
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
+    durationInSeconds: number = 3,
+  ) {
+    this._snackBar.open(message, 'close', {
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+      duration: durationInSeconds * 1000,
+    });
   }
 
 }

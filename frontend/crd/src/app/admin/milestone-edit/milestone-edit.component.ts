@@ -55,7 +55,10 @@ export class MilestoneEditComponent {
       this.milestoneParam = +decodeURIComponent(params['name']);
     });
 
-    this.milestoneService.getMilestones(undefined, true)
+    // FIXME this should be able to be undefined and not force refresh but after creating a milestone the current
+    //  milestone is null if this is no set to always fetch
+    // this.milestoneService.getMilestones(undefined, true)
+    this.milestoneService.getMilestones(true, true)
       .pipe(takeUntil(this.destroyed$),
         mergeMap((milestones: Milestone[]) => {
           milestones.forEach((milestone) => {

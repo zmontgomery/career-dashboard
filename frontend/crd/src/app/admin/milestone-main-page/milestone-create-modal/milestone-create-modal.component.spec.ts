@@ -26,8 +26,8 @@ describe('MilestoneCreateModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [MilestoneCreateModalComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
         MatDialogModule,
         MatFormFieldModule,
         MatCheckboxModule,
@@ -44,6 +44,8 @@ describe('MilestoneCreateModalComponent', () => {
       ],
       teardown: {destroyAfterEach: false}
     });
+    const locationSpy = jasmine.createSpyObj('location', ['reload']);
+    TestBed.overrideProvider(location, { useValue: locationSpy });
     fixture = TestBed.createComponent(MilestoneCreateModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
