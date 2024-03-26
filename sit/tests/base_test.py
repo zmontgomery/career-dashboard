@@ -190,12 +190,20 @@ class BaseTest(unittest.TestCase):
         password = details['database']['password']
 
         # Connect to database
-        self.db = mysql.connector.connect(
-          host = 'localhost',
-          user = user,
-          password = password,
-          database = 'CRD'
-        )
+        try:
+          self.db = mysql.connector.connect(
+            host = 'localhost',
+            user = user,
+            password = password,
+            database = 'CRD'
+          )
+        except Exception:
+          self.db = mysql.connector.connect(
+            host = 'localhost',
+            user = user,
+            password = password,
+            database = 'crd'
+          )
 
         # Create cursor
         self.cursor = self.db.cursor()
