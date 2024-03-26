@@ -6,7 +6,7 @@
                     <mat-grid-tile>
                         <mat-card class="milestone-card">
                             <mat-card-header>
-                                <mat-card-title>
+                                <mat-card-title class="card-title">
                                     {{milestone.name}}
                                 </mat-card-title>
                             </mat-card-header>
@@ -15,7 +15,7 @@
                                 <div class="milestone-content">
                                     <p>Includes:</p>
                                     <ng-container *ngFor="let task of milestone.tasks">
-                                        <p>{{task.name}}</p>
+                                        <p class="task-item">{{task.name}}</p>
                                     </ng-container>
                                 </div>
                             </mat-card-content>
@@ -27,8 +27,12 @@
                         </mat-card>
                     </mat-grid-tile>
                 </ng-container>
-                <mat-grid-tile class="new-milestone" (click)="openMilestoneCreateModal(yearLevel)">
-                Create New {{yearLevel}} Milestone
+                <mat-grid-tile class="new-milestone">
+                    <mat-card class="create-milestone-card" (click)="openMilestoneCreateModal(yearLevel)">
+                        <div class="new-milestone-content">
+                            <p>Create New {{yearLevel}} Milestone</p>
+                        </div>
+                    </mat-card>
                 </mat-grid-tile>
             </mat-grid-list>
         </mat-tab>
