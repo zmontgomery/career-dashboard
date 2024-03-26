@@ -86,15 +86,14 @@ public class MilestoneHandler {
      */
     public Mono<ServerResponse> completed(ServerRequest serverRequest) {
         var userParam = serverRequest.queryParam("userId");
+        if (userParam.isEmpty()) {
+            return ServerResponse.badRequest().bodyValue("No userId param provided");
+        }
         try {
-            if (userParam.isPresent()) {
-                var userid = UUID.fromString(userParam.get());
-                return ServerResponse.ok().body(this.milestoneService.completedMilestones(userid).map(Milestone::toDTO), MilestoneDTO.class);
-            }
+            var userid = UUID.fromString(userParam.get());
+            return ServerResponse.ok().body(this.milestoneService.completedMilestones(userid).map(Milestone::toDTO), MilestoneDTO.class);
         } catch (IllegalArgumentException e) {
             return ServerResponse.badRequest().bodyValue("Invalid UserId");
         }
-
-        return ServerResponse.badRequest().bodyValue("No userId param provided");
     }
 }

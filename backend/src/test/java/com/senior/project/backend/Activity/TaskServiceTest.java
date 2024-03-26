@@ -67,7 +67,7 @@ public class TaskServiceTest {
         tasks.add(task1);
         tasks.add(task2);
         tasks.add(task3);
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         when(taskRepository.findTasksToDisplayOnDashboard(any(), any(), any())).thenReturn(tasks);
         Flux<Task> result = taskService.dashboard(6);
         StepVerifier.create(result)

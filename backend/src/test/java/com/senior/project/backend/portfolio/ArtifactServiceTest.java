@@ -7,8 +7,6 @@ import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.Artifact;
 import com.senior.project.backend.security.CurrentUserUtil;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -72,7 +70,7 @@ public class ArtifactServiceTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         when(filePart.headers()).thenReturn(headers);
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         when(filePart.transferTo((Path) any())).thenReturn(Mono.empty());
         when(artifactRepository.save(any())).thenReturn(Constants.artifact1);
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
@@ -166,7 +164,7 @@ public class ArtifactServiceTest {
     @Test
     public void testGetFileFailPathCheck() {
         when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact2));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         Path artifactPath = Paths.get(Constants.artifact2.getFileLocation());
@@ -184,7 +182,7 @@ public class ArtifactServiceTest {
     @Test
     public void testGetFile() {
         when(artifactRepository.findById(any())).thenReturn(Optional.ofNullable(Constants.artifact1));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         Path artifact1path = Paths.get(Constants.artifact1.getFileLocation());
@@ -249,7 +247,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalName() {
         when(artifactRepository.findByUniqueIdentifier(anyString())).thenReturn(Optional.of(Constants.artifact1));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
@@ -271,7 +269,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileInternalNameEmpty() {
         when(artifactRepository.findByUniqueIdentifier(any())).thenReturn(Optional.empty());
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         Mono<String> result = artifactService.deleteFile("asdf");
 
         StepVerifier.create(result)
@@ -282,7 +280,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileId() {
         when(artifactRepository.findById(any())).thenReturn(Optional.of(Constants.artifact1));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         MockedStatic<Paths> paths = mockStatic(Paths.class);
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
@@ -315,7 +313,7 @@ public class ArtifactServiceTest {
     @Test
     public void testDeleteFileIdEmpty() {
         when(artifactRepository.findById(any())).thenReturn(Optional.empty());
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         Mono<String> result = artifactService.deleteFile(2);
 
         StepVerifier.create(result)
@@ -329,7 +327,7 @@ public class ArtifactServiceTest {
         MockedStatic<Files> files = mockStatic(Files.class);
         paths.when(() -> Paths.get(any())).thenReturn(null);
         files.when(() -> Files.deleteIfExists(any())).thenReturn(true);
-        Mono<String> result = artifactService.deleteFile(Constants.artifact1, Constants.user1);
+        Mono<String> result = artifactService.deleteFile(Constants.artifact1, Constants.userAdmin);
 
         result = result.map((r) -> {
             paths.close();
@@ -345,7 +343,7 @@ public class ArtifactServiceTest {
 
     @Test
     public void testDeleteFileNotUser() {
-        Mono<String> result = artifactService.deleteFile(Constants.artifact2, Constants.user1);
+        Mono<String> result = artifactService.deleteFile(Constants.artifact2, Constants.userAdmin);
 
         StepVerifier.create(result)
             .expectError(ResponseStatusException.class);
@@ -353,7 +351,7 @@ public class ArtifactServiceTest {
 
     @Test
     public void testDeleteFileUserNotAdmin() {
-        Mono<String> result = artifactService.deleteFile(Constants.artifact2, Constants.user2);
+        Mono<String> result = artifactService.deleteFile(Constants.artifact2, Constants.userFaculty);
 
         StepVerifier.create(result)
             .expectError(ResponseStatusException.class);

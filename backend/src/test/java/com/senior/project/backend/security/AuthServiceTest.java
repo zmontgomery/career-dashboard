@@ -36,7 +36,7 @@ public class AuthServiceTest {
     @Mock
     private UserService userService;
 
-    private static final User USER = Constants.user1;
+    private static final User USER = Constants.userAdmin;
 
     private static final String TOKEN = "token";
     private static final String TOKEN_2 = "token2";
@@ -63,7 +63,7 @@ public class AuthServiceTest {
             .thenReturn(NumericDate.fromMilliseconds(System.currentTimeMillis() + 600000));
         when(tokenGenerator.generateToken(any())).thenReturn(TOKEN_2);
         when(tokenGenerator.extractEmail(anyString())).thenReturn(USER.getEmail());
-        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.user1));
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.userAdmin));
 
         LoginResponse expected = LoginResponse.builder()
             .user(USER)

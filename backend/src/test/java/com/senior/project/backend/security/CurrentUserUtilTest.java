@@ -26,12 +26,12 @@ public class CurrentUserUtilTest {
     @Test
     public void getUserHappy() {
         Authentication authentication = 
-            new UsernamePasswordAuthenticationToken(Constants.user1, "", Constants.user1.getAuthorities());
+            new UsernamePasswordAuthenticationToken(Constants.userAdmin, "", Constants.userAdmin.getAuthorities());
         Context context = ReactiveSecurityContextHolder.withAuthentication(authentication);
         Mono<User> res = currentUserUtil.getCurrentUser().contextWrite(context);
 
         StepVerifier.create(res)
-            .expectNext(Constants.user1)
+            .expectNext(Constants.userAdmin)
             .expectComplete()
             .verify();
     }

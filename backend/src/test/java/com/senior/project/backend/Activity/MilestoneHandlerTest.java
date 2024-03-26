@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +43,7 @@ public class MilestoneHandlerTest {
     public void setup() {
         webTestClient = WebTestClient.bindToRouterFunction(RouterFunctions.route()
                         .GET("/test", milestoneHandler::all)
+                        .GET("/complete", milestoneHandler::completed)
                         .POST("/edit", milestoneHandler::update)
                         .POST("/create", milestoneHandler::create)
                         .build())
@@ -173,5 +175,37 @@ public class MilestoneHandlerTest {
                 .expectBody(String.class).returnResult().getResponseBody();
         assertNotNull(result);
         assertEquals(result, "Invalid JSON format");
+    }
+
+
+    @Test
+    public void testCompleted() {
+        Flux<Milestone> milestoneFlux = Flux.just(Constants.m1, Constants.m2);
+        when(milestoneService.completedMilestones(any())).thenReturn(milestoneFlux);
+        List<Milestone> result = webTestClient.get().uri("/complete?userId="+Constants.userAdmin.getId())
+                .exchange().expectStatus().isOk()
+                .expectBodyList(Milestone.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(Constants.m1.getId(), result.get(0).getId());
+        assertEquals(Constants.m2.getId(), result.get(1).getId());
+    }
+
+    @Test
+    public void testCompletedInvalidID() {
+        String result = webTestClient.get().uri("/complete?userId=invalid")
+                .exchange().expectStatus().isBadRequest()
+                .expectBody(String.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(result, "Invalid UserId");
+    }
+
+    @Test
+    public void testCompletedNoID() {
+        String result = webTestClient.get().uri("/complete")
+                .exchange().expectStatus().isBadRequest()
+                .expectBody(String.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertEquals(result, "No userId param provided");
     }
 }

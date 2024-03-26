@@ -1,8 +1,6 @@
 package com.senior.project.backend.users;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -26,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.senior.project.backend.Constants;
 import com.senior.project.backend.domain.User;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -43,18 +42,19 @@ public class UserServiceTest {
         when(userRepository.findAll()).thenReturn(Constants.USERS);
         Flux<User> result = userService.allUsers();
         StepVerifier.create(result)
-            .expectNext(Constants.user1)
-            .expectNext(Constants.user2)
+            .expectNext(Constants.userAdmin)
+            .expectNext(Constants.userFaculty)
+            .expectNext(Constants.userStudent)
             .expectComplete()
             .verify();
     }
 
     @Test
     public void findUserByEmailHappy() {
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
-        Mono<User> result = userService.findByEmailAddress(Constants.user1.getEmail());
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.userAdmin));
+        Mono<User> result = userService.findByEmailAddress(Constants.userAdmin.getEmail());
         StepVerifier.create(result)
-            .expectNext(Constants.user1)
+            .expectNext(Constants.userAdmin)
             .expectComplete()
             .verify();
     }
@@ -62,7 +62,7 @@ public class UserServiceTest {
     @Test
     public void findUserByEmailUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        Mono<User> result = userService.findByEmailAddress(Constants.user1.getEmail());
+        Mono<User> result = userService.findByEmailAddress(Constants.userAdmin.getEmail());
         StepVerifier.create(result)
             .expectComplete()
             .verify();
@@ -70,30 +70,30 @@ public class UserServiceTest {
 
     @Test
     public void findByIdHappy() {
-        when(userRepository.findById(Constants.user1.getId())).thenReturn(Optional.of(Constants.user1));
-        Mono<User> result = userService.findByID(Constants.user1.getId());
+        when(userRepository.findById(Constants.userAdmin.getId())).thenReturn(Optional.of(Constants.userAdmin));
+        Mono<User> result = userService.findByID(Constants.userAdmin.getId());
         StepVerifier.create(result)
-            .expectNext(Constants.user1)
+            .expectNext(Constants.userAdmin)
             .expectComplete()
             .verify();
     }
 
     @Test
     public void findByIdUnhappy() {
-        when(userRepository.findById(Constants.user1.getId())).thenReturn(Optional.empty());
-        Mono<User> result = userService.findByID(Constants.user1.getId());
+        when(userRepository.findById(Constants.userAdmin.getId())).thenReturn(Optional.empty());
+        Mono<User> result = userService.findByID(Constants.userAdmin.getId());
         StepVerifier.create(result)
             .expectError();
     }
 
     @Test
     public void findByUsernameHappy() {
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.user1));
+        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(Constants.userAdmin));
         
-        Mono<UserDetails> user = userService.findByUsername(Constants.user1.getEmail());
+        Mono<UserDetails> user = userService.findByUsername(Constants.userAdmin.getEmail());
 
         StepVerifier.create(user)
-            .expectNext((UserDetails) Constants.user1)
+            .expectNext((UserDetails) Constants.userAdmin)
             .expectComplete()
             .verify();
     }
@@ -101,7 +101,7 @@ public class UserServiceTest {
     @Test
     public void findByUsernameUnhappy() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.empty());
-        Mono<UserDetails> result = userService.findByUsername(Constants.user1.getEmail());
+        Mono<UserDetails> result = userService.findByUsername(Constants.userAdmin.getEmail());
         StepVerifier.create(result)
             .expectComplete()
             .verify();
@@ -124,50 +124,50 @@ public class UserServiceTest {
 
     @Test
     public void setSuperUser() {
-        Constants.user1.setRole(Role.SuperAdmin);
+        Constants.userAdmin.setRole(Role.SuperAdmin);
         when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
-        when(userRepository.findUserByEmail(any())).thenReturn(Optional.of(Constants.user2));
+        when(userRepository.findUserByEmail(any())).thenReturn(Optional.of(Constants.userFaculty));
 
         userService.setSuperUser();
 
-        assertFalse(Constants.user1.hasSuperAdminPrivileges());
+        assertFalse(Constants.userAdmin.hasSuperAdminPrivileges());
         verify(userRepository, times(Constants.USERS.size() + 1)).save(any());
-        assertTrue(Constants.user2.hasSuperAdminPrivileges());
+        assertTrue(Constants.userFaculty.hasSuperAdminPrivileges());
 
-        Constants.user2.setRole(Role.SuperAdmin);
+        Constants.userFaculty.setRole(Role.SuperAdmin);
     }
 
     @Test
     public void setSuperUserError() throws InterruptedException {
-        Constants.user1.setRole(Role.SuperAdmin);
+        Constants.userAdmin.setRole(Role.SuperAdmin);
         when(userRepository.findUsersByRole(Role.SuperAdmin)).thenReturn(Constants.USERS);
         when(userRepository.findUserByEmail(any())).thenReturn(Optional.empty());
 
-        userService.setSuperUser();
+        assertThrows(UsernameNotFoundException.class, userService::setSuperUser);
 
-        assertFalse(Constants.user1.hasSuperAdminPrivileges());
-        verify(userRepository, times(2)).save(any());
-        assertFalse(Constants.user2.hasSuperAdminPrivileges());
+        assertFalse(Constants.userAdmin.hasSuperAdminPrivileges());
+        verify(userRepository, times(Constants.USERS.size())).save(any());
+        assertFalse(Constants.userFaculty.hasSuperAdminPrivileges());
     }
 
     @Test
     public void testCreateOrUpdateUser() {
-        when(userRepository.saveAndFlush(any())).thenReturn(Constants.user1);
-        Mono<User> res = userService.createOrUpdateUser(Constants.user2);
+        when(userRepository.saveAndFlush(any())).thenReturn(Constants.userAdmin);
+        Mono<User> res = userService.createOrUpdateUser(Constants.userFaculty);
         
         StepVerifier.create(res)
-            .expectNext(Constants.user1)
+            .expectNext(Constants.userAdmin)
             .expectComplete()
             .verify();
     }
 
     @Test
     public void testFindByIdHappy() {
-        when(userRepository.findById(any())).thenReturn(Optional.of(Constants.user1));
+        when(userRepository.findById(any())).thenReturn(Optional.of(Constants.userAdmin));
         Mono<User> res = userService.findById(UUID.randomUUID());
 
         StepVerifier.create(res)
-            .expectNext(Constants.user1)
+            .expectNext(Constants.userAdmin)
             .expectComplete()
             .verify();
     }

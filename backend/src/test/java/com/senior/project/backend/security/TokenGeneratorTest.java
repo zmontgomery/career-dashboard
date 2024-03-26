@@ -41,7 +41,7 @@ public class TokenGeneratorTest {
     @Mock
     private AuthInformation authInformation;
 
-    private static final User user = Constants.user1;
+    private static final User user = Constants.userAdmin;
 
     private static String token;
     private static Long now;

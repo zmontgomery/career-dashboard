@@ -110,7 +110,7 @@ public class UserHandlerTest {
 
     @Test
     public void testCurrentUser() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
         User user = webTestClient.get()
             .uri("/curr")
@@ -121,17 +121,17 @@ public class UserHandlerTest {
             .returnResult()
             .getResponseBody();
 
-        assertEquals(user, Constants.user1);
+        assertEquals(user, Constants.userAdmin);
     }
 
     @Test
     public void testUpdateRoleHappy() {
-        when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.user2));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.userFaculty));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
         User user = webTestClient.post()
             .uri("/update")
-            .bodyValue(Constants.user2)
+            .bodyValue(Constants.userFaculty)
             .exchange()
             .expectStatus()
             .isOk()
@@ -139,14 +139,14 @@ public class UserHandlerTest {
             .returnResult()
             .getResponseBody();
 
-        assertEquals(user, Constants.user2);
+        assertEquals(user, Constants.userFaculty);
     }
 
     @Test
     public void testUpdateRoleSuperAdmin() {
         User superUser = User.builder().role(Role.SuperAdmin).build();
         User test = User.builder().role(Role.Admin).build();
-        when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.user2));
+        when(userService.createOrUpdateUser(any())).thenReturn(Mono.just(Constants.userFaculty));
         when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(superUser));
 
         User user = webTestClient.post()
@@ -159,14 +159,14 @@ public class UserHandlerTest {
             .returnResult()
             .getResponseBody();
 
-        assertEquals(user, Constants.user2);
+        assertEquals(user, Constants.userFaculty);
     }
 
     @Test
     public void testUpdateRoleInvalidPerms() {
         User user = User.builder().role(Role.Admin).build();
         User test = User.builder().role(Role.Admin).build();
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
         webTestClient.post()
             .uri("/update")
@@ -192,7 +192,7 @@ public class UserHandlerTest {
 
     @Test
     public void testGetUserById() {
-        when(userService.findById(any())).thenReturn(Mono.just(Constants.user1));
+        when(userService.findById(any())).thenReturn(Mono.just(Constants.userAdmin));
 
         User res = webTestClient.get()
             .uri("/id/" + UUID.randomUUID().toString())
@@ -202,7 +202,7 @@ public class UserHandlerTest {
             .returnResult()
             .getResponseBody();
 
-        assertEquals(res, Constants.user1);
+        assertEquals(res, Constants.userAdmin);
     }
 
     @Test
