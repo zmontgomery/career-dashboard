@@ -12,7 +12,7 @@
             <hr />
             <div class="signup-fields">
                 <form [formGroup]="form">
-                    <mat-form-field class="signup-phone-number" [floatLabel]="form.value.floatLabel">
+                    <mat-form-field id="signup-name" class="signup-phone-number" [floatLabel]="form.value.floatLabel">
                         <mat-label>Preferred Name (empty for none)</mat-label>
                         <input 
                             class="nickname-field" 
@@ -21,10 +21,10 @@
                         >
                         <mat-error *ngIf="nicknameHasError()">Name can only contain letters</mat-error>
                     </mat-form-field>
-                    <mat-form-field class="signup-phone-number" [floatLabel]="form.value.floatLabel">
+                    <mat-form-field id="signup-pn" class="signup-phone-number" [floatLabel]="form.value.floatLabel">
                         <mat-label>Phone Number</mat-label>
                         <input 
-                            class="password-field" 
+                            class="phone-field" 
                             matInput 
                             formControlName="phoneNumber" 
                             [required]="true"
@@ -33,8 +33,8 @@
                     </mat-form-field>
 
                     <div class="signup-checkboxes">
-                        <mat-checkbox formControlName="canText">Allow texting notifications</mat-checkbox>
-                        <mat-checkbox formControlName="canEmail">Allow email notifications</mat-checkbox>
+                        <mat-checkbox class="text-field" formControlName="canText">Allow texting notifications</mat-checkbox>
+                        <mat-checkbox class="email-field" formControlName="canEmail">Allow email notifications</mat-checkbox>
                     </div>
                 </form>
             </div>
@@ -44,7 +44,7 @@
                   <mat-icon>cancel</mat-icon>
                   Cancel
               </button>
-              <button mat-raised-button color="primary" (click)="onSubmit()">
+              <button mat-raised-button class="next" color="primary" (click)="onSubmit()">
                   <mat-icon>arrow_right_alt</mat-icon>
                   Continue
               </button>

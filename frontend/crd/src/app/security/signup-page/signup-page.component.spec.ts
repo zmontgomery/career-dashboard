@@ -13,8 +13,11 @@ import { User } from '../domain/user';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { userJSON } from '../auth.service.spec';
+import { OswegoLogoModule } from 'src/app/oswego-logo/oswego-logo.module';
+import { MockComponent } from 'ng-mocks';
+import { OswegoLogoComponent } from 'src/app/oswego-logo/oswego-logo.component';
 
-describe('SignupPageComponent', () => {
+fdescribe('SignupPageComponent', () => {
   let component: SignupPageComponent;
   let fixture: ComponentFixture<SignupPageComponent>;
 
@@ -26,7 +29,7 @@ describe('SignupPageComponent', () => {
     authService = jasmine.createSpyObj('AuthService', ['signup', 'signOut'], {user$: of(user)});
 
     TestBed.configureTestingModule({
-      declarations: [SignupPageComponent],
+      declarations: [SignupPageComponent, MockComponent(OswegoLogoComponent)],
       imports: [
         CommonModule,
         MatCardModule,
@@ -35,7 +38,8 @@ describe('SignupPageComponent', () => {
         MatCheckboxModule,
         ReactiveFormsModule,
         MatIconModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        OswegoLogoModule
       ],
       providers: [
         {provide: AuthService, useValue: authService},
@@ -90,7 +94,7 @@ describe('SignupPageComponent', () => {
 
     component.phoneNumberControl.setValue('1234567890');
 
-    const foramtted = fixture.elementRef.nativeElement.getElementsByClassName('password-field')[0].value;
+    const foramtted = fixture.elementRef.nativeElement.getElementsByClassName('phone-field')[0].value;
 
     expect(foramtted).toEqual('(123)-456-7890');
     expect(component.phoneNumber).toEqual('123-456-7890');
