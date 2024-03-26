@@ -312,6 +312,14 @@ class BaseTest(unittest.TestCase):
     """
     time.sleep(duration)
 
+  def click_element(self, element_class) -> None:
+    """
+    Attempts to click on an element
+    """
+    e = self.find_element_by_class_name(element_class)
+    self.wait_for_element_to_be_clickable(e)
+    e.click()
+
   # ===================================================
   # Private
   # ===================================================
