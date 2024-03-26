@@ -55,4 +55,6 @@ export class EditRoleMenuComponent {
       })
     );
   }
+
+  protected readonly Role = Role;
 }
