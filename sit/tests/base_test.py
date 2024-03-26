@@ -76,22 +76,23 @@ class BaseTest(unittest.TestCase):
     self.driver = webdriver.Chrome(options = chrome_options)
     self.driver.get(self.BASE_URL)
 
-    # Wait until app is loaded
-    self.find_element_by_class_name(APP_CONTAINER)
+    # Navigate to page
+    self.driver.get(f'{self.BASE_URL}/{self.path()}')
+    self.find_element_by_class_name('logo-container')
 
     # Sign in
     if (self.authenticated()):
       email, password = self._get_role_details()
       self.sign_in(email, password)
 
-    # Navigate to page
-    self.driver.get(f'{self.BASE_URL}/{self.path()}')
-    self.find_element_by_class_name('logo-container')
-
   def tearDown(self) -> None:
     """
     Closes the web driver and clears existing authentication
     """
+
+    # Execute post test database cleanup
+    self.execute_post_test_sql_statements()
+
     # Clear database
     if self.cursor != None:
       self.cursor.close()
@@ -158,6 +159,9 @@ class BaseTest(unittest.TestCase):
       .click(nextButton)\
       .perform()
 
+    while len(self.driver.window_handles) > 1:
+      continue
+
     # Return to original window and wait until app is loaded
     self.driver.switch_to.window(original_handle)
 
@@ -169,6 +173,7 @@ class BaseTest(unittest.TestCase):
         WebDriverWait(self.driver, TIMEOUT).until(EC.element_to_be_clickable((By.CLASS_NAME, 'signup-modal')))
       except TimeoutException:
         self.fail("Expected elements of logout button or sign up container")
+    self.email = email
 
   def connect_to_database(self) -> None:
     """
@@ -210,7 +215,17 @@ class BaseTest(unittest.TestCase):
 
     for command in commands:
       self.cursor.execute(command)
-    self.cursor.rowcount()
+    self.db.commit()
+
+  def execute_post_test_sql_statements(self) -> None:
+    """
+    Executes all post test scripts
+    """
+    post_commands = self.post_test_sql_statements()
+
+    for command in post_commands:
+      self.cursor.execute(command)
+    self.db.commit()
 
   # ===================================================
   # Test Attributes
@@ -330,8 +345,8 @@ class BaseTest(unittest.TestCase):
           password = details['admin']['password']
           sql = "UPDATE user AS u SET u.role = 'SuperAdmin' WHERE u.email = %s"
           self.cursor.execute(sql, (email,))
+          self.db.commit()
           
-
         # Return
         return email, password
     except FileNotFoundError:
