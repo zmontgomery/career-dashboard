@@ -194,7 +194,7 @@ class BaseTest(unittest.TestCase):
           host = 'localhost',
           user = user,
           password = password,
-          database = 'crd'
+          database = 'CRD'
         )
 
         # Create cursor
