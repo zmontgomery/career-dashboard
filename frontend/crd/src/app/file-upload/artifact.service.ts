@@ -58,7 +58,7 @@ export class ArtifactService {
   getArtifactFile(id: number): Observable<Blob> {
     return this.http.get(constructBackendRequest(`${Endpoints.ARTIFACT_FILE}/${id}`), { responseType: 'blob' })
       .pipe(map((data: any) => {
-        return new Blob([data]);
+        return new Blob([data],  {type: data.type});
       }));
   }
 

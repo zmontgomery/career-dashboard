@@ -24,7 +24,7 @@
         </mat-expansion-panel-header>
           <mat-expansion-panel [disabled]="!completedTasks.includes(task.taskID)"  *ngFor="let task of milestone.tasks">
 
-          <mat-expansion-panel-header (click)="openTask(task)">
+          <mat-expansion-panel-header >
             <div class="flex-vertical-align">
               <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
                 color="primary" (click)="$event.stopPropagation()">
@@ -32,7 +32,18 @@
               </mat-checkbox>
             </div>
           </mat-expansion-panel-header>
-          <div>Change this to show submission comment</div>
+          <div *ngIf="submissionMap.get(task.taskID)">
+            Submitted {{submissionMap.get(task.taskID)!.submissionDate.toLocaleString()}}
+            <span *ngIf="submissionMap.get(task.taskID)!.comment">
+              with comment "{{submissionMap.get(task.taskID)!.comment}}"
+            </span>
+            <br />
+            <div *ngIf="submissionMap.get(task.taskID)!.artifactId != 1">
+              <button mat-raised-button (click)="downloadArtifact(task)">
+                Download Artifact
+              </button>
+            </div>
+          </div>
         </mat-expansion-panel>
       </mat-expansion-panel>
     </ng-container>
