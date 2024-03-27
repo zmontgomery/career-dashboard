@@ -23,7 +23,8 @@ public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
 
     @Query("SELECT DISTINCT m FROM Milestone m " +
             "JOIN FETCH m.tasks t " +
-            "WHERE EXISTS (SELECT 1 FROM Submission s WHERE s.taskId = t.id AND s.studentId = :uid) "+
-            "AND SIZE(m.tasks) > 0")
+            "WHERE (SELECT COUNT(*) FROM Task t2 WHERE t2.milestone.id = m.id) = " +
+            "(SELECT COUNT(*) FROM Submission s JOIN Task t3 ON s.taskId = t3.id WHERE t3.milestone.id = m.id AND s.studentId = :uid)")
     List<Milestone> findComplete(@Param("uid") UUID userId);
+
 }
