@@ -8,6 +8,9 @@ import { User } from 'src/app/security/domain/user';
 import { MilestonesPage } from '../milestones-page';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/security/user.service';
+import { Submission } from 'src/domain/Submission';
+import { ArtifactService } from 'src/app/file-upload/artifact.service';
+import { Task } from 'src/domain/Task';
 
 @Component({
   selector: 'app-faculty-milestones',
@@ -29,12 +32,15 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
   ];
   completedMap: Map<CompletionStatus, Array<Milestone>> = new Map();
 
+  submissionMap: Map<number, Submission> = new Map();
+
   constructor(
     milestoneService: MilestoneService,
     matDialog: MatDialog,
     submissionService: SubmissionService,
     protected route: ActivatedRoute,
-    protected userService: UserService
+    protected userService: UserService,
+    protected artifactSertive: ArtifactService,
   ) {
     super(milestoneService, matDialog, submissionService);
   }
@@ -55,10 +61,12 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
         this.currentStudent = student;
         this.studentYear = student.studentDetails?.yearLevel;
       }
-      
+
       this.makeMilestoneMap(milestones);
       this.checkCompleted(submissions);
       this.sortMilestones(milestones);
+      this.mapSubmissions(submissions);
+
       this.dataLoaded = true;
     });
   }
@@ -104,7 +112,40 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
     this.completedMap.set(CompletionStatus.Upcoming, upcomingMilestones);
   }
 
-  openTask(task: any) {
-    console.log("replace with view submission");
+  mapSubmissions(submissions: Submission[]) {
+    submissions.forEach((submission) => {
+      // sanity check
+      if (!this.completedTasks.includes(submission.taskId)) {
+        return;
+      }
+      this.submissionMap.set(submission.taskId, submission);
+    })
+  }
+
+  downloadArtifact(task: Task) {
+    const taskID = task.taskID;
+    const submission = this.submissionMap.get(taskID)!;
+    this.artifactSertive.getArtifactFile(submission.artifactId).subscribe((artifactBlob: Blob) => {
+      const artifactURL = window.URL.createObjectURL(artifactBlob);
+
+      // possibly change format later
+      const taskName = task.name.replace(" ", "");
+      const fileName: string = this.currentStudent.firstName 
+                             + this.currentStudent.lastName
+                             + taskName + "Submission";
+
+      // create invisible link so we can name the file
+      const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+      a.href = artifactURL;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+  
+      document.body.removeChild(a);
+      URL.revokeObjectURL(artifactURL);
+      
+      // window.open does not name the file (kept just in case we're changing this)
+      //window.open(artifactURL, "artifactName");
+    });
   }
 }
