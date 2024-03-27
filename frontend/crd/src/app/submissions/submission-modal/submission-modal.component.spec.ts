@@ -49,7 +49,6 @@ describe('SubmissionModalComponent', () => {
         MatButtonModule,
         MatIconModule,
         MatInputModule,
-        MatSnackBarModule,
         FileUploadModule,
         MatDialogModule,
         FormsModule,

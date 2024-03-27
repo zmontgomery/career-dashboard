@@ -1,9 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Task } from 'src/domain/Task';
-import { Submission } from 'src/domain/Submission';
-import { ArtifactService } from 'src/app/file-upload/artifact.service';
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 /**
  * Component for the submission modal that allows a user to submit
@@ -20,7 +17,6 @@ export class SubmissionModalComponent {
   private readonly closeTime: number = 100; // Delay before the modal closes
 
   constructor(
-    private _snackBar: MatSnackBar,
     private readonly submissionModalRef: MatDialogRef<SubmissionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       task: Task
@@ -32,11 +28,5 @@ export class SubmissionModalComponent {
   onCancel() {
     setTimeout(() => this.submissionModalRef.close(), this.closeTime);
     // FIXME
-    // TODO error check?
-    this._snackBar.open("Submission Successful!", 'close', {
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      duration: 3000,
-    });
   }
 }

@@ -21,6 +21,7 @@ import { SubmissionModalComponent } from '../submission-modal/submission-modal.c
 import { SubmissionService } from '../submission.service';
 import { submission1 } from '../submission.service.spec';
 import { taskJSON } from 'src/app/util/task.service.spec';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('SubmissionContentComponent', () => {
   let component: SubmissionContentComponent;
@@ -55,6 +56,7 @@ describe('SubmissionContentComponent', () => {
         MatCardModule,
         MatButtonModule,
         MatIconModule,
+        MatSnackBarModule,
         MatInputModule,
         FileUploadModule,
         MatDialogModule,
