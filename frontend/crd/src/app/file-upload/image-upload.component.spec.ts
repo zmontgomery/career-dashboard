@@ -56,10 +56,10 @@ describe('ImageUploadComponent', () => {
   });
 
   it("close dialog", fakeAsync(() => {
-    spyOn(component.closeEmitter, 'emit');
+    const closeEmit = spyOn(component.closeEmitter, 'emit');
     component.closeModal();
-    tick();
-    expect(component.closeEmitter.emit).toHaveBeenCalled();
+    tick(1000);
+    expect(closeEmit).toHaveBeenCalled();
   }));
 
   it('done cropping', () => {

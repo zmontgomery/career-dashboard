@@ -91,11 +91,12 @@ describe('MilestoneCreateModalComponent', () => {
       name: [null, Validators.required],
       description: [null],
     });
-    let spyWindow = spyOn(window, 'alert');
+    // @ts-ignore
+    let spySnackBar = spyOn(component._snackBar, 'open');
 
     component.newMilestone();
 
-    expect(spyWindow).toHaveBeenCalled();
+    expect(spySnackBar).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
@@ -108,12 +109,14 @@ describe('MilestoneCreateModalComponent', () => {
     let spy = spyOn(component.http, 'post').and.returnValue(of({
       name: ""
     }));
-    let spyWindow = spyOn(window, 'alert');
+    // @ts-ignore
+    let spySnackBar = spyOn(component._snackBar, 'open');
+
     let spyRouter = spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
 
     component.newMilestone();
 
-    expect(spyWindow).toHaveBeenCalled();
+    expect(spySnackBar).toHaveBeenCalled();
   });
 
   it('should navigate away', () => {

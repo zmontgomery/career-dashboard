@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
 import { DeleteResumeConfirmationDialogComponent } from './delete-resume-confirmation-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('DeleteResumeConfirmationDialogComponent', () => {
   let component: DeleteResumeConfirmationDialogComponent;
@@ -30,6 +31,7 @@ describe('DeleteResumeConfirmationDialogComponent', () => {
         CommonModule,
         MatDialogModule,
         MatSnackBarModule,
+        NoopAnimationsModule,
         MatButtonModule
       ],
       providers: [
@@ -55,7 +57,7 @@ describe('DeleteResumeConfirmationDialogComponent', () => {
 
   it('should confirm', fakeAsync(() => {
     component.onConfirm();
-
+    tick(1000)
     expect(artifactService.deleteArtifact).toHaveBeenCalledWith(2);
     expect(ref.close).toHaveBeenCalledWith(true);
   }));

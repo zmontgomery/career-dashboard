@@ -231,11 +231,12 @@ describe('EventEditModalComponent', () => {
     });
 
     let spy = spyOn(component.http, 'post').and.returnValue(of(null));
-    let spyWindow = spyOn(window, 'alert');
+    //@ts-ignore
+    let snackBarSpy = spyOn(component._snackBar, 'open');
 
     component.saveEvent();
     expect(spy).toHaveBeenCalled();
-    expect(spyWindow).toHaveBeenCalled();
+    expect(snackBarSpy).toHaveBeenCalled();
   });
 
 

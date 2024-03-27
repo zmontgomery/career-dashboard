@@ -128,7 +128,7 @@ describe('SubmissionContentComponent', () => {
     })
     submissionService.submit.and.returnValue(of(submission1));
     component.onSubmit();
-    tick(50);
+    tick(1000);
     expect(submissionService.submit).toHaveBeenCalled();
     expect(component.state).toEqual('submitting');
   }));
