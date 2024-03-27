@@ -2,22 +2,41 @@
 
 .resume-card {
     align-items: center;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    box-shadow: @oswego-box-shadow;
+    min-height: 50vh;
 
-    .mdc-button {
-        width: 100%;
+    .upload {
+      width: 100%;
+      flex-grow: 1;
+      .center();
+
+      mat-icon {
+        transform: scale(2);
+      }
     }
 
     pdf-viewer {
-        height: 530px!important;
+      width: 100% !important;
+      aspect-ratio: 8.5 / 11;
+      overflow-x: hidden;
+      border-radius: 10px;
+
+      ::ng-deep .ng2-pdf-viewer-container {
+        overflow-y: scroll;
+        overflow-x: hidden;
+      }
     }
+}
 
-    .mdc-button{
-        height: 50vh;
+.resume-container {
+  position: relative;
 
-        mat-icon {
-        transform: scale(2);
-        }
-    }   
+  .delete {
+    position: absolute;
+    z-index: 1;
+  }   
 }
 
 .spinner-container {

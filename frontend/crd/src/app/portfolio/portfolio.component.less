@@ -1,49 +1,152 @@
 @import "../../common";
 
-h1 {
+h2 {
+  font-size: larger;
   color: @oswego-green;
 }
 
-.section-container {
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-.section {
-  width: 45%; /* Adjust the width as needed */
-  margin: 10px;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 5px;
-  transition: transform 0.2s;
-
-  .card-body {
-    padding: 10px;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-}
-
-.card-header {
-  background-color: @oswego-green;
-  color: #fff;
+h3 {
+  font-size: medium;
   font-weight: bold;
-  padding: 10px;
-  height: 50px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+}
 
-  mat-icon {
-    margin-bottom: 5px;
+.portfolio-container {
+  width: 95%;
+  .center();
+  flex-direction: column;
+  margin: 0 2.5%;
+
+  .skills {
+    display: flex;
+    gap: 15px;
+
+    .skill {
+      background-color: @oswego-gray;
+      box-shadow: @oswego-box-shadow;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  }
+
+  .content {
+    div {
+      padding: 2.5px 20px;
+      display: flex;
+  
+      mat-icon:hover {
+        color: @oswego-sunset-gold !important;
+        cursor: pointer;
+      }
+  
+      span {
+        width: 50%;
+        font-size: smaller;
+      }
+
+      .value {
+        font-size: large !important;
+      }
+  
+      .title {
+        width: 35% !important;
+        font-size: large;
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .project {
+      padding: 20px;
+      border-radius: 1em;
+      box-shadow: @oswego-box-shadow;
+      background-color: @oswego-gray;
+
+      .date-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    
+        div {
+          padding-left: 0 !important; 
+        }
+    
+        span {
+          width: fit-content !important;
+        }
+    
+        .date {
+          font-size: medium !important; 
+          display: flex;
+          align-items: center;
+        }
+    
+        .title {
+          font-size: medium !important;
+          padding-right: 5px;
+        }
+      }
+
+      .project-description {
+        padding-top: 10px;
+      }
+    }
+  }
+
+  .personal {
+    display: flex;
+    justify-content: space-between;
+
+    .profile-picture {
+      width: 200px !important;
+      height: 200px !important;
+      font-size: 200px;
+      border-radius: 10px;
+    }
+
+    .card-body-section-data {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+
+      .verticle {
+        flex-direction: column;
+      }
+    }
+  }
+  
+  .section-container {
+    display: flex;
+    justify-content: space-between;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  .section {
+    width: 50%; /* Adjust the width as needed */
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: transform 0.2s;
+  
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .card-body-section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 40px;
+    border-radius: 1em;
+    box-shadow: @oswego-box-shadow;
   }
 }
+

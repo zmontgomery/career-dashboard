@@ -7,8 +7,9 @@ import {ArtifactService} from "../file-upload/artifact.service";
 import { TaskService } from '../util/task.service';
 import { SubmissionService } from '../submissions/submission.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map, mergeMap, tap, zipWith } from 'rxjs';
+import { map, mergeMap, takeUntil, tap, zipWith } from 'rxjs';
 import { UserService } from '../security/user.service';
+import { Job } from 'src/domain/Job';
 
 @Component({
   selector: 'app-portfolio',
@@ -19,10 +20,12 @@ export class PortfolioComponent implements OnInit {
 
   user: User = User.makeEmpty();
   external: boolean = false;
+  profileURL: string | null = null;
 
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly artifactService: ArtifactService,
     private readonly route: ActivatedRoute,
     private readonly router: Router
   ) { }
@@ -52,8 +55,54 @@ export class PortfolioComponent implements OnInit {
     ).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;
+        this.loadProfilePicture();
       }
     });
+  }
+
+  loadProfilePicture() {
+    this.artifactService.getArtifactFile(this.user.profilePictureId)
+      .subscribe((blob) => {
+        this.user.profilePictureURL = URL.createObjectURL(blob);
+      });
+  }
+
+  goToLinkedIn() {
+    location.href = this.user.linkedin;
+  }
+
+  majors(): string[] {
+    return (this.user.studentDetails?.degreePrograms ?? [])
+      .filter((d) => !d.isMinor)
+      .map((d) => d.name);
+  }
+
+  minors(): string[] {
+    return (this.user.studentDetails?.degreePrograms ?? [])
+      .filter((d) => d.isMinor)
+      .map((d) => d.name);
+  }
+
+  skills(): string[] {
+    return (this.user.studentDetails?.skills ?? [])
+      .filter((s) => !s.isLanguage)
+      .map((s) => s.name);
+  }
+
+  jobs(): Job[] {
+    return (this.user.studentDetails?.jobs ?? [])
+      .filter((s) => !s.isCoop)
+  }
+
+  coops(): Job[] {
+    return (this.user.studentDetails?.jobs ?? [])
+      .filter((s) => s.isCoop)
+  }
+
+  languages(): string[] {
+    return (this.user.studentDetails?.skills ?? [])
+      .filter((s) => s.isLanguage)
+      .map((s) => s.name);
   }
 
   formatDate(date: Date){
