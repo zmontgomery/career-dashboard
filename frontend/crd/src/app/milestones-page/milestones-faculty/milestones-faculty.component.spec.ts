@@ -20,11 +20,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { StudentDetailsJSON } from 'src/domain/StudentDetails';
 import { AuthService } from 'src/app/security/auth.service';
 import { userJSON } from 'src/app/security/auth.service.spec';
+import { ArtifactService } from 'src/app/file-upload/artifact.service';
 
 describe('MilestonesFacultyComponent', () => {
   let component: MilestonesFacultyComponent;
   let fixture: ComponentFixture<MilestonesFacultyComponent>;
   let submissionService: jasmine.SpyObj<SubmissionService>;
+  let artifactService: jasmine.SpyObj<ArtifactService>;
   let httpMock: HttpTestingController;
 
   let authServiceSpy: jasmine.SpyObj<AuthService>;
@@ -281,12 +283,15 @@ describe('MilestonesFacultyComponent', () => {
   
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   let submissionsServiceSpy = createSpyObj('SubmissionService', ['getStudentSubmissionsFaculty']);
+  let artifactServiceSpy = createSpyObj('ArtifactService', ['getArtifactFile']);
   let userServiceSpy = createSpyObj('UserService', ['getUser']);
 
   beforeEach(() => {
     submissionService = jasmine.createSpyObj('SubmissionService', ['submit']);
+    artifactService = jasmine.createSpyObj('ArtifactService', ['getArtifactFile']);
     milestoneServiceSpy.getMilestones.and.returnValue(of([]));
     submissionsServiceSpy.getStudentSubmissionsFaculty.and.returnValue(of(testSubmissions));
+    artifactServiceSpy.getArtifactFile.and.returnValue(of(new Blob([])));
     userServiceSpy.getUser.and.returnValue(of(user));
 
     TestBed.configureTestingModule({
@@ -304,7 +309,8 @@ describe('MilestonesFacultyComponent', () => {
         {provide: SubmissionService, useValue: submissionsServiceSpy},
         {provide: ActivatedRoute, useValue: activatedRouteMock},
         {provide: UserService, userValue: userServiceSpy},
-        {provide: AuthService, useValue: authServiceSpy}
+        {provide: AuthService, useValue: authServiceSpy},
+        {provide: ArtifactService, useValue: artifactServiceSpy}
       ],
       declarations: [MilestonesFacultyComponent]
     }).compileComponents();
@@ -343,6 +349,43 @@ describe('MilestonesFacultyComponent', () => {
     component.sortMilestones(testMilestones);
     
     expect(component.completedMap).toEqual(testFMap);
+  });
+
+  
+  it('should download artifact', () => {
+    const testSubmissionMap: Map<number, Submission> = new Map();
+    testSubmissionMap.set(1, testSubmissions[0]);
+    const testTask = completeMilstone.tasks[0];
+    const testArtifactURL = "testURL";
+    const testFileName = user.firstName + user.lastName 
+                       + testTask.name.replace(" ", "") + "Submission";
+
+    component.currentStudent = user;
+    component.submissionMap = testSubmissionMap;
+
+    let spyURL = spyOn(window.URL, 'createObjectURL').and.returnValue(testArtifactURL);
+    let spyDocument = spyOn(document.body, 'appendChild');
+    let spyRevokeURL = spyOn(URL, 'revokeObjectURL');
+    let spyRemove = spyOn(document.body, 'removeChild');
+
+    component.downloadArtifact(testTask);
+
+    const testA: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+    testA.href = testArtifactURL;
+    testA.download = testFileName;
+
+    expect(spyURL).toHaveBeenCalled();  
+    expect(spyDocument).toHaveBeenCalledWith(testA);
+    expect(spyRevokeURL).toHaveBeenCalledWith(testArtifactURL);
+  });
+
+  it('should map submissions', () => {
+    component.completedTasks = [1, 2, 3]
+
+    component.mapSubmissions(testSubmissions);
+
+    expect(component.submissionMap.size).toEqual(3);
+    expect(component.submissionMap.get(1)).toEqual(testSubmissions[0]);
   });
 
   // tests from milestones-page
