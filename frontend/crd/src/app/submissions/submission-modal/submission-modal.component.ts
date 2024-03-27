@@ -27,6 +27,5 @@ export class SubmissionModalComponent {
 
   onCancel() {
     setTimeout(() => this.submissionModalRef.close(), this.closeTime);
-    // FIXME
   }
 }
