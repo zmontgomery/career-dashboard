@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MilestonesComponent } from './milestones.component';
 import { of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
-import { Milestone, YearLevel } from "../../../domain/Milestone";
+import {Milestone, MilestoneJSON, YearLevel} from "../../../domain/Milestone";
 import { MatCardModule } from "@angular/material/card";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -18,6 +18,45 @@ import { Task, TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
 import { TasksModalComponent } from 'src/app/tasks-modal/tasks-modal.component';
 import { TasksModalModule } from 'src/app/tasks-modal/tasks-modal.module';
+
+export const taskJSON = {
+  name: 'task name',
+  description: "description",
+  id: 1,
+  isRequired: true,
+  yearLevel: YearLevel.Freshman,
+  milestoneID: 1,
+  taskType: TaskType.ARTIFACT,
+  artifactName: 'test artifact'
+}
+
+export const milestone1JSON: MilestoneJSON = {
+  name: "name",
+  yearLevel: YearLevel.Freshman,
+  id: 1,
+  description: "sample",
+  events: [],
+  tasks: [taskJSON,
+  {
+    ...taskJSON,
+    id: 2,
+  }],
+}
+
+export const milestone2JSON = {
+  ...milestone1JSON,
+  id: 2,
+  tasks: [{
+    ...taskJSON,
+    id: 3,
+    milestoneID: 2,
+  },
+  {
+    ...taskJSON,
+    id: 4,
+    milestoneID: 2,
+  }],
+}
 
 describe('MilestonesComponent', () => {
   let component: MilestonesComponent;
@@ -64,7 +103,7 @@ describe('MilestonesComponent', () => {
       taskId: 3,
     })
   ];
-  
+
   let milestoneServiceSpy = createSpyObj('MilestoneService', ['getMilestones']);
   milestoneServiceSpy.getMilestones.and.returnValue(of([]));
 
@@ -77,10 +116,10 @@ describe('MilestonesComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MatCardModule, 
-        MatExpansionModule, 
-        MatCheckboxModule, 
-        NoopAnimationsModule, 
+        MatCardModule,
+        MatExpansionModule,
+        MatCheckboxModule,
+        NoopAnimationsModule,
         MatDialogModule,
         TasksModalModule
       ],

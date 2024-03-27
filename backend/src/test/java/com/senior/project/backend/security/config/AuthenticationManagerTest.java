@@ -39,7 +39,7 @@ public class AuthenticationManagerTest {
         new UsernamePasswordAuthenticationToken("email", "");
 
     private UsernamePasswordAuthenticationToken expectedToken =
-        new UsernamePasswordAuthenticationToken(Constants.user1, "", Constants.user1.getAuthorities());
+        new UsernamePasswordAuthenticationToken(Constants.userAdmin, "", Constants.userAdmin.getAuthorities());
 
     @BeforeEach
     public void setup() {
@@ -48,8 +48,8 @@ public class AuthenticationManagerTest {
 
     @Test
     public void testHappyPath() throws TokenVerificiationException {
-        when(tokenGenerator.extractEmail(anyString())).thenReturn(Constants.user1.getEmail());
-        when(userDetailsService.findByUsername(anyString())).thenReturn(Mono.just(Constants.user1));
+        when(tokenGenerator.extractEmail(anyString())).thenReturn(Constants.userAdmin.getEmail());
+        when(userDetailsService.findByUsername(anyString())).thenReturn(Mono.just(Constants.userAdmin));
 
         Mono<Authentication> auth = CuT.authenticate(token);
 
@@ -72,7 +72,7 @@ public class AuthenticationManagerTest {
 
     @Test
     public void testUserNotFound() throws TokenVerificiationException {
-        when(tokenGenerator.extractEmail(anyString())).thenReturn(Constants.user1.getEmail());
+        when(tokenGenerator.extractEmail(anyString())).thenReturn(Constants.userAdmin.getEmail());
         when(userDetailsService.findByUsername(anyString())).thenReturn(Mono.empty());
 
         Mono<Authentication> auth = CuT.authenticate(token);

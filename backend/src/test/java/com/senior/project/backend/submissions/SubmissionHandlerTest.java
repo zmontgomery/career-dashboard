@@ -114,7 +114,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testGetLatestSubmission() {        
         when(submissionService.getSubmissions(any(), eq(1))).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
         Submission result = webTestClient.get()
             .uri("/test/1")
@@ -130,7 +130,7 @@ public class SubmissionHandlerTest {
     @Test
     public void testLatestSubmissionWith404() {
         when(submissionService.getSubmissions(any(), eq(1))).thenReturn(Flux.fromIterable(new ArrayList<Submission>()));
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
         webTestClient.get()
             .uri("/test/1")
@@ -141,8 +141,8 @@ public class SubmissionHandlerTest {
 
     @Test
     public void testGetStudentSubmissions() {  
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
-        when(submissionService.getStudentSubmissions(Constants.user1.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
+        when(submissionService.getStudentSubmissions(Constants.userAdmin.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
 
         List<Submission> result = webTestClient.get()
             .uri("/student")
@@ -157,9 +157,9 @@ public class SubmissionHandlerTest {
 
     @Test
     public void testGetStudentSubmissionsFaculty() {  
-        when(submissionService.getStudentSubmissionsFaculty(Constants.user1.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
+        when(submissionService.getStudentSubmissionsFaculty(Constants.userAdmin.getId())).thenReturn(Flux.fromIterable(Constants.SUBMISSIONS));
 
-        String studentID = Constants.user1.getId().toString();
+        String studentID = Constants.userAdmin.getId().toString();
 
         List<Submission> result = webTestClient.get()
             .uri("/faculty/" + studentID)

@@ -1,4 +1,4 @@
-package com.senior.project.backend.artifact;
+package com.senior.project.backend.util;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

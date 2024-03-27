@@ -14,6 +14,9 @@ import { of } from 'rxjs';
 import { userJSON } from '../security/auth.service.spec';
 import { User } from '../security/domain/user';
 import { ResumeComponent } from './resume/resume.component';
+import {MilestoneService} from "../milestones-page/milestones/milestone.service";
+import {Milestone} from "../../domain/Milestone";
+import {milestone1JSON} from "../milestones-page/milestones/milestones.component.spec";
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
@@ -25,6 +28,7 @@ describe('PortfolioComponent', () => {
   let userServiceSpy: SpyObj<UserService>;
   let routeSpy: SpyObj<ActivatedRoute>;
   let router: SpyObj<Router>;
+  let milestoneServiceSpy: SpyObj<MilestoneService>;
 
   const user = new User(userJSON);
 
@@ -32,15 +36,17 @@ describe('PortfolioComponent', () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', [''], {user$: of(user)});
     userServiceSpy = jasmine.createSpyObj('UserService', ['getUser']);
     router = jasmine.createSpyObj('Router', ['navigate']);
+    milestoneServiceSpy = jasmine.createSpyObj('MilestoneService', ['getCompletedMilestones']);
 
     userServiceSpy.getUser.and.returnValue(of(new User({...userJSON, id: 'id-2'})));
+    milestoneServiceSpy.getCompletedMilestones.and.returnValue(of([new Milestone(milestone1JSON), new Milestone(milestone1JSON)]))
   }
 
   function createTestBed(external: boolean, faculty: boolean) {
     setupSpies();
-    routeSpy = jasmine.createSpyObj('ActivatedRoute', [''], 
+    routeSpy = jasmine.createSpyObj('ActivatedRoute', [''],
       {
-        paramMap: of(convertToParamMap(external ? {'id': 'id'} : {})), 
+        paramMap: of(convertToParamMap(external ? {'id': 'id'} : {})),
         url: of(faculty ? [new UrlSegment('faculty', {})] : [new UrlSegment('', {})])
       }
     );
@@ -62,7 +68,8 @@ describe('PortfolioComponent', () => {
         {provide: AuthService, useValue: authServiceSpy},
         {provide: UserService, useValue: userServiceSpy},
         {provide: ActivatedRoute, useValue: routeSpy},
-        {provide: Router, useValue: router}
+        {provide: Router, useValue: router},
+        {provide: MilestoneService, useValue: milestoneServiceSpy},
       ]
     });
     fixture = TestBed.createComponent(PortfolioComponent);

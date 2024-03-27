@@ -61,7 +61,7 @@ public class SubmissionServiceTest {
     public void testGetPreviousSubmission() {
         when(submissionRepository.findAllWithUserAndTask(any(), anyInt())).thenReturn(Constants.SUBMISSIONS);
 
-        Flux<Submission> result = submissionService.getSubmissions(Constants.user1.getId(), 1);
+        Flux<Submission> result = submissionService.getSubmissions(Constants.userAdmin.getId(), 1);
 
         StepVerifier.create(result)
             .expectNext(Constants.submission1)
@@ -89,11 +89,11 @@ public class SubmissionServiceTest {
 
     @Test
     public void testGetStudentSubmissions() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         
-        when(submissionRepository.findAllWithUser(Constants.user1.getId())).thenReturn(Constants.SUBMISSIONS);
+        when(submissionRepository.findAllWithUser(Constants.userAdmin.getId())).thenReturn(Constants.SUBMISSIONS);
 
-        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.user1.getId());
+        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.userAdmin.getId());
 
         StepVerifier.create(result)
             .expectNext(Constants.submission1)
@@ -104,9 +104,9 @@ public class SubmissionServiceTest {
 
     @Test
     public void testGetWrongStudentSubmissions() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         
-        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.user1.getId());
+        Flux<Submission> result = submissionService.getStudentSubmissions(Constants.userAdmin.getId());
 
         StepVerifier.create(result).expectErrorMatches(throwable -> throwable instanceof ResponseStatusException &&
             throwable.getMessage().equals("Can't get submissions for other users"));
@@ -114,9 +114,9 @@ public class SubmissionServiceTest {
 
     @Test
     public void testGetStudentSubmissionsFaculty() {        
-        when(submissionRepository.findAllWithUser(Constants.user1.getId())).thenReturn(Constants.SUBMISSIONS);
+        when(submissionRepository.findAllWithUser(Constants.userAdmin.getId())).thenReturn(Constants.SUBMISSIONS);
 
-        Flux<Submission> result = submissionService.getStudentSubmissionsFaculty(Constants.user1.getId());
+        Flux<Submission> result = submissionService.getStudentSubmissionsFaculty(Constants.userAdmin.getId());
 
         StepVerifier.create(result)
             .expectNext(Constants.submission1)

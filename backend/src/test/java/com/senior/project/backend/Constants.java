@@ -174,29 +174,38 @@ public class Constants {
         return ServerResponse.status(401).build();
     }
 
-    public static User user1;
-    public static User user2;
+    public static User userAdmin;
+    public static User userFaculty;
+    public static User userStudent;
 
     public static final List<User> USERS = new ArrayList<>();
 
     static {
-        user1 = new User();
-        user1.setId(UUID.randomUUID());
-        user1.setEmail("test@test.com");
-        user1.setRole(Role.Admin);
-        user1.setSignedUp(false);
-        user1.setProfilePictureId(1);
+        userAdmin = new User();
+        userAdmin.setId(UUID.randomUUID());
+        userAdmin.setEmail("test@test.com");
+        userAdmin.setRole(Role.Admin);
+        userAdmin.setSignedUp(false);
+        userAdmin.setProfilePictureId(1);
         var user1Details = new StudentDetails();
         user1Details.setYearLevel(YearLevel.Freshman);
-        user1.setStudentDetails(user1Details);
-        user2 = new User();
-        user2.setId(UUID.randomUUID());
-        user2.setEmail("test2@test.com");
-        user2.setSignedUp(true);
-        user2.setRole(Role.Faculty);
+        userAdmin.setStudentDetails(user1Details);
 
-        USERS.add(user1);
-        USERS.add(user2);
+        userFaculty = new User();
+        userFaculty.setId(UUID.randomUUID());
+        userFaculty.setEmail("test2@test.com");
+        userFaculty.setSignedUp(true);
+        userFaculty.setRole(Role.Faculty);
+
+        userStudent = new User();
+        userStudent.setId(UUID.randomUUID());
+        userStudent.setEmail("test3@test.com");
+        userStudent.setSignedUp(true);
+        userStudent.setRole(Role.Student);
+
+        USERS.add(userAdmin);
+        USERS.add(userFaculty);
+        USERS.add(userStudent);
     }
 
     public static Artifact artifact1;
@@ -208,12 +217,12 @@ public class Constants {
         artifact1.setName("artifact 1 name");
         artifact1.setId(2);
         artifact1.setFileLocation("../uploads/artifactServiceTest");
-        artifact1.setUserId(user1.getId());
+        artifact1.setUserId(userAdmin.getId());
         artifact2 = new Artifact();
         artifact2.setName("artifact 2 name");
         artifact2.setId(3);
         artifact2.setFileLocation("../uploads/location 2");
-        artifact2.setUserId(user2.getId());
+        artifact2.setUserId(userFaculty.getId());
         ARTIFACTS.add(artifact1);
         ARTIFACTS.add(artifact2);
     }

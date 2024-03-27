@@ -3,6 +3,7 @@ package com.senior.project.backend.submissions;
 import com.senior.project.backend.domain.Submission;
 import com.senior.project.backend.security.CurrentUserUtil;
 
+import com.senior.project.backend.util.NonBlockingExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.Optional;
 
 /**
  * Service to interact with the repository layer for submissions
@@ -33,11 +33,8 @@ public class SubmissionService {
      * @return
      */
     public Mono<Submission> addSubmission(Submission submission) {
-        try {
-            return Mono.just(submissionRepository.saveAndFlush(submission));
-        } catch (Exception e) {
-            return Mono.empty();
-        }
+        return NonBlockingExecutor.execute(()->submissionRepository.saveAndFlush(submission))
+                .onErrorResume(throwable -> Mono.empty());
     }
 
     /**
@@ -47,7 +44,7 @@ public class SubmissionService {
      * @return
      */
     public Flux<Submission> getSubmissions(UUID userId, int taskId) {
-        return Flux.fromIterable(submissionRepository.findAllWithUserAndTask(userId, taskId));
+        return NonBlockingExecutor.executeMany(()->submissionRepository.findAllWithUserAndTask(userId, taskId));
     }
 
 
@@ -59,7 +56,7 @@ public class SubmissionService {
     public Flux<Submission> getStudentSubmissions(UUID userId) {
         return currentUserUtil.getCurrentUser().flatMapMany(user -> {
             if (user.getId().equals(userId)) {
-                return Flux.fromIterable(submissionRepository.findAllWithUser(userId));
+                return NonBlockingExecutor.executeMany(()->submissionRepository.findAllWithUser(userId));
             }
             else {
                 return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Can't get submissions for other users"));
@@ -91,10 +88,7 @@ public class SubmissionService {
      * @return the submission with the given artifact id
      */
     public Mono<Submission> findByArtifact(int artifactId) {
-        Optional<Submission> submission = submissionRepository.findSubmissionByArtifactId(artifactId);
-        if (submission.isPresent()) {
-            return Mono.just(submission.get());
-        }
-        return Mono.empty();
+        return NonBlockingExecutor.execute(()->submissionRepository.findSubmissionByArtifactId(artifactId))
+                .flatMap(submission -> submission.<Mono<? extends Submission>>map(Mono::just).orElseGet(Mono::empty));
     }
 }

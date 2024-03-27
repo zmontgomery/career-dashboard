@@ -159,7 +159,7 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDelete() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission2));
         when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
@@ -176,7 +176,7 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmission() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.empty());
         when(artifactService.deleteFile(anyInt())).thenReturn(Mono.just("test"));
         
@@ -192,7 +192,7 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteNoSubmissionNoFile() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user1));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
         webTestClient.delete().uri("/test/1")
             .exchange()
             .expectStatus()
@@ -201,7 +201,7 @@ public class ArtifactHandlerTest {
 
     @Test
     public void handleFileDeleteForbidden() {
-        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.user2));
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userFaculty));
         when(submissionService.scrubArtifact(any())).thenReturn(Mono.just(Constants.submission2));
         when(submissionService.findByArtifact(anyInt())).thenReturn(Mono.just(Constants.submission1));
 

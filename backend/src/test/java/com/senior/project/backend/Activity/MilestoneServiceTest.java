@@ -10,6 +10,9 @@ import com.senior.project.backend.domain.Task;
 import com.senior.project.backend.domain.YearLevel;
 
 import java.util.Map;
+
+import com.senior.project.backend.security.CurrentUserUtil;
+import com.senior.project.backend.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,12 +20,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +38,12 @@ public class MilestoneServiceTest {
 
     @Mock
     private MilestoneRepository milestoneRepository;
+
+    @Mock
+    private CurrentUserUtil currentUserUtil;
+
+    @Mock
+    private UserService userService;
 
     @Mock
     private TaskRepository taskRepository;
@@ -223,5 +234,34 @@ public class MilestoneServiceTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testCompletedFaculty() {
+        when(milestoneRepository.findComplete(any())).thenReturn(Constants.milestoneDATA);
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userFaculty));
+        when(userService.findById(any())).thenReturn(Mono.just(Constants.userFaculty));
+
+        Flux<Milestone> result = milestoneService.completedMilestones(Constants.userFaculty.getId());
+        StepVerifier.create(result).expectNext(Constants.milestoneDATA.get(0)).expectNext(Constants.milestoneDATA.get(1)).expectComplete().verify();
+    }
+
+    @Test
+    public void testCompletedCurrentUser() {
+        when(milestoneRepository.findComplete(any())).thenReturn(Constants.milestoneDATA);
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userStudent));
+        when(userService.findById(any())).thenReturn(Mono.just(Constants.userStudent));
+
+        Flux<Milestone> result = milestoneService.completedMilestones(Constants.userStudent.getId());
+        StepVerifier.create(result).expectNext(Constants.milestoneDATA.get(0)).expectNext(Constants.milestoneDATA.get(1)).expectComplete().verify();
+    }
+
+    @Test
+    public void testCompletedError() {
+        when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userStudent));
+        when(userService.findById(any())).thenReturn(Mono.just(Constants.userFaculty));
+
+        Flux<Milestone> result = milestoneService.completedMilestones(Constants.userFaculty.getId());
+        StepVerifier.create(result).expectError().verify();
     }
 }

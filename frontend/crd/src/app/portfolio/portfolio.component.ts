@@ -10,6 +10,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, mergeMap, takeUntil, tap, zipWith } from 'rxjs';
 import { UserService } from '../security/user.service';
 import { Job } from 'src/domain/Job';
+import {MilestoneService} from "../milestones-page/milestones/milestone.service";
 
 @Component({
   selector: 'app-portfolio',
@@ -21,25 +22,26 @@ export class PortfolioComponent implements OnInit {
   user: User = User.makeEmpty();
   external: boolean = false;
   profileURL: string | null = null;
+  completedMilestones: string[] = []
 
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly artifactService: ArtifactService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly milestoneService: MilestoneService,
   ) { }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
       mergeMap((map: ParamMap) => {
-        console.log(map);
         if (map.has('id')) {
           this.external = true;
           return this.userService.getUser(map.get('id')!);
         } else {
           return this.authService.user$;
-        }  
+        }
       }),
       zipWith(this.route.url),
       tap(([_, url]) => {
@@ -56,6 +58,9 @@ export class PortfolioComponent implements OnInit {
       if (LangUtils.exists(user)) {
         this.user = user!;
         this.loadProfilePicture();
+        this.milestoneService.getCompletedMilestones(user!.id).subscribe((milestones) => {
+          this.completedMilestones = milestones.map((it) => it.name)
+        })
       }
     });
   }
