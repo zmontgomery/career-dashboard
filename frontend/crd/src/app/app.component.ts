@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {ScreenSizeService} from "./util/screen-size.service";
+import {map, Observable} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -9,8 +11,15 @@ export class AppComponent {
   title = 'crd';
 
   noNavBar = ['login', 'signup'];
+  showAIButton$: Observable<boolean>;
+  showTitle$: Observable<boolean>;
 
-  constructor() {}
+  constructor(
+    screenSizeSvc: ScreenSizeService
+  ) {
+    this.showAIButton$ = screenSizeSvc.screenSize$.pipe(map(it => it > 770));
+    this.showTitle$ = screenSizeSvc.screenSize$.pipe(map(it => it > 430));
+  }
 
   needsNavBar(): boolean {
     return this.noNavBar.every((uri) => {

@@ -5,6 +5,8 @@ import { LangUtils } from 'src/app/util/lang-utils';
 import {Router} from "@angular/router";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {UserService} from "../user.service";
+import {ScreenSizeService} from "../../util/screen-size.service";
+import {map, Observable} from "rxjs";
 
 @Component({
   selector: 'app-user-menu',
@@ -15,12 +17,15 @@ export class UserMenuComponent implements OnInit {
 
   user: User = User.makeEmpty();
   profileURL: string | null = null;
+  displayName$: Observable<boolean>;
 
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly userService: UserService,
+    private readonly screenSizeSvc: ScreenSizeService,
     ) {
+    this.displayName$ = screenSizeSvc.screenSize$.pipe(map(it => it > 830));
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (LangUtils.exists(user)) {
         this.user = user!;

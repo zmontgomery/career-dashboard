@@ -3,14 +3,14 @@
     <div class="logo">
       <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
     </div>
-    <div class="title-container">
+    <div *ngIf="(showTitle$ | async)" class="title-container">
       <p>Career Readiness Dashboard</p>
     </div>
 
     <div class="header">
-      <div class="header-AI-button" *ngIf="needsNavBar()">
+      <div class="header-AI-button" *ngIf="needsNavBar() && (showAIButton$ | async)">
         <img class="header-AI-img" src="../assets/images/Lakers.jpg" alt="Oswego Logo">
-        <p class = "AI-button-text">AI Business Advisor<br>Ask all your 
+        <p class = "AI-button-text">AI Business Advisor<br>Ask all your
         advisement and career questions</p>
       </div>
 
