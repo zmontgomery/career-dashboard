@@ -176,7 +176,7 @@
                     "description": "new or current event name"
                   },
                   "date": {
-                    "type": "Date",
+                    "type": "string",
                     "required": "true",
                     "description": "new or current event date"
                   },
@@ -262,7 +262,7 @@
                     "description": "new event name"
                   },
                   "date": {
-                    "type": "Date",
+                    "type": "string",
                     "required": "true",
                     "description": "new event date"
                   },
@@ -1282,24 +1282,26 @@
       "Submission": {
         "description": "the submission for a task",
         "properties": {
-          "submissionID": {
+          "submissionId": {
             "type": "integer",
-            "description": "internal ID for the submission"
+            "description": "internal ID for the submission",
+            "default": 0
           },
-          "artifactID": {
-            "type": "number",
-            "description": "reference to the artifact data with the submission"
+          "artifactId": {
+            "type": "integer",
+            "description": "reference to the artifact data with the submission",
+            "default": 0
           },
-          "taskID": {
-            "type": "number",
+          "taskId": {
+            "type": "integer",
             "description": "what task was this submission for"
           },
-          "studentID": {
-            "type": "number",
+          "studentId": {
+            "type": "string",
             "description": "the student who made the submission"
           },
           "submissionDate": {
-            "type": "Date",
+            "type": "string",
             "description": "when the submission was made"
           },
           "comment": {
@@ -1320,7 +1322,7 @@
             "description": "name of the file submitted"
           },
           "submissionDate": {
-            "type": "Date",
+            "type": "string",
             "description": "when the artifact was submitted"
           },
           "submission": {
@@ -1361,11 +1363,11 @@
             "description": "user's phone number"
           },
           "dateCreated": {
-            "type": "Date",
+            "type": "string",
             "description": "when the account was created"
           },
           "lastLogin": {
-            "type": "Date",
+            "type": "string",
             "description": "when the user last logged in"
           },
           "canEmail": {
@@ -1420,11 +1422,11 @@
             "description": "description of the student (?)"
           },
           "graduationYear": {
-            "type": "Date",
+            "type": "string",
             "description": "expected graduation date of the student"
           },
           "startDate": {
-            "type": "Date",
+            "type": "string",
             "description": "when the student began at university"
           },
           "yearLevel": {
