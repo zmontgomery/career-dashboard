@@ -119,5 +119,4 @@ export class PortfolioComponent implements OnInit {
     return this.mobile ? date.toLocaleString("en-US", {month: "numeric", year: "numeric", day: "numeric"}) :
       date.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"});
   }
-
 }
