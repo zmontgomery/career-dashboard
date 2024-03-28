@@ -22,7 +22,8 @@ export class PortfolioComponent implements OnInit {
   user: User = User.makeEmpty();
   external: boolean = false;
   profileURL: string | null = null;
-  completedMilestones: string[] = []
+  completedMilestones: string[] = [];
+  mobile = window.outerWidth <= 480;
 
   constructor(
     private readonly authService: AuthService,
@@ -110,8 +111,13 @@ export class PortfolioComponent implements OnInit {
       .map((s) => s.name);
   }
 
+  dateHeader(header: string): string {
+    return this.mobile ? `${header}:` : `${header} Date:`;
+  }
+
   formatDate(date: Date){
-    return date.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"});
+    return this.mobile ? date.toLocaleString("en-US", {month: "numeric", year: "numeric", day: "numeric"}) :
+      date.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"});
   }
 
 }

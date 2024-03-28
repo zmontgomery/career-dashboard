@@ -6,7 +6,7 @@
 }
 
 .matList {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    box-shadow: @oswego-box-shadow;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -17,6 +17,7 @@
 }
 .matListTitle {
     font-weight: bold;
+    box-shadow: @oswego-box-shadow;
 }
 .matListItem {
     background-color: white;
@@ -25,7 +26,7 @@
     width: 95%;
     margin: 1vh;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: @oswego-box-shadow;
 }
 .matListItem:not(.taskBar):hover {
   background-color: lightgray;
