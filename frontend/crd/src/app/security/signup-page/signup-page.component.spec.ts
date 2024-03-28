@@ -17,7 +17,7 @@ import { OswegoLogoModule } from 'src/app/oswego-logo/oswego-logo.module';
 import { MockComponent } from 'ng-mocks';
 import { OswegoLogoComponent } from 'src/app/oswego-logo/oswego-logo.component';
 
-fdescribe('SignupPageComponent', () => {
+describe('SignupPageComponent', () => {
   let component: SignupPageComponent;
   let fixture: ComponentFixture<SignupPageComponent>;
 

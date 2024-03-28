@@ -1,42 +1,83 @@
-@import "../../../common";
+@import "../../../common.less";
 
-.year-container {
-  margin-bottom: 20px;
+.milestone-page-container {
+  width: 100%;
+  .center();
+  flex-direction: column;
 
-  .year-card {
-    background-color: @oswego-green;
-    color: white;
-    width: 200px;
-    mat-card-header {
-      padding: 10px 16px;
-      justify-content: center;
+  mat-spinner {
+    align-self: center;
+    min-height: 75vh;
+    transform: scale(1.2);
+  }
 
+  .milestone-container {
+    width: 95%;
+    .center();
+    flex-direction: column;
+    align-self: center;
 
-      .year-name {
-        font-size: 18px;
+    .year-container {
+      .center();
+      width: 100%;
+      flex-direction: column;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: white;
+
+      .year-header {
+        font-size: xx-large;
+        color: @oswego-green;
+        padding: 10px 0;
+        padding-left: 15px;
+      }
+
+      .accordion {
+        width: 98% !important;
+        align-self: center !important;
+      }
+
+      .milestone-panel {
+        background-color: @oswego-gray;
+        margin-bottom: 5px;
+      }
+
+      .milestone-panel:hover {
+        background-color: @oswego-green-faded;
+      }
+
+      mat-expansion-panel {
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 10px;
+      }
+
+      ::ng-deep mat-expansion-panel-header {
+        padding-left: 5px;
+        padding-right: 24px;
       }
     }
-  }
-}
 
-@media (max-width: 768px) {
-  mat-expansion-panel-header {
-    padding: 0 15px 0 8px;
-  }
+    @media (max-width: 768px) {
+      mat-expansion-panel-header {
+        padding: 0 15px 0 8px;
+      }
 
-  mat-expansion- {
-    mat-expansion-panel-body {
-      padding: 0 10px 16px;
+      mat-expansion- {
+        mat-expansion-panel-body {
+          padding: 0 10px 16px;
+        }
+      }
+    }
+
+    .flex-vertical-align {
+      display: flex;
+      align-items: center;
+    }
+
+    mat-checkbox.mat-mdc-checkbox.mat-primary {
+      --mdc-checkbox-disabled-selected-icon-color: @oswego-green;
+      --mdc-checkbox-disabled-unselected-icon-color: @oswego-green;
     }
   }
-}
-
-.flex-vertical-align {
-  display: flex;
-  align-items: center;
-}
-
-mat-checkbox.mat-mdc-checkbox.mat-primary {
-  --mdc-checkbox-disabled-selected-icon-color: @oswego-green;
-  --mdc-checkbox-disabled-unselected-icon-color: @oswego-green;
 }
