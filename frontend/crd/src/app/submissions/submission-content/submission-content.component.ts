@@ -4,6 +4,7 @@ import { Task } from 'src/domain/Task';
 import { SubmissionService } from '../submission.service';
 import { Submission } from 'src/domain/Submission';
 import { ArtifactService } from 'src/app/file-upload/artifact.service';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-submission-content',
@@ -23,6 +24,7 @@ export class SubmissionContentComponent implements OnDestroy {
   constructor(
     private readonly authService: AuthService,
     private readonly submissionService: SubmissionService,
+    private _snackBar: MatSnackBar,
     private readonly artifactService: ArtifactService
   ) {}
 
@@ -55,6 +57,12 @@ export class SubmissionContentComponent implements OnDestroy {
       this.submissionService.submit(submission).subscribe(() => {
         this.state = 'submitting';
         this.onCancel();
+        // TODO error check?
+        this._snackBar.open("Submission Successful!", 'close', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          duration: 3000,
+        });
       });
     });
   }

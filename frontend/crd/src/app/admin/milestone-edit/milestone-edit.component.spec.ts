@@ -23,6 +23,7 @@ import { MilestoneCreateModalComponent } from '../milestone-main-page/milestone-
 import { MilestoneCreateModalModule } from '../milestone-main-page/milestone-create-modal/milestone-create-modal.module';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { Event } from 'src/domain/Event';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('MilestoneEditComponent', () => {
@@ -67,6 +68,7 @@ describe('MilestoneEditComponent', () => {
         ReactiveFormsModule,
         MatCheckboxModule,
         NoopAnimationsModule,
+        MatSnackBarModule,
         HttpClientModule,
         TaskEditModalModule,
         MatDialogModule,

@@ -3,6 +3,7 @@ import {catchError, Observable, of} from 'rxjs';
 import { LangUtils } from '../util/lang-utils';
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 /**
  * Component to upload artifacts to the server
@@ -30,6 +31,7 @@ export class ImageUploadComponent implements OnInit {
   protected acceptedFileTypes: string = ".png, .jpeg";
 
   constructor(
+    private _snackBar: MatSnackBar,
     private sanitizer: DomSanitizer,
   ) { }
 
@@ -128,6 +130,11 @@ export class ImageUploadComponent implements OnInit {
 
   closeModal(waitTime: number = 0) {
     this.closeEmitter.emit(waitTime);
+    this._snackBar.open("Image upload Successful!", 'close', {
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      duration: 3000,
+    });
   }
 }
 
