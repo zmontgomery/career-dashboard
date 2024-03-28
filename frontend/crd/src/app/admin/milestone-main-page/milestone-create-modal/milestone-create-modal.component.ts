@@ -6,7 +6,8 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 import { NavigationEnd, Router } from '@angular/router';
-import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service'; 
+import { MilestoneService } from 'src/app/milestones-page/milestones/milestone.service';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -26,6 +27,7 @@ export class MilestoneCreateModalComponent implements OnInit {
     public dialogRef: MatDialogRef<MilestoneCreateModalComponent>,
     public formBuilder: FormBuilder,
     public http: HttpClient,
+    private _snackBar: MatSnackBar,
     public router: Router,
     public milestoneService: MilestoneService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
@@ -34,7 +36,7 @@ export class MilestoneCreateModalComponent implements OnInit {
       this.yearLevel = this.modalData.yearLevel;
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     // the following is actually called when leaving the modal
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -54,7 +56,7 @@ export class MilestoneCreateModalComponent implements OnInit {
    */
   createForm() {
     this.milestoneForm = this.formBuilder.group({
-      name: [null, Validators.required], 
+      name: [null, Validators.required],
     });
   }
 
@@ -65,7 +67,7 @@ export class MilestoneCreateModalComponent implements OnInit {
     const newData: any = {};
 
     if (!this.milestoneForm.get('name')?.value) {
-      window.alert("Please add a milestone name");
+      this.openSnackBar("Please add a milestone name");
       return;
     }
 
@@ -78,10 +80,10 @@ export class MilestoneCreateModalComponent implements OnInit {
       const newMilestone = new Milestone(newJSON);
       // in case the returned milestone is empty
       if(!newMilestone.name) {
-        window.alert("Something went wrong creating milestone");
+        this.openSnackBar("Something went wrong creating milestone");
         this.closeModal();
       }
-      
+
       // automatically navigates to the edit page for this new milestone
       const encodedName = encodeURIComponent(newMilestone.milestoneID);
       this.router.navigate(['/admin/milestone-edit', encodedName]);
@@ -91,6 +93,19 @@ export class MilestoneCreateModalComponent implements OnInit {
 
   closeModal() {
     this.dialogRef.close();
+  }
+
+  openSnackBar(
+    message: string,
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
+    durationInSeconds: number = 3,
+  ) {
+    this._snackBar.open(message, 'close', {
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+      duration: durationInSeconds * 1000,
+    });
   }
 
 }

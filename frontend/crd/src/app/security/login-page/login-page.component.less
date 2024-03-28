@@ -1,20 +1,32 @@
 @import "../../../common.less";
 
 .login-page {
+  position: relative;
     display: flex;
     width: 100%;
-    height: calc(~"100vh - 150px");
+    height: 100vh;
     justify-content: center;
     align-content: center;
+
+    .image {
+      @media screen and (max-width: @min-screen-width) {
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        opacity: 0.8;
+      }
+    }
 
     .login-modal {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-grow: 1;
     
         .login-card {
             width: 400px;
-            height: 300px;
             display: flex;
             justify-content: center;
 
@@ -22,13 +34,13 @@
                 width: 300px;
             }
 
-            .card-header {
-                background-color: @oswego-green;
-                color: #fff;
-                font-weight: bold;
-                padding: 10px;
-                border-top-left-radius: 5px;
-                border-top-right-radius: 5px;
+            .login-logo {
+              padding: 50px;
+            }
+
+            hr {
+              width: 80%;
+              color: rgba(0, 0, 0, 0.2);
             }
 
             .card-body {
@@ -40,23 +52,30 @@
                 justify-content: center;
 
                 .login-microsoft-button {
-                    margin: 5%;
-                    height: 40px;
-                    width: 70%;
+                  background-color: black;
+                  height: 40px;
+                  width: 250px;
+                  position: relative;
+                  margin-bottom: 25px;
 
-                    @media screen and (max-width: @min-screen-width) {
-                        width: 85%;
-                    }
+                  button {
+                    padding: 0;
+                    box-shadow: none;
+                  }
+
+                  ::ng-deep .mdc-button__label {
+                    width: 100%;
+                  }
+
+                  img {
+                    position: absolute;
+                    left: -5px;
+                  }
                 }
 
                 .login-google-button {
-                    margin: 5%;
                     height: 60px;
-                    width: 70%;
-
-                    @media screen and (max-width: @min-screen-width) {
-                        width: 85%;
-                    }
+                    width: 250px
                 }
             }
         }

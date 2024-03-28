@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { EventEditModalModule } from '../event-edit-modal/event-edit-modal.module';
 import {EventImageModalComponent} from "../event-image-modal/event-image-modal.component";
 import SpyObj = jasmine.SpyObj;
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('EventMainPageComponent', () => {
   const createSpyObj= jasmine.createSpyObj;
@@ -46,6 +47,7 @@ describe('EventMainPageComponent', () => {
         MatDialogModule,
         MatTabsModule,
         MatListModule,
+        MatSnackBarModule,
         MatFormFieldModule,
         EventEditModalModule,
         EventEditModalModule,

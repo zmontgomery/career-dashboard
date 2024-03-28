@@ -42,6 +42,7 @@ import { NgOptimizedImage } from "@angular/common";
 import { FooterModule } from './footer/footer.module';
 import { ProfileImageModalModule } from './file-upload/profile-image-modal/profile-image-modal.module';
 import { SettingsPageModule } from './settings/settings-page.module';import { MilestonesFacultyModule } from './milestones-page/milestones-faculty/milestones-faculty.module';
+import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -111,6 +112,7 @@ import { SettingsPageModule } from './settings/settings-page.module';import { Mi
     NgOptimizedImage,
     UserMenuModule,
     FileUploadModule,
+    MatSnackBarModule,
   ],
   providers: [
     provideHttpClient(),

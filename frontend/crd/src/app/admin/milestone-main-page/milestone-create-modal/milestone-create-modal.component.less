@@ -6,6 +6,50 @@ mat-card-title {
   font-weight: bold;
 }
 
+#modal-content-wrapper {
+  width: 100%;
+  height: fit-content;
+  display: grid;
+  color: black;
+  background-color: white;
+}
+
+#modal-header {
+  text-align: center;
+  align-items: center;
+  justify-self: center;
+  height: fit-content;
+  width: 100%;
+  color: @oswego-green;
+  padding: 25px;
+}
+
+.milestone-form {
+  border-top: solid gray 1px;
+  width: 100%;
+}
+
+.form-section{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 5px 0;
+  background-color: #F0F6F3;
+  border-top: solid gray 1px;
+  border-bottom: solid gray 1px;
+}
+
+.modal-footer {
+  background-color: #F0F6F3;
+  border-top: solid gray 1px;
+  height: fit-content;
+  width: 100%;
+  display:flex;
+  justify-content: left;
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+}
+
 .flex-vertical-align {
   display: flex;
   align-items: center;
@@ -26,4 +70,18 @@ mat-card-title {
 
 .mat-mdc-form-field {
     display: block;
+}
+
+.modal-cancel-button {
+  background-color: #4e4e4e;
+  color: white;
+  margin: 0 20px  0 0;
+  border-radius: 5px;
+}
+
+.modal-submit-button {
+  background-color: @oswego-green;
+  color: white;
+  margin: 0 20px  0 0;
+  border-radius: 5px;
 }
