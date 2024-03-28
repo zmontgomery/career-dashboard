@@ -5,9 +5,13 @@
       <p class="taskTitle"> Task </p>
       <p class="taskDate"> Year Level </p>
     </div>
+
     <button mat-list-item class="matListItem" [class.overdue]="isTaskOverdue(task)" *ngFor="let task of tasksList" (click)="openTask(task)">
       <div class="taskText">
-        <p class="taskTitle">{{task.name}}</p>
+        <div class="taskTitleOverDue">
+          <mat-icon *ngIf="isTaskOverdue(task)" color="warn" class="warning">report_problem</mat-icon>
+          <p class="taskTitle">{{task.name}}</p>
+        </div>
         <p class="taskDate">{{task.yearLevel}}</p>
       </div>
     </button>

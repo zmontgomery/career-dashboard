@@ -1,6 +1,7 @@
 @import "../../common";
 
 #modal-content-wrapper {
+  align-items: center;
   width: 100%;
   height: fit-content;
   display: grid;
@@ -39,6 +40,28 @@
   width: 100%;
   color: @oswego-green;
   padding: 25px;
+  margin: 10px;
+}
+
+#modal-header-overdue {
+  text-align: center;
+  align-items: center;
+  justify-self: center;
+  height: fit-content;
+  width: 100%;
+  color: red;
+  padding: 25px;
+  margin: 10px;
+}
+
+.icon-overdue{
+  font-size: 30px;
+  margin: 0 10px 0 0;
+  transform: translateY(10px);
+}
+
+.icon-not-overdue{
+  display: none;
 }
 
 #modal-body {
@@ -56,11 +79,11 @@
 }
 
 #modal-footer {
+  position: relative;
   width: 100%;
   height:fit-content;
   align-self: center;
   display: flex;
-  position: absolute;
   bottom: 0;
   background-color: #F0F6F3;
   border-top: solid gray 1px;
