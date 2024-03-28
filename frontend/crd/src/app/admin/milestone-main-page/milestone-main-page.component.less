@@ -44,12 +44,47 @@ mat-checkbox.mat-mdc-checkbox.mat-primary {
   color:white;
 }
 
-.new-milestone {
+.create-milestone-card:hover {
+  cursor: pointer;
+  background-color: #8ab6a0;
+}
+
+.create-milestone-card {
   background-color: @oswego-green;
   color:white;
   font-weight: bold;
+  border-radius: 1em;
+  width: 95%;
+  height: 95%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
-.new-milestone:hover {
-  cursor: pointer;
+.milestone-card {
+  background-color: #F0F6F3;
+  border-radius: 1em;
+  width: 95%;
+  height: 95%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  overflow-x: auto;
+}
+
+.new-milestone-content {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.card-title {
+font-weight: bold;
+font-size: 25px;
+}
+
+.task-item {
+border-radius: 1em;
+box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+background-color: white;
+padding: 5px 0 5px 10px;
 }

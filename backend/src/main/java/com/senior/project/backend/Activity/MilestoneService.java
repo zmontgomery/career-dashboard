@@ -1,15 +1,23 @@
 package com.senior.project.backend.Activity;
 
+import com.senior.project.backend.util.NonBlockingExecutor;
 import com.senior.project.backend.domain.Milestone;
 import com.senior.project.backend.domain.Task;
+import com.senior.project.backend.domain.User;
 import com.senior.project.backend.domain.YearLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import com.senior.project.backend.security.CurrentUserUtil;
+import com.senior.project.backend.users.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,24 +26,29 @@ public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
     private final TaskRepository taskRepository;
+    private final UserService userService;
+    private final CurrentUserUtil currentUserUtil;
 
-    public MilestoneService(MilestoneRepository milestoneRepository, TaskRepository taskRepository) { 
+    public MilestoneService(MilestoneRepository milestoneRepository, TaskRepository taskRepository,
+                            UserService userService, CurrentUserUtil currentUserUtil) {
         this.milestoneRepository = milestoneRepository;
         this.taskRepository = taskRepository;
+        this.userService = userService;
+        this.currentUserUtil = currentUserUtil;
     }
     
     /**
      * Gets all milestones without tasks
      */
     public Flux<Milestone> all() {
-        return Flux.fromIterable(milestoneRepository.findAll());
+        return NonBlockingExecutor.executeMany(milestoneRepository::findAll);
     }
 
     /**
      * Gets all milestones with tasks
      */
     public Flux<Milestone> allWithTasks() {
-        return Flux.fromIterable(milestoneRepository.findAllWithTasks());
+        return NonBlockingExecutor.executeMany(milestoneRepository::findAllWithTasks);
     }
 
     /**
@@ -69,11 +82,11 @@ public class MilestoneService {
         }
 
         // if a task exists on the milestone but is not included in the task list, remove it
-        List<Task> removals = new ArrayList<Task>(existingMilestone.getTasks());
+        List<Task> removals = new ArrayList<>(existingMilestone.getTasks());
         removals.removeAll(taskList);
 
         // if a task in the task list is not on the milestone, add it
-        List<Task> additions = new ArrayList<Task>(taskList);
+        List<Task> additions = new ArrayList<>(taskList);
         additions.removeAll(existingMilestone.getTasks());
         
         for (Task removedTask : removals) {
@@ -85,7 +98,7 @@ public class MilestoneService {
             addedTask.setMilestone(existingMilestone);
         }
 
-        return Mono.just(milestoneRepository.save(existingMilestone));
+        return NonBlockingExecutor.execute(()->milestoneRepository.save(existingMilestone));
     }
 
     /**
@@ -102,6 +115,27 @@ public class MilestoneService {
         newMilestone.setName((String) data.get("name"));
         newMilestone.setYearLevel(YearLevel.valueOf((String) data.get("yearLevel")));
 
-        return Mono.just(milestoneRepository.save(newMilestone));
+        return NonBlockingExecutor.execute(()->milestoneRepository.save(newMilestone));
+    }
+
+    public Flux<Milestone> completedMilestones(UUID requestedUserId) {
+        var requestedUserMono = userService.findById(requestedUserId)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id: " + requestedUserId + " found")));
+
+        return Mono.zip(requestedUserMono, currentUserUtil.getCurrentUser())
+                .flatMap((users) -> {
+                    User requestedUser = users.getT1();
+                    User currentUser = users.getT2();
+                    if (currentUser.hasFacultyPrivileges()) {
+                        return Mono.empty();
+                    }
+
+                    if (currentUser.getId().equals(requestedUserId)) {
+                        return Mono.empty();
+                    }
+
+                    return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have permission to view milestones of user with id: " + requestedUser));
+                })
+                .thenMany(NonBlockingExecutor.executeMany(() -> milestoneRepository.findComplete(requestedUserId)));
     }
 }

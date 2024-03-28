@@ -31,7 +31,7 @@
           Education
         </div>
         <div class="card-body-section-body">
-          Majors: 
+          Majors:
           <ul>
             <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
               <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
@@ -147,9 +147,9 @@
         <div class="card-body-section-header">
           Milestones
         </div>
-        <div class="card-body-section-body">
-          <app-milestones></app-milestones>
-        </div>
+        <ul class="card-body-section-body" *ngFor="let milestone of completedMilestones">
+          <li>{{milestone}}</li>
+        </ul>
       </div>
     </div>
   </div>
