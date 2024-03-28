@@ -59,7 +59,7 @@ public class SecurityContextHolderTest {
     @Test
     public void testLoadHappy() {
         UsernamePasswordAuthenticationToken authToken = 
-            new UsernamePasswordAuthenticationToken(Constants.user1, "", Constants.user1.getAuthorities());
+            new UsernamePasswordAuthenticationToken(Constants.userAdmin, "", Constants.userAdmin.getAuthorities());
         SecurityContext expected = new SecurityContextImpl(authToken);
 
         ServerHttpRequest request = mock(ServerHttpRequest.class);

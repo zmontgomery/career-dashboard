@@ -21,7 +21,7 @@ public abstract class TestUtil {
 
     public static void setSecurityContext() {
         ReactiveSecurityContextHolder.getContext().subscribe((c) -> {
-            c.setAuthentication(new UsernamePasswordAuthenticationToken(Constants.user1, "", Constants.user1.getAuthorities()));
+            c.setAuthentication(new UsernamePasswordAuthenticationToken(Constants.userAdmin, "", Constants.userAdmin.getAuthorities()));
         });
     }
 
@@ -66,7 +66,7 @@ public abstract class TestUtil {
         int expTime = expired ? -10 : 60;
 
         JwtClaims claims = new JwtClaims();
-        claims.setSubject(Constants.user1.getEmail());
+        claims.setSubject(Constants.userAdmin.getEmail());
         claims.setExpirationTimeMinutesInTheFuture(expTime);
         claims.setIssuedAtToNow();
         claims.setClaim("iat", System.currentTimeMillis() / 1000);

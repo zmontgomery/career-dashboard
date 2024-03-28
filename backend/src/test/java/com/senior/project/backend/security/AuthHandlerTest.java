@@ -73,7 +73,7 @@ public class AuthHandlerTest {
 
     @Test
     public void testSignInHappy() throws TokenVerificiationException {
-        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.user1));
+        when(userService.findByEmailAddress(anyString())).thenReturn(Mono.just(Constants.userAdmin));
 
         LoginRequest request = new LoginRequest("token", TokenType.GOOGLE);
         LoginResponse response = LoginResponse.builder().token("token_2").build();

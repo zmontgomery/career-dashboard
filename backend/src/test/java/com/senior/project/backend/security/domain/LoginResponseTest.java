@@ -6,7 +6,7 @@ import com.senior.project.backend.Pair;
 import com.senior.project.backend.domain.User;
 
 public class LoginResponseTest extends AbstractDomainObjectTest<LoginResponse> {
-    private static final User USER = Constants.user1;
+    private static final User USER = Constants.userAdmin;
     private static final String TOKEN = "token";
 
     public LoginResponseTest() {

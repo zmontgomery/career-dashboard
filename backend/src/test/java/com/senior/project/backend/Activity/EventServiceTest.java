@@ -153,7 +153,6 @@ public class EventServiceTest {
         Map<String, Object> jsonMap;
         try {
             jsonMap = objectMapper.readValue(updateData, new TypeReference<Map<String, Object>>() {});
-            when(eventRepository.findById(event1.getId())).thenReturn(eventOption);
 
             Mono<Event> result = eventService.updateEvent(event1.getId(), jsonMap);
             StepVerifier.create(result).expectError();

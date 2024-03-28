@@ -28,7 +28,8 @@ public class ActivityRouter extends AbstractRouter {
     ) {
         return wrapRoutes(
             route(GET(Endpoints.EVENTS.uri()), eventHandler::all)
-                .andRoute(GET(Endpoints.MILSTONES.uri()), milestoneHandler::all)
+                .andRoute(GET(Endpoints.MILESTONES.uri()), milestoneHandler::all)
+                .andRoute(GET(Endpoints.MILESTONES_COMPLETE.uri()), milestoneHandler::completed)
                 .andRoute(GET(Endpoints.DASHBOARD_EVENTS.uri()), eventHandler::dashboard)
                 .andRoute(GET(Endpoints.DASHBOARD_TASKS.uri()), taskHandler::dashboard)
                 .andRoute(GET(Endpoints.TASKS.uri()), taskHandler::all)
