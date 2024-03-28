@@ -54,6 +54,7 @@ export class SubmissionContentComponent implements OnDestroy {
       );
       this.submissionService.submit(submission).subscribe(() => {
         this.state = 'submitting';
+        window.alert("Submission sent.");
         this.onCancel();
       });
     });
