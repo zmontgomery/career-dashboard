@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Career Readiness Dashboard API",
-    "description": "API documentation for the Career Readiness Dashboard 2023-2024 senior project. It's recommended that you use this page while logged in as an admin in order to access all restricted endpoints.\n\nTO USE: \n1. Open Inspect Element (F12) and switch to the Network tab\n2. Select the call 'current-user' (if nothing is there, refresh the page with inspect element still open)\n3. Scroll to the bottom of Request Headers and find 'X-Authorization', then copy the content (including the 'Bearer' part)\n4. Click on the 'Authorize' button in swagger and paste the 'X-Authorization' key and click authorize\n\nYou will need to do this every time the page refreshes, but the key should stay the same until you log out",
+    "description": "API documentation for the Career Readiness Dashboard 2023-2024 Senior project. It's recommended that you use this page while logged in as an admin in order to access all restricted endpoints.\n\nTO USE: \n1. Open Inspect Element (F12) and switch to the Network tab\n2. Select the call 'current-user' (if nothing is there, refresh the page with inspect element still open)\n3. Scroll to the bottom of Request Headers and find 'X-Authorization', then copy the content (including the 'Bearer' part)\n4. Click on the 'Authorize' button in swagger and paste the 'X-Authorization' key and click authorize\n\nYou will need to do this every time the page refreshes, but the key should stay the same until you log out",
     "version": "1.0.1"
   },
   "servers": [{
@@ -49,7 +49,7 @@
                       "milestoneID": 1,
                       "name": "Professional Career Package Development",
                       "description": "complete important steps for the job search",
-                      "yearLevel": "freshman",
+                      "yearLevel": "Freshman",
                       "events": [],
                       "tasks": [
                         {
@@ -102,7 +102,7 @@
                       "milestoneID": 1,
                       "name": "Professional Career Package Development",
                       "description": "complete important steps for the job search",
-                      "yearLevel": "freshman"
+                      "yearLevel": "Freshman"
                     }
                   ]
                 }
@@ -206,8 +206,8 @@
                 "id": 1,
                 "description": "new description",
                 "location": "new location",
-                "name": "Career Fair",
-                "date": "9/27/2023 10:00 AM",
+                "name": "Major/Minor & Career Exploration Event",
+                "date": "2024-04-03T04:00:00.000Z",
                 "organizer": "SUNY career prep department",
                 "isRecurring": true
               }
@@ -225,7 +225,7 @@
                     "eventID": 1,
                     "name": "Career Fair",
                     "description": "new description",
-                    "date": "9/27/2023 10:00 AM",
+                    "date": "2024-04-03T04:00:00.000Z",
                     "location": "new location",
                     "organizer": "SUNY career prep department",
                     "isRecurring": true,
@@ -291,7 +291,7 @@
               "example": {
                 "name": "NEW Career Fair",
                 "description": "campus wide career fair",
-                "date": "9/28/2023 10:00 AM",
+                "date": "2024-04-04T04:00:00.000Z",
                 "location": "NOT Gordon Field House",
                 "organizer": "SUNY career prep department",
                 "isRecurring": true,
@@ -312,7 +312,7 @@
                     "eventID": 2,
                     "name": "NEW Career Fair",
                     "description": "campus wide career fair",
-                    "date": "9/28/2023 10:00 AM",
+                    "date": "2024-04-04T04:00:00.000Z",
                     "location": "NOT Gordon Field House",
                     "organizer": "SUNY career prep department",
                     "isRecurring": true,
@@ -387,7 +387,7 @@
         "parameters": [
           {
             "in": "query",
-            "name": "integer",
+            "name": "limit",
             "required": true,
             "schema": {
               "type": "string"
@@ -411,9 +411,9 @@
                       "taskID": 1,
                       "name": "Upload Resume",
                       "description": "upload resume draft to portfolio",
-                      "yearLevel": "freshman",
+                      "yearLevel": "Freshman",
                       "milestoneID": 1,
-                      "taskType": "artifact",
+                      "taskType": "ARTIFACT",
                       "artifactName": "Resume",
                       "eventID": 0,
                       "submissionInstructions": "Please attach the draft of your resume"
@@ -444,9 +444,9 @@
                   "taskID": 1,
                   "name": "Upload Resume",
                   "description": "upload resume draft to portfolio",
-                  "yearLevel": "freshman",
+                  "yearLevel": "Freshman",
                   "milestoneID": 1,
-                  "taskType": "artifact",
+                  "taskType": "ARTIFACT",
                   "artifactName": "Resume",
                   "eventID": 0,
                   "submissionInstructions": "Please attach the draft of your resume"
@@ -486,9 +486,9 @@
                   "taskID": 1,
                   "name": "Upload Resume",
                   "description": "upload resume draft to portfolio",
-                  "yearLevel": "freshman",
+                  "yearLevel": "Freshman",
                   "milestoneID": 1,
-                  "taskType": "artifact",
+                  "taskType": "ARTIFACT",
                   "artifactName": "Resume",
                   "eventID": 0,
                   "submissionInstructions": "Please attach the draft of your resume"
@@ -525,9 +525,9 @@
                   "taskType": {
                     "type": "string",
                     "enum": [
-                      "comment",
-                      "artifact",
-                      "evemt"
+                      "COMMENT",
+                      "ARTIFACT",
+                      "EVENT"
                     ],
                     "description": "new or current task type"
                   },
@@ -555,9 +555,9 @@
                     "taskID": 1,
                     "name": "Upload Resume",
                     "description": "new description",
-                    "yearLevel": "freshman",
+                    "yearLevel": "Freshman",
                     "milestoneID": 1,
-                    "taskType": "artifact",
+                    "taskType": "ARTIFACT",
                     "artifactName": "Resume",
                     "eventID": 0,
                     "submissionInstructions": "Please attach the draft of your resume"
@@ -594,9 +594,9 @@
               "example": {
                 "name": "Upload Draft Resume",
                 "description": "upload SECOND resume draft to portfolio",
-                "yearLevel": "freshman",
+                "yearLevel": "Freshman",
                 "milestoneID": 1,
-                "taskType": "artifact",
+                "taskType": "ARTIFACT",
                 "artifactName": "Resume",
                 "eventID": 0,
                 "submissionInstructions": "Please attach the draft of your resume"
@@ -615,9 +615,9 @@
                     "taskID": 2,
                     "name": "Upload Draft Resume",
                     "description": "upload SECOND resume draft to portfolio",
-                    "yearLevel": "freshman",
+                    "yearLevel": "Freshman",
                     "milestoneID": 1,
-                    "taskType": "artifact",
+                    "taskType": "ARTIFACT",
                     "artifactName": "Resume",
                     "eventID": 0,
                     "submissionInstructions": "Please attach the draft of your resume"
@@ -675,7 +675,7 @@
                     "milestoneID": 1,
                     "name": "Professional Career Package Development",
                     "description": "new description",
-                    "yearLevel": "freshman",
+                    "yearLevel": "Freshman",
                     "events": [],
                     "tasks": [
                       {
@@ -714,10 +714,10 @@
                   "yearLevel": {
                     "type": "string",
                     "enum": [
-                      "freshman",
-                      "sophomore",
-                      "junior",
-                      "senior"
+                      "Freshman",
+                      "Sophomore",
+                      "Junior",
+                      "Senior"
                     ],
                     "description": "the school year that the milestone is for"
                   }
@@ -725,7 +725,7 @@
               },
               "example": {
                 "name": "Career Counseling",
-                "yearLevel": "freshman"
+                "yearLevel": "Freshman"
               }
             }
           }
@@ -741,7 +741,7 @@
                     "milestoneID": 2,
                     "name": "Career Counseling",
                     "description": "",
-                    "yearLevel": "freshman",
+                    "yearLevel": "Freshman",
                     "events": [],
                     "tasks": []
                   }
@@ -804,7 +804,7 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "UUID"
+              "type": "string"
             },
             "description": "The user ID"
           }
@@ -846,7 +846,7 @@
     "/users/roles": {
       "put": {
         "summary": "Change the role of a given user",
-        "description": "Optional extended description in Markdown.",
+        "description": "Recommended that you get user info using the above endpoint, then copy their data here and change their role.",
         "tags": ["users"],
         "produces": ["application/json"],
         "requestBody": {
@@ -1008,7 +1008,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "taskId",
             "required": true,
             "schema": {
               "type": "integer"
@@ -1020,7 +1020,7 @@
             "name": "user",
             "required": true,
             "schema": {
-              "type": "UUID"
+              "type": "string"
             },
             "description": "Which user's submission we're getting"
           }
@@ -1083,7 +1083,7 @@
             "name": "studentID",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "description": "Which student to get submissions for"
           }
@@ -1163,10 +1163,10 @@
           "yearLevel": {
             "type": "string",
             "enum": [
-              "freshman",
-              "sophomore",
-              "junior",
-              "senior"
+              "Freshman",
+              "Sophomore",
+              "Junior",
+              "Senior"
             ],
             "description": "the school year that the task is assigned to"
           },
@@ -1177,9 +1177,9 @@
           "taskType": {
             "type": "string",
             "enum": [
-              "comment",
-              "artifact",
-              "event"
+              "COMMENT",
+              "ARTIFACT",
+              "EVENT"
             ],
             "description": "what kind of task the student is required to do"
           },
@@ -1256,10 +1256,10 @@
           "yearLevel": {
             "type": "string",
             "enum": [
-              "freshman",
-              "sophomore",
-              "junior",
-              "senior"
+              "Freshman",
+              "Sophomore",
+              "Junior",
+              "Senior"
             ],
             "description": "the school year that the milestone is assigned to"
           },
@@ -1430,10 +1430,10 @@
           "yearLevel": {
             "type": "string",
             "enum": [
-              "freshman",
-              "sophomore",
-              "junior",
-              "senior"
+              "Freshman",
+              "Sophomore",
+              "Junior",
+              "Senior"
             ],
             "description": "the student's current year level"
           },
