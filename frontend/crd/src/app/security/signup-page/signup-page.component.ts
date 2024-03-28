@@ -57,7 +57,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     });
 
     this.phoneSub = this.phoneNumberControl.valueChanges.subscribe((val) => {
-      const ref = this.elementRef.nativeElement.getElementsByClassName('password-field')[0];
+      const ref = this.elementRef.nativeElement.getElementsByClassName('phone-field')[0];
 
       ref.value = /^[(]*[\d]{0,3}[)]*([\d-]{0,4})*$/.test(val!) ? this.formatPhoneNumber(val!) 
         : val!.substring(0, val!.length - 1);
