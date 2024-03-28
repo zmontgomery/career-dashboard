@@ -3,16 +3,19 @@
   <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" >
     <img class="profile-picture" *ngIf="profileURL != null" [src]="profileURL" width="50" height="50" alt="User Image">
     <mat-icon class="profile-picture-placeholder" *ngIf="profileURL == null">account_circle</mat-icon>
+    <div class="overlay"></div>
   </button>
 </div>
 
 <mat-menu class="user-menu" xPosition="before" #userMenu>
-  <button mat-menu-item class="logout-button" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    <span>Logout</span>
-  </button>
-  <button mat-menu-item class="settings-button" (click)="openSettings()">
-    <mat-icon>settings</mat-icon>
-    <span>Settings</span>
-  </button>
+  <div class="menu-content">
+    <button mat-menu-item class="logout-button" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+    <button mat-menu-item class="settings-button" (click)="openSettings()">
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+  </div>
 </mat-menu>

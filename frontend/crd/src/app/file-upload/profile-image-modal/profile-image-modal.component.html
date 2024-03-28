@@ -1,10 +1,6 @@
 <mat-dialog-content>
   <div id="modal-content-wrapper">
-
     <h1>Upload a Profile Picture</h1>
-
-    <app-image-upload (closeEmitter)="closeModal($event)" [uploadStrategy]="uploadStrategy" [roundCropper]="true">
-
-    </app-image-upload>
+    <app-image-upload (closeEmitter)="closeModal($event)" [uploadStrategy]="uploadStrategy" [roundCropper]="true" />
   </div>
 </mat-dialog-content>
