@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { Task, TaskType } from 'src/domain/Task';
 import { YearLevel } from 'src/domain/Milestone';
 import { TaskService } from 'src/app/util/task.service';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('TaskMainPageComponent', () => {
@@ -44,11 +45,12 @@ describe('TaskMainPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [TaskMainPageComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
-        MatDialogModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
+        MatDialogModule,
         MatTabsModule,
         MatListModule,
+        MatSnackBarModule,
         NoopAnimationsModule
       ],
       providers: [MatDialog,{provide: TaskService, useValue: taskServiceSpy},],

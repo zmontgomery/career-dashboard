@@ -7,15 +7,15 @@
 
     <mat-menu #roleMenu>
       <div style="display: flex; flex-direction: column; padding: 5px 10px;">
-        <button mat-raised-button (click)="onSelection(STUDENT)">
+        <button mat-raised-button *ngIf="user.role != Role.Student" (click)="onSelection(STUDENT)">
           Student
         </button>
         <div style="height: 5px"></div>
-        <button mat-raised-button (click)="onSelection(FACULTY)"> 
+        <button mat-raised-button  *ngIf="user.role != Role.Faculty" (click)="onSelection(FACULTY)">
           Faculty
         </button>
         <div style="height: 5px"></div>
-        <button mat-raised-button *ngIf="(user$ | async)?.hasSuperAdminPrivileges()" (click)="onSelection(ADMIN)">
+        <button mat-raised-button  *ngIf="(user$ | async)?.hasSuperAdminPrivileges() && user.role != Role.Admin" (click)="onSelection(ADMIN)">
           Admin
         </button>
       </div>

@@ -1,5 +1,5 @@
-<div class="app-container">
-  <div class="header-container">
+<div class="app-container scrollbar">
+  <div class="header-container" *ngIf="needsNavBar()">
     <div class="logo">
       <app-oswego-logo [sizeFactor]=".3"></app-oswego-logo>
     </div>
@@ -25,7 +25,5 @@
     </ng-container>
     <router-outlet></router-outlet>
   </div>
-
-  <app-footer></app-footer>
-  
-  </div>
+  <app-footer *ngIf="needsNavBar()"></app-footer>
+</div>

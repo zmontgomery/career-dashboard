@@ -10,6 +10,7 @@ import {ArtifactService} from "./artifact.service";
 import createSpyObj = jasmine.createSpyObj;
 import {of, Subject} from "rxjs";
 import SpyObj = jasmine.SpyObj;
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('ImageUploadComponent', () => {
   let component: ImageUploadComponent;
@@ -25,6 +26,7 @@ describe('ImageUploadComponent', () => {
       imports: [
         NoopAnimationsModule,
         HttpClientTestingModule,
+        MatSnackBarModule,
         MatDialogModule,
         MatIconModule,
       ],
@@ -54,10 +56,10 @@ describe('ImageUploadComponent', () => {
   });
 
   it("close dialog", fakeAsync(() => {
-    spyOn(component.closeEmitter, 'emit');
+    const closeEmit = spyOn(component.closeEmitter, 'emit');
     component.closeModal();
-    tick();
-    expect(component.closeEmitter.emit).toHaveBeenCalled();
+    tick(1000);
+    expect(closeEmit).toHaveBeenCalled();
   }));
 
   it('done cropping', () => {

@@ -5,6 +5,7 @@ import {PortfolioComponent} from "./portfolio.component";
 import {MilestonesModule} from "../milestones-page/milestones/milestones.module";
 import {MatButtonModule} from "@angular/material/button";
 import { ResumeModule } from './resume/resume.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ResumeModule } from './resume/resume.module';
       MatCardModule,
       MilestonesModule,
       MatButtonModule,
-      ResumeModule
+      ResumeModule,
+      MatIconModule
     ]
 })
 export class PortfolioModule { }

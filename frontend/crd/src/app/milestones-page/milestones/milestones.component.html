@@ -1,44 +1,41 @@
 <!-- this is from milestones-page -->
-<h1>Milestones</h1>
+<div class="milestone-page-container">
+  <div *ngIf="dataLoaded; else loading" class="milestone-container">
+    <h1>Milestones</h1>
+    <mat-card class="year-container" *ngFor="let yearLevel of yearLevels">
+      <div class="year-header">{{yearLevel}}</div>
+      <mat-accordion multi class="accordion">
+        <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
+          <mat-expansion-panel [expanded]="!completedMilestones.includes(milestone.milestoneID)" class="milestone-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-checkbox [disabled]="true" [checked]="completedMilestones.includes(milestone.milestoneID)" 
+                  color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
+                {{milestone.name}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+              <mat-expansion-panel *ngFor="let task of milestone.tasks">
 
-<div *ngIf="dataLoaded">
-<div class="year-container" *ngFor="let yearLevel of yearLevels">
-  <mat-card class="year-card">
-    <mat-card-header>
-      <div class="year-name">{{yearLevel}}</div>
-    </mat-card-header>
-  </mat-card>
+              <mat-expansion-panel-header #panelH (click)="panelH._toggle(); openTask(task)">
+                <div class="flex-vertical-align">
+                  <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
+                    color="primary" (click)="$event.stopPropagation()">
+                    {{task.name}}
+                  </mat-checkbox>
+                </div>
+              </mat-expansion-panel-header>
+              <div>{{task.description}}</div>
+            </mat-expansion-panel>
+          </mat-expansion-panel>
+        </ng-container>
+      </mat-accordion>
 
-
-  <mat-accordion multi>
-    <ng-container *ngFor="let milestone of milestonesMap.get(yearLevel)">
-      <mat-expansion-panel [expanded]="!completedMilestones.includes(milestone.milestoneID)">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-checkbox [disabled]="true" [checked]="completedMilestones.includes(milestone.milestoneID)" 
-              color="primary" (click)="$event.stopPropagation()"></mat-checkbox>
-            {{milestone.name}}
-          </mat-panel-title>
-<!--  Use if we want to display a description -->
-<!--          <mat-panel-description>-->
-<!--            {{milestone.description}}-->
-<!--          </mat-panel-description>-->
-        </mat-expansion-panel-header>
-          <mat-expansion-panel *ngFor="let task of milestone.tasks">
-
-          <mat-expansion-panel-header #panelH (click)="panelH._toggle(); openTask(task)">
-            <div class="flex-vertical-align">
-              <mat-checkbox [disabled]="true" [checked]="completedTasks.includes(task.taskID)" 
-                color="primary" (click)="$event.stopPropagation()">
-                {{task.name}}
-              </mat-checkbox>
-            </div>
-          </mat-expansion-panel-header>
-          <div>{{task.description}}</div>
-        </mat-expansion-panel>
-      </mat-expansion-panel>
-    </ng-container>
-  </mat-accordion>
-
+    </mat-card>
+  </div>
 </div>
-</div>
+
+<ng-template #loading>
+  <div class="milestone-container">
+    <mat-spinner />
+  </div>
+</ng-template>

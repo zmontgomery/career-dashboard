@@ -12,6 +12,7 @@ import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/d
 import { MilestoneCreateModalComponent } from './milestone-create-modal/milestone-create-modal.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('MilestoneMainPageComponent', () => {
@@ -30,11 +31,12 @@ describe('MilestoneMainPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatCardModule, 
-        MatGridListModule, 
-        MatTabsModule, 
-        NoopAnimationsModule, 
-        MatDialogModule, 
+        MatCardModule,
+        MatGridListModule,
+        MatTabsModule,
+        NoopAnimationsModule,
+        MatDialogModule,
+        MatSnackBarModule,
         HttpClientModule,
         MatInputModule
       ],

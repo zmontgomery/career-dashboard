@@ -17,6 +17,9 @@ import { MatSelectModule } from '@angular/material/select';
 import createSpyObj = jasmine.createSpyObj;
 import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from 'src/domain/Event';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import any = jasmine.any;
+import anything = jasmine.anything;
 
 
 describe('TaskEditModalComponent', () => {
@@ -25,6 +28,9 @@ describe('TaskEditModalComponent', () => {
   let httpMock: HttpTestingController;
   let formBuilder: FormBuilder;
   let eventServiceSpy = createSpyObj('EventService', ['getEvents']);
+  // @ts-ignore
+  let snackBarSpy: Jasmine.Spy<MatSnackBar>;
+
   eventServiceSpy.getEvents.and.returnValue(of(Array(new Event({
     name: "name",
     description: "description",
@@ -66,6 +72,7 @@ describe('TaskEditModalComponent', () => {
         MatDialogModule,
         MatFormFieldModule,
         MatCheckboxModule,
+        MatSnackBarModule,
         MatInputModule,
         ReactiveFormsModule,
         MatRadioModule,
@@ -86,6 +93,8 @@ describe('TaskEditModalComponent', () => {
     fixture.detectChanges();
     httpMock = TestBed.inject(HttpTestingController);
     formBuilder = TestBed.inject(FormBuilder);
+    // @ts-ignore
+    snackBarSpy = spyOn(component._snackBar, 'open');
   });
 
   it('should list events', () => {
@@ -260,10 +269,8 @@ describe('TaskEditModalComponent', () => {
       instructions: ['test']
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please add an artifact name");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please add an artifact name", anything(), anything());
   });
 
   it('should block saving without event', () => {
@@ -288,10 +295,8 @@ describe('TaskEditModalComponent', () => {
       instructions: ['test']
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please select an event");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please select an event", anything(), anything());
   });
 
   it('should block saving without instructions', () => {
@@ -316,10 +321,8 @@ describe('TaskEditModalComponent', () => {
       instructions: [null]
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please add submission instructions");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please add submission instructions", anything(), anything());
   });
 
   it('should create artifact task', () => {
@@ -388,10 +391,8 @@ describe('TaskEditModalComponent', () => {
       instructions: ['test']
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please add a task name");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please add a task name", anything(), anything());
   });
 
 
@@ -407,10 +408,8 @@ describe('TaskEditModalComponent', () => {
       instructions: ['test']
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please add an artifact name");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please add an artifact name", anything(), anything());
   });
 
   it('should block create without event', () => {
@@ -425,10 +424,8 @@ describe('TaskEditModalComponent', () => {
       instructions: ['test']
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please select an event");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please select an event", anything(), anything());
   });
 
   it('should create', () => {
@@ -447,10 +444,8 @@ describe('TaskEditModalComponent', () => {
       instructions: [null]
     });
 
-    let spyWindow = spyOn(window, 'alert');
-
     component.saveTask();
-    expect(spyWindow).toHaveBeenCalledWith("Please add submission instructions");
+    expect(snackBarSpy).toHaveBeenCalledWith("Please add submission instructions", anything(), anything());
   });
 
   it('should create', () => {

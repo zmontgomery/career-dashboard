@@ -8,6 +8,7 @@ import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
 import { HttpClient } from '@angular/common/http';
 import { EventService } from 'src/app/dashboard/events/event.service';
 import { Event } from 'src/domain/Event';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -35,6 +36,7 @@ export class TaskEditModalComponent implements OnInit {
     public dialogRef: MatDialogRef<TaskEditModalComponent>,
     private formBuilder: FormBuilder,
     public http: HttpClient,
+    private _snackBar: MatSnackBar,
     private eventService: EventService,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
   ) {
@@ -50,7 +52,7 @@ export class TaskEditModalComponent implements OnInit {
     }
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.eventService.getEvents().subscribe(events => {
       this.eventList = events;
       this.dataLoaded = true; // prevents creating the form until we have the events
@@ -66,7 +68,7 @@ export class TaskEditModalComponent implements OnInit {
       this.taskForm = this.formBuilder.group({
         name: [this.taskName],   //this field is hidden if the task already exists
         description: [this.currentTask.description],
-        taskType: [this.currentTask.taskType], 
+        taskType: [this.currentTask.taskType],
         artifactName: [this.currentTask.artifactName],
         event: [this.currentTask.eventID],
         instructions: [this.currentTask.submissionInstructions]
@@ -77,7 +79,7 @@ export class TaskEditModalComponent implements OnInit {
       this.taskForm = this.formBuilder.group({
         name: [null, Validators.required],
         description: [null],
-        taskType: [TaskType.ARTIFACT], 
+        taskType: [TaskType.ARTIFACT],
         artifactName: [null],
         event: [null],
         instructions: [null]  // default instructions?
@@ -111,7 +113,7 @@ export class TaskEditModalComponent implements OnInit {
       // required information
       if (!this.taskForm.get('instructions')?.value ||
             this.taskForm.get('instructions')?.value.length == 0) {
-        window.alert("Please add submission instructions");
+        this.openSnackBar("Please add submission instructions");
         return;
       }
 
@@ -119,13 +121,13 @@ export class TaskEditModalComponent implements OnInit {
       if (this.taskForm.get('taskType')!.value == TaskType.ARTIFACT && (
             !this.taskForm.get('artifactName')?.value ||
             this.taskForm.get('artifactName')?.value.length == 0)) {
-        window.alert("Please add an artifact name");
+        this.openSnackBar("Please add an artifact name");
         return;
       }
       else if (this.taskForm.get('taskType')!.value == TaskType.EVENT && (
           !this.taskForm.get('event')?.value ||
           this.taskForm.get('event')?.value.length == 0)) {
-        window.alert("Please select an event");
+        this.openSnackBar("Please select an event");
         return;
       }
 
@@ -145,10 +147,10 @@ export class TaskEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.EDIT_TASK)
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong editing task");
+          this.openSnackBar("Something went wrong editing task");
           return;
         }
-        window.alert("Task saved");
+        this.openSnackBar("Task saved");
         this.closeModal();
       })
     }
@@ -157,12 +159,12 @@ export class TaskEditModalComponent implements OnInit {
 
       // required information
       if (!this.taskForm.get('name')?.value) {
-        window.alert("Please add a task name");
+        this.openSnackBar("Please add a task name");
         return;
       }
       if (!this.taskForm.get('instructions')?.value ||
             this.taskForm.get('instructions')?.value.length == 0) {
-        window.alert("Please add submission instructions");
+        this.openSnackBar("Please add submission instructions");
         return;
       }
 
@@ -180,13 +182,13 @@ export class TaskEditModalComponent implements OnInit {
       if (this.taskForm.get('taskType')!.value == TaskType.ARTIFACT && (
             !this.taskForm.get('artifactName')?.value ||
             this.taskForm.get('artifactName')?.value.length == 0)) {
-        window.alert("Please add an artifact name");
+        this.openSnackBar("Please add an artifact name");
         return;
       }
       else if (this.taskForm.get('taskType')!.value == TaskType.EVENT && (
           !this.taskForm.get('event')?.value ||
           this.taskForm.get('event')?.value.length == 0)) {
-        window.alert("Please select an event");
+        this.openSnackBar("Please select an event");
         return;
       }
 
@@ -206,13 +208,26 @@ export class TaskEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.CREATE_TASK);
       this.http.post(url, newData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong creating task");
+          this.openSnackBar("Something went wrong creating task!");
           return;
         }
-        window.alert("Task created");
+        this.openSnackBar("Task created");
         this.closeModal();
       })
     }
+  }
+
+  openSnackBar(
+    message: string,
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
+    durationInSeconds: number = 3,
+  ) {
+    this._snackBar.open(message, 'close', {
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+      duration: durationInSeconds * 1000,
+    });
   }
 
   closeModal() {

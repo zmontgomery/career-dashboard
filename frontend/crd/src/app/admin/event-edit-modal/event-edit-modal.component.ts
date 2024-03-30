@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Event } from "../../../domain/Event";
 import { Endpoints, constructBackendRequest } from 'src/app/util/http-helper';
+import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -21,6 +22,7 @@ export class EventEditModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<EventEditModalComponent>,
+    private _snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
     public http: HttpClient,
     @Inject(MAT_DIALOG_DATA) private modalData: any,
@@ -32,7 +34,7 @@ export class EventEditModalComponent implements OnInit {
     }
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.createForm();
   }
 
@@ -102,10 +104,10 @@ export class EventEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.EDIT_EVENT);
       this.http.post(url, updateData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong saving the event");
+          this.openSnackBar("Something went wrong saving the event");
           return;
         }
-        window.alert("Event updated");
+        this.openSnackBar("Event updated");
         this.closeModal();
       })
     }
@@ -113,17 +115,17 @@ export class EventEditModalComponent implements OnInit {
       const newData: any = {};
 
       if (!this.eventForm.get('name')?.value) {
-        window.alert("Please add an event name");
+        this.openSnackBar("Please add an event name");
         return;
       }
       if (!this.eventForm.get('date')?.value) {
-        window.alert("Please set an event date");
+        this.openSnackBar("Please set an event date");
         return;
       }
 
       if (!this.eventForm.get('location')?.value ||
           !this.eventForm.get('organizer')?.value) {
-        window.alert("Please fill out all event information");
+        this.openSnackBar("Please fill out all event information");
         return;
       }
 
@@ -147,13 +149,26 @@ export class EventEditModalComponent implements OnInit {
       const url = constructBackendRequest(Endpoints.CREATE_EVENT);
       this.http.post(url, newData).subscribe(data => {
         if (!data) {
-          window.alert("Something went wrong creating the event");
+          this.openSnackBar("Something went wrong creating the event");
           return;
         }
-        window.alert("Event created");
+        this.openSnackBar("Event created");
         this.closeModal();
       })
     }
+  }
+
+  openSnackBar(
+    message: string,
+    verticalPosition: MatSnackBarVerticalPosition = 'bottom',
+    horizontalPosition: MatSnackBarHorizontalPosition = 'center',
+    durationInSeconds: number = 3,
+  ) {
+    this._snackBar.open(message, 'close', {
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+      duration: durationInSeconds * 1000,
+    });
   }
 
 }

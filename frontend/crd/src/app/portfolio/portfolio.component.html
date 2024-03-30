@@ -1,160 +1,235 @@
-<h1>Portfolio</h1>
-
-<div class="section-container">
-  <div class="section">
-    <div class="card-header">
-      Details
+<div class="portfolio-container" [class.mobile]="mobile">
+  <div class="section-container">
+    <div class="section">
+      <h1>Portfolio</h1>
+      <div class="card-body">
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Personal</h2>
+          </div>
+          <div class="card-body-section-body personal">
+            <div class="card-body-section-image">
+              <img class="profile-picture" *ngIf="user.profilePictureURL != null" [src]="user.profilePictureURL" alt="User Image">
+              <mat-icon class="profile-picture" *ngIf="user.profilePictureURL == null">account_circle</mat-icon>
+            </div>
+            <div class="card-body-section-data content">
+                <div>
+                  <span class="title">Name</span>
+                  <span>{{user.preferredName}} {{user.lastName}}</span>
+                </div>
+                <div>
+                  <span class="title">Email</span>
+                  <span>{{user.email}}</span>
+                </div>
+                <div>
+                  <span class="title" *ngIf="!mobile">Phone Number</span>
+                  <span class="title" *ngIf="mobile">Phone</span>
+                  <span>{{user.phoneNumber}}</span>
+                </div>
+                <div>
+                  <span class="title">LinkedIn</span>
+                  <span>
+                    <mat-icon *ngIf="user.linkedin !== null && user.linkedin !== ''" (click)="goToLinkedIn()">link</mat-icon>
+                  </span>
+                  <span *ngIf="user.linkedin === null">No LinkedIn</span>
+                </div>
+                <div class="verticle">
+                  <p class="title">Description</p>
+                  <p>{{user.studentDetails?.description}}</p>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Education</h2>
+          </div>
+          <div class="card-body-section-body content">
+            <div>
+              <span class="title">Majors</span>
+              <span class="value">
+                <span *ngFor="let degreeProgram of majors(); index as i">
+                  <span>{{degreeProgram}}{{i < majors().length - 1 ? ', ' : ''}}</span>
+                </span>
+              </span>
+            </div>
+            <div>
+              <span class="title">Minors</span>
+              <span class="value">
+                <span *ngFor="let degreeProgram of minors(); index as i">
+                  <span>{{degreeProgram}}{{i < minors().length - 1 ? ', ' : ''}}</span>
+                </span>
+              </span>
+            </div>
+            <div>
+              <span class="title" *ngIf="!mobile">University ID</span>
+              <span class="title" *ngIf="mobile">U. ID</span>
+              <span>{{user.studentDetails?.universityId}}</span>
+            </div>
+            <div>
+              <span class="title">Year</span>
+              <span>{{user.studentDetails?.yearLevel}}</span>
+            </div>
+            <div>
+              <span class="title">GPA</span>
+              <span>{{user.studentDetails?.gpa}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Skills</h2>
+          </div>
+          <div class="card-body-section-body">
+            <div class="skills">
+              <div class="skill" *ngFor="let skill of skills()">{{skill}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Languages</h2>
+          </div>
+          <div class="card-body-section-body">
+            <div class="skills">
+              <div class="skill" *ngFor="let language of languages()">{{language}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Projects</h2>
+          </div>
+          <div class="card-body-section-body projects">
+            <div class="project" *ngFor="let project of user.studentDetails?.projects">
+              <h3>{{project.name.charAt(0).toUpperCase() + project.name.substring(1)}}</h3> <!-- Guarentees project name is capitalized -->
+              <div class="date-row content">
+                <div>
+                  <span class="title">{{dateHeader('Start')}}</span>
+                  <span class="date">{{formatDate(project.startDate)}}</span>
+                </div>
+                <div>
+                  <span class="title">{{dateHeader('End')}}</span>
+                  <span class="date">{{formatDate(project.endDate)}}</span>
+                </div>
+              </div>
+              <div class="project-description">
+                {{project.description}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Jobs</h2>
+          </div>
+          <div class="card-body-section-body projects">
+            <div *ngFor="let job of jobs()">
+              <div class="project">
+                <h3>{{job.name}}</h3>
+                <div class="date-row content">
+                  <div>
+                    <span class="title">{{dateHeader('Start')}}</span>
+                    <span class="date">{{formatDate(job.startDate)}}</span>
+                  </div>
+                  <div>
+                    <span class="title">{{dateHeader('End')}}</span>
+                    <span class="date">{{formatDate(job.endDate)}}</span>
+                  </div>
+                </div>
+                <div class="date-row content">
+                  <div class="location">
+                    <span class="title">Location: </span>
+                    <span class="date">{{job.location}}</span>
+                  </div>
+                </div>
+                <div class="project-description">
+                  {{job.description}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Co-ops and Internships</h2>
+          </div>
+          <div class="card-body-section-body projects">
+            <div *ngFor="let job of coops()">
+              <div class="project">
+                <h3>{{job.name}}</h3>
+                <div class="date-row content">
+                  <div>
+                    <span class="title">{{dateHeader('Start')}}</span>
+                    <span class="date">{{formatDate(job.startDate)}}</span>
+                  </div>
+                  <div>
+                    <span class="title">{{dateHeader('End')}}</span>
+                    <span class="date">{{formatDate(job.endDate)}}</span>
+                  </div>
+                </div>
+                <div class="date-row content">
+                  <div class="location">
+                    <span class="title">Location: </span>
+                    <span class="date">{{job.location}}</span>
+                  </div>
+                </div>
+                <div class="project-description">
+                  {{job.description}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Clubs</h2>
+          </div>
+          <div class="card-body-section-body projects">
+            <div *ngFor="let club of user.studentDetails?.clubs">
+              <div class="project">
+                <h3>{{club.name}}</h3>
+                <div class="date-row content">
+                  <div>
+                    <span class="title">{{dateHeader('Start')}}</span>
+                    <span class="date">{{formatDate(club.startDate)}}</span>
+                  </div>
+                  <div>
+                    <span class="title">{{dateHeader('End')}}</span>
+                    <span class="date">{{formatDate(club.endDate)}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Interests</h2>
+          </div>
+          <div class="card-body-section-body">
+            <div class="skills">
+              <div class="skill" *ngFor="let interest of user.studentDetails?.interests">{{interest.name}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body-section">
+          <div class="card-body-section-header">
+            <h2>Milestones</h2>
+          </div>
+          <div class="card-body-section-body">
+            <div class="milestone" *ngFor="let milestone of completedMilestones">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{milestone}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Personal
-        </div>
-        <div class="card-body-section-body">
-          <div class="card-body-section-image">
-
-          </div>
-          <div class="card-body-section-data">
-            <ul>
-              <li>Name: {{user.firstName}} {{user.lastName}}</li>
-              <li>Preferred Name: {{user.preferredName}}</li>
-              <li>Description: {{user.studentDetails?.description}}</li>
-              <li>Email: {{user.email}}</li>
-              <li>Phone: {{user.phoneNumber}}</li>
-              <li>LinkedIn: {{user.linkedin}}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Education
-        </div>
-        <div class="card-body-section-body">
-          Majors:
-          <ul>
-            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
-              <li *ngIf="!degreeProgram.isMinor">{{degreeProgram.name}}</li>
-            </div>
-          </ul>
-          Minors:
-          <ul>
-            <div *ngFor="let degreeProgram of user.studentDetails?.degreePrograms">
-              <li *ngIf="degreeProgram.isMinor">{{degreeProgram.name}}</li>
-            </div>
-          </ul>
-          <ul>
-            <li>University ID: {{user.studentDetails?.universityId}}</li>
-            <li>School Year: {{user.studentDetails?.yearLevel}}</li>
-            <li>GPA: {{user.studentDetails?.gpa}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Skills
-        </div>
-        <div class="card-body-section-body">
-          <ul *ngFor="let skill of user.studentDetails?.skills">
-              <li *ngIf="!skill.isLanguage">{{skill.name}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Language Skills
-        </div>
-        <div class="card-body-section-body">
-          <ul *ngFor="let skill of user.studentDetails?.skills">
-            <li *ngIf="skill.isLanguage">{{skill.name}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Projects
-        </div>
-        <div class="card-body-section-body">
-          <div *ngFor="let project of user.studentDetails?.projects">
-            <p>{{project.name}}</p>
-            <ul>
-              <li>{{project.description}}</li>
-              <li>Start Date: {{project.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{project.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Jobs
-        </div>
-        <div class="card-body-section-body">
-          <div *ngFor="let job of user.studentDetails?.jobs">
-            <div *ngIf="!job.isCoop">
-            <p>{{job.name}}</p>
-            <ul>
-              <li>{{job.location}}</li>
-              <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-            </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Co-ops and Internships
-        </div>
-        <div class="card-body-section-body">
-          <div *ngFor="let job of user.studentDetails?.jobs">
-            <div *ngIf="job.isCoop">
-            <p>{{job.name}}</p>
-            <ul>
-              <li>{{job.location}}</li>
-              <li>{{job.description}}</li>
-              <li>Start Date: {{job.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-              <li>End Date: {{job.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-            </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Clubs
-        </div>
-        <div class="card-body-section-body">
-          <ul *ngFor="let club of user.studentDetails?.clubs">
-            <li>{{club.name}}</li>
-            <li>{{club.startDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-            <li>{{club.endDate.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"})}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Interests
-        </div>
-        <div class="card-body-section-body">
-          <ul *ngFor="let interest of user.studentDetails?.interests">
-            <li>{{interest.name}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card-body-section">
-        <div class="card-body-section-header">
-          Milestones
-        </div>
-        <ul class="card-body-section-body" *ngFor="let milestone of completedMilestones">
-          <li>{{milestone}}</li>
-        </ul>
-      </div>
+  
+    <div class="section">
+      <h1>Resume</h1>
+      <app-resume [user]="user" [external]="external"></app-resume>
     </div>
-  </div>
-
-  <div class="section">
-    <app-resume [user]="user" [external]="external"></app-resume>
   </div>
 </div>
