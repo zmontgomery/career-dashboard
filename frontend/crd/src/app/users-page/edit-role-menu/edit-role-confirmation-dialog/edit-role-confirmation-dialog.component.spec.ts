@@ -7,6 +7,8 @@ import { userJSON } from 'src/app/security/auth.service.spec';
 import { Role, User } from 'src/app/security/domain/user';
 import { of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('EditRoleConfirmationDialogComponent', () => {
   let component: EditRoleConfirmationDialogComponent;
@@ -29,6 +31,8 @@ describe('EditRoleConfirmationDialogComponent', () => {
       ],
       imports: [
         MatDialogModule,
+        MatSnackBarModule,
+        NoopAnimationsModule,
         MatButtonModule
       ]
     });

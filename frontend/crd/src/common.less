@@ -1,6 +1,11 @@
 // SUNY Oswego colors
 @oswego-green: #235937;
+@oswego-green-faded: #F0F6F3;
 @oswego-sunset-gold: #FFCC33;
+@oswego-gray: #FBFBFB;
+
+// Box Shadow
+@oswego-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 
 // fonts
 @font-family-bebas-neue: 'Bebas Neue Pro', sans-serif;
@@ -17,4 +22,25 @@
   font-size: @size;
   width: @size;
   line-height: @size;
+}
+
+.center() {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+h1 {
+  padding-top: 50px;
+  padding-bottom: 25px;
+
+  @media screen and (max-width: 480px) {
+    padding-top: 20px;
+    padding-bottom: 15px;    
+  }
+}
+
+.mat-mdc-card {
+  box-shadow: @oswego-box-shadow !important;
+  border-radius: 1em !important;
 }

@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { Milestone, YearLevel } from 'src/domain/Milestone';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('MilestoneCreateModalComponent', () => {
@@ -26,14 +27,15 @@ describe('MilestoneCreateModalComponent', () => {
     TestBed.configureTestingModule({
       declarations: [MilestoneCreateModalComponent],
       imports: [
-        HttpClientTestingModule, 
-        HttpClientModule, 
+        HttpClientTestingModule,
+        HttpClientModule,
         MatDialogModule,
         MatFormFieldModule,
         MatCheckboxModule,
         MatInputModule,
         ReactiveFormsModule,
         MatRadioModule,
+        MatSnackBarModule,
         NoopAnimationsModule
       ],
       providers: [
@@ -44,6 +46,8 @@ describe('MilestoneCreateModalComponent', () => {
       ],
       teardown: {destroyAfterEach: false}
     });
+    const locationSpy = jasmine.createSpyObj('location', ['reload']);
+    TestBed.overrideProvider(location, { useValue: locationSpy });
     fixture = TestBed.createComponent(MilestoneCreateModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -87,11 +91,12 @@ describe('MilestoneCreateModalComponent', () => {
       name: [null, Validators.required],
       description: [null],
     });
-    let spyWindow = spyOn(window, 'alert');
+    // @ts-ignore
+    let spySnackBar = spyOn(component._snackBar, 'open');
 
     component.newMilestone();
 
-    expect(spyWindow).toHaveBeenCalled();
+    expect(spySnackBar).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
@@ -104,12 +109,14 @@ describe('MilestoneCreateModalComponent', () => {
     let spy = spyOn(component.http, 'post').and.returnValue(of({
       name: ""
     }));
-    let spyWindow = spyOn(window, 'alert');
+    // @ts-ignore
+    let spySnackBar = spyOn(component._snackBar, 'open');
+
     let spyRouter = spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
 
     component.newMilestone();
 
-    expect(spyWindow).toHaveBeenCalled();
+    expect(spySnackBar).toHaveBeenCalled();
   });
 
   it('should navigate away', () => {

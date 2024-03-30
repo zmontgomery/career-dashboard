@@ -1,36 +1,30 @@
 <div class="login-page">  
-    <div class="login-modal">
-        <mat-card class="login-card">
-            <div class="card-header">
-                Login
-            </div>
-            <div class="card-body">
-                <button class="login-microsoft-button" mat-raised-button color="primary" (click)="ms()">Login with Microsoft</button>
-                <ng-container *ngIf="smallButton;else large">
-                    <asl-google-signin-button 
-                        class="login-google-button"
-                        type="standard"
-                        size="large"
-                        shape="rectangular"
-                        text="signin_with"
-                        theme="outline"
-                        width="255"
-                        logo_alignment="left"
-                    ></asl-google-signin-button>
-                </ng-container>
-                <ng-template #large>
-                    <asl-google-signin-button 
-                        class="login-google-button"
-                        type="standard"
-                        size="large"
-                        shape="rectangular"
-                        text="signin_with"
-                        theme="outline"
-                        width="280"
-                        logo_alignment="left"
-                    ></asl-google-signin-button>
-                </ng-template>
-            </div>
-        </mat-card>
-    </div>  
+  <img class="image" src="assets/images/oswego_campus.jpg" alt="oswego campus">
+  <div class="login-modal">
+    <mat-card class="login-card">
+      <div class="login-logo">
+        <app-oswego-logo 
+          [sizeFactor]="0.25"
+        />
+      </div>
+      <div class="card-body">
+        <h2>Login</h2>
+        <hr />
+        <asl-google-signin-button 
+            class="login-google-button"
+            type="standard"
+            size="large"
+            shape="rectangular"
+            text="signin_with"
+            theme="outline"
+            width="250"
+            logo_alignment="left"
+        />
+        <button class="login-microsoft-button" mat-raised-button color="primary" (click)="ms()">
+          <span>Login with Microsoft</span>
+          <img src="assets/images/ms_logo.png" alt="microsoft logo">
+        </button>
+      </div>
+    </mat-card>
+  </div>  
 </div>
