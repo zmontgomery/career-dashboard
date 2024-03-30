@@ -1,8 +1,8 @@
 <div class="submission-modal-container">
   <mat-dialog-content>
-    <div class="submission-modal-header">
-        Submit {{task.name}}
-    </div>
+    <h2>
+      {{task.name}}
+    </h2>
     <app-submission-content 
       [task]="task"
       (cancel)="onCancel()"

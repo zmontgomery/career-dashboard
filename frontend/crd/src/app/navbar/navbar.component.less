@@ -1,10 +1,29 @@
 .nav-bar-container {
-    width: 100%;
-    border-top: solid gray 2px;
-    border-bottom: solid gray 2px;
+  background-color: white;
+  width: 100%;
+  border-top: solid rgba(0, 0, 0, 0.1) 1px;
+  border-bottom: solid rgba(0, 0, 0, 0.1) 1px;
+
+  a {
+    margin: 10px 0;
+    border-radius: 1em !important;
+  }
+
+  ::ng-deep .mat-ripple {
+    border-radius: 1em !important;
+  }
+
+  ::ng-deep .mdc-tab__ripple::before {
+    border-radius: 1em !important;
+  }
+
+  ::ng-deep .mdc-tab-indicator {
+    display: none !important;
+  }
 }
 
 .mdc-tab--active{
   background-color: #F0F6F3;
   border-radius: 1em;
 }
+

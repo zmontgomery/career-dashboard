@@ -114,6 +114,14 @@ You can also do this for frontend/backend test.
 - `cd backend`
 - `./gradlew test`
 - coverage found in backend/build/reports/jacoco/test/html/index.html
+### Integration
+- When setting up, create an `account_information.yml` file in the `sit/tests` directory, follow the 
+  format in the `account_information_default.yml` file. Get the sign in information from the sponsors
+  or another team member to get the login information for each account. Replace the database username
+  and password with the username and password you set for the crd database.
+- `cd sit`
+- `./runner.sh`
+- tests will take some time to complete
 
 # Deploying
 #### Work in Progress. This just showcases how to build angular app and run backend as jar that also serves angular app

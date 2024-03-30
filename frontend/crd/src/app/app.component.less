@@ -5,13 +5,18 @@ mat-card-header {
 }
 
 .body-container {
-  background-color: #FBFBFB;
+  background-color: @oswego-gray;
 }
 
 .app-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: @oswego-gray;
+
+  .navbar {
+    padding: 0;
+  }
 
   app-oswego-logo {
     display: inline-block;
@@ -33,6 +38,7 @@ mat-card-header {
   }
 
   .header-container {
+    background-color: white;
     display: flex;
     width: 100%;
 

@@ -16,6 +16,7 @@ import { FileUploadModule } from 'src/app/file-upload/file-upload.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockComponent } from 'ng-mocks';
 import { SubmissionContentComponent } from '../submission-content/submission-content.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('SubmissionModalComponent', () => {
   let component: SubmissionModalComponent;
