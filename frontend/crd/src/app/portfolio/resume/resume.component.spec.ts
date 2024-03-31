@@ -5,7 +5,7 @@ import { Artifact } from 'src/domain/Artifact';
 import { userJSON } from 'src/app/security/auth.service.spec';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { of } from 'rxjs';
@@ -84,13 +84,18 @@ describe('ResumeComponent', () => {
     component.openDialog();
     tick(1000);
     expect(taskService.findById).toHaveBeenCalled();
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.maxWidth = '90vw';
+    dialogConfig.data = {
+      task: task
+    }
     expect(matDialog.open).toHaveBeenCalledWith(SubmissionModalComponent,
-      {data: {task: task} }
+      dialogConfig
     )
   }));
 
-  it('update Artifacts with file', fakeAsync(() => {  
-    submissionService.getLatestSubmission.and.returnValue(of(submission2)); 
+  it('update Artifacts with file', fakeAsync(() => {
+    submissionService.getLatestSubmission.and.returnValue(of(submission2));
     // @ts-ignore
     component.fetchCurrentArtifact();
     tick(1000);
@@ -98,7 +103,7 @@ describe('ResumeComponent', () => {
     expect(component.pdfURL).toBeTruthy();
   }));
 
-  it('update Artifacts id is 1', fakeAsync(() => {   
+  it('update Artifacts id is 1', fakeAsync(() => {
     submissionService.getLatestSubmission
       .and.returnValue(of(new Submission({...submission1JSON, artifactId: 1})));
 
@@ -113,7 +118,7 @@ describe('ResumeComponent', () => {
     component.artifactId = 2;
     spyOn(component, 'fetchCurrentArtifact');
     matDialogRef.afterClosed.and.returnValue(of(true));
-    
+
 
     component.deleteResume();
     tick(1000);
@@ -127,7 +132,7 @@ describe('ResumeComponent', () => {
     component.artifactId = 1;
     spyOn(component, 'fetchCurrentArtifact');
     matDialogRef.afterClosed.and.returnValue(of(false));
-    
+
     component.deleteResume();
     tick(1000);
     expect(matDialog.open).toHaveBeenCalledWith(DeleteResumeConfirmationDialogComponent,
