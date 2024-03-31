@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { AuthService } from '../auth.service';
 import { User } from '../domain/user';
 import { LangUtils } from 'src/app/util/lang-utils';
@@ -15,6 +15,7 @@ import {map, Observable} from "rxjs";
 })
 export class UserMenuComponent implements OnInit {
 
+  @Input() showAIButton$!: Observable<boolean>;
   user: User = User.makeEmpty();
   profileURL: string | null = null;
   displayName$: Observable<boolean>;

@@ -49,10 +49,20 @@
 }
 
 .text{
-  padding: 0 0 0 10px;
+  padding: 0 10px 0 10px;
   display: flex;
   word-wrap: break-word;
   font-size: 22px;
+}
+
+.description {
+  @media(max-width: 700px) {
+    flex-direction: column;
+
+    .content {
+      margin: 0 10px;
+    }
+  }
 }
 
 #modal-footer {

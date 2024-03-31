@@ -1,14 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Milestone, YearLevel } from "../../../domain/Milestone";
 import { MilestoneService } from "./milestone.service";
-import { Subject, mergeMap, takeUntil, zip } from 'rxjs';
+import { mergeMap, takeUntil, zip } from 'rxjs';
 import { MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { TasksModalComponent } from "../../tasks-modal/tasks-modal.component";
 import { SubmissionService } from 'src/app/submissions/submission.service';
 import { AuthService } from 'src/app/security/auth.service';
-import { User } from 'src/app/security/domain/user';
-import { Submission } from 'src/domain/Submission';
-import { ActivatedRoute } from '@angular/router';
 import { MilestonesPage } from '../milestones-page';
 
 @Component({
@@ -49,6 +45,7 @@ export class MilestonesComponent extends MilestonesPage implements OnInit, OnDes
     dialogConfig.id = "modal-component";
     dialogConfig.height = "80%";
     dialogConfig.width = "60%";
+    dialogConfig.minWidth = "350px";
     dialogConfig.data = {
       task: task
     }
