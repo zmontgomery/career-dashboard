@@ -1,9 +1,7 @@
-<mat-card>
-  <mat-card-header>
-    <h2>
-      Events
-    </h2>
-  </mat-card-header>
+<div class="event-container">
+  <h1>
+    Events
+  </h1>
   <carousel [itemsPerSlide]="itemsPerSlide"
             [singleSlideOffset]="true"
             [noWrap]="!noWrap"
@@ -16,9 +14,14 @@
            [ngSrc]="slide.img" width="500" height="200" alt="event image">
       <div class="carousel-caption">
         <h4>{{slide.name}}</h4>
-        <div>{{slide.date}}</div>
-        <div>{{slide.description}}</div>
+        <div class="date">
+          <mat-icon>calendar_month</mat-icon>
+          <span>{{slide.date}}</span>
+        </div>
+        <button *ngIf="index % 2 === 0" mat-stroked-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.description}}</button>
+        <button *ngIf="index % 2 === 1" mat-raised-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.description}}</button>
       </div>
     </slide>
     </carousel>
-</mat-card>
+</div>
+

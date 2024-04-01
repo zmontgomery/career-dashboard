@@ -7,6 +7,8 @@ import { MilestonesModule } from "../milestones-page/milestones/milestones.modul
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TaskSubmitButtonModule } from '../task-submit-button/task-submit-button.module';
 import { TasksModule } from "../tasks/tasks.module";
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -17,13 +19,15 @@ import { TasksModule } from "../tasks/tasks.module";
   ],
   exports: [
   ],
-    imports: [
-        CommonModule,
-        MatCardModule,
-        MilestonesModule,
-        CarouselModule,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MilestonesModule,
+    CarouselModule,
     TasksModule,
-        NgOptimizedImage,
-    ]
+    NgOptimizedImage,
+    MatButtonModule,
+    MatIconModule
+  ]
 })
 export class DashboardModule { }

@@ -15,10 +15,7 @@
     margin: auto;
     border-radius: 20px;
 }
-.matListTitle {
-    font-weight: bold;
-    box-shadow: @oswego-box-shadow;
-}
+
 .matListItem {
     background-color: white;
     border: none;
@@ -28,6 +25,7 @@
     border-radius: 10px;
     box-shadow: @oswego-box-shadow;
 }
+
 .matListItem:not(.taskBar):hover {
   background-color: lightgray;
   cursor: pointer;
@@ -39,10 +37,10 @@
 }
 
 .taskBar {
-  background-color: #F0F6F3;
+  background-color: @oswego-green-faded;
   padding: 1em;
   font-weight: bold;
-  box-shadow: none;
+  box-shadow: @oswego-box-shadow;
 }
 
 .taskText {
