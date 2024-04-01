@@ -6,6 +6,9 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { SubmissionContentModule } from '../submissions/submission-content/submission-content.module';
 import { TaskSubmitButtonModule } from "../task-submit-button/task-submit-button.module";
+import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -21,7 +24,10 @@ import { TaskSubmitButtonModule } from "../task-submit-button/task-submit-button
     MatCardModule,
     MatIconModule,
     TaskSubmitButtonModule,
-    SubmissionContentModule
+    SubmissionContentModule,
+    HttpClientModule,
+    MatSnackBarModule,
+    NoopAnimationsModule
   ],
   providers: [
     { provide: MatDialogRef, useValue: {} },

@@ -10,6 +10,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { TaskSubmitButtonModule } from "../../task-submit-button/task-submit-button.module";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -30,7 +31,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
         MatButtonToggleModule,
         MatCheckboxModule,
         TaskSubmitButtonModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatSnackBarModule
     ]
 })
 export class MilestonesModule { }
