@@ -1,8 +1,8 @@
 <div class="resume-container">
-    <button class="delete" *ngIf="canDelete()" mat-icon-button (click)="deleteResume()">
-      <mat-icon>delete</mat-icon>
-    </button>
     <mat-card class="resume-card">
+      <button class="delete" *ngIf="canDelete()" mat-icon-button (click)="deleteResume()">
+        <mat-icon>delete</mat-icon>
+      </button>
         <ng-container *ngIf="resumeLoaded$ | async; else loading">
             <ng-container *ngIf="pdfURL !== ''; else noResume">
                 <pdf-viewer
@@ -24,7 +24,7 @@
         <ng-template #loading>
             <div class="spinner-container">
                 <mat-spinner></mat-spinner>
-            </div>  
+            </div>
         </ng-template>
     </mat-card>
 </div>

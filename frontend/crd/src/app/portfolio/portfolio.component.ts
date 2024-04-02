@@ -7,10 +7,11 @@ import {ArtifactService} from "../file-upload/artifact.service";
 import { TaskService } from '../util/task.service';
 import { SubmissionService } from '../submissions/submission.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map, mergeMap, takeUntil, tap, zipWith } from 'rxjs';
+import {map, mergeMap, Observable, takeUntil, tap, zipWith} from 'rxjs';
 import { UserService } from '../security/user.service';
 import { Job } from 'src/domain/Job';
 import {MilestoneService} from "../milestones-page/milestones/milestone.service";
+import {ScreenSizeService} from "../util/screen-size.service";
 
 @Component({
   selector: 'app-portfolio',
@@ -23,16 +24,25 @@ export class PortfolioComponent implements OnInit {
   external: boolean = false;
   profileURL: string | null = null;
   completedMilestones: string[] = [];
-  mobile = window.outerWidth <= 480;
+  isMobile$: Observable<boolean>;
+  personalSectionResize$: Observable<boolean>;
 
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly artifactService: ArtifactService,
+    private readonly screenSizeSvc: ScreenSizeService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly milestoneService: MilestoneService,
-  ) { }
+  ) {
+    this.isMobile$ = screenSizeSvc.isMobile$;
+
+    // Add the mobile styling to personal section because it gets squished around 1200.
+    // At 1000 resume is moved downward and there is more space so go back to normal
+    // styling until regular mobile kicks in.
+    this.personalSectionResize$ = screenSizeSvc.screenSize$.pipe(map(it => it < 1200 && it > 1000));
+  }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -112,11 +122,11 @@ export class PortfolioComponent implements OnInit {
   }
 
   dateHeader(header: string): string {
-    return this.mobile ? `${header}:` : `${header} Date:`;
+    return this.isMobile$ ? `${header}:` : `${header} Date:`;
   }
 
   formatDate(date: Date){
-    return this.mobile ? date.toLocaleString("en-US", {month: "numeric", year: "numeric", day: "numeric"}) :
+    return this.isMobile$ ? date.toLocaleString("en-US", {month: "numeric", year: "numeric", day: "numeric"}) :
       date.toLocaleString("en-US", {month: "long", year: "numeric", day: "numeric"});
   }
 }

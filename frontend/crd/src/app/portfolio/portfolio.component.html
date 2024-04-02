@@ -1,9 +1,9 @@
-<div class="portfolio-container" [class.mobile]="mobile">
+<div class="portfolio-container" [class.mobile]="isMobile$ | async">
   <div class="section-container">
     <div class="section">
       <h1>Portfolio</h1>
       <div class="card-body">
-        <div class="card-body-section">
+        <div class="card-body-section" [class.mobile]="personalSectionResize$ | async">
           <div class="card-body-section-header">
             <h2>Personal</h2>
           </div>
@@ -22,8 +22,8 @@
                   <span>{{user.email}}</span>
                 </div>
                 <div>
-                  <span class="title" *ngIf="!mobile">Phone Number</span>
-                  <span class="title" *ngIf="mobile">Phone</span>
+                  <span class="title" *ngIf="!(isMobile$ | async)">Phone Number</span>
+                  <span class="title" *ngIf="isMobile$| async">Phone</span>
                   <span>{{user.phoneNumber}}</span>
                 </div>
                 <div>
@@ -62,8 +62,8 @@
               </span>
             </div>
             <div>
-              <span class="title" *ngIf="!mobile">University ID</span>
-              <span class="title" *ngIf="mobile">U. ID</span>
+              <span class="title" *ngIf="!(isMobile$ | async)">University ID</span>
+              <span class="title" *ngIf="isMobile$ | async">U. ID</span>
               <span>{{user.studentDetails?.universityId}}</span>
             </div>
             <div>
@@ -226,8 +226,8 @@
         </div>
       </div>
     </div>
-  
-    <div class="section">
+
+    <div class="section resume">
       <h1>Resume</h1>
       <app-resume [user]="user" [external]="external"></app-resume>
     </div>
