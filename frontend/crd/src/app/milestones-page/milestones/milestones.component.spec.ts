@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MilestonesComponent } from './milestones.component';
 import { of } from "rxjs";
 import createSpyObj = jasmine.createSpyObj;
-import {Milestone, MilestoneJSON, YearLevel} from "../../../domain/Milestone";
+import { Milestone, MilestoneJSON, YearLevel } from "../../../domain/Milestone";
 import { MatCardModule } from "@angular/material/card";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -18,6 +18,7 @@ import { Task, TaskType } from 'src/domain/Task';
 import { Submission } from 'src/domain/Submission';
 import { TasksModalComponent } from 'src/app/tasks-modal/tasks-modal.component';
 import { TasksModalModule } from 'src/app/tasks-modal/tasks-modal.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 export const taskJSON = {
   name: 'task name',
@@ -37,10 +38,10 @@ export const milestone1JSON: MilestoneJSON = {
   description: "sample",
   events: [],
   tasks: [taskJSON,
-  {
-    ...taskJSON,
-    id: 2,
-  }],
+    {
+      ...taskJSON,
+      id: 2,
+    }],
 }
 
 export const milestone2JSON = {
@@ -66,7 +67,7 @@ describe('MilestonesComponent', () => {
 
   const user = new User(userJSON);
 
-  const testTask = new Task({
+  const testTask: Task = new Task({
     name: 'task name',
     description: "description",
     id: 1,
@@ -112,7 +113,7 @@ describe('MilestonesComponent', () => {
 
   beforeEach(() => {
     submissionService = jasmine.createSpyObj('SubmissionService', ['submit']);
-    authService = jasmine.createSpyObj('AuthService', ['toString'], {user$: of(user)});
+    authService = jasmine.createSpyObj('AuthService', ['toString'], { user$: of(user) });
 
     TestBed.configureTestingModule({
       imports: [
@@ -121,12 +122,13 @@ describe('MilestonesComponent', () => {
         MatCheckboxModule,
         NoopAnimationsModule,
         MatDialogModule,
-        TasksModalModule
+        TasksModalModule,
+        MatSnackBarModule
       ],
       providers: [
-        {provide: MilestoneService, useValue: milestoneServiceSpy},
-        {provide: SubmissionService, useValue: submissionsServiceSpy},
-        {provide: AuthService, useValue: authService},
+        { provide: MilestoneService, useValue: milestoneServiceSpy },
+        { provide: SubmissionService, useValue: submissionsServiceSpy },
+        { provide: AuthService, useValue: authService },
       ],
       declarations: [MilestonesComponent]
     });
@@ -140,8 +142,7 @@ describe('MilestonesComponent', () => {
   });
 
   it('should open the TaskEditModal in a MatDialog', () => {
-    spyOn(component.matDialog,'open').and.callThrough();
-    component.openTask(testTask);
+    spyOn(component.matDialog, 'open').and.callThrough();
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -152,6 +153,8 @@ describe('MilestonesComponent', () => {
     dialogConfig.data = {
       task: testTask
     }
+
+    component.openTask(testTask);
 
     expect(component.matDialog.open).toHaveBeenCalledWith(TasksModalComponent, dialogConfig);
   });

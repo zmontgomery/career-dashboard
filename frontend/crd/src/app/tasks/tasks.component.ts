@@ -55,7 +55,8 @@ export class TasksComponent {
     dialogConfig.width = "60%";
     dialogConfig.minWidth = "350px";
     dialogConfig.data = {
-      task: task
+      task: task,
+      overdue: this.isTaskOverdue(task)
     }
     // https://material.angular.io/components/dialog/overview
     const dialogRef = this.matDialog.open(TasksModalComponent, dialogConfig);
