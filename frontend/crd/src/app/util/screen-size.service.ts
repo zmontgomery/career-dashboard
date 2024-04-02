@@ -8,6 +8,7 @@ import {debounceTime, fromEvent, map, Observable, startWith} from "rxjs";
 export class ScreenSizeService {
 
   /**
+   * Checks if the Screen size is less than 700px. Will have correct value on load and update if size changes
    * Start off with the initial value use the isMobile$ | async in the view to get both the
    * original value and the new value after resize.
    */

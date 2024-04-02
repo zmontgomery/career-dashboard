@@ -1,5 +1,5 @@
 <div class="user-container">
-  <div class="user-name">{{user.firstName}} {{user.lastName}}</div>
+  <div *ngIf="(displayName$ | async)" class="user-name">{{user.firstName}} {{user.lastName}}</div>
   <button mat-raised-button class="user-button" [matMenuTriggerFor]="userMenu" >
     <img class="profile-picture" *ngIf="profileURL != null" [src]="profileURL" width="50" height="50" alt="User Image">
     <mat-icon class="profile-picture-placeholder" *ngIf="profileURL == null">account_circle</mat-icon>

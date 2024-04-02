@@ -24,8 +24,12 @@ mat-card-header {
     padding: 1vh;
   }
 
-  .logo{
-    margin: 20px
+  .logo {
+    margin: 20px;
+
+    @media(max-width: 700px) {
+      margin: 0;
+    }
   }
 
   .title-container{
@@ -35,6 +39,28 @@ mat-card-header {
     width: fit-content;
     font-weight: bold;
     font-size: 24px;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    @media(max-width: 920px) {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+
+    @media(max-width: 700px) {
+      padding-bottom: 0;
+      padding-top: 40px;
+    }
+
+    @media(max-width: 629px) {
+      padding-top: 25px;
+    }
+
+    @media(max-width: 500px) {
+      padding-top: 0;
+    }
   }
 
   .header-container {
