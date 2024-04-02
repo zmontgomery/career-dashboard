@@ -12,12 +12,14 @@ export class AppComponent {
 
   noNavBar = ['login', 'signup'];
   showAIButton$: Observable<boolean>;
+  showAIInMenu$: Observable<boolean>;
   showTitle$: Observable<boolean>;
 
   constructor(
     screenSizeSvc: ScreenSizeService
   ) {
     this.showAIButton$ = screenSizeSvc.screenSize$.pipe(map(it => it > 770));
+    this.showAIInMenu$ = this.showAIButton$.pipe(map(it => !it));
     this.showTitle$ = screenSizeSvc.screenSize$.pipe(map(it => it > 430));
   }
 

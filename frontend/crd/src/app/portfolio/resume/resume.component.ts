@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import { ArtifactService } from 'src/app/file-upload/artifact.service';
 import { SubmissionModalComponent } from 'src/app/submissions/submission-modal/submission-modal.component';
 import { SubmissionService } from 'src/app/submissions/submission.service';
@@ -35,7 +35,6 @@ export class ResumeComponent implements OnInit, OnChanges {
     private readonly artifactService: ArtifactService,
     private readonly submissionService: SubmissionService,
     private readonly taskService: TaskService,
-    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -65,11 +64,12 @@ export class ResumeComponent implements OnInit, OnChanges {
      */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
-      this.dialog.open(SubmissionModalComponent, {
-        data: {
-          task: task
-        }
-      })
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.maxWidth = '90vw';
+      dialogConfig.data = {
+        task: task
+      }
+      this.dialog.open(SubmissionModalComponent, dialogConfig)
         // this could definitely be optimized, but for now we can do this
         .afterClosed().subscribe(this.fetchCurrentArtifact.bind(this))
     });

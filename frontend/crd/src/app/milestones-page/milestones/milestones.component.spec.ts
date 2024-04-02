@@ -148,6 +148,7 @@ describe('MilestonesComponent', () => {
     dialogConfig.id = "modal-component";
     dialogConfig.height = "80%";
     dialogConfig.width = "60%";
+    dialogConfig.minWidth = "350px";
     dialogConfig.data = {
       task: testTask
     }

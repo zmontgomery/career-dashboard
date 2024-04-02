@@ -15,7 +15,7 @@
       </div>
 
       <ng-container *ngIf="needsNavBar()">
-        <app-user-menu class="logout-button"></app-user-menu>
+        <app-user-menu [showAIButton$]="showAIInMenu$" class="logout-button"></app-user-menu>
       </ng-container>
     </div>
   </div>

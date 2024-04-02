@@ -17,5 +17,12 @@
       <mat-icon>settings</mat-icon>
       <span>Settings</span>
     </button>
+    <button class="ai-button" mat-menu-item *ngIf="(showAIButton$ | async)">
+      <img class="ai-img" src="../assets/images/Lakers.jpg" alt="Oswego Logo" height="30px">
+      <span class = "ai-button-text">AI Business Advisor
+  <!--      <br>Ask all your-->
+  <!--      advisement and career questions-->
+      </span>
+    </button>
   </div>
 </mat-menu>

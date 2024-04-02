@@ -6,7 +6,6 @@ import {TasksModalComponent} from '../tasks-modal/tasks-modal.component';
 import {AuthService} from "../security/auth.service";
 import {take} from "rxjs";
 import {YearLevel} from "../../domain/Milestone";
-import {User} from "../security/domain/user";
 
 @Component({
   selector: 'app-tasks',
@@ -54,6 +53,7 @@ export class TasksComponent {
     dialogConfig.id = "modal-component";
     dialogConfig.height = "80%";
     dialogConfig.width = "60%";
+    dialogConfig.minWidth = "350px";
     dialogConfig.data = {
       task: task
     }
