@@ -3,15 +3,16 @@
         <mat-tab label="{{yearLevel}}">
             <mat-list>
                 <ng-container *ngFor="let task of taskMap.get(yearLevel)">
-                    <mat-list-item>
-                        <span matListItemTitle>{{task.name}}</span>
-                        <span matListItemLine>{{task.description}}</span>
-                        <button mat-button (click)="openTaskEditModal(task.name, task)">EDIT</button>
+                    <mat-list-item class="task-item">
+                        <p matListItemTitle>{{task.name}}</p>
+                        <p matListItemLine>{{task.description}}</p>
+                        <button mat-raised-button class="task-edit-button" (click)="openTaskEditModal(task.name, task)">EDIT</button>
                     </mat-list-item>
                 </ng-container>
-                <mat-list-item class="new-task" (click)="openTaskEditModal(yearLevel, null)">
+                <!-- <mat-list-item class="new-task" (click)="openTaskEditModal(yearLevel, null)">
                     Create New {{yearLevel}} Task
-                </mat-list-item>
+                </mat-list-item> -->
+                <button mat-raised-button class="form-create-task-button" type='button' (click)="openTaskEditModal(yearLevel, null)">Create New {{yearLevel}} Task</button>
             </mat-list>
         </mat-tab>
     </div>
