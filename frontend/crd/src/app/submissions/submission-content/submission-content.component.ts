@@ -56,7 +56,6 @@ export class SubmissionContentComponent implements OnDestroy {
       );
       this.submissionService.submit(submission).subscribe(() => {
         this.state = 'submitting';
-        window.alert("Submission sent.");
         this.onCancel();
         // TODO error check?
         this._snackBar.open("Submission Successful!", 'close', {
