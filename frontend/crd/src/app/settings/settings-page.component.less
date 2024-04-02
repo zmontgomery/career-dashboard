@@ -1,25 +1,62 @@
 @import "../../common";
 
-h1 {
-  color: @oswego-green;
-}
-
 .settings-page-container {
-  margin: 0 10px;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+
+  .section {
+    background-color: white;
+    box-shadow: @oswego-box-shadow;
+    border-radius: 1em;
+    width: 50%;
+    align-self: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @desktop-size: 300px;
+
+  h2 {
+    font-size: xx-large;
+    color: @oswego-green;
+    padding-bottom: 20px;
+  }
 
   .user-button {
-    width: 150px;
-    height: 150px;
+    width: @desktop-size;
+    height: @desktop-size;
     border-radius: 100%;
     padding: 0;
+    align-self: center;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s;
 
     img {
-      border-radius: 100%;
+      width: @desktop-size;
+      height: @desktop-size;
     }
 
     .mat-icon {
-      .mat-icon-size(150px);
+      .mat-icon-size(@desktop-size);
       margin: 0;
     }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: transparent;
+  }
+
+  .overlay:hover {
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }

@@ -1,19 +1,19 @@
 <div id="modal-content-wrapper">
     <form [formGroup]="eventForm" class="mat-dialog-content" (ngSubmit)="saveEvent()">
+      <header id="modal-header">
         <div *ngIf="eventName == ''">
             <h4>Create New Event</h4>
-            <mat-form-field *ngIf="eventName == ''">
-                <mat-label>Event Name</mat-label>
-                <input matInput formControlName="name">
-            </mat-form-field>
         </div>
         <div *ngIf="eventName != ''">
           <h4>Editing {{eventName}}</h4>
-          <mat-form-field>
-              <mat-label>Event Name</mat-label>
-              <input matInput formControlName="name">
-          </mat-form-field>
         </div>
+      </header>
+
+      <mat-form-field>
+        <mat-label>Event Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+
         <mat-form-field>
           <mat-label>Choose a date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="date">
@@ -21,38 +21,42 @@
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <br />
+        <br/>
         <mat-form-field>
           <mat-label>Event Description</mat-label>
           <textarea matInput formControlName="description"></textarea>
         </mat-form-field>
+        <br/>
         <mat-form-field>
           <mat-label>Event Location</mat-label>
           <input matInput formControlName="location">
         </mat-form-field>
+        <br/>
         <mat-form-field>
           <mat-label>Event Organizer</mat-label>
           <input matInput formControlName="organizer">
         </mat-form-field>
+        <br/>
         <mat-form-field>
           <mat-label>Event Link</mat-label>
           <input matInput formControlName="link">
           <mat-hint align="end">Link to the event on the SUNY calendar or other external site</mat-hint>
         </mat-form-field>
+        <br/>
         <mat-form-field>
           <mat-label>Event Button Label</mat-label>
           <input matInput formControlName="buttonLabel">
           <mat-hint align="end">Label the link like "Explore" or "Get Involved"</mat-hint>
         </mat-form-field>
-        <mat-checkbox formControlName="recurring">
+        <br/>
+        <mat-checkbox class="checkbox" formControlName="recurring">
             This is a Recurring Event
         </mat-checkbox>
-        <br />
-        <button mat-button type="submit" [disabled]="!eventForm.status">Submit</button>
-    </form>
-    <footer id="modal-footer">
-        <button mat-raised-button id="modal-cancel-button" (click)="closeModal()">
+    <footer class="modal-footer">
+        <button mat-raised-button type="button" class="modal-cancel-button" (click)="closeModal()">
             Back
         </button>
+        <button mat-raised-button type="submit" class="modal-submit-button" [disabled]="!eventForm.status">Submit</button>
     </footer>
+  </form>
 </div>

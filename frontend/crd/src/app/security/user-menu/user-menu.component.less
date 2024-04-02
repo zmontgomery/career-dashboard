@@ -12,6 +12,8 @@
     min-width: unset;
     height: unset;
     border-radius: 100%;
+    position: relative;
+    overflow: hidden;
 
     .profile-picture {
       border-radius: 100%;
@@ -21,7 +23,24 @@
       .mat-icon-size(50px);
       margin: 0;
     }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-color: transparent;
+    }
+
+    .overlay:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
   }
+}
+
+.menu-content {
+  padding: 5px 10px;
 }
 
 .ai-button {

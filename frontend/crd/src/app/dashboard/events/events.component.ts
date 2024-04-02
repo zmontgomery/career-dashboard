@@ -40,17 +40,17 @@ export class EventsComponent implements OnInit{
         return {
           id: event.eventID,
           name: event.name,
-          date: event.date,
+          date: event.date.toLocaleString('en-us', {month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}),
           description: event.description,
           img: imgUrl,
+          eventLink: event.eventLink
         }
       })
     });
+  }
 
-
-    //this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID)
-
-    //this.eventService.getGoogleEvents(1).subscribe((events: Event[]) => {});
+  goToLink(link: string) {
+    location.href = link;
   }
 
   events: Array<Event> = []
