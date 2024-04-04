@@ -44,7 +44,7 @@ Partially Hydrated devs - Senior Project
    Works on Linux/Mac. It may work on Windows using GitBash, or there or some alternatives listed.
    
 5. Install npm packages.
-   - Go to senior-project/frontend/crd. run `npm install`. You will have to do this every time a dependency changes in 
+   - Go to senior-project/frontend. run `npm install`. You will have to do this every time a dependency changes in 
    the frontend
    
 6. Install mysql 8 from https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/
@@ -86,13 +86,13 @@ the app still should build normally
     - in environment variables add `CRD_DB_PASSWORD=your_password; EMAIL_PASSWORD=app password; CRD_SUPER_ADMIN=admin email;`
   - ### Frontend
     - In IntelliJ go to Configuration -> Edit Configurations... -> Add new configuration -> npm
-    - select `senior-project/frontend/crd/package.json` as the package.json
+    - select `senior-project/frontend/package.json` as the package.json
     - change the command to start
 - Or 
   - run `export CRD_DB_PASSWORD=your_password; export EMAIL_PASSWORD=app password; export CRD_SUPER_ADMIN=admin email; ./gradlew bootrun`
   - Alternate Backend run
     - run `./setenv.sh` which will first ask you to setup the environment variables and then run the backend
-  - Open another terminal and navigate to the frontend/crd directory
+  - Open another terminal and navigate to the frontend directory
   - Run `npm start`
   
 
@@ -106,9 +106,9 @@ You can also do this for frontend/backend test.
 
 # Executing tests
 ### Front-end
-- `cd frontend/crd`
+- `cd frontend`
 - `npm run test-headless`
-- coverage found in frontend/crd/coverage/crd/index.html
+- coverage found in frontend/coverage/crd/index.html
 - for more accurate coverage, run `npm run test-headless-coverage`
 ### Back-end
 - `cd backend`
@@ -125,7 +125,7 @@ You can also do this for frontend/backend test.
 
 # Deploying
 #### Work in Progress. This just showcases how to build angular app and run backend as jar that also serves angular app
-- `cd frontend/crd`
+- `cd frontend`
 - `npm run build`
 - cd back to project home
 - `cd backend`
