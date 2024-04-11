@@ -75,7 +75,7 @@ public class SubmissionService {
 
     /**
      * Sets the artifact id to No File
-     * @param submission
+     * @param submission the comment submission
      * @return
      */
     public Mono<Submission> scrubArtifact(Submission submission) {

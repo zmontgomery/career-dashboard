@@ -71,6 +71,9 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
     });
   }
 
+  /**
+   * Sorts the milestones by completion status
+   */
   sortMilestones(milestones: Milestone[]) {
     const inprogressMilestones: Milestone[] = [];
 
@@ -112,6 +115,9 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
     this.completedMap.set(CompletionStatus.Upcoming, upcomingMilestones);
   }
 
+  /**
+   * Connects submissions to the tasks to display on the page
+   */
   mapSubmissions(submissions: Submission[]) {
     submissions.forEach((submission) => {
       // sanity check
@@ -122,6 +128,9 @@ export class MilestonesFacultyComponent extends MilestonesPage implements OnInit
     })
   }
 
+  /**
+   * Retrieves and downloads the artifact file for a given task
+   */
   downloadArtifact(task: Task) {
     const taskID = task.taskID;
     const submission = this.submissionMap.get(taskID)!;

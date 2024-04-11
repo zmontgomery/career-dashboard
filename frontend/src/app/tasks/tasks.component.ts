@@ -36,6 +36,9 @@ export class TasksComponent {
     });
   }
 
+  /**
+   * Gets the tasks to display on the page
+   */
   private updateTasks() {
     this.taskService.getDashBoardTasks(6).subscribe((tasks: Task[]) => {
       this.tasksList = tasks;

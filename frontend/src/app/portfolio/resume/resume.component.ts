@@ -60,8 +60,8 @@ export class ResumeComponent implements OnInit, OnChanges {
   }
 
   /**
-     * Opens the Submission Modal
-     */
+   * Opens the Submission Modal
+   */
   openDialog(): void {
     this.taskService.findById(RESUME_TASK_ID).subscribe((task) => {
       const dialogConfig = new MatDialogConfig();

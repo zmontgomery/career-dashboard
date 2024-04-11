@@ -147,7 +147,6 @@ public class EventServiceTest {
         "\"isRecurring\":\"true\"}";
 
         Event event1 = Constants.e1;
-        Optional<Event> eventOption = Optional.empty();
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap;

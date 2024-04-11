@@ -189,8 +189,6 @@ export class MilestoneEditComponent {
     const url = constructBackendRequest(Endpoints.EDIT_MILESTONE)
     this.http.post(url, updateData).subscribe(milestone => {
       if (milestone) {
-        console.log("milestone updated");
-        console.log(milestone);
         this.openSnackBar("Milestone Updated!");
         this.back();
       }

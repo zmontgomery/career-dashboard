@@ -119,6 +119,7 @@ export class ImageUploadComponent implements OnInit {
 
   imageCropped(event: ImageCroppedEvent) {
     if (event.objectUrl != null) {
+      // maybe change this to something safer in the future
       this.croppedImageUrl = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
       this.croppedFile = event.blob;
     }

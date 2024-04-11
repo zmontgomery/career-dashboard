@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   template: ''
 })
 export abstract class MilestonesPage {
-
+  // used by both student and faculty view
   milestonesMap: Map<string, Array<Milestone>> = new Map()
   completedTasks!: number[];
   completedMilestones: number[] = [];
@@ -33,11 +33,18 @@ export abstract class MilestonesPage {
   ) {
   }
 
+  /**
+   * Map milestones by year level
+   */
   makeMilestoneMap(milestones: Milestone[]) {
     this.yearLevels.forEach((yearLevel) => this.milestonesMap.set(yearLevel, new Array<Milestone>()));
     milestones.forEach((milestone) => this.milestonesMap.get(milestone.yearLevel)?.push(milestone));
   }
 
+  /**
+   * Assigns the completedTasks and completedMilestones lists
+   * Used to format the milestone display correctly
+   */
   checkCompleted(submissions: Submission[]) {
     this.completedTasks = submissions.map(submission => submission.taskId);
 

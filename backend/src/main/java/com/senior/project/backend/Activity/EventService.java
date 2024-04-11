@@ -40,7 +40,6 @@ public class EventService {
 
     /**
      * Updates an event using the provided map of updates
-     * It assumes all updates will include id, name, location, and organizer since those are required
      * 
      * @param id event id
      * @param updates updated event data in the form of fieldName, fieldValue
@@ -64,7 +63,6 @@ public class EventService {
 
     /**
      * Creates an event using the provided map of data
-     * It assumes the data will include id, name, location, and organizer since those are required
      * 
      * @param data event data in the form of fieldName, fieldValue
      * @return the new event or Mono error if date formatted doesn't work
@@ -83,6 +81,8 @@ public class EventService {
     }
 
     /**
+     * Update the provided event object with the update data
+     * It assumes all updates will include name, location, and organizer since those are required
      *
      * @param data data to updateEvent with
      * @param newEvent Event object to be updated

@@ -102,7 +102,9 @@ public class SubmissionHandler {
             .flatMap((submission) -> ServerResponse.ok().bodyValue(submission));
     }
 
-
+    /**
+     * Retrieves all submissions for the current user, expected to be a student
+     */
     public Mono<ServerResponse> getStudentSubmissions(ServerRequest serverRequest) {
         return currentUserUtil.getCurrentUser()
             .flatMapMany((user) -> submissionService.getStudentSubmissions(user.getId()))
@@ -111,6 +113,9 @@ public class SubmissionHandler {
             .flatMap((submissions) -> ServerResponse.ok().bodyValue(submissions));
     }
 
+    /**
+     * Faculty specific method to get submissions for a given student
+     */
     public Mono<ServerResponse> getStudentSubmissionsFaculty(ServerRequest serverRequest) {
         String studentID = serverRequest.pathVariable("studentID");
         return submissionService.getStudentSubmissionsFaculty(UUID.fromString(studentID))

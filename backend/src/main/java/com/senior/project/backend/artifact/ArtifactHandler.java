@@ -54,6 +54,9 @@ public class ArtifactHandler {
                 );
     }
 
+    /**
+     * Assigns an uploaded image to the specified event
+     */
     public Mono<ServerResponse> handleEventImageUpload(ServerRequest request) {
         long eventID;
         try {
@@ -69,6 +72,9 @@ public class ArtifactHandler {
                         .bodyValue(response));
     }
 
+    /**
+     * Assigns an uploaded image as the profile picture of the current user
+     */
     public Mono<ServerResponse> handleProfileImageUpload(ServerRequest request) {
         return getFilePart(request)
                 .flatMap(artifactService::processProfileImage)
@@ -78,6 +84,9 @@ public class ArtifactHandler {
                 );
     }
 
+    /**
+     * Retrieves the part of the server request containing the file data
+     */
     private static Mono<FilePart> getFilePart(ServerRequest request) {
         return request.multipartData()
                 .map(parts -> parts.toSingleValueMap().get("file"))
@@ -87,6 +96,9 @@ public class ArtifactHandler {
 
     /**
      * Deletes the file with the given file name
+     * 
+     * @return 200 if successful or 403 forbidden if attempting to delete from a submission that does not exist
+     * or if a non-admin is attempting to delete another user's submission
      */
     public Mono<ServerResponse> handleFileDelete(ServerRequest request) {
         return currentUserUtil.getCurrentUser().zipWith(Mono.just(Integer.parseInt(request.pathVariable("id"))))
@@ -124,6 +136,11 @@ public class ArtifactHandler {
                         .body(BodyInserters.fromValue(Objects.requireNonNull(responseEntity.getBody()))));
     }
 
+    /**
+     * Retrieves the profile picture for the current user
+     * 
+     * @return 200 with the image or 204 no content if the user does not have a profile picture
+     */
     public Mono<ServerResponse> serveUserProfileImage(ServerRequest request) {
         return currentUserUtil.getCurrentUser()
                 .flatMap((user) -> {
