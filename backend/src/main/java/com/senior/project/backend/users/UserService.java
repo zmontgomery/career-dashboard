@@ -99,7 +99,7 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     public Mono<User> createOrUpdateUser(User user) {
-        // FIXME this should be done with the non blocking executor 
+        // FIXME this should be done with the non blocking executor but it doesn't run the code
         // return NonBlockingExecutor.execute(()-> repository.saveAndFlush(user));
         return Mono.just(repository.saveAndFlush(user));
     }
