@@ -109,6 +109,13 @@ public class ArtifactService {
                 });
     }
 
+    /**
+     * Uploads an event image and assigns it to the provided event
+     * Replaces the current event image if it exists
+     * 
+     * @param filePart the image file to upload
+     * @param eventID which event the image is for
+     */
     public Mono<Integer> processEventImage(FilePart filePart, long eventID) {
         return validateAndGetPath(filePart, IMAGE_TYPES)
                 .flatMap(destination -> {
@@ -138,7 +145,13 @@ public class ArtifactService {
                 });
     }
 
-
+    /**
+     * Uploads an image as the current user's profile picture
+     * Replaces the current profile picture if it exists
+     * 
+     * @return 422 unprocessable entity if the imageIO fails or 404 not found
+     * if the artifact is lost after saving to server
+     */
     public Mono<Integer> processProfileImage(FilePart filePart) {
         var userMono = currentUserUtil.getCurrentUser();
         var uploadAndUserMono = validateAndGetPath(filePart, IMAGE_TYPES)
@@ -162,6 +175,7 @@ public class ArtifactService {
                     });
                 }).zipWith(userMono);
 
+        // delete existing profile picture if it exists
         uploadAndUserMono = uploadAndUserMono
                 .flatMap((zipped) -> {
                     var user = zipped.getT2();
@@ -190,6 +204,15 @@ public class ArtifactService {
                 }));
     }
 
+    /**
+     * Checks if the given file is an acceptable file type and returns an upload destination
+     * Artifact submissions can only be PDF while images can only be JPEG or PNG
+     * 
+     * @param filePart the file data to process
+     * @param acceptableTypes which file types are acceptible for the given upload
+     * 
+     * @return the upload destiation
+     */
     private Mono<Path> validateAndGetPath(FilePart filePart, List<MediaType> acceptableTypes) {
         return validateFileSize(filePart)
                 .flatMap((filePart1 -> {
@@ -211,6 +234,13 @@ public class ArtifactService {
                 }));
     }
 
+    /**
+     * Checks if the provided image matches the expected aspect ratio for its purpose
+     * Currently only used to validate profile pictures as event images are validated on the frontend 
+     * 
+     * @param filePart the file data to process
+     * @param expectedRatio aspect ratio to compare against
+     */
     private Mono<BufferedImage> validateImageAspectRatio(FilePart filePart, int expectedRatio) {
         return filePart.content().collectList()
                 .flatMap(dataBufferList -> NonBlockingExecutor.execute(() -> {
@@ -372,6 +402,7 @@ public class ArtifactService {
         .name("No File")
         .fileLocation("N/A")
         .build();
+    // TODO if specifying an artifact id for "artifact deleted", it would go here
 
     /**
      * Clears out the files if the database is reset and adds
@@ -399,6 +430,10 @@ public class ArtifactService {
         }
     }
 
+    /**
+     * Checks if the file's type matches an acceptable type
+     * Also checks against .docx even though it currently isn't supported
+     */
     public static Optional<String> getFileExtension(MediaType mediaType) {
         // image types
         if (mediaType.equals(MediaType.IMAGE_JPEG)) {

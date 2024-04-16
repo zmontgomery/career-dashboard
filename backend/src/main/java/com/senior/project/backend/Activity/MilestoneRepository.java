@@ -22,6 +22,7 @@ public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
 
 
     // FIXME this query is slightly incorrect because it does not account for submissions objects that exist but their artifact was deleted
+    // Possible solution was to specify an artifact ID meaning "artifact deleted"
     @Query("SELECT DISTINCT m FROM Milestone m " +
             "JOIN FETCH m.tasks t " +
             "WHERE (SELECT COUNT(*) FROM Task t2 WHERE t2.milestone.id = m.id) = " +

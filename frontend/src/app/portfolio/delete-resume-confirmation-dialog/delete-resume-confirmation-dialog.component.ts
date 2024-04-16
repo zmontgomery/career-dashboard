@@ -26,6 +26,9 @@ export class DeleteResumeConfirmationDialogComponent {
     this.ref.close(false);
   }
 
+  /**
+   * Deletes the resume file
+   */
   onConfirm() {
     this.artifactService.deleteArtifact(this.artifactId).subscribe(() => {
       this.ref.close(true);

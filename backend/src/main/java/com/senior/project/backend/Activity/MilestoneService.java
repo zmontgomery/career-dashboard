@@ -118,6 +118,14 @@ public class MilestoneService {
         return NonBlockingExecutor.execute(()->milestoneRepository.save(newMilestone));
     }
 
+    /**
+     * Retrieves a list of completed milestones for a requested user to display on portfolio
+     * This can either be for a student viewing their own portfolio, or a faculty viewing
+     * a student's portfolio
+     * 
+     * @param requestedUserId UUID of the user to get the milestones for
+     * @return the list of milestones, or 403 forbidden if a student requests another student
+     */
     public Flux<Milestone> completedMilestones(UUID requestedUserId) {
         var requestedUserMono = userService.findById(requestedUserId)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No user with id: " + requestedUserId + " found")));

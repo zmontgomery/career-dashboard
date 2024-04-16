@@ -164,7 +164,6 @@ public class UserHandlerTest {
 
     @Test
     public void testUpdateRoleInvalidPerms() {
-        User user = User.builder().role(Role.Admin).build();
         User test = User.builder().role(Role.Admin).build();
         when(currentUserUtil.getCurrentUser()).thenReturn(Mono.just(Constants.userAdmin));
 
