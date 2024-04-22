@@ -112,6 +112,7 @@ export class MilestoneEditComponent {
    * Checks off assigned tasks and disables unavailable tasks
    */
   listTasks() {
+    this.assignedTasks = new Array();
     const taskControlArray = this.yearTasks.map(task => {
       // check off all tasks currently assigned to the milestone
       if (this.currentMilestone && task.milestoneID == this.currentMilestone.milestoneID) {
