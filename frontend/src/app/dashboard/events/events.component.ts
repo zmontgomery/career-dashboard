@@ -42,6 +42,7 @@ export class EventsComponent implements OnInit{
           date: event.date.toLocaleString('en-us', {month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'}),
           description: event.description,
           img: imgUrl,
+          buttonLabel: event.buttonLabel,
           eventLink: event.eventLink
         }
       })

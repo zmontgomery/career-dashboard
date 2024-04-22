@@ -18,8 +18,8 @@
           <mat-icon>calendar_month</mat-icon>
           <span>{{slide.date}}</span>
         </div>
-        <button *ngIf="index % 2 === 0" mat-stroked-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.description}}</button>
-        <button *ngIf="index % 2 === 1" mat-raised-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.description}}</button>
+        <button *ngIf="index % 2 === 0" mat-stroked-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.buttonLabel}}</button>
+        <button *ngIf="index % 2 === 1" mat-raised-button color="primary" (click)="goToLink(slide.eventLink)">{{slide.buttonLabel}}</button>
       </div>
     </slide>
     </carousel>
