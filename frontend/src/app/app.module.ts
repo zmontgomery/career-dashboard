@@ -59,9 +59,9 @@ import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
     MsalModule.forRoot(
       new PublicClientApplication({
         auth: {
-          clientId: "ce4bbce1-ee95-4991-8367-c180902da560", // Application (client) ID from the app registration
+          clientId: environment.clientId, // Application (client) ID from the app registration
           authority:
-            "https://login.microsoftonline.com/24e2ab17-fa32-435d-833f-93888ce006dd", // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
+            `https://login.microsoftonline.com/${environment.tentantId}`, // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
           redirectUri: environment.redirectURI, // This is your redirect URI
         },
         cache: {
@@ -124,7 +124,7 @@ import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              "10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com",
+              environment.gClientId,
               {
                 oneTapEnabled: false,
               }
