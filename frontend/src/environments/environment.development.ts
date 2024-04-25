@@ -1,6 +1,7 @@
 export const environment = {
     requestURI: "http://localhost:8080",
-    clientId: "ce4bbce1-ee95-4991-8367-c180902da560",
-    gClientId: "10084452653-c2867pfh6lvpgoq09aoe4i71ijeshej6.apps.googleusercontent.com",
+    clientId: "REPLACE",
+    tentantId: "REPLACE",
+    gClientId: "REPLACE",
     redirectURI: "http://localhost:4200",
 };
