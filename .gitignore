@@ -1,7 +1,7 @@
 backend/HELP.md
 backend/src/main/resources/public/**
 backend/src/main/resources/static/**
-setenv.sh
+backend/setenv.sh
 .gradle
 build/
 uploads/*
