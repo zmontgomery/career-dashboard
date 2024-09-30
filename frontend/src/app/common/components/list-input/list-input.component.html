@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<div class="list-input">
+  <label class="label">{{ label }}</label>
+  <div *ngFor="let control of formArray.controls; let i = index">
+    <mat-form-field class="list-item" appearance="outline">
+      <input matInput [formControl]="control" id="item-{{ i }}" type="text" />
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="removeInput(i)"
+        [attr.aria-label]="'Delete item {{ i }}'"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <mat-error *ngIf="control.hasError('required') && control.touched">
+        Please specify a value.
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <button class="add-button" type="button" mat-button (click)="addInput()">
+    {{ addText }}
+  </button>
+</div>

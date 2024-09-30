@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<h2 mat-dialog-title>{{ title }}</h2>
+<form [formGroup]="form" (ngSubmit)="saveChanges()">
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>University ID</mat-label>
+      <input
+        id="universityId"
+        type="text"
+        formControlName="universityId"
+        matInput
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Year</mat-label>
+      <mat-select id="year" formControlName="year">
+        <mat-option *ngFor="let year of yearLevels" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>GPA</mat-label>
+      <input id="gpa" type="text" formControlName="gpa" matInput />
+      <mat-error *ngIf="form.controls['gpa'].hasError('invalidNumber')">{{
+        form.controls["gpa"].getError("invalidNumber")
+      }}</mat-error>
+    </mat-form-field>
+    <list-input
+      label="Majors"
+      addText="Add Major"
+      formArrayName="majors"
+      [formGroup]="form"
+      [formArray]="majors"
+    />
+    <list-input
+      label="Minors"
+      addText="Add Minor"
+      formArrayName="minors"
+      [formGroup]="form"
+      [formArray]="minors"
+    />
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Cancel</button>
+    <button mat-button [disabled]="!form.valid || form.pristine" type="submit">
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>
