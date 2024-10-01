@@ -98,6 +98,11 @@ export class ImageUploadComponent implements OnInit {
             this.artifactIdEmitter.next(artifactId);
             this.status = 'success';
             this.closeModal(1000);
+            this._snackBar.open("Image upload Successful!", 'close', {
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              duration: 3000,
+            });
           }
         });
       } else {
@@ -131,11 +136,6 @@ export class ImageUploadComponent implements OnInit {
 
   closeModal(waitTime: number = 0) {
     this.closeEmitter.emit(waitTime);
-    this._snackBar.open("Image upload Successful!", 'close', {
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      duration: 3000,
-    });
   }
 }
 
