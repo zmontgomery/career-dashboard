@@ -15,7 +15,7 @@ read -p "Enter the database username (default: backend): " CRD_DB_USERNAME
 CRD_DB_USERNAME=${CRD_DB_USERNAME:-backend}
 
 read -p "Enter the database password (default: your_password): " CRD_DB_PASSWORD
-CRD_DB_PASSWORD=${CRD_DB_PASSWORD:-Abort-never9rely}
+CRD_DB_PASSWORD=${CRD_DB_PASSWORD:-your_password}
 
 read -p "Enter the super admin: " CRD_SUPER_ADMIN
 
