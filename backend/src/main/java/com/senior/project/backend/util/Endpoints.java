@@ -1,12 +1,11 @@
 package com.senior.project.backend.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.senior.project.backend.domain.Role;
-
-import java.util.List;
-import java.util.Arrays;
 
 /**
  * Enum for endpoints in the system and if they are accessible
@@ -37,6 +36,9 @@ public enum Endpoints {
     UPDATE_ROLES("users/roles", true, Role.Faculty),
     SEARCH_USERS("users/search", true, Role.Faculty),
     PORTFOLIO("portfolio", true),
+
+    // Portfolio
+    EDUCATION("education", true),
 
     // Submissions
     SUBMISSION("tasks/submission", true),
@@ -103,11 +105,13 @@ public enum Endpoints {
     //
 
     // The map of the path to the endpoint
-    public static Map<String, Endpoints> stringToEndpoint = new HashMap<>() {{
-        for (Endpoints e : Endpoints.values()) {
-            put(e.uri(), e);
+    public static Map<String, Endpoints> stringToEndpoint = new HashMap<>() {
+        {
+            for (Endpoints e : Endpoints.values()) {
+                put(e.uri(), e);
+            }
         }
-    }};
+    };
 
     /**
      * Converts a string to the endpoint
@@ -121,9 +125,9 @@ public enum Endpoints {
      */
     public static String[] getOpenRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> !r.getNeedsAuthentication())
-            .map(Endpoints::uri)
-            .toList();
+                .filter(r -> !r.getNeedsAuthentication())
+                .map(Endpoints::uri)
+                .toList();
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
@@ -138,9 +142,9 @@ public enum Endpoints {
      */
     public static String[] getAdminRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-            .filter(r -> r.getRole() == Role.Admin)
-            .map((r) -> r.uri())
-            .toList();
+                .filter(r -> r.getRole() == Role.Admin)
+                .map((r) -> r.uri())
+                .toList();
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {
@@ -155,9 +159,9 @@ public enum Endpoints {
      */
     public static String[] getFacultyRoutes() {
         List<String> list = Arrays.stream(Endpoints.values())
-        .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)
-        .map((r) -> r.uri())
-        .toList();
+                .filter(r -> r.getRole() == Role.Admin || r.getRole() == Role.Faculty)
+                .map((r) -> r.uri())
+                .toList();
 
         String[] routes = new String[list.size()];
         for (int i = 0; i < routes.length; i++) {

@@ -1,9 +1,9 @@
 package com.senior.project.backend.domain;
 
-import lombok.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Generated;
 
 @Generated
 public enum YearLevel {
@@ -11,6 +11,7 @@ public enum YearLevel {
 
     /**
      * find current and previous years
+     * 
      * @return list of years
      */
     public List<YearLevel> currentAndPreviousYears() {
@@ -21,6 +22,7 @@ public enum YearLevel {
 
     /**
      * find previous years
+     * 
      * @return list of years
      */
     public List<YearLevel> previousYears() {
@@ -40,6 +42,7 @@ public enum YearLevel {
 
     /**
      * find current and upcoming years
+     * 
      * @return list of years
      */
     public List<YearLevel> currentAndUpcomingYears() {
@@ -50,6 +53,7 @@ public enum YearLevel {
 
     /**
      * find upcoming years
+     * 
      * @return list of years
      */
     public List<YearLevel> upcomingYears() {
