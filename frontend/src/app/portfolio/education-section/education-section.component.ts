@@ -51,7 +51,7 @@ export class EducationSectionComponent implements OnInit {
     dialogRef.componentInstance.defaultValues = {
       universityId: this.user.studentDetails?.universityId ?? '',
       year: this.user.studentDetails?.yearLevel ?? '',
-      gpa: String(this.user.studentDetails?.gpa) ?? '',
+      gpa: String(this.user.studentDetails?.gpa ?? ''),
       majors: this.majors(),
       minors: this.minors(),
     };
