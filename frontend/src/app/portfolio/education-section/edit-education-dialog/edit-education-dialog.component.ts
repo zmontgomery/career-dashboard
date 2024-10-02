@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,6 +9,14 @@ import {
   type FormGroup,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+
+export type EditEducationRequest = {
+  universityId: string;
+  year: string;
+  gpa: string;
+  majors: string[];
+  minors: string[];
+};
 
 @Component({
   selector: 'app-edit-education-dialog',
@@ -30,6 +38,7 @@ export class EditEducationDialogComponent implements OnInit {
     'Junior',
     'Senior',
   ];
+  @Input() defaultValues?: EditEducationRequest;
 
   public constructor(
     private readonly dialogRef: MatDialogRef<EditEducationDialogComponent>,
@@ -43,11 +52,19 @@ export class EditEducationDialogComponent implements OnInit {
 
   createForm() {
     this.form = this.formBuilder.group({
-      universityId: [''],
-      year: [null],
-      gpa: ['', this.gpaValidator()],
-      majors: this.formBuilder.array<FormControl>([]),
-      minors: this.formBuilder.array<FormControl>([]),
+      universityId: [this.defaultValues?.universityId ?? ''],
+      year: [this.defaultValues?.year ?? null],
+      gpa: [this.defaultValues?.gpa ?? '', this.gpaValidator()],
+      majors: this.formBuilder.array<FormControl>(
+        this.defaultValues?.majors.map((major) =>
+          this.formBuilder.control(major)
+        ) ?? []
+      ),
+      minors: this.formBuilder.array<FormControl>(
+        this.defaultValues?.minors.map((minor) =>
+          this.formBuilder.control(minor)
+        ) ?? []
+      ),
     });
   }
 

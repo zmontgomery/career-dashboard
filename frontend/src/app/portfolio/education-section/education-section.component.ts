@@ -48,6 +48,13 @@ export class EducationSectionComponent implements OnInit {
 
   openEditDialog(): void {
     const dialogRef = this.editDialog.open(EditEducationDialogComponent);
+    dialogRef.componentInstance.defaultValues = {
+      universityId: this.user.studentDetails?.universityId ?? '',
+      year: this.user.studentDetails?.yearLevel ?? '',
+      gpa: String(this.user.studentDetails?.gpa) ?? '',
+      majors: this.majors(),
+      minors: this.minors(),
+    };
 
     dialogRef.afterClosed().subscribe((result) => {
       // TODO: update user's education
