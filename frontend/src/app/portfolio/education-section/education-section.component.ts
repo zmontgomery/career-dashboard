@@ -1,13 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, map, mergeMap, zipWith } from 'rxjs';
+import { map, mergeMap, Observable, zipWith } from 'rxjs';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/security/domain/user';
 import { UserService } from 'src/app/security/user.service';
 import { LangUtils } from 'src/app/util/lang-utils';
 import { ScreenSizeService } from 'src/app/util/screen-size.service';
-import { EditEducationDialogComponent } from './edit-education-dialog/edit-education-dialog.component';
+import {
+  DegreeProgramOperation,
+  EditEducationRequest,
+  PortfolioService,
+} from '../portfolio.service';
+import {
+  EditEducationDialogComponent,
+  EditEducationFormValues,
+} from './edit-education-dialog/edit-education-dialog.component';
 
 @Component({
   selector: 'education-section',
@@ -23,7 +31,8 @@ export class EducationSectionComponent implements OnInit {
     private readonly userService: UserService,
     private readonly screenSizeSvc: ScreenSizeService,
     private readonly route: ActivatedRoute,
-    private readonly editDialog: MatDialog
+    private readonly editDialog: MatDialog,
+    private readonly portfolioService: PortfolioService
   ) {
     this.isMobile$ = screenSizeSvc.isMobile$;
   }
@@ -52,14 +61,51 @@ export class EducationSectionComponent implements OnInit {
       universityId: this.user.studentDetails?.universityId ?? '',
       year: this.user.studentDetails?.yearLevel ?? '',
       gpa: String(this.user.studentDetails?.gpa ?? ''),
-      majors: this.majors(),
-      minors: this.minors(),
+      majors: this.getMajorsFromUser() ?? [],
+      minors: this.getMinorsFromUser() ?? [],
     };
 
-    dialogRef.afterClosed().subscribe((result) => {
-      // TODO: update user's education
-      console.log('Edit dialog closed:', result);
+    dialogRef.afterClosed().subscribe((result?: EditEducationFormValues) => {
+      if (!result) {
+        return;
+      }
+      const request: EditEducationRequest = {
+        gpa: Number(result.gpa),
+        universityId: Number(result.universityId),
+        year: result.year,
+        degreeProgramOperations: [...result.majors, ...result.minors],
+      };
+      this.portfolioService.editEducation(request).subscribe((user) => {
+        console.log(user);
+        console.log('Edit dialog closed:', result);
+      });
     });
+  }
+
+  getMajorsFromUser(): DegreeProgramOperation[] {
+    return (
+      this.user.studentDetails?.degreePrograms
+        .filter((d) => !d.isMinor)
+        .map((value) => ({
+          id: value.id,
+          operation: 'Edit',
+          name: value.name,
+          isMinor: false,
+        })) ?? []
+    );
+  }
+
+  getMinorsFromUser(): DegreeProgramOperation[] {
+    return (
+      this.user.studentDetails?.degreePrograms
+        .filter((d) => d.isMinor)
+        .map((value) => ({
+          id: value.id,
+          operation: 'Edit',
+          name: value.name,
+          isMinor: true,
+        })) ?? []
+    );
   }
 
   majors(): string[] {

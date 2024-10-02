@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <div class="list-input">
   <label class="label">{{ label }}</label>
-  <div *ngFor="let control of formArray.controls; let i = index">
-    <mat-form-field class="list-item" appearance="outline">
-      <input matInput [formControl]="control" id="item-{{ i }}" type="text" />
+  <div *ngFor="let control of arrayControls(); let i = index">
+    <mat-form-field
+      class="list-item"
+      appearance="outline"
+      [hidden]="deleted.has(i)"
+    >
+      <input
+        matInput
+        [value]="getValue(control.value)"
+        (input)="setValue(control, $event)"
+        id="item-{{ i }}"
+        type="text"
+      />
       <button
         type="button"
         mat-icon-button
         matSuffix
-        (click)="removeInput(i)"
+        (click)="delete(control, i)"
         [attr.aria-label]="'Delete item {{ i }}'"
       >
         <mat-icon>delete</mat-icon>

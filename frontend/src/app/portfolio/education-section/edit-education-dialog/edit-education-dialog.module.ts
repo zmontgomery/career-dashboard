@@ -6,7 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ListInputModule } from 'src/app/common/components/list-input/list-input.module';
+import { DegreeProgramListInputModule } from './degree-program-list-input/degree-program-list-input.module';
 import { EditEducationDialogComponent } from './edit-education-dialog.component';
 
 @NgModule({
@@ -19,7 +19,7 @@ import { EditEducationDialogComponent } from './edit-education-dialog.component'
     MatInputModule,
     MatSelectModule,
     ReactiveFormsModule,
-    ListInputModule,
+    DegreeProgramListInputModule,
   ],
   exports: [EditEducationDialogComponent],
 })

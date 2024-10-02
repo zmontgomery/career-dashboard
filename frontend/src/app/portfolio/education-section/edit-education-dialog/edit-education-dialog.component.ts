@@ -9,13 +9,14 @@ import {
   type FormGroup,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { DegreeProgramOperation } from '../../portfolio.service';
 
-export type EditEducationRequest = {
+export type EditEducationFormValues = {
   universityId: string;
   year: string;
   gpa: string;
-  majors: string[];
-  minors: string[];
+  majors: DegreeProgramOperation[];
+  minors: DegreeProgramOperation[];
 };
 
 @Component({
@@ -38,7 +39,7 @@ export class EditEducationDialogComponent implements OnInit {
     'Junior',
     'Senior',
   ];
-  @Input() defaultValues?: EditEducationRequest;
+  @Input() defaultValues?: EditEducationFormValues;
 
   public constructor(
     private readonly dialogRef: MatDialogRef<EditEducationDialogComponent>,
@@ -46,8 +47,10 @@ export class EditEducationDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('hello');
     this.createForm();
     this.dialogRef.addPanelClass('edit-dialog');
+    console.log(this.form);
   }
 
   createForm() {

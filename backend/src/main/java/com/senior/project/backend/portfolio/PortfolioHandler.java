@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.senior.project.backend.portfolio.dto.EducationDTO;
+
 import reactor.core.publisher.Mono;
 
 @Component

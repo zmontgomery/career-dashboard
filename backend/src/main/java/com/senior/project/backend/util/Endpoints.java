@@ -38,7 +38,7 @@ public enum Endpoints {
     PORTFOLIO("portfolio", true),
 
     // Portfolio
-    EDUCATION("education", true),
+    EDUCATION("student/education", true),
 
     // Submissions
     SUBMISSION("tasks/submission", true),

@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ListInputComponent } from './list-input.component';
+import { DegreeProgramListInputComponent } from './degree-program-list-input.component';
 
 @NgModule({
-  declarations: [ListInputComponent],
+  declarations: [DegreeProgramListInputComponent],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -17,6 +17,6 @@ import { ListInputComponent } from './list-input.component';
     MatFormFieldModule,
     MatInputModule,
   ],
-  exports: [ListInputComponent],
+  exports: [DegreeProgramListInputComponent],
 })
-export class ListInputModule {}
+export class DegreeProgramListInputModule {}

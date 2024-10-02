@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +20,7 @@ import { ResumeModule } from './resume/resume.module';
     ResumeModule,
     MatIconModule,
     EducationSectionModule,
+    HttpClientModule,
   ],
 })
 export class PortfolioModule {}
