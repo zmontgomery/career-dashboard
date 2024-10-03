@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<div class="card-body-section-header">
+  <h2>Education</h2>
+  <button mat-mini-fab (click)="openEditDialog()">
+    <mat-icon>edit</mat-icon>
+  </button>
+</div>
+<div class="card-body-section-body content">
+  <div>
+    <span class="title">Majors</span>
+    <span class="value">
+      <span *ngFor="let degreeProgram of majors(); index as i">
+        <span
+          >{{ degreeProgram }}{{ i < majors().length - 1 ? ", " : "" }}</span
+        >
+      </span>
+    </span>
+  </div>
+  <div>
+    <span class="title">Minors</span>
+    <span class="value">
+      <span *ngFor="let degreeProgram of minors(); index as i">
+        <span
+          >{{ degreeProgram }}{{ i < minors().length - 1 ? ", " : "" }}</span
+        >
+      </span>
+    </span>
+  </div>
+  <div>
+    <span class="title" *ngIf="!(isMobile$ | async)">University ID</span>
+    <span class="title" *ngIf="isMobile$ | async">U. ID</span>
+    <span>{{ user.studentDetails?.universityId }}</span>
+  </div>
+  <div>
+    <span class="title">Year</span>
+    <span>{{ user.studentDetails?.yearLevel }}</span>
+  </div>
+  <div>
+    <span class="title">GPA</span>
+    <span>{{ user.studentDetails?.gpa }}</span>
+  </div>
+</div>
