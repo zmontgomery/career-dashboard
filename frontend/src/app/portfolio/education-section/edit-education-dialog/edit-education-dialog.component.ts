@@ -55,7 +55,10 @@ export class EditEducationDialogComponent implements OnInit {
 
   createForm() {
     this.form = this.formBuilder.group({
-      universityId: [this.defaultValues?.universityId ?? ''],
+      universityId: [
+        this.defaultValues?.universityId ?? '',
+        this.universityIdValidator(),
+      ],
       year: [this.defaultValues?.year ?? null],
       gpa: [this.defaultValues?.gpa ?? '', this.gpaValidator()],
       majors: this.formBuilder.array<FormControl>(
@@ -71,6 +74,20 @@ export class EditEducationDialogComponent implements OnInit {
     });
   }
 
+  universityIdValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+      const regex = new RegExp(/^\d+$/);
+      if (!regex.test(value)) {
+        return { notInteger: true };
+      }
+      return null;
+    };
+  }
+
   gpaValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
@@ -79,7 +96,7 @@ export class EditEducationDialogComponent implements OnInit {
       }
       const regex = new RegExp(/^\d+(\.\d{1,2})?$/);
       if (!regex.test(value)) {
-        return { invalidGpa: true };
+        return { invalidNumber: true };
       }
       return null;
     };
